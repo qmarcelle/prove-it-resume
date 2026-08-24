@@ -1,0 +1,94 @@
+.section {
+  background: var(--color-inverse-bg);
+  color: var(--color-inverse-ink);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 4.5rem var(--page-gutter) var(--space-8);
+}
+
+.heading {
+  font-size: clamp(2rem, 1.3rem + 3vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  max-width: 18ch;
+}
+
+.body {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--color-inverse-ink-quiet);
+  max-width: 60ch;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: 0.625rem;
+}
+
+.primary {
+  padding: 0.8125rem 1.25rem;
+  background: var(--color-inverse-ink);
+  color: var(--color-ink);
+  border: 0;
+  border-radius: var(--radius);
+  font-size: 0.938rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 140ms ease;
+}
+
+.primary:hover {
+  background: var(--color-inverse-accent-strong);
+}
+
+.secondary {
+  padding: 0.75rem 1.1875rem;
+  border: 1px solid var(--color-ink-tertiary);
+  border-radius: var(--radius);
+  color: var(--color-inverse-ink);
+  font-size: 0.938rem;
+  font-weight: 500;
+}
+
+.secondary:hover {
+  border-color: var(--color-inverse-ink);
+  text-decoration: none;
+}
+
+.pending {
+  padding: 0.75rem 1.1875rem;
+  border: 1px dashed var(--color-inverse-border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-inverse-ink-quiet);
+}
+
+.signature {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3125rem;
+  margin-top: 1.375rem;
+  font-family: var(--font-mono);
+  color: var(--color-inverse-ink-quiet);
+}
+
+.signatureName {
+  font-size: 0.813rem;
+  letter-spacing: 0.06em;
+  color: var(--color-inverse-ink-quiet);
+}
+
+.signatureRole {
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+}

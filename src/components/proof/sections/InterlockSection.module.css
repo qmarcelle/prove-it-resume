@@ -1,0 +1,33 @@
+.relevance {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.relevanceHeading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.relevanceLead {
+  font-size: 0.938rem;
+  line-height: 1.65;
+  color: var(--color-ink-secondary);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3125rem;
+  margin: 0;
+  padding-left: 1.125rem;
+  font-size: 0.906rem;
+  line-height: 1.6;
+  color: var(--color-ink-tertiary);
+}
+
+.emphasis {
+  font-weight: 700;
+  color: var(--color-ink);
+}

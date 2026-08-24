@@ -1,0 +1,137 @@
+.section {
+  padding: 2.75rem 0 3.25rem;
+  border-bottom: var(--rule);
+  scroll-margin-top: var(--scroll-offset);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-accent);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-4) var(--space-7);
+}
+
+.heading {
+  font-size: 1.625rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.lead {
+  flex: 1 1 380px;
+  font-size: 0.938rem;
+  line-height: 1.6;
+  color: var(--color-ink-tertiary);
+}
+
+.card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-7);
+  padding: 1.25rem 1.125rem;
+  background: var(--color-surface);
+  border: var(--rule);
+  border-top: var(--rule-strong);
+}
+
+.body {
+  display: flex;
+  flex: 1 1 300px;
+  flex-direction: column;
+  gap: 0.625rem;
+  min-width: 0;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.question {
+  font-size: 0.969rem;
+  line-height: 1.55;
+  font-weight: 500;
+  color: var(--color-ink-strong);
+}
+
+.summary {
+  font-size: 0.906rem;
+  line-height: 1.6;
+  color: var(--color-ink-tertiary);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-ink-secondary);
+}
+
+.tag {
+  padding: 0.25rem var(--space-2);
+  border: var(--rule);
+}
+
+.meta {
+  display: flex;
+  flex: 0 1 260px;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-self: stretch;
+  padding-left: var(--space-5);
+  border-left: var(--rule-quiet);
+}
+
+.metaBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3125rem;
+}
+
+.metaLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-meta-quiet);
+}
+
+.metaValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-lg);
+  line-height: 1.6;
+  color: var(--color-ink-secondary);
+  overflow-wrap: anywhere;
+}
+
+.cta {
+  margin-top: auto;
+}
+
+@media (max-width: 640px) {
+  .meta {
+    padding-left: 0;
+    border-left: 0;
+    border-top: var(--rule-quiet);
+    padding-top: var(--space-4);
+  }
+}

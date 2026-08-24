@@ -1,0 +1,109 @@
+.section {
+  padding: 2.75rem 0 var(--space-8);
+  border-bottom: var(--rule);
+  scroll-margin-top: var(--scroll-offset);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-accent);
+}
+
+.masthead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-bottom: 0.875rem;
+  border-bottom: var(--rule-strong);
+}
+
+.title {
+  font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.5rem);
+  letter-spacing: -0.035em;
+}
+
+.thesis {
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--color-ink-strong);
+  max-width: 56ch;
+}
+
+/* Two-column body: prose left, evidence panel right, reflowing by basis. */
+.columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-7);
+}
+
+.prose {
+  display: flex;
+  flex: 1 1 400px;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.aside {
+  display: flex;
+  flex: 1 1 320px;
+  flex-direction: column;
+  gap: 0.875rem;
+  min-width: 0;
+  align-self: flex-start;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4375rem;
+}
+
+.fieldLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-meta-quiet);
+}
+
+.fieldBody {
+  font-size: 0.938rem;
+  line-height: 1.65;
+  color: var(--color-ink-secondary);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  color: var(--color-ink-secondary);
+}
+
+.tag {
+  padding: 0.25rem var(--space-2);
+  border: var(--rule);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3125rem;
+  margin: 0;
+  padding-left: 1.125rem;
+  font-size: 0.906rem;
+  line-height: 1.6;
+  color: var(--color-ink-tertiary);
+}

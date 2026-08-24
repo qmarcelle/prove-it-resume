@@ -1,0 +1,142 @@
+.hero {
+  border-bottom: var(--rule);
+}
+
+.inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-8) var(--space-7);
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: var(--space-8) var(--page-gutter) var(--space-8);
+}
+
+.lede {
+  display: flex;
+  flex: 1 1 520px;
+  flex-direction: column;
+  gap: 1.125rem;
+  min-width: 0;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--color-accent);
+}
+
+.headline {
+  font-size: clamp(2rem, 1.25rem + 3.2vw, 3.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  max-width: 17ch;
+}
+
+.thesis {
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  font-weight: 500;
+  color: var(--color-ink-strong);
+  max-width: 44ch;
+}
+
+.supporting {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--color-ink-secondary);
+  max-width: 62ch;
+}
+
+/*
+ * Action hierarchy. One primary action, then quiet secondary links. The design gave the
+ * résumé a bordered button of nearly equal weight; demoting it is deliberate — the
+ * proof is the argument, and the résumé is the fallback for processes that require one.
+ */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.125rem;
+  margin-top: var(--space-2);
+}
+
+.primary {
+  padding: 0.8125rem 1.25rem;
+  background: var(--color-ink);
+  color: var(--color-canvas);
+  border: 1px solid var(--color-ink);
+  border-radius: var(--radius);
+  font-size: 0.938rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease;
+}
+
+.primary:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.secondary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-lg);
+  color: var(--color-ink-tertiary);
+}
+
+.secondary a {
+  color: var(--color-ink-tertiary);
+  border-bottom: 1px solid var(--color-accent-border);
+  padding-bottom: 2px;
+}
+
+.secondary a:hover {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.divider {
+  color: var(--color-border);
+}
+
+.pending {
+  border-bottom: 1px dashed var(--color-border-dashed);
+  padding-bottom: 2px;
+  color: var(--color-ink-muted);
+}
+
+.capabilities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) 0.625rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  margin-top: 1.125rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-ink-secondary);
+}
+
+.capability {
+  padding: 0.3125rem 0.5625rem;
+  border: var(--rule);
+}
+
+@media (max-width: 640px) {
+  .inner {
+    gap: var(--space-7) var(--space-5);
+  }
+
+  .headline {
+    max-width: none;
+  }
+}

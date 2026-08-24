@@ -1,0 +1,55 @@
+.wrap {
+  border-top: var(--rule-strong);
+  /* Three-column mapping data; scrolls inside itself on narrow viewports. */
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+}
+
+.table th {
+  padding: 0.625rem 0;
+  text-align: left;
+  border-bottom: var(--rule);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  font-weight: 400;
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-meta-quiet);
+}
+
+.table th + th,
+.table td + td {
+  padding-left: var(--space-5);
+}
+
+.table td {
+  padding: var(--space-4) 0;
+  border-bottom: var(--rule-quiet);
+  vertical-align: top;
+}
+
+.problem {
+  width: 34%;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.evidence {
+  width: 24%;
+  font-family: var(--font-mono);
+  font-size: 0.813rem;
+  line-height: 1.55;
+  color: var(--color-accent-deep);
+}
+
+.discuss {
+  width: 42%;
+  font-size: 0.906rem;
+  line-height: 1.6;
+  color: var(--color-ink-tertiary);
+}

@@ -1,0 +1,48 @@
+.status {
+  display: flex;
+  align-items: center;
+  gap: 0.4375rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+}
+
+/*
+ * Each tone gets a distinct glyph as well as a distinct colour, so status survives
+ * greyscale, low vision, and every form of colour blindness. The mark is decorative;
+ * the adjacent text carries the meaning.
+ */
+.mark {
+  flex: none;
+}
+
+.shipped {
+  color: var(--color-accent-deep);
+}
+
+.shipped .mark {
+  width: 4px;
+  height: 9px;
+  background: var(--color-accent);
+}
+
+.implemented {
+  color: var(--color-ink-secondary);
+}
+
+.implemented .mark {
+  width: 4px;
+  height: 9px;
+  border: 1px solid var(--color-ink-secondary);
+}
+
+.controlled {
+  color: var(--color-ink-secondary);
+}
+
+.controlled .mark {
+  width: 6px;
+  height: 6px;
+  background: var(--color-ink-secondary);
+  transform: rotate(45deg);
+}
