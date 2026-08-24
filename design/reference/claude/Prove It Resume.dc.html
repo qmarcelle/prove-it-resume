@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #FAF9F6; color: #1A1A17; font-family: 'Public Sans', system-ui, sans-serif; }
+  a { color: #8A5A12; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  button { font: inherit; }
+  :focus-visible { outline: 2px solid #8A5A12; outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
+</style>
+</helmet>
+
+<div style="display: flex; flex-direction: column; background: #FAF9F6;">
+
+  <!-- ============ HEADER ============ -->
+  <header style="position: sticky; top: 0; z-index: 40; background: #FAF9F6; border-bottom: 1px solid #DEDBD2;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 13px 32px; display: flex; align-items: center; flex-wrap: wrap; gap: 14px 24px;">
+      <a href="#top" style="display: flex; align-items: baseline; gap: 10px; color: #1A1A17;">
+        <span style="font-size: 15px; font-weight: 700; letter-spacing: 0.01em;">QWYNN MARCELLE</span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.08em; color: #83817A;">/ PROVE IT RESUME</span>
+      </a>
+      <nav style="display: flex; flex-wrap: wrap; gap: 22px; margin-left: 18px; font-size: 14px;">
+        <a href="#sec-02" style="color: #45443E;">Proof</a>
+        <a href="#sec-03" style="color: #45443E;">Systems</a>
+        <a href="#sec-05" style="color: #45443E;">Role Fit</a>
+        <a href="#sec-06" style="color: #45443E;">Career</a>
+        <a href="#about" style="color: #45443E;">About</a>
+      </nav>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 16px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px;">
+        <a href="https://github.com/qmarcelle" style="color: #45443E;">GitHub ↗</a>
+        <a href="#resume" style="color: #8A5A12; border: 1px solid #D9C8A8; padding: 6px 11px; border-radius: 2px;" style-hover="background: #F6F1E6; text-decoration: none;">Résumé PDF ↓</a>
+      </div>
+    </div>
+    <sc-if value="{{ showAvailability }}" hint-placeholder-val="{{ true }}">
+      <div style="border-top: 1px solid #EDEAE1; background: #F6F5F0;">
+        <div style="max-width: 1280px; margin: 0 auto; padding: 6px 32px; display: flex; align-items: center; gap: 9px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #7A4F0F;">
+          <span style="width: 4px; height: 9px; background: #8A5A12;"></span>AVAILABLE FOR STAFF / PRINCIPAL AI PLATFORM WORK
+        </div>
+      </div>
+    </sc-if>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section id="top" style="border-bottom: 1px solid #DEDBD2;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 64px 32px 56px; display: flex; flex-wrap: wrap; gap: 56px 48px; align-items: flex-start;">
+      <div style="flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 18px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.1em; color: #8A5A12;">AI PLATFORM · DEVELOPER SYSTEMS · TECHNICAL LEADERSHIP</div>
+        <h1 style="margin: 0; font-size: 52px; line-height: 1.08; font-weight: 700; letter-spacing: -0.035em; max-width: 17ch; text-wrap: pretty;">I build the infrastructure between AI agents and production software.</h1>
+        <p style="margin: 0; font-size: 17px; line-height: 1.6; color: #45443E; max-width: 62ch; text-wrap: pretty;">MCP and tool surfaces, repository intelligence, developer platforms, CI/CD integration, agent coordination, and the evidence needed to determine whether the resulting system actually works.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 18px; align-items: center; margin-top: 8px;">
+          <button type="button" onClick="{{ walkProof }}" style="background: #1A1A17; color: #FAF9F6; padding: 13px 20px; font-size: 15px; font-weight: 600; border: 1px solid #1A1A17; border-radius: 2px; cursor: pointer;" style-hover="background: #8A5A12; border-color: #8A5A12;">Walk the proof →</button>
+          <a href="#resume" style="font-size: 15px; font-weight: 500; color: #1A1A17; border: 1px solid #DEDBD2; padding: 12px 18px; border-radius: 2px; background: #FFFFFF;" style-hover="border-color: #8A5A12; color: #8A5A12; text-decoration: none;">Open traditional résumé</a>
+          <a href="https://github.com/qmarcelle" style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #55534C; border-bottom: 1px solid #D9C8A8; padding-bottom: 2px;">github.com/qmarcelle ↗</a>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px 10px; margin-top: 18px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.07em; color: #45443E;">
+          <span style="border: 1px solid #DEDBD2; padding: 5px 9px;">MCP</span>
+          <span style="border: 1px solid #DEDBD2; padding: 5px 9px;">AGENTIC SYSTEMS</span>
+          <span style="border: 1px solid #DEDBD2; padding: 5px 9px;">DEVELOPER PLATFORMS</span>
+          <span style="border: 1px solid #DEDBD2; padding: 5px 9px;">CI/CD</span>
+          <span style="border: 1px solid #DEDBD2; padding: 5px 9px;">REPOSITORY INTELLIGENCE</span>
+          <span style="border: 1px solid #DEDBD2; padding: 5px 9px;">ENTERPRISE HEALTHCARE</span>
+        </div>
+      </div>
+
+      <div style="flex: 1 1 380px; min-width: 0; border: 1px solid #DEDBD2; background: #FFFFFF;">
+        <div style="display: flex; align-items: baseline; gap: 12px; padding: 12px 18px; border-bottom: 1px solid #DEDBD2; background: #F2F0E9;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em; color: #7A4F0F;">EVIDENCE INDEX</span>
+          <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #83817A;">REV 2026.08</span>
+        </div>
+        <a href="#sec-02" style="display: flex; gap: 16px; padding: 18px; border-bottom: 1px solid #EDEAE1; color: #1A1A17;" style-hover="background: #FCFBF8; text-decoration: none;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A5A29A; padding-top: 3px;">01</span>
+          <span style="display: flex; flex-direction: column; gap: 5px;">
+            <span style="font-size: 19px; font-weight: 700; letter-spacing: -0.02em;">Vreko</span>
+            <span style="font-size: 14px; color: #55534C;">MCP + agent intelligence</span>
+            <span style="display: flex; align-items: center; gap: 7px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #7A4F0F; margin-top: 3px;"><span style="width: 4px; height: 9px; background: #8A5A12;"></span>SHIPPED SYSTEM</span>
+          </span>
+        </a>
+        <a href="#sec-03" style="display: flex; gap: 16px; padding: 18px; border-bottom: 1px solid #EDEAE1; color: #1A1A17;" style-hover="background: #FCFBF8; text-decoration: none;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A5A29A; padding-top: 3px;">02</span>
+          <span style="display: flex; flex-direction: column; gap: 5px;">
+            <span style="font-size: 19px; font-weight: 700; letter-spacing: -0.02em;">Repository Intelligence</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #55534C;">workspace.json → Codex → Tally</span>
+            <span style="display: flex; align-items: center; gap: 7px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #45443E; margin-top: 3px;"><span style="width: 4px; height: 9px; border: 1px solid #45443E;"></span>STANDARD · IMPLEMENTED · INTEGRATED</span>
+          </span>
+        </a>
+        <a href="#sec-04" style="display: flex; gap: 16px; padding: 18px; border-bottom: 1px solid #EDEAE1; color: #1A1A17;" style-hover="background: #FCFBF8; text-decoration: none;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A5A29A; padding-top: 3px;">03</span>
+          <span style="display: flex; flex-direction: column; gap: 5px;">
+            <span style="font-size: 19px; font-weight: 700; letter-spacing: -0.02em;">Interlock</span>
+            <span style="font-size: 14px; color: #55534C;">Agent coordination</span>
+            <span style="display: flex; align-items: center; gap: 7px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #45443E; margin-top: 3px;"><span style="width: 6px; height: 6px; background: #45443E; transform: rotate(45deg);"></span>CONTROLLED EVIDENCE</span>
+          </span>
+        </a>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 12px 18px; background: #FCFBF8; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #83817A;">
+          <span>3 proof paths</span><span style="color: #C9C3B8;">·</span>
+          <a href="https://github.com/qmarcelle" style="color: #8A5A12;">inspect source ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BODY: RAIL + PROOF ============ -->
+  <div style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; flex-wrap: wrap; gap: 0 48px; align-items: flex-start; width: 100%; box-sizing: border-box;">
+
+    <aside style="flex: 1 1 180px; max-width: 100%; position: sticky; top: 82px; z-index: 20; background: #FAF9F6; padding: 28px 0 20px; align-self: flex-start;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #A5A29A; padding-bottom: 10px;">PROOF PROGRESS</div>
+      <div style="display: flex; flex-wrap: wrap; border-top: 1px solid #DEDBD2; border-bottom: 1px solid #DEDBD2;">
+        <sc-for list="{{ rail }}" as="step" hint-placeholder-count="6">
+          <button type="button" onClick="{{ step.go }}" aria-current="{{ step.current }}" style="{{ step.style }}">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em;">{{ step.n }}</span>
+            <span style="font-size: 13.5px;">{{ step.label }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </aside>
+
+    <main style="flex: 999 1 660px; min-width: 0; display: flex; flex-direction: column;">
+
+      <!-- ---------- 01 PROBLEM ---------- -->
+      <section id="sec-01" style="padding: 44px 0 56px; border-bottom: 1px solid #DEDBD2; scroll-margin-top: 100px;">
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em; color: #8A5A12;">01 / OPERATING THESIS</div>
+          <h2 style="margin: 0; font-size: 34px; line-height: 1.18; font-weight: 700; letter-spacing: -0.03em; max-width: 24ch; text-wrap: pretty;">AI agents are easy to demo. Production developer systems are harder.</h2>
+          <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 8px;">
+            <div style="flex: 1 1 240px; border-top: 2px solid #1A1A17; padding: 14px 0 0; display: flex; flex-direction: column; gap: 8px;">
+              <h3 style="margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.015em;">Context</h3>
+              <p style="margin: 0; font-size: 14.5px; line-height: 1.65; color: #55534C; text-wrap: pretty;">Agents make decisions with incomplete, stale, fragmented, or poorly surfaced repository context.</p>
+            </div>
+            <div style="flex: 1 1 240px; border-top: 2px solid #1A1A17; padding: 14px 0 0; display: flex; flex-direction: column; gap: 8px;">
+              <h3 style="margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.015em;">Integration</h3>
+              <p style="margin: 0; font-size: 14.5px; line-height: 1.65; color: #55534C; text-wrap: pretty;">Giving an agent access to another tool does not automatically mean the tool will be considered at the right decision point.</p>
+            </div>
+            <div style="flex: 1 1 240px; border-top: 2px solid #1A1A17; padding: 14px 0 0; display: flex; flex-direction: column; gap: 8px;">
+              <h3 style="margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.015em;">Evidence</h3>
+              <p style="margin: 0; font-size: 14.5px; line-height: 1.65; color: #55534C; text-wrap: pretty;">A successful-looking agent run is not enough. Production systems need observable boundaries, reproducible behavior, and explicit limitations.</p>
+            </div>
+          </div>
+          <p style="margin: 14px 0 0; border-left: 2px solid #D9C8A8; padding-left: 16px; font-size: 16px; line-height: 1.6; color: #38372F; max-width: 60ch;">Most of my recent work explores different parts of this boundary.</p>
+          <div style="margin-top: 10px;">
+            <button type="button" onClick="{{ toProof }}" style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8A5A12; background: transparent; border: 1px solid #D9C8A8; padding: 10px 15px; border-radius: 2px; cursor: pointer;" style-hover="background: #F6F1E6;">Show me what you built ↓</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- 02 VREKO ---------- -->
+      <section id="sec-02" style="padding: 44px 0 56px; border-bottom: 1px solid #DEDBD2; scroll-margin-top: 100px;">
+        <div style="display: flex; flex-direction: column; gap: 22px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em; color: #8A5A12;">02 / PROOF ONE</div>
+          <div style="display: flex; flex-direction: column; gap: 8px; border-bottom: 2px solid #1A1A17; padding-bottom: 14px;">
+            <h2 style="margin: 0; font-size: 40px; font-weight: 700; letter-spacing: -0.035em;">Vreko</h2>
+            <p style="margin: 0; font-size: 17px; font-weight: 500; color: #38372F; max-width: 52ch; text-wrap: pretty;">MCP and codebase intelligence for agentic development workflows</p>
+          </div>
+
+          <div style="display: flex; flex-wrap: wrap; gap: 40px;">
+            <div style="flex: 1 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 22px;">
+              <div style="display: flex; flex-direction: column; gap: 7px;">
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #A5A29A;">PROBLEM</div>
+                <p style="margin: 0; font-size: 15px; line-height: 1.65; color: #45443E; text-wrap: pretty;">Coding agents enter complex repositories with limited durable understanding of project-specific risks, prior discoveries, and operating context.</p>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 7px;">
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #A5A29A;">BUILT</div>
+                <p style="margin: 0; font-size: 15px; line-height: 1.65; color: #45443E; text-wrap: pretty;">An MCP-based intelligence surface designed to expose repository and session context to compatible AI assistants.</p>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 9px;">
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #A5A29A;">ENGINEERING SURFACE</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 7px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #45443E;">
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">MCP</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">JSON-RPC</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">TypeScript</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">Node</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">Authentication</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">Agent lifecycle</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">Tool contracts</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">Cloud deployment</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">CI/CD</span>
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 9px;">
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #A5A29A;">WHAT THIS DEMONSTRATES</div>
+                <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 5px; font-size: 14.5px; line-height: 1.6; color: #55534C;">
+                  <li>MCP implementation beyond a toy tool</li>
+                  <li>protocol and application-boundary thinking</li>
+                  <li>agent/tool interface design</li>
+                  <li>state and session concepts</li>
+                  <li>deployment and authentication concerns</li>
+                  <li>developer-experience thinking</li>
+                </ul>
+              </div>
+            </div>
+
+            <div style="flex: 1 1 320px; min-width: 0; border: 1px solid #DEDBD2; background: #FFFFFF; align-self: flex-start;">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-bottom: 1px solid #DEDBD2; background: #F2F0E9; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em;">
+                <span style="display: flex; align-items: center; gap: 7px; color: #7A4F0F;"><span style="width: 4px; height: 9px; background: #8A5A12;"></span>VERIFY THIS</span>
+                <span style="margin-left: auto; color: #83817A;">EV-VRK</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-bottom: 1px solid #EDEAE1;">
+                <span style="font-size: 14.5px; font-weight: 600;">Repository</span>
+                <div style="display: flex; align-items: baseline; gap: 12px;">
+                  <span style="font-size: 14px; color: #55534C;">Vreko MCP Server</span>
+                  <a href="https://github.com/qmarcelle" style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.07em; color: #8A5A12; white-space: nowrap;">OPEN GITHUB ↗</a>
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-bottom: 1px solid #EDEAE1;">
+                <span style="font-size: 14.5px; font-weight: 600;">Architecture</span>
+                <div style="display: flex; align-items: baseline; gap: 12px;">
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #55534C;">Transport → MCP protocol → intelligence layer</span>
+                  <a href="#sec-02" style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.07em; color: #8A5A12; white-space: nowrap;">INSPECT ↗</a>
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-bottom: 1px solid #EDEAE1;">
+                <span style="font-size: 14.5px; font-weight: 600;">Agent workflow</span>
+                <div style="display: flex; align-items: baseline; gap: 12px;">
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #55534C;">brief → pulse → learn → end</span>
+                  <a href="#sec-02" style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.07em; color: #8A5A12; white-space: nowrap;">INSPECT ↗</a>
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-bottom: 1px solid #EDEAE1;">
+                <span style="font-size: 14.5px; font-weight: 600;">Deployment</span>
+                <div style="display: flex; align-items: baseline; gap: 12px;">
+                  <span style="font-size: 14px; color: #55534C;">local + hosted execution paths</span>
+                  <a href="#sec-02" style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.07em; color: #8A5A12; white-space: nowrap;">INSPECT ↗</a>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 16px; background: #FCFBF8; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #83817A;">
+                Evidence source: public GitHub repository
+              </div>
+              <button type="button" onClick="{{ d.vreko.toggle }}" aria-expanded="{{ d.vreko.expanded }}" style="width: 100%; box-sizing: border-box; text-align: left; display: flex; align-items: center; gap: 10px; padding: 11px 16px; border: 0; border-top: 1px solid #DEDBD2; background: #F6F5F0; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.07em; color: #7A4F0F; cursor: pointer;" style-hover="background: #F6F1E6;">
+                {{ d.vreko.label }}
+              </button>
+            </div>
+          </div>
+
+          <sc-if value="{{ d.vreko.open }}" hint-placeholder-val="{{ false }}">
+            <div style="border: 1px solid #DEDBD2; border-top: 2px solid #1A1A17; background: #FFFFFF;">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid #EDEAE1; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #83817A;">
+                <span>EVIDENCE DRAWER</span><span style="margin-left: auto;">VREKO</span>
+              </div>
+              <sc-for list="{{ d.vreko.rows }}" as="row" hint-placeholder-count="4">
+                <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 13px 16px; border-bottom: 1px solid #EDEAE1;">
+                  <div style="flex: 0 0 132px; display: flex; align-items: center; gap: 7px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #45443E;">{{ row.type }}</div>
+                  <div style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 4px; min-width: 0;">
+                    <span style="font-size: 14.5px; font-weight: 600;">{{ row.title }}</span>
+                    <span style="font-size: 14px; line-height: 1.6; color: #55534C; text-wrap: pretty;">{{ row.detail }}</span>
+                  </div>
+                </div>
+              </sc-for>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 13px 16px; background: #FCFBF8;">
+                <div style="flex: 0 0 132px; display: flex; align-items: center; gap: 7px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #6E6C64;"><span style="width: 8px; height: 1px; background: #6E6C64;"></span>BOUNDARY</div>
+                <p style="flex: 1 1 300px; margin: 0; font-size: 14px; line-height: 1.6; color: #38372F; text-wrap: pretty;">Public source establishes that the system exists and how it is built. It does not establish adoption, usage volume, or production scale outside the repositories where it has been applied.</p>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </section>
+
+      <!-- ---------- 03 WORKSPACE.JSON ---------- -->
+      <section id="sec-03" style="padding: 44px 0 56px; border-bottom: 1px solid #DEDBD2; scroll-margin-top: 100px;">
+        <div style="display: flex; flex-direction: column; gap: 22px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em; color: #8A5A12;">03 / PROOF TWO</div>
+          <div style="display: flex; flex-direction: column; gap: 8px; border-bottom: 2px solid #1A1A17; padding-bottom: 14px;">
+            <h2 style="margin: 0; font-size: 40px; font-weight: 700; letter-spacing: -0.035em;">Repository Intelligence</h2>
+            <p style="margin: 0; font-size: 17px; font-weight: 500; color: #38372F; max-width: 56ch; text-wrap: pretty;">Making repository evidence useful to an agent at decision time — contract, agent implementation, enterprise integration.</p>
+          </div>
+
+          <div style="border: 1px solid #DEDBD2; background: #FFFFFF; padding: 18px 16px; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px;">
+            <span style="border: 1px solid #DEDBD2; background: #F6F5F0; padding: 9px 12px;">REPOSITORY</span>
+            <span style="flex: 1 1 20px; height: 1px; background: #DEDBD2; min-width: 16px;"></span>
+            <span style="color: #A5A29A;">→</span>
+            <span style="border: 1px solid #D9C8A8; background: #F6F1E6; color: #7A4F0F; padding: 9px 12px;">.agents/workspace.json</span>
+            <span style="flex: 1 1 20px; height: 1px; background: #DEDBD2; min-width: 16px;"></span>
+            <span style="color: #A5A29A;">→</span>
+            <span style="border: 1px solid #DEDBD2; background: #F6F5F0; padding: 9px 12px;">AGENTS / TOOLS / INTEGRATIONS</span>
+          </div>
+
+          <!-- three layers -->
+          <div style="display: flex; flex-direction: column; gap: 0;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #A5A29A; padding-bottom: 10px;">THREE LAYERS · ONE PROOF</div>
+
+            <div style="border: 1px solid #DEDBD2; border-top: 2px solid #1A1A17; background: #FFFFFF; display: flex; flex-wrap: wrap; gap: 12px 28px; padding: 18px 18px 20px;">
+              <div style="flex: 0 1 190px; display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #7A4F0F;">STANDARD</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 17px; letter-spacing: -0.02em; color: #1A1A17;">workspace.json</span>
+              </div>
+              <div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 10px;">
+                <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #45443E; text-wrap: pretty;">A neutral, Apache-2.0 contract for repository-derived intelligence, committed alongside the code it describes.</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 7px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #45443E;">
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">SPECIFICATION</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">JSON Schema</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">Governance</span>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 8px 18px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #A5A29A;"><span style="width: 1px; height: 18px; background: #DEDBD2; margin-left: 6px;"></span>↓</div>
+
+            <div style="border: 1px solid #DEDBD2; background: #FFFFFF; display: flex; flex-wrap: wrap; gap: 12px 28px; padding: 18px 18px 20px;">
+              <div style="flex: 0 1 190px; display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #7A4F0F;">AGENT IMPLEMENTATION</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 17px; letter-spacing: -0.02em; color: #1A1A17;">workspace.json for Codex</span>
+              </div>
+              <div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 10px;">
+                <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #45443E; text-wrap: pretty;">Portable repository history that changes Codex's plan before an evidenced risky edit lands.</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 7px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #45443E;">
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">Codex</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">MCP</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">Hooks</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">Co-change / fragility</span>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 8px 18px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #A5A29A;"><span style="width: 1px; height: 18px; background: #DEDBD2; margin-left: 6px;"></span>↓</div>
+
+            <div style="border: 1px solid #D9C8A8; background: #FCFBF8; display: flex; flex-wrap: wrap; gap: 12px 28px; padding: 18px 18px 20px;">
+              <div style="flex: 0 1 190px; display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #7A4F0F;">ENTERPRISE INTEGRATION</span>
+                <span style="font-size: 19px; font-weight: 700; letter-spacing: -0.02em; color: #1A1A17;">Tally</span>
+                <span style="font-size: 13.5px; color: #55534C;">Change impact cockpit</span>
+              </div>
+              <div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 10px;">
+                <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #45443E; text-wrap: pretty;">Joins DataHub context with repository evidence. Resolves the coordinate mismatch between dbt paths and git-root paths, where the naive join silently returns zero, then compares paired plans to see whether the joined evidence changes what the model can do.</p>
+                <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #45443E; text-wrap: pretty;">Writeback is independently checked rather than treated as observed because an API call returned successfully.</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 7px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #45443E;">
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">DataHub</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">dbt</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">Path resolution</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">Paired plan comparison</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">Writeback verification</span>
+                </div>
+                <a href="https://www.workspacejson.dev/showcase/tally" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.07em; color: #8A5A12; align-self: flex-start;">READ THE TALLY CASE ↗</a>
+              </div>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid #DEDBD2; border-bottom: 1px solid #DEDBD2; padding: 16px 0; display: flex; flex-direction: column; gap: 8px;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #A5A29A;">THE ARGUMENT IN ONE LINE</span>
+            <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #38372F; max-width: 78ch; text-wrap: pretty;">Identified a repository-context problem, designed a portable contract, implemented it for a coding agent, integrated it with an enterprise metadata system, then tested whether the information actually changed the plan.</p>
+          </div>
+
+          <div style="display: flex; flex-wrap: wrap; gap: 40px;">
+            <div style="flex: 1 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 22px;">
+              <div style="display: flex; flex-direction: column; gap: 7px;">
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #A5A29A;">PROBLEM</div>
+                <p style="margin: 0; font-size: 15px; line-height: 1.65; color: #45443E; text-wrap: pretty;">Important repository-derived information is scattered across files, conventions, tools, and provider-specific mechanisms.</p>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 7px;">
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #A5A29A;">WORK</div>
+                <p style="margin: 0; font-size: 15px; line-height: 1.65; color: #45443E; text-wrap: pretty;">Designed and stewarded an Apache-2.0 descriptive standard for committing repository intelligence in a deterministic, tool-consumable form.</p>
+              </div>
+              <div style="border: 1px solid #D9C8A8; background: #F6F1E6; padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #7A4F0F;"><span style="width: 6px; height: 6px; border-radius: 50%; border: 1px solid #8A5A12;"></span>ACTIVE RESEARCH QUESTION</div>
+                <p style="margin: 0; font-size: 19px; line-height: 1.45; font-weight: 600; letter-spacing: -0.015em; color: #1A1A17; text-wrap: pretty;">What repository-derived information, available at decision time, can causally improve an AI agent's decision?</p>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 9px;">
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #A5A29A;">WHAT THIS DEMONSTRATES</div>
+                <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 5px; font-size: 14.5px; line-height: 1.6; color: #55534C;">
+                  <li>standards thinking</li>
+                  <li>schema and contract design</li>
+                  <li>governance</li>
+                  <li>producer/consumer boundaries</li>
+                  <li>evidence discipline</li>
+                  <li>open-source stewardship</li>
+                  <li>implementing a specification I authored against a real coding agent</li>
+                  <li>integration engineering across enterprise metadata and repository evidence</li>
+                  <li>ability to distinguish descriptive infrastructure from prescriptive agent policy</li>
+                </ul>
+              </div>
+            </div>
+
+            <div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 14px; align-self: flex-start;">
+              <div style="border: 1px solid #DEDBD2; background: #FFFFFF;">
+                <div style="display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-bottom: 1px solid #DEDBD2; background: #F2F0E9; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em;">
+                  <span style="display: flex; align-items: center; gap: 7px; color: #45443E;"><span style="width: 4px; height: 9px; border: 1px solid #45443E;"></span>VERIFY THIS</span>
+                  <span style="margin-left: auto; color: #83817A;">EV-WSJ</span>
+                </div>
+                <div style="display: flex; align-items: baseline; gap: 12px; padding: 13px 16px; border-bottom: 1px solid #EDEAE1;">
+                  <span style="font-size: 14.5px; font-weight: 600;">Canonical specification</span>
+                  <a href="https://github.com/qmarcelle" style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.07em; color: #8A5A12; white-space: nowrap;">VIEW REPOSITORY ↗</a>
+                </div>
+                <div style="display: flex; align-items: baseline; gap: 12px; padding: 13px 16px; border-bottom: 1px solid #EDEAE1;">
+                  <span style="font-size: 14.5px; font-weight: 600;">JSON Schema / types</span>
+                  <a href="#sec-03" style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.07em; color: #8A5A12; white-space: nowrap;">INSPECT ↗</a>
+                </div>
+                <div style="display: flex; align-items: baseline; gap: 12px; padding: 13px 16px; border-bottom: 1px solid #EDEAE1;">
+                  <span style="font-size: 14.5px; font-weight: 600;">CLI / producer tooling</span>
+                  <a href="#sec-03" style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.07em; color: #8A5A12; white-space: nowrap;">INSPECT ↗</a>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 5px; padding: 13px 16px; border-bottom: 1px solid #EDEAE1;">
+                  <span style="font-size: 14.5px; font-weight: 600;">Codex implementation</span>
+                  <div style="display: flex; align-items: baseline; gap: 12px;">
+                    <span style="font-size: 14px; color: #55534C;">agent-side hooks and repository history</span>
+                    <a href="https://github.com/qmarcelle" style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.07em; color: #8A5A12; white-space: nowrap;">OPEN GITHUB ↗</a>
+                  </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 5px; padding: 13px 16px; border-bottom: 1px solid #EDEAE1;">
+                  <span style="font-size: 14.5px; font-weight: 600;">Tally · DataHub integration</span>
+                  <div style="display: flex; align-items: baseline; gap: 12px;">
+                    <span style="font-size: 14px; color: #55534C;">paired plan comparison + writeback check</span>
+                    <a href="https://www.workspacejson.dev/showcase/tally" style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.07em; color: #8A5A12; white-space: nowrap;">READ CASE ↗</a>
+                  </div>
+                </div>
+                <div style="display: flex; align-items: baseline; gap: 12px; padding: 13px 16px;">
+                  <span style="font-size: 14.5px; font-weight: 600;">Integrations</span>
+                  <a href="#sec-03" style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.07em; color: #8A5A12; white-space: nowrap;">INSPECT ↗</a>
+                </div>
+                <button type="button" onClick="{{ d.workspace.toggle }}" aria-expanded="{{ d.workspace.expanded }}" style="width: 100%; box-sizing: border-box; text-align: left; display: flex; align-items: center; gap: 10px; padding: 11px 16px; border: 0; border-top: 1px solid #DEDBD2; background: #F6F5F0; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.07em; color: #7A4F0F; cursor: pointer;" style-hover="background: #F6F1E6;">
+                  {{ d.workspace.label }}
+                </button>
+              </div>
+              <div style="border-left: 2px dashed #B3AFA4; padding: 2px 0 2px 14px; display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #6E6C64;">BOUNDARY NOTE</span>
+                <p style="margin: 0; font-size: 13.5px; line-height: 1.6; color: #55534C; text-wrap: pretty;">workspace.json is presented here as an independent open standard, not as a Vreko feature.</p>
+              </div>
+            </div>
+          </div>
+
+          <sc-if value="{{ d.workspace.open }}" hint-placeholder-val="{{ false }}">
+            <div style="border: 1px solid #DEDBD2; border-top: 2px solid #1A1A17; background: #FFFFFF;">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid #EDEAE1; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #83817A;">
+                <span>EVIDENCE DRAWER</span><span style="margin-left: auto;">WORKSPACE.JSON</span>
+              </div>
+              <sc-for list="{{ d.workspace.rows }}" as="row" hint-placeholder-count="4">
+                <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 13px 16px; border-bottom: 1px solid #EDEAE1;">
+                  <div style="flex: 0 0 132px; display: flex; align-items: center; gap: 7px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #45443E;">{{ row.type }}</div>
+                  <div style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 4px; min-width: 0;">
+                    <span style="font-size: 14.5px; font-weight: 600;">{{ row.title }}</span>
+                    <span style="font-size: 14px; line-height: 1.6; color: #55534C; text-wrap: pretty;">{{ row.detail }}</span>
+                  </div>
+                </div>
+              </sc-for>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 13px 16px; background: #FCFBF8;">
+                <div style="flex: 0 0 132px; display: flex; align-items: center; gap: 7px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #6E6C64;"><span style="width: 8px; height: 1px; background: #6E6C64;"></span>BOUNDARY</div>
+                <p style="flex: 1 1 300px; margin: 0; font-size: 14px; line-height: 1.6; color: #38372F; text-wrap: pretty;">The specification establishes a repository-level contract and its governance. It does not establish adoption outside the repositories where it has been applied, and it is independent from proprietary Vreko behavior.</p>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </section>
+
+      <!-- ---------- 04 INTERLOCK ---------- -->
+      <section id="sec-04" style="padding: 44px 0 56px; border-bottom: 1px solid #DEDBD2; scroll-margin-top: 100px;">
+        <div style="display: flex; flex-direction: column; gap: 22px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em; color: #8A5A12;">04 / PROOF THREE</div>
+          <div style="display: flex; flex-direction: column; gap: 8px; border-bottom: 2px solid #1A1A17; padding-bottom: 14px;">
+            <h2 style="margin: 0; font-size: 40px; font-weight: 700; letter-spacing: -0.035em;">Interlock</h2>
+            <p style="margin: 0; font-size: 17px; font-weight: 500; color: #38372F; max-width: 56ch; text-wrap: pretty;">Can environment evidence change a coordination decision before shared-state mutation?</p>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #83817A;">
+            <span style="width: 5px; height: 5px; background: #45443E; transform: rotate(45deg);"></span>REPRODUCIBLE EVIDENCE &gt; DEMO
+          </div>
+
+          <div style="display: flex; flex-wrap: wrap; gap: 16px;">
+            <div style="flex: 1 1 300px; min-width: 0; border: 1px solid #DEDBD2; background: #FFFFFF; display: flex; flex-direction: column;">
+              <div style="padding: 11px 16px; border-bottom: 1px solid #EDEAE1; background: #F6F5F0; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em; color: #45443E;">WITHOUT COORDINATION</div>
+              <div style="padding: 18px 16px; display: flex; flex-direction: column; gap: 12px; flex: 1;">
+                <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #45443E;">Two locally valid intents</p>
+                <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #45443E;">Joint state exceeds bounded constraint</p>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 30px; letter-spacing: -0.01em; color: #1A1A17; padding: 8px 0;">140 &gt; 130</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 9px; padding: 11px 16px; border-top: 1px solid #EDEAE1; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em; color: #45443E;">
+                <span style="width: 9px; height: 9px; border: 1px solid #45443E; transform: rotate(45deg);"></span>INVALID JOINT OUTCOME
+              </div>
+            </div>
+            <div style="flex: 1 1 300px; min-width: 0; border: 1px solid #D9C8A8; background: #FFFFFF; display: flex; flex-direction: column;">
+              <div style="padding: 11px 16px; border-bottom: 1px solid #EDEAE1; background: #F6F1E6; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em; color: #7A4F0F;">WITH INTERLOCK</div>
+              <div style="padding: 18px 16px; display: flex; flex-direction: column; gap: 12px; flex: 1;">
+                <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #45443E;">Evidence-bound decision</p>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 14px; letter-spacing: 0.04em; color: #7A4F0F; border: 1px solid #D9C8A8; background: #F6F1E6; padding: 7px 10px; align-self: flex-start;">WITHHOLD_SERIALIZE</div>
+                <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #45443E;">Observed bounded result</p>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 30px; letter-spacing: -0.01em; color: #1A1A17;">120 ≤ 130</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 9px; padding: 11px 16px; border-top: 1px solid #EDEAE1; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em; color: #7A4F0F;">
+                <span style="width: 4px; height: 9px; background: #8A5A12;"></span>CONSTRAINT SATISFIED
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-wrap: wrap; gap: 40px; margin-top: 6px;">
+            <div style="flex: 1 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 12px;">
+              <h3 style="margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.02em;">Why this belongs in a résumé</h3>
+              <p style="margin: 0; font-size: 15px; line-height: 1.65; color: #45443E; text-wrap: pretty;">Interlock demonstrates how I approach systems where an AI/agent component is only one part of the engineering problem:</p>
+              <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 5px; font-size: 14.5px; line-height: 1.6; color: #55534C;">
+                <li>define the decision boundary</li>
+                <li>bind decisions to evidence</li>
+                <li>test counterfactuals</li>
+                <li>separate execution from observation</li>
+                <li>distinguish provenance layers</li>
+                <li>preserve negative findings</li>
+                <li>state explicitly what the experiment does <strong style="font-weight: 700;">not</strong> prove</li>
+              </ul>
+            </div>
+
+            <div style="flex: 1 1 320px; min-width: 0; border: 1px solid #DEDBD2; background: #FFFFFF; align-self: flex-start;">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-bottom: 1px solid #DEDBD2; background: #F2F0E9; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em;">
+                <span style="display: flex; align-items: center; gap: 7px; color: #45443E;"><span style="width: 6px; height: 6px; background: #45443E; transform: rotate(45deg);"></span>VERIFY THIS</span>
+                <span style="margin-left: auto; color: #83817A;">EV-ILK</span>
+              </div>
+              <div style="display: flex; align-items: baseline; gap: 12px; padding: 13px 16px; border-bottom: 1px solid #EDEAE1;">
+                <span style="font-size: 14.5px; font-weight: 600;">Controlled experiment</span>
+                <a href="#sec-04" style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.07em; color: #8A5A12;">INSPECT ↗</a>
+              </div>
+              <div style="display: flex; align-items: baseline; gap: 12px; padding: 13px 16px; border-bottom: 1px solid #EDEAE1;">
+                <span style="font-size: 14.5px; font-weight: 600;">Frozen evidence packet</span>
+                <a href="#sec-04" style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.07em; color: #8A5A12;">INSPECT ↗</a>
+              </div>
+              <div style="display: flex; align-items: baseline; gap: 12px; padding: 13px 16px; border-bottom: 1px solid #EDEAE1;">
+                <span style="font-size: 14.5px; font-weight: 600;">Independent verifier</span>
+                <a href="#sec-04" style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.07em; color: #8A5A12;">INSPECT ↗</a>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 5px; padding: 13px 16px; border-bottom: 1px solid #EDEAE1;">
+                <span style="font-size: 14.5px; font-weight: 600;">Cloud traversal</span>
+                <div style="display: flex; align-items: baseline; gap: 12px;">
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #55534C;">Google ADK + Vertex AI + Cloud Run + MCP proxy</span>
+                  <a href="#sec-04" style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.07em; color: #8A5A12; white-space: nowrap;">INSPECT ↗</a>
+                </div>
+              </div>
+              <div style="display: flex; align-items: baseline; gap: 12px; padding: 13px 16px;">
+                <span style="font-size: 14.5px; font-weight: 600;">Claim boundaries</span>
+                <a href="#ledger" style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.07em; color: #8A5A12;">READ ↗</a>
+              </div>
+              <button type="button" onClick="{{ d.interlock.toggle }}" aria-expanded="{{ d.interlock.expanded }}" style="width: 100%; box-sizing: border-box; text-align: left; display: flex; align-items: center; gap: 10px; padding: 11px 16px; border: 0; border-top: 1px solid #DEDBD2; background: #F6F5F0; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.07em; color: #7A4F0F; cursor: pointer;" style-hover="background: #F6F1E6;">
+                {{ d.interlock.label }}
+              </button>
+            </div>
+          </div>
+
+          <sc-if value="{{ d.interlock.open }}" hint-placeholder-val="{{ false }}">
+            <div style="border: 1px solid #DEDBD2; border-top: 2px solid #1A1A17; background: #FFFFFF;">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid #EDEAE1; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #83817A;">
+                <span>EVIDENCE DRAWER</span><span style="margin-left: auto;">INTERLOCK</span>
+              </div>
+              <sc-for list="{{ d.interlock.rows }}" as="row" hint-placeholder-count="4">
+                <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 13px 16px; border-bottom: 1px solid #EDEAE1;">
+                  <div style="flex: 0 0 132px; display: flex; align-items: center; gap: 7px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #45443E;">{{ row.type }}</div>
+                  <div style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 4px; min-width: 0;">
+                    <span style="font-size: 14.5px; font-weight: 600;">{{ row.title }}</span>
+                    <span style="font-size: 14px; line-height: 1.6; color: #55534C; text-wrap: pretty;">{{ row.detail }}</span>
+                  </div>
+                </div>
+              </sc-for>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 13px 16px; background: #FCFBF8;">
+                <div style="flex: 0 0 132px; display: flex; align-items: center; gap: 7px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #6E6C64;"><span style="width: 8px; height: 1px; background: #6E6C64;"></span>BOUNDARY</div>
+                <p style="flex: 1 1 300px; margin: 0; font-size: 14px; line-height: 1.6; color: #38372F; text-wrap: pretty;">A bounded experiment under stated conditions. It is not a universal safety proof, and it does not establish behavior outside the constraint and environment described in the evidence packet.</p>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </section>
+
+      <!-- ---------- 05 ROLE FIT ---------- -->
+      <section id="sec-05" style="padding: 44px 0 56px; border-bottom: 1px solid #DEDBD2; scroll-margin-top: 100px;">
+        <div style="display: flex; flex-direction: column; gap: 22px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em; color: #8A5A12;">05 / APPLY THE EVIDENCE</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.08em;">
+            <span style="border: 1px solid #D9C8A8; background: #F6F1E6; color: #7A4F0F; padding: 6px 10px;">ROLE LENS: {{ roleTitleUpper }}</span>
+            <sc-if value="{{ hasOrg }}" hint-placeholder-val="{{ true }}">
+              <span style="border: 1px solid #DEDBD2; color: #45443E; padding: 6px 10px;">{{ roleOrgUpper }}</span>
+            </sc-if>
+          </div>
+          <h2 style="margin: 0; font-size: 34px; line-height: 1.18; font-weight: 700; letter-spacing: -0.03em; max-width: 24ch; text-wrap: pretty;">What these systems have to do with your problem.</h2>
+
+          <div style="border-top: 2px solid #1A1A17; display: flex; flex-direction: column;">
+            <div style="display: flex; flex-wrap: wrap; gap: 6px 20px; padding: 10px 0; border-bottom: 1px solid #DEDBD2; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #A5A29A;">
+              <span style="flex: 1 1 220px;">YOUR ENGINEERING PROBLEM</span>
+              <span style="flex: 0 1 180px;">RELEVANT EVIDENCE</span>
+              <span style="flex: 1 1 260px;">WHAT I CAN DISCUSS IN DEPTH</span>
+            </div>
+            <sc-for list="{{ mapping }}" as="row" hint-placeholder-count="6">
+              <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 16px 0; border-bottom: 1px solid #EDEAE1;">
+                <h3 style="flex: 1 1 220px; margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -0.015em; text-wrap: pretty;">{{ row.problem }}</h3>
+                <div style="flex: 0 1 180px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #7A4F0F;">{{ row.evidence }}</div>
+                <div style="flex: 1 1 260px; font-size: 14.5px; line-height: 1.6; color: #55534C; text-wrap: pretty;">{{ row.discuss }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="border: 1px solid #1A1A17; background: #1A1A17; color: #FAF9F6; padding: 26px 24px; display: flex; flex-direction: column; gap: 16px; margin-top: 10px;">
+            <h3 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.025em;">Ask me to defend a decision.</h3>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{ prompts }}" as="p" hint-placeholder-count="7">
+                <button type="button" onClick="{{ p.toggle }}" aria-pressed="{{ p.pressed }}" style="{{ p.style }}">
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #C9B98F;">{{ p.mark }}</span>
+                  <span style="font-size: 15px; line-height: 1.5; text-align: left;">{{ p.text }}</span>
+                </button>
+              </sc-for>
+            </div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.08em; color: #A5A29A; border-top: 1px solid #3A3833; padding-top: 12px;">{{ pickedLine }}</div>
+          </div>
+
+          <!-- HOW I WOULD START -->
+          <div style="display: flex; flex-direction: column; gap: 18px; margin-top: 20px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #A5A29A;">HOW I WOULD ENTER AN UNFAMILIAR PLATFORM</div>
+            <h3 style="margin: 0; font-size: 26px; line-height: 1.22; font-weight: 700; letter-spacing: -0.025em; max-width: 26ch; text-wrap: pretty;">Start narrow. Establish evidence. Expand only if useful.</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+              <div style="flex: 1 1 220px; border-top: 1px solid #DEDBD2; padding-top: 13px; display: flex; flex-direction: column; gap: 7px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #8A5A12;">01</span>
+                <h4 style="margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -0.015em;">Find one costly workflow</h4>
+                <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #55534C; text-wrap: pretty;">Observe the existing developer journey and identify a bounded problem worth changing.</p>
+              </div>
+              <div style="flex: 1 1 220px; border-top: 1px solid #DEDBD2; padding-top: 13px; display: flex; flex-direction: column; gap: 7px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #8A5A12;">02</span>
+                <h4 style="margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -0.015em;">Establish the baseline</h4>
+                <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #55534C; text-wrap: pretty;">Define the behavior and outcome we are trying to improve before adding an agent.</p>
+              </div>
+              <div style="flex: 1 1 220px; border-top: 1px solid #DEDBD2; padding-top: 13px; display: flex; flex-direction: column; gap: 7px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #8A5A12;">03</span>
+                <h4 style="margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -0.015em;">Ship one instrumented path</h4>
+                <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #55534C; text-wrap: pretty;">Integrate the smallest useful agent/tool surface into the real workflow with explicit failure boundaries.</p>
+              </div>
+              <div style="flex: 1 1 220px; border-top: 1px solid #DEDBD2; padding-top: 13px; display: flex; flex-direction: column; gap: 7px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #8A5A12;">04</span>
+                <h4 style="margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -0.015em;">Compare and expand</h4>
+                <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #55534C; text-wrap: pretty;">Measure whether it changed the target outcome. Keep, revise, or remove it before scaling the pattern.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- 06 CAREER ---------- -->
+      <section id="sec-06" style="padding: 44px 0 56px; border-bottom: 1px solid #DEDBD2; scroll-margin-top: 100px;">
+        <div style="display: flex; flex-direction: column; gap: 22px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em; color: #8A5A12;">06 / THE EXPERIENCE BENEATH THE PROOF</div>
+          <h2 style="margin: 0; font-size: 34px; line-height: 1.18; font-weight: 700; letter-spacing: -0.03em; max-width: 24ch; text-wrap: pretty;">The systems are recent. The production discipline isn't.</h2>
+
+          <div id="about" style="display: flex; flex-direction: column; margin-top: 8px;">
+            <div style="display: flex; flex-wrap: wrap; gap: 12px 32px; border-top: 2px solid #1A1A17; padding: 20px 0;">
+              <div style="flex: 0 1 200px; display: flex; flex-direction: column; gap: 6px;">
+                <h3 style="margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.02em;">Enterprise healthcare engineering</h3>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #83817A;">~10 YEARS</span>
+              </div>
+              <div style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 12px;">
+                <p style="margin: 0; font-size: 15px; line-height: 1.65; color: #45443E; text-wrap: pretty;">Nearly a decade working inside enterprise healthcare engineering environments.</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 7px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #45443E;">
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">legacy Java systems</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">Node / TypeScript modernization</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">platform architecture</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">CI/CD</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">Kubernetes / OpenShift</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">Argo CD</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">IAM</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">OAuth / SAML</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">regulated production environments</span>
+                  <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">engineering leadership</span>
+                </div>
+                <div style="border-left: 2px dashed #B3AFA4; padding-left: 14px; font-size: 13.5px; line-height: 1.6; color: #6E6C64; text-wrap: pretty;">Themes are surfaced in place of employer-confidential details. No proprietary metrics.</div>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 12px 32px; border-top: 1px solid #DEDBD2; padding: 20px 0;">
+              <div style="flex: 0 1 200px; display: flex; flex-direction: column; gap: 6px;">
+                <h3 style="margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.02em;">Marcelle Labs</h3>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #83817A;">FOUNDER / TECHNICAL EXECUTION</span>
+              </div>
+              <div style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 10px;">
+                <p style="margin: 0; font-size: 15px; line-height: 1.65; color: #45443E; text-wrap: pretty;">Founder-led engineering work across healthcare platforms, AI automation, and production systems.</p>
+                <a href="https://github.com/qmarcelle" style="font-size: 14.5px; font-weight: 500; color: #8A5A12; align-self: flex-start; border-bottom: 1px solid #D9C8A8; padding-bottom: 2px;">Selected Marcelle Labs work ↗</a>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 12px 32px; border-top: 1px solid #DEDBD2; border-bottom: 1px solid #DEDBD2; padding: 20px 0;">
+              <div style="flex: 0 1 200px; display: flex; flex-direction: column; gap: 6px;">
+                <h3 style="margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.02em;">Independent technical systems</h3>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #83817A;">CURRENT</span>
+              </div>
+              <div style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column;">
+                <a href="#sec-02" style="display: flex; align-items: baseline; gap: 12px; padding: 10px 0; border-bottom: 1px solid #EDEAE1; color: #1A1A17;">
+                  <span style="font-size: 16px; font-weight: 600;">Vreko</span>
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.08em; color: #7A4F0F; margin-left: auto;">SHIPPED SYSTEM ↑</span>
+                </a>
+                <a href="#sec-03" style="display: flex; align-items: baseline; gap: 12px; padding: 10px 0; border-bottom: 1px solid #EDEAE1; color: #1A1A17;">
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px;">workspace.json</span>
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.08em; color: #7A4F0F; margin-left: auto;">OPEN STANDARD ↑</span>
+                </a>
+                <a href="#sec-04" style="display: flex; align-items: baseline; gap: 12px; padding: 10px 0; color: #1A1A17;">
+                  <span style="font-size: 16px; font-weight: 600;">Interlock</span>
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.08em; color: #7A4F0F; margin-left: auto;">CONTROLLED EVIDENCE ↑</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- MORE EVIDENCE ---------- -->
+      <section id="more-evidence" style="padding: 44px 0 52px; border-bottom: 1px solid #DEDBD2; scroll-margin-top: 100px;">
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em; color: #8A5A12;">MORE PROOF, IF RELEVANT</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 16px 40px; align-items: baseline;">
+            <h2 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.025em;">Additional systems</h2>
+            <p style="margin: 0; flex: 1 1 380px; font-size: 15px; line-height: 1.6; color: #55534C; text-wrap: pretty;">Not six side projects. Three engineering problems, with multiple independent receipts.</p>
+          </div>
+
+          <div style="border: 1px solid #DEDBD2; border-top: 2px solid #1A1A17; background: #FFFFFF; display: flex; flex-wrap: wrap; gap: 16px 32px; padding: 20px 18px;">
+            <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 10px;">
+              <h3 style="margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.02em;">Never Ask Twice</h3>
+              <p style="margin: 0; font-size: 15.5px; line-height: 1.55; font-weight: 500; color: #38372F; text-wrap: pretty;">Can persistent agent memory reduce unnecessary re-asking?</p>
+              <p style="margin: 0; font-size: 14.5px; line-height: 1.6; color: #55534C; text-wrap: pretty;">An enterprise support MemoryAgent that carries customer context across sessions, evaluated with a live re-ask-rate ablation.</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 7px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.07em; color: #45443E;">
+                <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">AGENT MEMORY</span>
+                <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">RETRIEVAL</span>
+                <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">EVALUATION</span>
+                <span style="border: 1px solid #DEDBD2; padding: 4px 8px;">ABLATION</span>
+              </div>
+            </div>
+            <div style="flex: 0 1 260px; display: flex; flex-direction: column; gap: 12px; align-self: stretch; border-left: 1px solid #EDEAE1; padding-left: 24px;">
+              <div style="display: flex; flex-direction: column; gap: 5px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #A5A29A;">SURFACE</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.6; color: #45443E;">forgetting policy · MCP · pgvector / Postgres · TypeScript · cloud execution</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 5px;">
+                <span style="display: flex; align-items: center; gap: 7px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #6E6C64;"><span style="width: 8px; height: 1px; background: #6E6C64;"></span>BOUNDARY</span>
+                <span style="font-size: 13.5px; line-height: 1.55; color: #55534C; text-wrap: pretty;">Ablation measured within the described evaluation setup. Not a general claim about memory in other products.</span>
+              </div>
+              <a href="https://github.com/qmarcelle" style="margin-top: auto; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.07em; color: #8A5A12; border: 1px solid #D9C8A8; padding: 8px 11px; align-self: flex-start;" style-hover="background: #F6F1E6; text-decoration: none;">INSPECT PROOF →</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- RÉSUMÉ BRIDGE ---------- -->
+      <section id="resume" style="padding: 44px 0; border-bottom: 1px solid #DEDBD2; scroll-margin-top: 100px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 24px 40px; align-items: flex-end;">
+          <div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 10px;">
+            <h2 style="margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.025em;">Need the conventional version?</h2>
+            <p style="margin: 0; font-size: 15px; line-height: 1.65; color: #55534C; max-width: 62ch; text-wrap: pretty;">The evidence above is how I prefer to explain my work. The conventional chronology is here when your process needs it.</p>
+          </div>
+          <div style="flex: 0 1 auto; display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+            <a href="#resume" style="background: #1A1A17; color: #FAF9F6; padding: 12px 18px; font-size: 14.5px; font-weight: 600; border-radius: 2px;" style-hover="background: #8A5A12; text-decoration: none;">Download résumé PDF</a>
+            <a href="#resume" style="border: 1px solid #DEDBD2; background: #FFFFFF; color: #1A1A17; padding: 11px 17px; font-size: 14.5px; font-weight: 500; border-radius: 2px;" style-hover="border-color: #8A5A12; color: #8A5A12; text-decoration: none;">View LinkedIn ↗</a>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.08em; color: #6E6C64; border: 1px dashed #B3AFA4; padding: 5px 8px;">[VERIFY BEFORE PUBLISHING] file + profile URLs</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- CLAIM LEDGER ---------- -->
+      <section id="ledger" style="padding: 36px 0 48px; scroll-margin-top: 100px;">
+        <button type="button" onClick="{{ toggleLedger }}" aria-expanded="{{ ledgerExpanded }}" style="width: 100%; box-sizing: border-box; display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: #F6F5F0; border: 1px solid #DEDBD2; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; letter-spacing: 0.08em; color: #1A1A17; cursor: pointer; text-align: left;" style-hover="background: #F6F1E6; border-color: #D9C8A8;">
+          {{ ledgerLabel }}
+          <span style="margin-left: auto; color: #83817A; font-size: 11px;">CLAIM · EVIDENCE · BOUNDARY</span>
+        </button>
+        <sc-if value="{{ ledgerOpenState }}" hint-placeholder-val="{{ false }}">
+          <div style="border: 1px solid #DEDBD2; border-top: 0; background: #FFFFFF; display: flex; flex-direction: column;">
+            <div style="display: flex; flex-wrap: wrap; gap: 6px 20px; padding: 10px 16px; border-bottom: 1px solid #DEDBD2; background: #FCFBF8; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #A5A29A;">
+              <span style="flex: 1 1 240px;">CLAIM</span>
+              <span style="flex: 0 1 200px;">EVIDENCE</span>
+              <span style="flex: 1 1 240px;">BOUNDARY</span>
+            </div>
+            <sc-for list="{{ ledger }}" as="row" hint-placeholder-count="4">
+              <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 15px 16px; border-bottom: 1px solid #EDEAE1;">
+                <div style="flex: 1 1 240px; font-size: 14.5px; font-weight: 600; line-height: 1.5; text-wrap: pretty;">{{ row.claim }}</div>
+                <div style="flex: 0 1 200px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.5; color: #7A4F0F;">{{ row.evidence }}</div>
+                <div style="flex: 1 1 240px; font-size: 14px; line-height: 1.55; color: #55534C; text-wrap: pretty;">{{ row.boundary }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </section>
+    </main>
+  </div>
+
+  <!-- ============ FINAL ============ -->
+  <section style="background: #1A1A17; color: #FAF9F6;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 72px 32px 64px; display: flex; flex-direction: column; gap: 20px;">
+      <h2 style="margin: 0; font-size: 48px; line-height: 1.1; font-weight: 700; letter-spacing: -0.035em; max-width: 18ch; text-wrap: pretty;">Don't take the résumé's word for it.</h2>
+      <p style="margin: 0; font-size: 17px; line-height: 1.6; color: #C9C3B8; max-width: 60ch; text-wrap: pretty;">Inspect the systems. Read the decisions. Run the checks. Then ask me why I built them that way.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px;">
+        <button type="button" onClick="{{ walkProof }}" style="background: #FAF9F6; color: #1A1A17; padding: 13px 20px; font-size: 15px; font-weight: 600; border: 0; border-radius: 2px; cursor: pointer;" style-hover="background: #E4D6B8;">Walk the proof again ↑</button>
+        <a href="https://github.com/qmarcelle" style="border: 1px solid #55534C; color: #FAF9F6; padding: 12px 19px; font-size: 15px; font-weight: 500; border-radius: 2px;" style-hover="border-color: #FAF9F6; text-decoration: none;">GitHub ↗</a>
+        <a href="#resume" style="border: 1px solid #55534C; color: #FAF9F6; padding: 12px 19px; font-size: 15px; font-weight: 500; border-radius: 2px;" style-hover="border-color: #FAF9F6; text-decoration: none;">Résumé PDF ↓</a>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 22px; font-family: 'JetBrains Mono', monospace; color: #A5A29A;">
+        <span style="font-size: 13px; letter-spacing: 0.06em; color: #C9C3B8;">Qwynn Marcelle · AI Platform &amp; Developer Systems</span>
+        <span style="font-size: 11.5px; letter-spacing: 0.08em;">Founder, Marcelle Labs · Steward, workspace.json</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer style="border-top: 1px solid #DEDBD2;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 26px 32px 34px; display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: baseline;">
+      <span style="font-size: 14px; font-weight: 600;">Qwynn Marcelle</span>
+      <nav style="display: flex; flex-wrap: wrap; gap: 20px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px;">
+        <a href="https://github.com/qmarcelle" style="color: #55534C;">GitHub</a>
+        <a href="#resume" style="color: #55534C;">LinkedIn</a>
+        <a href="#resume" style="color: #55534C;">Email</a>
+        <a href="#resume" style="color: #55534C;">Résumé</a>
+      </nav>
+      <a href="#" style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.06em; color: #83817A;">Professional work: Marcelle Labs ↗</a>
+    </div>
+  </footer>
+
+  <!-- ============ GUIDED CONTROLS ============ -->
+  <sc-if value="{{ guided }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; right: 20px; bottom: 20px; z-index: 60; display: flex; align-items: stretch; border: 1px solid #1A1A17; background: #FAF9F6; box-shadow: 0 2px 10px rgba(26,26,23,0.12);">
+      <button type="button" onClick="{{ prevProof }}" style="border: 0; background: transparent; padding: 11px 14px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.07em; color: #45443E; cursor: pointer;" style-hover="background: #F6F1E6;">← PREV</button>
+      <span style="display: flex; align-items: center; padding: 0 12px; border-left: 1px solid #DEDBD2; border-right: 1px solid #DEDBD2; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #83817A;">{{ guidedPos }}</span>
+      <button type="button" onClick="{{ nextProof }}" style="border: 0; background: transparent; padding: 11px 14px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.07em; color: #45443E; cursor: pointer;" style-hover="background: #F6F1E6;">NEXT →</button>
+      <button type="button" onClick="{{ exitGuided }}" aria-label="Exit guided mode" style="border: 0; border-left: 1px solid #DEDBD2; background: transparent; padding: 11px 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #83817A; cursor: pointer;" style-hover="color: #1A1A17;">✕</button>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;roleTitle&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;Senior AI Platform Engineer&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Role lens&quot;}, &quot;roleOrg&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;athenahealth / Yoh&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Role lens&quot;}, &quot;showAvailability&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Page&quot;}, &quot;expandEvidence&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Page&quot;}, &quot;ledgerOpen&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Page&quot;}}">
+class Component extends DCLogic {
+  state = { active: 0, open: {}, ledger: null, guided: false, picked: {} };
+
+  steps = [
+    { n: '01', id: 'sec-01', label: 'Problem' },
+    { n: '02', id: 'sec-02', label: 'Vreko' },
+    { n: '03', id: 'sec-03', label: 'Repository Intelligence' },
+    { n: '04', id: 'sec-04', label: 'Interlock' },
+    { n: '05', id: 'sec-05', label: 'Role Fit' },
+    { n: '06', id: 'sec-06', label: 'Career' }
+  ];
+
+  drawerData = {
+    vreko: [
+      { type: 'SOURCE', title: 'Vreko MCP Server', detail: 'Public repository containing the server implementation, tool contracts, and configuration.' },
+      { type: 'ARCHITECTURE', title: 'Transport → MCP protocol → intelligence layer', detail: 'Separation between transport concerns, protocol surface, and the repository/session intelligence behind it.' },
+      { type: 'OBSERVED', title: 'Agent lifecycle: brief → pulse → learn → end', detail: 'Session shape the server exposes to a compatible assistant, including where state is written and read.' },
+      { type: 'DEPLOYED', title: 'Local + hosted execution paths', detail: 'Two supported execution paths with distinct authentication and deployment boundaries.' }
+    ],
+    workspace: [
+      { type: 'SPECIFICATION', title: 'Canonical specification (Apache-2.0)', detail: 'Descriptive standard for committing repository-derived information in a deterministic, tool-consumable form.' },
+      { type: 'SPECIFICATION', title: 'JSON Schema / types', detail: 'Machine-checkable contract separating producers of repository intelligence from its consumers.' },
+      { type: 'SOURCE', title: 'CLI / producer tooling', detail: 'Reference producer that generates and validates the committed artifact.' },
+      { type: 'SOURCE', title: 'workspace.json for Codex', detail: 'Agent-side implementation: portable repository history surfaced through hooks and MCP before an evidenced risky edit lands.' },
+      { type: 'OBSERVED', title: 'Tally · DataHub + repository evidence', detail: 'Dataset resolved to an exact repository-relative path, joined with repository evidence, then compared as paired plans. Writeback checked independently of the API response.' },
+      { type: 'RESEARCH', title: 'Decision-time information study', detail: 'Open question on which repository-derived signals, available at decision time, causally improve an agent decision.' }
+    ],
+    interlock: [
+      { type: 'EXPERIMENT', title: 'Controlled counterfactual comparison', detail: 'Paired arms with and without evidence-bound coordination before shared-state mutation.' },
+      { type: 'OBSERVED', title: 'Frozen evidence packet', detail: 'Recorded run artifacts held fixed so the comparison can be re-checked after the fact.' },
+      { type: 'OBSERVED', title: 'Independent verifier', detail: 'Verification separated from execution so the checking path does not share the decision path.' },
+      { type: 'DEPLOYED', title: 'Google ADK + Vertex AI + Cloud Run + MCP proxy', detail: 'Cloud traversal exercised through an authenticated decision/execution boundary.' }
+    ]
+  };
+
+  mapping = [
+    { problem: 'Build MCP servers and tool surfaces', evidence: 'Vreko', discuss: 'Protocol boundaries, tools, auth, deployment, lifecycle' },
+    { problem: 'Introduce agents into developer workflows', evidence: 'Vreko + workspace.json', discuss: 'Context surfaces, agent/tool interaction, developer experience' },
+    { problem: 'Integrate with CI/CD', evidence: 'Vreko + enterprise platform history', discuss: 'Deployment pipelines, automation boundaries, operational feedback' },
+    { problem: 'Build production-grade agent systems', evidence: 'Vreko + Interlock', discuss: 'State, coordination, failure modes, evidence, observability' },
+    { problem: 'Persist agent state across sessions', evidence: 'Never Ask Twice', discuss: 'Memory, retrieval, forgetting policy, checkpointing, ablation-based evaluation' },
+    { problem: 'Integrate agents with enterprise metadata systems', evidence: 'Tally + workspace.json', discuss: 'Coordinate resolution, joined evidence, plan comparison, verified writeback' },
+    { problem: 'Improve engineering productivity', evidence: 'workspace.json + platform background', discuss: 'Measure first, introduce one useful surface, expand based on evidence' },
+    { problem: 'Explain architecture rather than hide behind AI-generated code', evidence: 'All three', discuss: 'Tradeoffs, negative results, rejected assumptions, limitations' }
+  ];
+
+  promptList = [
+    'Why MCP instead of another integration surface?',
+    'Where should agent state live?',
+    'When should a tool call be mandatory versus discretionary?',
+    'How do you know repository context actually affected a decision?',
+    'How would you introduce one agent into an existing CI/CD workflow?',
+    'What would make you kill an AI-platform experiment?',
+    'What did your experiments fail to prove?'
+  ];
+
+  ledgerRows = [
+    { claim: 'Built an MCP-based agent intelligence surface', evidence: 'Public Vreko repository', boundary: 'Do not infer external adoption without evidence' },
+    { claim: 'Stewards an open repository-intelligence standard', evidence: 'workspace.json specification', boundary: 'Independent from proprietary Vreko behavior' },
+    { claim: 'Implemented the standard for a coding agent and an enterprise metadata system', evidence: 'Codex implementation · Tally case', boundary: 'Demonstrates the integration path, not adoption or scale' },
+    { claim: 'Ran controlled coordination experiments', evidence: 'Interlock evidence packet', boundary: 'Bounded experiment, not universal safety proof' },
+    { claim: 'Evaluated persistent agent memory against re-asking', evidence: 'Never Ask Twice ablation', boundary: 'Measured inside the described evaluation setup only' },
+    { claim: 'Enterprise healthcare engineering background', evidence: 'résumé / professional history', boundary: 'No confidential employer artifacts' }
+  ];
+
+  componentDidMount() {
+    this.io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        const i = this.steps.findIndex((s) => s.id === e.target.id);
+        if (i >= 0 && i !== this.state.active) this.setState({ active: i });
+      });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    this.steps.forEach((s) => {
+      const el = document.getElementById(s.id);
+      if (el) this.io.observe(el);
+    });
+  }
+
+  componentWillUnmount() { if (this.io) this.io.disconnect(); }
+
+  goTo(i) {
+    const s = this.steps[Math.max(0, Math.min(this.steps.length - 1, i))];
+    const el = s && document.getElementById(s.id);
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.scrollY - 92;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+  }
+
+  drawer(key, expandAll) {
+    const open = this.state.open[key] ?? expandAll;
+    return {
+      open,
+      expanded: open ? 'true' : 'false',
+      label: open ? 'Close evidence ↑' : 'Inspect evidence ↓',
+      rows: this.drawerData[key],
+      toggle: () => this.setState((s) => ({ open: Object.assign({}, s.open, { [key]: !(s.open[key] ?? expandAll) }) }))
+    };
+  }
+
+  renderVals() {
+    const expandAll = this.props.expandEvidence ?? false;
+    const roleTitle = this.props.roleTitle ?? 'Senior AI Platform Engineer';
+    const roleOrg = this.props.roleOrg ?? 'athenahealth / Yoh';
+    const ledgerOpen = this.state.ledger ?? (this.props.ledgerOpen ?? false);
+    const pickedCount = Object.values(this.state.picked).filter(Boolean).length;
+
+    const rail = this.steps.map((s, i) => {
+      const on = i === this.state.active;
+      return {
+        n: s.n,
+        label: s.label,
+        current: on ? 'step' : 'false',
+        go: () => this.goTo(i),
+        style: 'flex: 1 1 150px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start;'
+          + ' padding: 10px 12px; cursor: pointer; text-align: left; border: 0;'
+          + ' border-left: 2px solid ' + (on ? '#8A5A12' : 'transparent') + ';'
+          + ' background: ' + (on ? '#F6F1E6' : 'transparent') + ';'
+          + ' color: ' + (on ? '#1A1A17' : '#83817A') + ';'
+          + ' font-family: \'Public Sans\', system-ui, sans-serif; font-weight: ' + (on ? '600' : '400') + ';'
+      };
+    });
+
+    const prompts = this.promptList.map((text, i) => {
+      const on = !!this.state.picked[i];
+      return {
+        text,
+        mark: on ? '■' : '□',
+        pressed: on ? 'true' : 'false',
+        toggle: () => this.setState((s) => ({ picked: Object.assign({}, s.picked, { [i]: !s.picked[i] }) })),
+        style: 'display: flex; align-items: flex-start; gap: 12px; width: 100%; box-sizing: border-box; cursor: pointer;'
+          + ' padding: 11px 14px; text-align: left; border-radius: 2px;'
+          + ' border: 1px solid ' + (on ? '#8A5A12' : '#3A3833') + ';'
+          + ' background: ' + (on ? '#26241F' : 'transparent') + '; color: #FAF9F6;'
+          + ' font-family: \'Public Sans\', system-ui, sans-serif;'
+      };
+    });
+
+    return {
+      rail,
+      prompts,
+      mapping: this.mapping,
+      ledger: this.ledgerRows,
+      ledgerOpenState: ledgerOpen,
+      ledgerExpanded: ledgerOpen ? 'true' : 'false',
+      ledgerLabel: ledgerOpen ? 'HIDE CLAIM LEDGER −' : 'SHOW CLAIM LEDGER +',
+      toggleLedger: () => this.setState({ ledger: !ledgerOpen }),
+      pickedLine: pickedCount
+        ? pickedCount + ' selected · bring these to the conversation'
+        : 'Select the ones you want answered.',
+      d: {
+        vreko: this.drawer('vreko', expandAll),
+        workspace: this.drawer('workspace', expandAll),
+        interlock: this.drawer('interlock', expandAll)
+      },
+      showAvailability: this.props.showAvailability ?? true,
+      roleTitleUpper: roleTitle.toUpperCase(),
+      roleOrgUpper: roleOrg.toUpperCase(),
+      hasOrg: !!roleOrg,
+      guided: this.state.guided,
+      guidedPos: String(this.state.active + 1).padStart(2, '0') + ' / 06',
+      walkProof: () => { this.setState({ guided: true }); this.goTo(0); },
+      toProof: () => this.goTo(1),
+      nextProof: () => this.goTo(this.state.active + 1),
+      prevProof: () => this.goTo(this.state.active - 1),
+      exitGuided: () => this.setState({ guided: false })
+    };
+  }
+}
+</script>
+</body>
+</html>
