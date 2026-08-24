@@ -1,6 +1,0 @@
-allowBuilds:
-  unrs-resolver: set this to true or false
-# unrs-resolver ships a native binary that eslint-import-resolver-typescript needs.
-# Allowing just this one keeps the default "no postinstall scripts" posture everywhere else.
-onlyBuiltDependencies:
-  - unrs-resolver
