@@ -1,0 +1,124 @@
+.rail {
+  position: sticky;
+  top: var(--sticky-top);
+  z-index: 20;
+  align-self: flex-start;
+  flex: 1 1 180px;
+  max-width: 100%;
+  padding: var(--space-6) 0 var(--space-5);
+  background: var(--color-canvas);
+}
+
+.label {
+  padding-bottom: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-meta-quiet);
+}
+
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: var(--rule);
+  border-bottom: var(--rule);
+}
+
+.stepItem {
+  display: flex;
+  flex: 1 1 150px;
+}
+
+.step {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: flex-start;
+  padding: 0.625rem 0.75rem;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-left: 2px solid transparent;
+  color: var(--color-meta);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+}
+
+.step:hover {
+  color: var(--color-ink-secondary);
+  background: var(--color-surface-subtle);
+}
+
+.step[aria-current='step'] {
+  border-left-color: var(--color-accent);
+  background: var(--color-accent-surface);
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.number {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
+}
+
+.stepLabel {
+  font-size: 0.844rem;
+  line-height: 1.35;
+}
+
+/*
+ * Below the two-column breakpoint the rail would eat roughly a third of a 320px
+ * viewport before any evidence appeared. It becomes a compact horizontal strip that
+ * scrolls within itself — the sticky behaviour and `aria-current` semantics are
+ * unchanged, only the axis is.
+ */
+@media (max-width: 899px) {
+  .rail {
+    flex: 1 1 100%;
+    top: 0;
+    padding: var(--space-2) 0;
+    border-bottom: var(--rule);
+  }
+
+  .label {
+    padding-bottom: var(--space-2);
+  }
+
+  .steps {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    border-bottom: 0;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .stepItem {
+    flex: 0 0 auto;
+  }
+
+  .step {
+    flex-direction: row;
+    gap: var(--space-2);
+    align-items: baseline;
+    /* Comfortable target on touch without inflating the strip's height. */
+    padding: 0.625rem 0.875rem;
+    min-height: 44px;
+    border-left: 0;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+  }
+
+  .step[aria-current='step'] {
+    border-left-color: transparent;
+    border-bottom-color: var(--color-accent);
+  }
+}

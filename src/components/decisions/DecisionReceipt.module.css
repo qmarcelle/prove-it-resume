@@ -1,0 +1,136 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.item {
+  border: 1px solid var(--color-inverse-border);
+  border-radius: var(--radius);
+  background: transparent;
+}
+
+.itemOpen {
+  border-color: var(--color-accent);
+  background: var(--color-inverse-surface);
+}
+
+.trigger {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: 0.6875rem 0.875rem;
+  min-height: 44px;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius);
+  color: var(--color-inverse-ink);
+  font-family: var(--font-sans);
+  cursor: pointer;
+}
+
+.trigger:hover {
+  background: var(--color-inverse-surface);
+}
+
+.marker {
+  flex: none;
+  padding-top: 0.125rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  color: var(--color-inverse-accent);
+}
+
+.question {
+  font-size: 0.938rem;
+  line-height: 1.5;
+}
+
+.receipt {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: 0 0.875rem 0.875rem 2.25rem;
+}
+
+.pending {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-1);
+  border-top: 1px solid var(--color-inverse-border);
+}
+
+.pendingLead {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-inverse-ink-quiet);
+  padding-top: var(--space-3);
+}
+
+.shape {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shapeRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-inverse-ink-quiet);
+}
+
+.shapeRule {
+  flex: 1 1 auto;
+  height: 1px;
+  min-width: 12px;
+  background: var(--color-inverse-border);
+}
+
+.awaiting {
+  flex: none;
+  padding: 0.1875rem 0.4375rem;
+  border: 1px dashed var(--color-inverse-border);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-inverse-accent);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.fieldLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-inverse-accent);
+}
+
+.fieldBody {
+  font-size: 0.938rem;
+  line-height: 1.6;
+  color: var(--color-inverse-ink);
+}
+
+.fieldList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding-left: 1.125rem;
+  font-size: 0.906rem;
+  line-height: 1.6;
+  color: var(--color-inverse-ink-quiet);
+}

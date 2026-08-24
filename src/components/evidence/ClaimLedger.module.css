@@ -1,0 +1,93 @@
+.section {
+  padding: var(--space-6) 0 var(--space-7);
+  scroll-margin-top: var(--scroll-offset);
+}
+
+.toggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0.875rem 1rem;
+  min-height: 44px;
+  text-align: left;
+  background: var(--color-surface-muted);
+  border: var(--rule);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-lg);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-ink);
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+.toggle:hover {
+  background: var(--color-accent-surface);
+  border-color: var(--color-accent-border);
+}
+
+.toggleMeta {
+  margin-left: auto;
+  font-size: var(--text-meta-sm);
+  color: var(--color-meta);
+}
+
+/* Wide, three-column data. It scrolls inside itself rather than widening the page. */
+.tableWrap {
+  border: var(--rule);
+  border-top: 0;
+  background: var(--color-surface);
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 620px;
+}
+
+.table th {
+  padding: 0.625rem 1rem;
+  text-align: left;
+  background: var(--color-surface-subtle);
+  border-bottom: var(--rule);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  font-weight: 400;
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-meta-quiet);
+}
+
+.table td {
+  padding: 0.9375rem 1rem;
+  border-bottom: var(--rule-quiet);
+  vertical-align: top;
+}
+
+.table tr:last-child td {
+  border-bottom: 0;
+}
+
+.claim {
+  width: 34%;
+  font-size: 0.906rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.evidence {
+  width: 26%;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-lg);
+  line-height: 1.5;
+  color: var(--color-accent-deep);
+}
+
+.boundary {
+  width: 40%;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--color-ink-tertiary);
+}
