@@ -1,0 +1,201 @@
+import type { EvidenceRef, Proof } from '@/lib/types';
+
+/**
+ * The one confirmed external artifact in the supplied design: the Tally case study.
+ * It appears twice in the export with the same URL, so it is treated as verified.
+ */
+export const TALLY_CASE_URL = 'https://www.workspacejson.dev/showcase/tally';
+
+/** The three layers of the argument, rendered as a vertical chain. */
+export type RepositoryLayer = {
+  id: string;
+  kicker: string;
+  name: string;
+  /** Renders the name in the mono face, for file- and code-shaped names. */
+  nameIsCode?: boolean;
+  subtitle?: string;
+  body: string[];
+  tags: string[];
+  link?: { label: string; ref: EvidenceRef };
+  /** The final layer is accented, as in the export. */
+  emphasis?: boolean;
+};
+
+export const repositoryLayers: readonly RepositoryLayer[] = [
+  {
+    id: 'standard',
+    kicker: 'STANDARD',
+    name: 'workspace.json',
+    nameIsCode: true,
+    body: [
+      'A neutral, Apache-2.0 contract for repository-derived intelligence, committed alongside the code it describes.',
+    ],
+    tags: ['SPECIFICATION', 'JSON Schema', 'Governance'],
+  },
+  {
+    id: 'agent',
+    kicker: 'AGENT IMPLEMENTATION',
+    name: 'workspace.json for Codex',
+    nameIsCode: true,
+    body: [
+      "Portable repository history that changes Codex's plan before an evidenced risky edit lands.",
+    ],
+    tags: ['Codex', 'MCP', 'Hooks', 'Co-change / fragility'],
+  },
+  {
+    id: 'enterprise',
+    kicker: 'ENTERPRISE INTEGRATION',
+    name: 'Tally',
+    subtitle: 'Change impact cockpit',
+    body: [
+      'Joins DataHub context with repository evidence. Resolves the coordinate mismatch between dbt paths and git-root paths, where the naive join silently returns zero, then compares paired plans to see whether the joined evidence changes what the model can do.',
+      'Writeback is independently checked rather than treated as observed because an API call returned successfully.',
+    ],
+    tags: [
+      'DataHub',
+      'dbt',
+      'Path resolution',
+      'Paired plan comparison',
+      'Writeback verification',
+    ],
+    link: {
+      label: 'READ THE TALLY CASE',
+      ref: {
+        id: 'tally-case',
+        kind: 'observed',
+        title: 'Tally case study',
+        href: TALLY_CASE_URL,
+        verified: true,
+      },
+    },
+    emphasis: true,
+  },
+] as const;
+
+export const ARGUMENT_IN_ONE_LINE =
+  'Identified a repository-context problem, designed a portable contract, implemented it for a coding agent, integrated it with an enterprise metadata system, then tested whether the information actually changed the plan.';
+
+export const ACTIVE_RESEARCH_QUESTION =
+  "What repository-derived information, available at decision time, can causally improve an AI agent's decision?";
+
+export const repositoryIntelligence: Proof = {
+  id: 'repository-intelligence',
+  sectionId: 'sec-03',
+  stage: '03',
+  eyebrow: '03 / PROOF TWO',
+  railLabel: 'Repository Intelligence',
+  listing: {
+    summary: 'workspace.json → Codex → Tally',
+    summaryIsCode: true,
+    shortName: 'workspace.json',
+    shortNameIsCode: true,
+    shortStatus: 'OPEN STANDARD',
+  },
+  title: 'Repository Intelligence',
+  thesis:
+    'Making repository evidence useful to an agent at decision time — contract, agent implementation, enterprise integration.',
+  status: { label: 'STANDARD · IMPLEMENTED · INTEGRATED', tone: 'implemented' },
+  evidenceCode: 'EV-WSJ',
+  fields: [
+    {
+      label: 'PROBLEM',
+      body: 'Important repository-derived information is scattered across files, conventions, tools, and provider-specific mechanisms.',
+    },
+    {
+      label: 'WORK',
+      body: 'Designed and stewarded an Apache-2.0 descriptive standard for committing repository intelligence in a deterministic, tool-consumable form.',
+    },
+  ],
+  demonstrates: [
+    'standards thinking',
+    'schema and contract design',
+    'governance',
+    'producer/consumer boundaries',
+    'evidence discipline',
+    'open-source stewardship',
+    'implementing a specification I authored against a real coding agent',
+    'integration engineering across enterprise metadata and repository evidence',
+    'ability to distinguish descriptive infrastructure from prescriptive agent policy',
+  ],
+  summary: [
+    {
+      id: 'wsj-spec',
+      label: 'Canonical specification',
+      verified: false,
+      cta: 'VIEW REPOSITORY',
+    },
+    { id: 'wsj-schema', label: 'JSON Schema / types', verified: false, cta: 'INSPECT' },
+    { id: 'wsj-cli', label: 'CLI / producer tooling', verified: false, cta: 'INSPECT' },
+    {
+      id: 'wsj-codex',
+      label: 'Codex implementation',
+      detail: 'agent-side hooks and repository history',
+      verified: false,
+      cta: 'OPEN GITHUB',
+    },
+    {
+      id: 'wsj-tally',
+      label: 'Tally · DataHub integration',
+      detail: 'paired plan comparison + writeback check',
+      href: TALLY_CASE_URL,
+      verified: true,
+      cta: 'READ CASE',
+    },
+    { id: 'wsj-integrations', label: 'Integrations', verified: false, cta: 'INSPECT' },
+  ],
+  evidence: [
+    {
+      id: 'wsj-ev-spec',
+      kind: 'specification',
+      title: 'Canonical specification (Apache-2.0)',
+      description:
+        'Descriptive standard for committing repository-derived information in a deterministic, tool-consumable form.',
+      verified: false,
+    },
+    {
+      id: 'wsj-ev-schema',
+      kind: 'specification',
+      title: 'JSON Schema / types',
+      description:
+        'Machine-checkable contract separating producers of repository intelligence from its consumers.',
+      verified: false,
+    },
+    {
+      id: 'wsj-ev-cli',
+      kind: 'source',
+      title: 'CLI / producer tooling',
+      description:
+        'Reference producer that generates and validates the committed artifact.',
+      verified: false,
+    },
+    {
+      id: 'wsj-ev-codex',
+      kind: 'source',
+      title: 'workspace.json for Codex',
+      description:
+        'Agent-side implementation: portable repository history surfaced through hooks and MCP before an evidenced risky edit lands.',
+      verified: false,
+    },
+    {
+      id: 'wsj-ev-tally',
+      kind: 'observed',
+      title: 'Tally · DataHub + repository evidence',
+      description:
+        'Dataset resolved to an exact repository-relative path, joined with repository evidence, then compared as paired plans. Writeback checked independently of the API response.',
+      href: TALLY_CASE_URL,
+      verified: true,
+    },
+    {
+      id: 'wsj-ev-research',
+      kind: 'research',
+      title: 'Decision-time information study',
+      description:
+        'Open question on which repository-derived signals, available at decision time, causally improve an agent decision.',
+      verified: false,
+    },
+  ],
+  boundary:
+    'The specification establishes a repository-level contract and its governance. It does not establish adoption outside the repositories where it has been applied, and it is independent from proprietary Vreko behavior.',
+  boundaryNote:
+    'workspace.json is presented here as an independent open standard, not as a Vreko feature.',
+};

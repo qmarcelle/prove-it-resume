@@ -1,0 +1,103 @@
+/*
+ * Design tokens — Prove It Resume
+ *
+ * Direction C·1, "Technical Review, hybridized" (locked visual language v0.1).
+ * Every value here is traceable to design/reference/claude/Prove It Resume.dc.html;
+ * the extraction table is in docs/design-import.md.
+ *
+ * The rule for this file: a value belongs here when it carries meaning that repeats.
+ * A one-off measurement stays in the component's own module.
+ */
+
+:root {
+  /* ---- Surfaces, lightest to most raised ---- */
+  --color-canvas: #faf9f6;
+  --color-surface: #ffffff;
+  --color-surface-subtle: #fcfbf8;
+  --color-surface-muted: #f6f5f0;
+  --color-surface-raised: #f2f0e9;
+
+  /* ---- Ink, strongest to quietest ---- */
+  --color-ink: #1a1a17;
+  --color-ink-strong: #38372f;
+  --color-ink-secondary: #45443e;
+  --color-ink-tertiary: #55534c;
+  /*
+   * Retuned from the export. #83817A and #A5A29A are the design's metadata greys and
+   * both fail WCAG AA on this canvas (3.90:1 and 2.55:1 against white). On a page whose
+   * entire argument is that evidence metadata should be easy to retrieve, metadata that
+   * cannot be read is a contradiction, not a style. Each step below clears 4.5:1 against
+   * every light surface it is used on, and the four-step hierarchy is preserved.
+   */
+  --color-ink-muted: #5e5c55; /* 5.87:1 — boundary labels */
+  --color-meta: #66645d; /* 5.19:1 — metadata */
+  --color-meta-quiet: #6e6c64; /* 4.61:1 — field labels */
+
+  /* ---- Structure ---- */
+  --color-border: #dedbd2;
+  --color-border-quiet: #edeae1;
+  --color-border-dashed: #b3afa4;
+
+  /* ---- The one signal accent ---- */
+  --color-accent: #8a5a12;
+  --color-accent-deep: #7a4f0f;
+  --color-accent-border: #d9c8a8;
+  --color-accent-surface: #f6f1e6;
+
+  /* ---- Inverse scale: dark CTA and the decision panel ---- */
+  --color-inverse-bg: #1a1a17;
+  --color-inverse-ink: #faf9f6;
+  --color-inverse-ink-quiet: #c9c3b8;
+  --color-inverse-border: #3a3833;
+  --color-inverse-surface: #26241f;
+  --color-inverse-accent: #c9b98f;
+  --color-inverse-accent-strong: #e4d6b8;
+
+  /* ---- Type ---- */
+  --font-sans: var(--font-public-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+
+  /*
+   * Metadata sizes. The export used 10.5–11px here; raised so metadata reads as
+   * information rather than texture. Tracking eases off as size drops — wide tracking
+   * on small uppercase type is precisely what makes it hard to read.
+   */
+  --text-meta-sm: 0.719rem; /* 11.5px */
+  --text-meta: 0.75rem; /* 12px */
+  --text-meta-lg: 0.781rem; /* 12.5px */
+  --tracking-meta: 0.08em;
+  --tracking-meta-tight: 0.07em;
+  --tracking-eyebrow: 0.1em;
+
+  /* ---- Rhythm ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.375rem;
+  --space-6: 1.75rem;
+  --space-7: 2.5rem;
+  --space-8: 3.5rem;
+
+  --page-max: 1280px;
+  --page-gutter: 2rem;
+
+  /* Header height plus breathing room. Sections and scroll offsets share it. */
+  --scroll-offset: 100px;
+  --sticky-top: 82px;
+
+  --radius: 2px;
+  --rule: 1px solid var(--color-border);
+  --rule-quiet: 1px solid var(--color-border-quiet);
+  --rule-strong: 2px solid var(--color-ink);
+
+  --focus-ring: 2px solid var(--color-accent);
+}
+
+@media (max-width: 640px) {
+  :root {
+    --page-gutter: 1.25rem;
+    --space-7: 2rem;
+    --space-8: 2.5rem;
+  }
+}
