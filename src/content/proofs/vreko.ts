@@ -3,11 +3,17 @@ import type { Proof } from '@/lib/types';
 /**
  * Copy is carried over from the Claude Design export verbatim unless noted.
  *
- * Every `href` here is absent and every row is `verified: false`. In the export these
- * rows pointed either at `#sec-02` — the section the reader is already in — or at the
- * general GitHub profile. Neither is the artifact the row names, so under the
- * evidence-integrity rule they are unresolved until exact URLs are supplied.
+ * In the export every row pointed either at `#sec-02` — the section the reader is
+ * already in — or at the general GitHub profile. Neither is the artifact the row
+ * names, so all four were unresolved.
+ *
+ * They now point at exact destinations in `vreko-dev/mcp-server`, each confirmed to
+ * be the artifact its row claims. The repository is the public distribution and
+ * documentation surface for the `vreko-mcp-server` package; the implementation is
+ * built from the proprietary Vreko core and is deliberately not published, which is
+ * why the boundary below says what it says.
  */
+const MCP_REPO = 'https://github.com/vreko-dev/mcp-server';
 export const vreko: Proof = {
   id: 'vreko',
   sectionId: 'sec-02',
@@ -53,7 +59,8 @@ export const vreko: Proof = {
       id: 'vreko-repo',
       label: 'Repository',
       detail: 'Vreko MCP Server',
-      verified: false,
+      href: MCP_REPO,
+      verified: true,
       cta: 'OPEN GITHUB',
     },
     {
@@ -61,7 +68,8 @@ export const vreko: Proof = {
       label: 'Architecture',
       detail: 'Transport → MCP protocol → intelligence layer',
       detailIsCode: true,
-      verified: false,
+      href: `${MCP_REPO}#architecture`,
+      verified: true,
       cta: 'INSPECT',
     },
     {
@@ -69,14 +77,16 @@ export const vreko: Proof = {
       label: 'Agent workflow',
       detail: 'brief → pulse → learn → end',
       detailIsCode: true,
-      verified: false,
+      href: `${MCP_REPO}#the-v2-agentic-workflow`,
+      verified: true,
       cta: 'INSPECT',
     },
     {
       id: 'vreko-deployment',
       label: 'Deployment',
       detail: 'local + hosted execution paths',
-      verified: false,
+      href: `${MCP_REPO}#deployment-to-flyio`,
+      verified: true,
       cta: 'INSPECT',
     },
   ],
@@ -86,8 +96,9 @@ export const vreko: Proof = {
       kind: 'source',
       title: 'Vreko MCP Server',
       description:
-        'Public repository containing the server implementation, tool contracts, and configuration.',
-      verified: false,
+        'Public repository carrying the package manifest, tool contracts, configuration and documentation that ship with each release.',
+      href: MCP_REPO,
+      verified: true,
     },
     {
       id: 'vreko-ev-architecture',
@@ -95,7 +106,8 @@ export const vreko: Proof = {
       title: 'Transport → MCP protocol → intelligence layer',
       description:
         'Separation between transport concerns, protocol surface, and the repository/session intelligence behind it.',
-      verified: false,
+      href: `${MCP_REPO}#architecture`,
+      verified: true,
     },
     {
       id: 'vreko-ev-lifecycle',
@@ -103,7 +115,8 @@ export const vreko: Proof = {
       title: 'Agent lifecycle: brief → pulse → learn → end',
       description:
         'Session shape the server exposes to a compatible assistant, including where state is written and read.',
-      verified: false,
+      href: `${MCP_REPO}#the-v2-agentic-workflow`,
+      verified: true,
     },
     {
       id: 'vreko-ev-deployed',
@@ -111,9 +124,10 @@ export const vreko: Proof = {
       title: 'Local + hosted execution paths',
       description:
         'Two supported execution paths with distinct authentication and deployment boundaries.',
-      verified: false,
+      href: `${MCP_REPO}#deployment-to-flyio`,
+      verified: true,
     },
   ],
   boundary:
-    'Public source establishes that the system exists and how it is built. It does not establish adoption, usage volume, or production scale outside the repositories where it has been applied.',
+    'The public repository establishes the protocol surface, the session contract and the deployment shape. The Vreko core is proprietary, so the implementation behind that surface is not open to inspection. It does not establish adoption, usage volume, or production scale.',
 };

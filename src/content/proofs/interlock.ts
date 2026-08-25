@@ -4,10 +4,10 @@ import type { Proof } from '@/lib/types';
  * Counterfactual arms for the Interlock section.
  *
  * These values come from the design export (`140 > 130`, `WITHHOLD_SERIALIZE`,
- * `120 ≤ 130`). They are carried over rather than invented, but they are *not* bound to
- * a published evidence packet, so the component labels them as prototype values. When
- * the packet is published, set `verified: true` on the evidence rows below and the
- * label changes with it.
+ * `120 ≤ 130`). They match the published HAC-330 counterfactual, which is now linked
+ * from the evidence rows below, but this component still renders from these local
+ * constants rather than reading the packet, so it continues to label them as
+ * prototype values. The packet itself is the artifact of record.
  */
 export type CounterfactualArm = {
   id: 'without' | 'with';
@@ -41,6 +41,14 @@ export const interlockArms: readonly CounterfactualArm[] = [
   },
 ] as const;
 
+/**
+ * Interlock publishes its cloud evidence pinned to a commit rather than a branch, so
+ * the packet a reader opens is the packet the claim was made against. Those URLs are
+ * reproduced here at the same pin; a branch link would silently drift.
+ */
+const ILK_REPO = 'https://github.com/Marcelle-Labs/interlock';
+const ILK_PIN = '75253e38791e69f7e2a4bb3a041044a9114c32f0';
+
 export const interlock: Proof = {
   id: 'interlock',
   sectionId: 'sec-04',
@@ -67,19 +75,22 @@ export const interlock: Proof = {
     {
       id: 'ilk-experiment',
       label: 'Controlled experiment',
-      verified: false,
+      href: `${ILK_REPO}/tree/main/experiments/hac-330`,
+      verified: true,
       cta: 'INSPECT',
     },
     {
       id: 'ilk-packet',
       label: 'Frozen evidence packet',
-      verified: false,
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-342/evidence/cloud-run.public.json`,
+      verified: true,
       cta: 'INSPECT',
     },
     {
       id: 'ilk-verifier',
       label: 'Independent verifier',
-      verified: false,
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-342/bin/verify-public-packet.mjs`,
+      verified: true,
       cta: 'INSPECT',
     },
     {
@@ -87,7 +98,8 @@ export const interlock: Proof = {
       label: 'Cloud traversal',
       detail: 'Google ADK + Vertex AI + Cloud Run + MCP proxy',
       detailIsCode: true,
-      verified: false,
+      href: `${ILK_REPO}#google-cloud-participation`,
+      verified: true,
       cta: 'INSPECT',
     },
   ],
@@ -97,16 +109,18 @@ export const interlock: Proof = {
       kind: 'experiment',
       title: 'Controlled counterfactual comparison',
       description:
-        'Paired arms with and without evidence-bound coordination before shared-state mutation.',
-      verified: false,
+        'Paired arms with and without evidence-bound coordination before shared-state mutation. Re-runnable: pnpm hac330.',
+      href: `${ILK_REPO}/tree/main/experiments/hac-330`,
+      verified: true,
     },
     {
       id: 'ilk-ev-packet',
       kind: 'observed',
       title: 'Frozen evidence packet',
       description:
-        'Recorded run artifacts held fixed so the comparison can be re-checked after the fact.',
-      verified: false,
+        'Recorded run artifacts held fixed so the comparison can be re-checked after the fact. Published at a pinned commit, not a branch, and the packet digest is recomputable with shasum.',
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-342/evidence/cloud-run.public.json`,
+      verified: true,
     },
     {
       id: 'ilk-ev-verifier',
@@ -114,19 +128,21 @@ export const interlock: Proof = {
       title: 'Independent verifier',
       description:
         'Verification separated from execution so the checking path does not share the decision path.',
-      verified: false,
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-342/bin/verify-public-packet.mjs`,
+      verified: true,
     },
     {
       id: 'ilk-ev-cloud',
       kind: 'deployed',
       title: 'Google ADK + Vertex AI + Cloud Run + MCP proxy',
       description:
-        'Cloud traversal exercised through an authenticated decision/execution boundary.',
-      verified: false,
+        'One recorded traversal through an authenticated decision/execution boundary, with the mutation and an independently authenticated read-back kept as separate facts.',
+      href: `${ILK_REPO}#google-cloud-participation`,
+      verified: true,
     },
   ],
   boundary:
-    'A bounded experiment under stated conditions. It is not a universal safety proof, and it does not establish behavior outside the constraint and environment described in the evidence packet.',
+    'A bounded experiment under stated conditions. The controlled counterfactual ran locally; the Google Cloud traversal is a separate recorded run, and neither is evidence for the other. It is not a universal safety proof, and it does not establish behavior outside the constraint and environment described in the evidence packet. The repository states the full not-claimed list in DISCLOSURE.md.',
 };
 
 /** Why this experiment belongs in a résumé at all. */

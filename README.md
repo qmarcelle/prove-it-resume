@@ -38,6 +38,7 @@ src/
   app/                    routes, all statically rendered
     page.tsx              the durable evidence surface
     role/[slug]/page.tsx  the same surface, projected through a role lens
+                          (athenahealth-yoh, end-to-end-delivery)
   components/             presentation; no content lives here
   content/                durable proof, claims, decisions, role lenses
   lib/                    types, the evidence rule, lens projection
@@ -54,7 +55,10 @@ cannot ship without stating its limits.
 
 **Role lenses are projections, not forks.** A `RoleLens` may reorder and reframe; it
 holds no proof content, so it structurally cannot change a claim. `/` and `/role/<slug>`
-render the same component with a different lens.
+render the same component with a different lens. A test asserts that every row in every
+lens exists _verbatim_ in the durable mapping, so a lens cannot author copy for one
+audience — `/role/end-to-end-delivery` reorders the durable rows into delivery sequence
+rather than writing its own.
 
 **Server Components by default.** `"use client"` appears in nine files, all genuinely
 interactive. The page works before hydration: anchors, the evidence index, and every link
@@ -135,10 +139,26 @@ anchor.
 - `RepositoryDecisionDiff` — structure, state machine, and accessibility only
 - Accessibility, responsive, and browser test coverage; CI
 
-**Awaiting verified content**
+**Evidence bound**
+
+Every evidence row on the three primary claims now resolves to an exact artifact, and
+each was opened and confirmed to be the thing its row names:
+
+| Claim                        | Resolved |
+| ---------------------------- | -------- |
+| Vreko                        | 8 / 8    |
+| Repository Intelligence      | 12 / 12  |
+| Interlock                    | 8 / 8    |
+| Never Ask Twice (supporting) | 1 / 1    |
+
+The Interlock rows point at a **pinned commit**, not a branch, so the packet a reader
+opens is the packet the claim was made against.
+
+**Awaiting owner-supplied content**
 
 - No résumé PDF was supplied; résumé support is wired but the link is disabled
-- Most per-artifact evidence URLs are unresolved — the Tally case study is the exception
+- LinkedIn and email are unresolved — publishing a contact address is the owner's call,
+  not something to infer
 - The seven Decision Receipts have questions but no answers
 - `RepositoryDecisionDiff` has no plan pair to show
 

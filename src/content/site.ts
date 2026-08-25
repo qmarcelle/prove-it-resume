@@ -53,9 +53,12 @@ export const RESUME: EvidenceRef = {
 };
 
 /**
- * Contact and profile destinations. All unresolved: the export pointed LinkedIn and
- * Email at `#resume` and the Marcelle Labs link at `#`. Inventing a profile URL or an
- * address would be fabricating contact information.
+ * Contact and profile destinations.
+ *
+ * The export pointed LinkedIn and Email at `#resume` and the Marcelle Labs link at
+ * `#`. Marcelle Labs now resolves to the live site. LinkedIn and Email stay
+ * unresolved on purpose: no profile URL was supplied, and publishing a contact
+ * address is the owner's decision, not something to infer.
  */
 export const PROFILES: readonly EvidenceRef[] = [
   { id: 'linkedin', kind: 'source', title: 'LinkedIn', verified: false },
@@ -64,7 +67,8 @@ export const PROFILES: readonly EvidenceRef[] = [
     id: 'marcelle-labs',
     kind: 'source',
     title: 'Professional work: Marcelle Labs',
-    verified: false,
+    href: 'https://marcellelabs.io',
+    verified: true,
   },
 ] as const;
 
