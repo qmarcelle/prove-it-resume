@@ -35,13 +35,22 @@
   align-items: flex-end;
 }
 
+/*
+ * Typography only. The masthead is a flex *row*, so the basis that lets the thesis
+ * share that row lives on the row's own rule below — set here it would be a flex-basis
+ * on whatever axis the parent happens to use, and in a column that 420px silently
+ * becomes 420px of height.
+ */
 .thesis {
-  flex: 1 1 420px;
   min-width: 0;
   max-width: 56ch;
   font-size: 1.0625rem;
   line-height: 1.6;
   color: var(--color-ink-strong);
+}
+
+.masthead > .thesis {
+  flex: 1 1 420px;
 }
 
 .dark .thesis {

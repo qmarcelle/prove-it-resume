@@ -151,13 +151,13 @@ test.describe('interlock counterfactual', () => {
     await page.goto('/');
     const panel = interlock(page);
 
-    await expect(panel.getByText(/JOINT SHARED STATE · BOUND 130/)).toBeVisible();
+    // The bound and the invariant it expresses read as one line above the axis.
+    await expect(panel.getByText(/BOUND 130 · sum\(services/)).toBeVisible();
 
     // Two bars, one marker, and the marker sits at the same x for both arms because
     // there is only one of it.
     await expect(panel.getByRole('img')).toHaveCount(2);
-    const markers = panel.locator('[class*="marker"]:not([class*="markerLabel"])');
-    await expect(markers).toHaveCount(1);
+    await expect(panel.locator('[class*="BoundAxis"][class*="marker"]')).toHaveCount(1);
   });
 
   test('moves through stages to the frozen outcome', async ({ page }) => {
@@ -183,8 +183,15 @@ test.describe('interlock counterfactual', () => {
 
   test('resolves its evidence link', async ({ page }) => {
     await page.goto('/');
+    // The artifact link moved to the section's proof layer, where the boundary is also
+    // stated once. The revision pin is the part that must not slip.
     await expect(
-      interlock(page).getByRole('link', { name: /INSPECT FROZEN EXPERIMENT/ }),
+      // Anchored on the call-to-action text: the evidence panel in the same section
+      // also names the frozen packet, but points at the published cockpit rather than
+      // the revision-pinned artifact, and that is the one under test here.
+      page.locator('#sec-04').getByRole('link', {
+        name: /^HAC-330 frozen evidence packet/,
+      }),
     ).toHaveAttribute('href', /Marcelle-Labs\/interlock\/blob\/[0-9a-f]{40}\//);
   });
 
