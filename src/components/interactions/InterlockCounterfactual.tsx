@@ -1,87 +1,299 @@
 'use client';
 
-import { useId, useState } from 'react';
-import { interlockArms } from '@/content/proofs/interlock';
+import { useId, useMemo, useState } from 'react';
+import type {
+  ArmFrame,
+  InterlockCounterfactualData,
+  InterlockStage,
+} from '@/lib/interactions';
+import { EvidenceLink } from '@/components/evidence/EvidenceLink';
+import { StepControl, type Step } from './StepControl';
+import { useDeepLinkedState } from './useDeepLinkedState';
 import styles from './InterlockCounterfactual.module.css';
 
 /**
- * The Interlock counterfactual: evidence → coordination decision → bounded outcome.
+ * The Interlock counterfactual: two locally valid intents, one bounded constraint.
  *
- * The design showed both arms statically, side by side. The section's actual claim is
- * that coordination *changes the outcome*, and a change is best shown by making it
- * happen — so this is an OFF/ON switch over one panel rather than two panels the reader
- * has to diff by eye.
+ * The single most important layout decision here is that **both arms are drawn against
+ * one scale, with one constraint marker running through both of them.** The earlier
+ * version switched a single panel between arms, which made the reader hold one arm in
+ * memory while looking at the other. The claim is a comparison, so the comparison is on
+ * screen: same axis, same bound, same clock.
  *
- * Both arms are rendered, and the inactive one is removed from the DOM rather than
- * hidden, so assistive technology and the visible page agree on what is being asserted.
- * The switch is two `aria-pressed` buttons rather than a checkbox: the states are named
- * (`WITHOUT` / `WITH INTERLOCK`), not on/off, and a screen-reader user should hear the
- * name.
+ * The second is that the arms advance together through named stages. The point of the
+ * experiment is *when* the decision happens — before shared state is mutated — and a
+ * reader cannot see "before" without a time axis.
  *
- * The values shown are carried over from the design prototype and are *not* bound to a
- * published evidence packet. The provenance strip below says so, and will keep saying so
- * until the packet exists. See docs/content-audit.md.
+ * Perturbation is a user action, never autoplay. Removing the coupling evidence flips
+ * the coordination decision from WITHHOLD_SERIALIZE to ALLOW_PARALLEL and the joint
+ * outcome from 120 to 140, using the same decision function. That is the experiment's
+ * strongest control and its most honest finding at once, so it is a control the reader
+ * operates rather than a result they are told about.
+ *
+ * Restraint is deliberate: no flash, no shake, no celebration of the satisfied arm. The
+ * uncoordinated arm is a legitimate recorded finding. The numbers carry the argument.
  */
-export function InterlockCounterfactual() {
-  const [withInterlock, setWithInterlock] = useState(false);
-  const panelId = useId();
 
-  const arm = interlockArms[withInterlock ? 1 : 0];
+export function InterlockCounterfactual({ data }: { data: InterlockCounterfactualData }) {
+  const panelId = useId();
+  const [perturbed, setPerturbed] = useState(false);
+
+  const stageIds = useMemo(() => data.stages.map((s) => s.id), [data.stages]);
+  const [stageId, setStageId] = useDeepLinkedState(
+    'interlock',
+    data.stages[0].id,
+    (raw) => (stageIds as readonly string[]).includes(raw),
+  );
+
+  /*
+   * Perturbation replaces the frames of the stages it affects and leaves the rest
+   * alone. The uncoordinated arm is unchanged throughout — it has no decision point to
+   * flip — which is itself part of what the control demonstrates.
+   */
+  const stages: readonly InterlockStage[] = useMemo(() => {
+    if (!perturbed) return data.stages;
+    return data.stages.map(
+      (stage) => data.perturbedStages.find((p) => p.id === stage.id) ?? stage,
+    );
+  }, [perturbed, data.stages, data.perturbedStages]);
+
+  const steps: readonly Step[] = stages.map((s) => ({ id: s.id, label: s.label }));
+  const index = Math.max(
+    0,
+    stages.findIndex((s) => s.id === stageId),
+  );
+  const stage = stages[index];
+  const condition = perturbed
+    ? data.evidenceConditions.perturbed
+    : data.evidenceConditions.baseline;
+
+  const markerPercent = (data.bound / data.scaleMax) * 100;
 
   return (
-    <div className={styles.wrap}>
+    <section className={styles.wrap} aria-labelledby={`${panelId}-title`}>
+      <div className={styles.header}>
+        <h3 className={styles.title} id={`${panelId}-title`}>
+          Interlock counterfactual
+        </h3>
+        <span className={styles.headerCode}>{data.experiment}</span>
+      </div>
+
+      <p className={styles.question}>{data.question}</p>
+
       <div className={styles.controls}>
-        <div className={styles.switch} role="group" aria-label="Coordination arm">
-          <button
-            type="button"
-            className={styles.option}
-            aria-pressed={!withInterlock}
-            aria-controls={panelId}
-            onClick={() => setWithInterlock(false)}
-          >
-            WITHOUT COORDINATION
-          </button>
-          <button
-            type="button"
-            className={styles.option}
-            aria-pressed={withInterlock}
-            aria-controls={panelId}
-            onClick={() => setWithInterlock(true)}
-          >
-            WITH INTERLOCK
-          </button>
+        <div className={styles.controlBlock}>
+          <span className={styles.controlLabel}>VARIED</span>
+          <p className={styles.controlBody}>{data.controls.varied}</p>
         </div>
-        <span className={styles.hint}>REPRODUCIBLE EVIDENCE &gt; DEMO</span>
+        <div className={styles.controlBlock}>
+          <span className={styles.controlLabel}>HELD FIXED</span>
+          <ul className={styles.fixedList}>
+            {data.controls.heldFixed.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
       </div>
 
-      <div
-        className={`${styles.arm} ${arm.satisfied ? styles.armActive : ''}`.trim()}
-        id={panelId}
-        aria-live="polite"
-      >
-        <div className={styles.armHeader}>{arm.heading}</div>
-        <div className={styles.armBody}>
-          {arm.lines.map((line) => (
-            <p className={styles.line} key={line}>
-              {line}
-            </p>
-          ))}
-          {arm.decision ? <span className={styles.decision}>{arm.decision}</span> : null}
-          <p className={styles.figure}>{arm.figure}</p>
+      <StepControl
+        label="Experiment stage"
+        steps={steps}
+        activeId={stage.id}
+        onChange={setStageId}
+        controls={panelId}
+      />
+
+      <p className="visually-hidden" role="status">
+        Stage {index + 1} of {stages.length}: {stage.label}.{' '}
+        {data.armLabels.uncoordinated}, joint total {stage.frames.uncoordinated.total}.{' '}
+        {data.armLabels.interlocked}, joint total {stage.frames.interlocked.total}. Bound{' '}
+        {data.bound}.
+      </p>
+
+      <div className={styles.panel} id={panelId}>
+        <div className={styles.scaleHead}>
+          <span className={styles.scaleTitle}>
+            JOINT SHARED STATE · BOUND {data.bound}
+          </span>
+          <span className={styles.invariant}>{data.invariant}</span>
         </div>
-        <div className={styles.armFooter}>
-          <span
-            className={arm.satisfied ? styles.markSatisfied : styles.markInvalid}
+
+        <p className={styles.caption}>{stage.caption}</p>
+
+        {/*
+         * One track, one marker, two arms. The marker is a single element positioned
+         * across the full height of the track, so the constraint is literally the same
+         * line for both arms rather than two lines a reader has to trust are aligned.
+         */}
+        <div className={styles.track}>
+          <div
+            className={styles.marker}
+            style={{ left: `${markerPercent}%` }}
             aria-hidden="true"
-          />
-          {arm.outcome}
+          >
+            <span className={styles.markerLabel}>{data.bound}</span>
+          </div>
+
+          {(['uncoordinated', 'interlocked'] as const).map((armId) => (
+            <Arm
+              key={armId}
+              label={data.armLabels[armId]}
+              frame={stage.frames[armId]}
+              scaleMax={data.scaleMax}
+              bound={data.bound}
+            />
+          ))}
+
+          <div className={styles.axis} aria-hidden="true">
+            <span>0</span>
+            <span>{data.scaleMax}</span>
+          </div>
         </div>
+
+        {/* ---- The evidence condition, and the control that changes it ---- */}
+        <div className={styles.evidenceBar}>
+          <div className={styles.evidenceState}>
+            <span className={styles.evidenceStateLabel}>
+              COUPLING EVIDENCE ·{' '}
+              {condition.present ? 'OBSERVED' : 'NOT OBSERVED IN HISTORY'}
+            </span>
+            <p className={styles.evidenceSummary}>{condition.summary}</p>
+            {condition.files ? (
+              <p className={styles.evidenceFiles}>
+                {condition.files.join(' ↔ ')} · support {condition.support} across{' '}
+                {condition.occurrences} occurrences
+              </p>
+            ) : null}
+            <p className={styles.evidenceBasis}>
+              basis {condition.basisRevision} · {condition.digest}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            className={styles.perturb}
+            aria-pressed={perturbed}
+            onClick={() => setPerturbed((value) => !value)}
+          >
+            {perturbed ? 'Restore evidence' : 'Perturb the evidence'}
+          </button>
+        </div>
+
+        {perturbed ? (
+          <p className={styles.perturbNote}>
+            Same decision function, same intents, same policy, identical final tree — and
+            the opposite decision, because the evidence changed. In this history alpha and
+            beta are still coupled; the commit graph simply never showed it.
+          </p>
+        ) : null}
+
+        {/* ---- Decision trace: what each arm did, stage by stage ---- */}
+        <div className={styles.trace}>
+          <span className={styles.sectionLabel}>Decision trace</span>
+          <ol className={styles.traceList}>
+            {stages.slice(0, index + 1).map((traced) => (
+              <li className={styles.traceStage} key={traced.id}>
+                <span className={styles.traceStageLabel}>{traced.label}</span>
+                <div className={styles.traceArms}>
+                  {(['uncoordinated', 'interlocked'] as const).map((armId) => (
+                    <p className={styles.traceLine} key={armId}>
+                      <span className={styles.traceArmName}>{data.armLabels[armId]}</span>
+                      {traced.frames[armId].decision ? (
+                        <span className={styles.traceDecision}>
+                          {traced.frames[armId].decision}
+                          {traced.frames[armId].decisionReason
+                            ? ` · ${traced.frames[armId].decisionReason}`
+                            : ''}
+                        </span>
+                      ) : null}
+                      {traced.frames[armId].note}
+                    </p>
+                  ))}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        {stage.id === 'evidence' ? (
+          <div className={styles.packet}>
+            <span className={styles.sectionLabel}>Frozen evidence packet</span>
+            <ul className={styles.distinctions}>
+              {data.distinctions.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+            {data.verification ? (
+              <>
+                <p className={styles.verifyMethod}>{data.verification.method}</p>
+                {data.verification.command ? (
+                  <code className={styles.command}>{data.verification.command}</code>
+                ) : null}
+              </>
+            ) : null}
+          </div>
+        ) : null}
       </div>
 
-      <p className={styles.provenance}>
-        PROTOTYPE VALUES — carried over from the design draft. These figures illustrate
-        the shape of the comparison; they are not yet bound to the published evidence
-        packet, and should not be read as a measured result.
+      <div className={styles.footer}>
+        <p className={styles.boundary}>
+          <span className={styles.boundaryLabel}>WHAT THIS DOES NOT SHOW</span>
+          {data.boundary}
+        </p>
+        <EvidenceLink reference={data.artifact} cta="INSPECT FROZEN EXPERIMENT" />
+      </div>
+    </section>
+  );
+}
+
+/** One arm: a stacked bar on the shared scale, plus the numbers in text. */
+function Arm({
+  label,
+  frame,
+  scaleMax,
+  bound,
+}: {
+  label: string;
+  frame: ArmFrame;
+  scaleMax: number;
+  bound: number;
+}) {
+  const description = `${label}: ${frame.segments
+    .map((s) => `${s.label} ${s.value}${s.pending ? ' pending' : ''}`)
+    .join(', ')}. Joint total ${frame.total} against a bound of ${bound}.`;
+
+  return (
+    <div className={styles.arm}>
+      <div className={styles.armHead}>
+        <span className={styles.armLabel}>{label}</span>
+        <span className={styles.armTotals}>
+          <span className={styles.armTotal}>{frame.total}</span>
+          {frame.verdict ? (
+            <span className={frame.holds ? styles.verdictHolds : styles.verdictBreached}>
+              {frame.verdict}
+            </span>
+          ) : null}
+        </span>
+      </div>
+
+      <div className={styles.bar} role="img" aria-label={description}>
+        {frame.segments.map((segment) => (
+          <span
+            key={segment.id}
+            className={segment.pending ? styles.segmentPending : styles.segment}
+            style={{ width: `${(segment.value / scaleMax) * 100}%` }}
+          />
+        ))}
+      </div>
+
+      <p className={styles.segmentLine}>
+        {frame.segments.map((segment, segmentIndex) => (
+          <span key={segment.id}>
+            {segmentIndex > 0 ? ' · ' : ''}
+            {segment.label} {segment.value}
+            {segment.pending ? ' (pending)' : ''}
+          </span>
+        ))}
       </p>
     </div>
   );

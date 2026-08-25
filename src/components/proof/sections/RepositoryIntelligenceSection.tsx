@@ -9,6 +9,7 @@ import { EvidenceLink } from '@/components/evidence/EvidenceLink';
 import { EvidencePanel } from '@/components/evidence/EvidencePanel';
 import { ArchitectureStrip } from '@/components/proof/ArchitectureStrip';
 import { RepositoryDecisionDiff } from '@/components/interactions/RepositoryDecisionDiff';
+import { repositoryDecision } from '@/content/experiments/repository-decision';
 import {
   ProofAside,
   ProofColumns,
@@ -102,7 +103,7 @@ export function RepositoryIntelligenceSection() {
         <p className={styles.argumentBody}>{ARGUMENT_IN_ONE_LINE}</p>
       </div>
 
-      <RepositoryDecisionDiff code={proof.evidenceCode} />
+      <RepositoryDecisionDiff code={proof.evidenceCode} data={repositoryDecision} />
 
       <ProofColumns>
         <ProofProse>

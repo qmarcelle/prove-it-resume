@@ -1,0 +1,128 @@
+.wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  /*
+   * A flex child defaults to min-width:auto, which means it refuses to shrink below its
+   * content. With four stage labels in a row that pushed the whole page wide at 375px.
+   */
+  min-width: 0;
+  max-width: 100%;
+  border: var(--rule);
+  background: var(--color-surface);
+}
+
+.step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+  padding: 0.5625rem 0.8125rem;
+  min-height: 44px;
+  background: transparent;
+  border: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-ink-secondary);
+  cursor: pointer;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
+}
+
+.step + .step {
+  border-left: var(--rule);
+}
+
+.ordinal {
+  font-size: var(--text-meta-sm);
+  color: var(--color-meta-quiet);
+}
+
+.step[aria-pressed='true'] {
+  background: var(--color-ink);
+  color: var(--color-canvas);
+}
+
+.step[aria-pressed='true'] .ordinal {
+  color: var(--color-inverse-accent);
+}
+
+.ordinalControls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.nudge {
+  padding: 0.5rem 0.6875rem;
+  min-height: 44px;
+  border: var(--rule);
+  background: var(--color-surface);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-ink-secondary);
+  cursor: pointer;
+}
+
+.nudge:disabled {
+  color: var(--color-meta-quiet);
+  cursor: default;
+}
+
+.position {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-meta);
+  min-width: 3.25rem;
+  text-align: center;
+}
+
+/*
+ * Below this width the stage buttons wrap into a grid rather than becoming a horizontal
+ * scroller.
+ *
+ * The scroller version was worse in two ways that only showed up in a real browser:
+ * activating a stage scrolled the control sideways under the reader's finger, and the
+ * browser propagated that scroll far enough to give the *page* ~50px of horizontal
+ * overflow. Wrapping keeps every stage label visible at once, which is also the better
+ * answer for a control whose whole job is to show where you are in a sequence.
+ */
+@media (max-width: 560px) {
+  .wrap {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .group {
+    flex-wrap: wrap;
+  }
+
+  .step {
+    /* A basis of auto means "as wide as the label", which is exactly what must not
+       happen here — the longest label would set the page width. */
+    flex: 1 1 8rem;
+    min-width: 0;
+    justify-content: center;
+    text-align: center;
+    white-space: normal;
+  }
+
+  /* Rows after the first need their own separator, since the border is on the left. */
+  .step:nth-child(n + 3) {
+    border-top: var(--rule);
+  }
+
+  .ordinalControls {
+    justify-content: space-between;
+  }
+}

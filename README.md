@@ -41,10 +41,12 @@ src/
                           (athenahealth-yoh, end-to-end-delivery)
   components/             presentation; no content lives here
   content/                durable proof, claims, decisions, role lenses
+    experiments/          the frozen runs the interactions are bound to
   lib/                    types, the evidence rule, lens projection
   styles/tokens.css       the design language as custom properties
 design/reference/claude/  the original design export, preserved unmodified
-docs/                     design import, ADRs, content audit, performance
+docs/                     design import, ADRs, content audit, performance,
+                          interaction contract, design provenance
 ```
 
 Three ideas carry the design:
@@ -60,7 +62,7 @@ lens exists _verbatim_ in the durable mapping, so a lens cannot author copy for 
 audience — `/role/end-to-end-delivery` reorders the durable rows into delivery sequence
 rather than writing its own.
 
-**Server Components by default.** `"use client"` appears in nine files, all genuinely
+**Server Components by default.** `"use client"` appears in twelve files, all genuinely
 interactive. The page works before hydration: anchors, the evidence index, and every link
 are ordinary HTML.
 
@@ -80,6 +82,12 @@ served.
 
 [`docs/design-import.md`](docs/design-import.md) records what was extracted, where each
 piece landed, and every deliberate deviation from the mockup.
+
+A later motion-and-disclosure storyboard drove the three progressive-disclosure
+interactions. It was consumed as an interaction specification and **not** committed —
+its hash, treatment, and every deviation are recorded in
+[`docs/design-provenance.md`](docs/design-provenance.md), and the durable rules it
+produced are in [`docs/interaction-contract.md`](docs/interaction-contract.md).
 
 ## Local development
 
@@ -135,8 +143,9 @@ anchor.
 - Guided proof navigation, active-stage tracking, evidence disclosures
 - Role-lens projection with the supplied `athenahealth / Yoh` lens
 - Decision Receipt component, with an explicit awaiting state
-- `InterlockCounterfactual` (prototype values, labelled as such)
-- `RepositoryDecisionDiff` — structure, state machine, and accessibility only
+- Three progressive-disclosure interactions, each bound to a frozen public artifact:
+  the Repository Decision Diff, the Interlock counterfactual, and the Vreko semantic
+  zoom and request trace
 - Accessibility, responsive, and browser test coverage; CI
 
 **Evidence bound**
@@ -152,7 +161,8 @@ each was opened and confirmed to be the thing its row names:
 | Never Ask Twice (supporting) | 1 / 1    |
 
 The Interlock rows point at a **pinned commit**, not a branch, so the packet a reader
-opens is the packet the claim was made against.
+opens is the packet the claim was made against. A test enforces that for every GitHub
+evidence link on the site.
 
 **Awaiting owner-supplied content**
 
@@ -160,7 +170,6 @@ opens is the packet the claim was made against.
 - LinkedIn and email are unresolved — publishing a contact address is the owner's call,
   not something to infer
 - The seven Decision Receipts have questions but no answers
-- `RepositoryDecisionDiff` has no plan pair to show
 
 The complete list, with what each item needs, is in
 [`docs/content-audit.md`](docs/content-audit.md).

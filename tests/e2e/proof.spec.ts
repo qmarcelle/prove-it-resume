@@ -135,6 +135,27 @@ test.describe('evidence disclosures', () => {
     }
   });
 
+  /*
+   * Interlock's row must stay pinned to the local controlled experiment. The repository
+   * publishes HAC-330, HAC-340 and HAC-343 as three separate results and says so
+   * explicitly, so a row drifting to the cloud packet would quietly merge two of them.
+   */
+  test('the Interlock counterfactual row points at HAC-330, not the cloud run', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: /Inspect evidence.*EV-ILK/ }).click();
+
+    const packet = page
+      .locator('#sec-04')
+      .getByRole('link', { name: /INSPECT PACKET/ })
+      .first();
+    await expect(packet).toHaveAttribute(
+      'href',
+      /Marcelle-Labs\/interlock\/blob\/[0-9a-f]{40}\/experiments\/hac-330/,
+    );
+  });
+
   test('a verified artifact is a real outbound link', async ({ page }) => {
     await page.goto('/');
 

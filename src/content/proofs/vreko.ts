@@ -77,7 +77,7 @@ export const vreko: Proof = {
       label: 'Agent workflow',
       detail: 'brief → pulse → learn → end',
       detailIsCode: true,
-      href: `${MCP_REPO}#the-v2-agentic-workflow`,
+      href: `${MCP_REPO}#what-is-vreko-mcp-server`,
       verified: true,
       cta: 'INSPECT',
     },
@@ -115,7 +115,7 @@ export const vreko: Proof = {
       title: 'Agent lifecycle: brief → pulse → learn → end',
       description:
         'Session shape the server exposes to a compatible assistant, including where state is written and read.',
-      href: `${MCP_REPO}#the-v2-agentic-workflow`,
+      href: `${MCP_REPO}#what-is-vreko-mcp-server`,
       verified: true,
     },
     {

@@ -1,50 +1,20 @@
 import type { Proof } from '@/lib/types';
 
 /**
- * Counterfactual arms for the Interlock section.
- *
- * These values come from the design export (`140 > 130`, `WITHHOLD_SERIALIZE`,
- * `120 ≤ 130`). They match the published HAC-330 counterfactual, which is now linked
- * from the evidence rows below, but this component still renders from these local
- * constants rather than reading the packet, so it continues to label them as
- * prototype values. The packet itself is the artifact of record.
- */
-export type CounterfactualArm = {
-  id: 'without' | 'with';
-  heading: string;
-  lines: string[];
-  /** The bounded-constraint comparison, shown at display size. */
-  figure: string;
-  /** The coordination decision, when there is one. */
-  decision?: string;
-  outcome: string;
-  satisfied: boolean;
-};
-
-export const interlockArms: readonly CounterfactualArm[] = [
-  {
-    id: 'without',
-    heading: 'WITHOUT COORDINATION',
-    lines: ['Two locally valid intents', 'Joint state exceeds bounded constraint'],
-    figure: '140 > 130',
-    outcome: 'INVALID JOINT OUTCOME',
-    satisfied: false,
-  },
-  {
-    id: 'with',
-    heading: 'WITH INTERLOCK',
-    lines: ['Evidence-bound decision', 'Observed bounded result'],
-    decision: 'WITHHOLD_SERIALIZE',
-    figure: '120 ≤ 130',
-    outcome: 'CONSTRAINT SATISFIED',
-    satisfied: true,
-  },
-] as const;
-
-/**
- * Interlock publishes its cloud evidence pinned to a commit rather than a branch, so
- * the packet a reader opens is the packet the claim was made against. Those URLs are
+ * Interlock publishes its evidence pinned to a commit rather than a branch, so the
+ * packet a reader opens is the packet the claim was made against. Those URLs are
  * reproduced here at the same pin; a branch link would silently drift.
+ *
+ * **The rows for the controlled experiment point at HAC-330's own artifacts.** They
+ * briefly pointed at HAC-342 — the public republication of the *cloud* run — which
+ * meant a row labelled "frozen evidence packet", sitting directly under "controlled
+ * experiment", opened a different experiment's packet. The repository is explicit that
+ * HAC-330, HAC-340 and HAC-343 are three separate results and are never combined, so a
+ * row that quietly merges two of them is exactly the failure the evidence rule exists
+ * to prevent. The cloud row keeps the cloud artifacts and says it is a separate run.
+ *
+ * The counterfactual figures themselves are read from the packet, in
+ * `src/content/experiments/interlock-hac330.ts`.
  */
 const ILK_REPO = 'https://github.com/Marcelle-Labs/interlock';
 const ILK_PIN = '75253e38791e69f7e2a4bb3a041044a9114c32f0';
@@ -75,32 +45,39 @@ export const interlock: Proof = {
     {
       id: 'ilk-experiment',
       label: 'Controlled experiment',
-      href: `${ILK_REPO}/tree/main/experiments/hac-330`,
+      detail: 'HAC-330 · 24/24 acceptance checks',
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/README.md`,
       verified: true,
-      cta: 'INSPECT',
+      cta: 'INSPECT EXPERIMENT',
     },
     {
       id: 'ilk-packet',
       label: 'Frozen evidence packet',
-      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-342/evidence/cloud-run.public.json`,
+      detail: 'three arms, decisions, invariant reports',
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/evidence/arms.json`,
       verified: true,
-      cta: 'INSPECT',
+      cta: 'INSPECT PACKET',
     },
     {
       id: 'ilk-verifier',
       label: 'Independent verifier',
-      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-342/bin/verify-public-packet.mjs`,
+      detail: 'pnpm check:packet',
+      detailIsCode: true,
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/bin/verify-packet.mjs`,
       verified: true,
-      cta: 'INSPECT',
+      cta: 'INSPECT VERIFIER',
     },
     {
       id: 'ilk-cloud',
-      label: 'Cloud traversal',
+      // A separate recorded run, labelled as one. HAC-340 does not reproduce the
+      // counterfactual above, and the repository is explicit that the two are never
+      // combined — so this row must not borrow the controlled experiment's artifacts.
+      label: 'Cloud traversal · separate run',
       detail: 'Google ADK + Vertex AI + Cloud Run + MCP proxy',
       detailIsCode: true,
-      href: `${ILK_REPO}#google-cloud-participation`,
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-342/evidence/cloud-run.public.json`,
       verified: true,
-      cta: 'INSPECT',
+      cta: 'INSPECT CLOUD PACKET',
     },
   ],
   evidence: [
@@ -110,7 +87,7 @@ export const interlock: Proof = {
       title: 'Controlled counterfactual comparison',
       description:
         'Paired arms with and without evidence-bound coordination before shared-state mutation. Re-runnable: pnpm hac330.',
-      href: `${ILK_REPO}/tree/main/experiments/hac-330`,
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/README.md`,
       verified: true,
     },
     {
@@ -119,7 +96,7 @@ export const interlock: Proof = {
       title: 'Frozen evidence packet',
       description:
         'Recorded run artifacts held fixed so the comparison can be re-checked after the fact. Published at a pinned commit, not a branch, and the packet digest is recomputable with shasum.',
-      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-342/evidence/cloud-run.public.json`,
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/evidence/arms.json`,
       verified: true,
     },
     {
@@ -128,16 +105,16 @@ export const interlock: Proof = {
       title: 'Independent verifier',
       description:
         'Verification separated from execution so the checking path does not share the decision path.',
-      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-342/bin/verify-public-packet.mjs`,
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/bin/verify-packet.mjs`,
       verified: true,
     },
     {
       id: 'ilk-ev-cloud',
       kind: 'deployed',
-      title: 'Google ADK + Vertex AI + Cloud Run + MCP proxy',
+      title: 'Google Cloud participation (HAC-340) — a separate run',
       description:
-        'One recorded traversal through an authenticated decision/execution boundary, with the mutation and an independently authenticated read-back kept as separate facts.',
-      href: `${ILK_REPO}#google-cloud-participation`,
+        'One recorded traversal through an authenticated decision/execution boundary, with the mutation and an independently authenticated read-back kept as separate facts. Published for logged-out inspection as HAC-342, with its own verifier. It does not reproduce the counterfactual above.',
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-342/bin/verify-public-packet.mjs`,
       verified: true,
     },
   ],
