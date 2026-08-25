@@ -140,16 +140,22 @@ export const RESUME_DOCUMENT = {
   location: 'Ooltewah, Tennessee',
   /*
    * Ordered by how a reader is most likely to act on them: reply, check the profile,
-   * read the code, read the site. Four entries plus the location no longer fit on one
-   * line, so the row wraps once — which the design allows, and which costs ~21px on a
-   * page that has no room to reflow. `resume.spec.ts` holds it to two lines, so a fifth
-   * entry fails as a test rather than as a footer clipped off the bottom of the sheet.
+   * read the code.
+   *
+   * The personal site is deliberately not here, although it was. Two reasons, and the
+   * second is the real one. It already sits in the page-two footer, so the masthead
+   * copy was a duplicate; and `qwynn.marcellelabs.io` set beside
+   * `qwynn@marcellelabs.io` differs by one character, so a reader scanning the row
+   * reads the same address twice and wonders which is wrong. Three entries plus the
+   * location also fit on one line, which the fixed-height page prefers.
+   *
+   * `resume.spec.ts` holds this row to a single line, so a fourth entry fails as a test
+   * rather than as content clipped off the bottom of the sheet.
    */
   links: [
     { label: CONTACT.email, href: `mailto:${CONTACT.email}` },
     { label: CONTACT.linkedinLabel, href: CONTACT.linkedin },
     { label: 'github.com/qmarcelle', href: 'https://github.com/qmarcelle' },
-    { label: 'qwynn.marcellelabs.io', href: PUBLISHED_SITES.personal },
   ],
 
   profile: {
