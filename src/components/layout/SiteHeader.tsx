@@ -1,6 +1,6 @@
 import { RESUME, SITE } from '@/content/site';
 import { ResumeDownloadLink } from '@/components/resume/ResumeDownloadLink';
-import type { RoleLens } from '@/lib/types';
+import type { AnyLens } from '@/lib/types';
 import { isResolved } from '@/lib/evidence';
 import { ActionIcon } from '@/components/icon/Icon';
 import styles from './SiteHeader.module.css';
@@ -11,12 +11,30 @@ import styles from './SiteHeader.module.css';
  * The in-page nav is a real `<nav>` of ordinary anchors, so it works before hydration
  * and without JavaScript entirely.
  */
+const DURABLE_NAV = [
+  { label: 'Proof', href: '#sec-02' },
+  { label: 'Systems', href: '#sec-03' },
+  { label: 'Role Fit', href: '#sec-05' },
+  { label: 'Career', href: '#sec-06' },
+  { label: 'About', href: '#about' },
+] as const;
+
 export function SiteHeader({
   showAvailability,
   lens,
+  availability = SITE.availability,
+  nav = DURABLE_NAV,
 }: {
   showAvailability: boolean;
-  lens: RoleLens;
+  lens: AnyLens;
+  /** Overridden by an application lens, whose open role is a different one. */
+  availability?: string;
+  /**
+   * The in-page nav. A surface that renders different sections in a different order
+   * needs a nav that points at them; passing it in beats a header that has to know
+   * which route it is on.
+   */
+  nav?: readonly { label: string; href: string }[];
 }) {
   const resumeAvailable = isResolved(RESUME);
 
@@ -29,11 +47,11 @@ export function SiteHeader({
         </a>
 
         <nav className={styles.nav} aria-label="Sections">
-          <a href="#sec-02">Proof</a>
-          <a href="#sec-03">Systems</a>
-          <a href="#sec-05">Role Fit</a>
-          <a href="#sec-06">Career</a>
-          <a href="#about">About</a>
+          {nav.map((entry) => (
+            <a href={entry.href} key={entry.href}>
+              {entry.label}
+            </a>
+          ))}
         </nav>
 
         <div className={styles.actions}>
@@ -58,7 +76,7 @@ export function SiteHeader({
         <div className={styles.availability}>
           <p className={styles.availabilityInner}>
             <span className={styles.availabilityMark} aria-hidden="true" />
-            {SITE.availability}
+            {availability}
           </p>
         </div>
       ) : null}

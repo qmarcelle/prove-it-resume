@@ -36,7 +36,12 @@
 .primary {
   padding: 0.8125rem 1.25rem;
   background: var(--color-inverse-ink);
-  color: var(--color-ink);
+  /*
+   * The panel's own ground, not the page's ink. The two are the same value on a light
+   * surface; on an inverted one only this one is still guaranteed to be the colour
+   * *behind* this button's fill.
+   */
+  color: var(--color-inverse-bg);
   border: 0;
   border-radius: var(--radius);
   font-size: 0.938rem;

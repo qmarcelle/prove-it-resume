@@ -76,9 +76,9 @@
 
 .primary {
   padding: 0.8125rem 1.25rem;
-  background: var(--color-ink);
-  color: var(--color-canvas);
-  border: 1px solid var(--color-ink);
+  background: var(--color-action-fill);
+  color: var(--color-action-ink);
+  border: 1px solid var(--color-action-fill);
   border-radius: var(--radius);
   font-size: 0.938rem;
   font-weight: 600;

@@ -1,7 +1,7 @@
 import { PROFILES, RESUME, RESUME_BRIDGE } from '@/content/site';
-import { RESUME_DOCUMENT } from '@/content/resume';
+import { RESUME_IDENTITY } from '@/content/resume';
 import { ResumeDownloadLink } from '@/components/resume/ResumeDownloadLink';
-import type { RoleLens } from '@/lib/types';
+import type { AnyLens } from '@/lib/types';
 import { isResolved } from '@/lib/evidence';
 import { ActionIcon } from '@/components/icon/Icon';
 import styles from './ResumeBridge.module.css';
@@ -26,7 +26,7 @@ import styles from './ResumeBridge.module.css';
  * burying it in the footer alone makes the reader go hunting, so it renders as the
  * quiet second line.
  */
-export function ResumeBridge({ lens }: { lens: RoleLens }) {
+export function ResumeBridge({ lens }: { lens: AnyLens }) {
   const resumeAvailable = isResolved(RESUME);
   const linkedin = PROFILES.find((profile) => profile.id === 'linkedin');
   const linkedinAvailable = linkedin ? isResolved(linkedin) : false;
@@ -49,7 +49,7 @@ export function ResumeBridge({ lens }: { lens: RoleLens }) {
               label="RÉSUMÉ · PDF"
               lens={lens}
             >
-              <span className={styles.pageCount}>{RESUME_DOCUMENT.pages} PP</span>
+              <span className={styles.pageCount}>{RESUME_IDENTITY.pages} PP</span>
             </ResumeDownloadLink>
           ) : (
             <span className={styles.pending}>RÉSUMÉ PDF — NOT YET PUBLISHED</span>

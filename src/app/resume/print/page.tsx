@@ -20,5 +20,10 @@ export const metadata: Metadata = {
 };
 
 export default function ResumePrintPage() {
-  return <ResumeDocument targetTitle={resumeTargetTitle(defaultRole)} />;
+  return (
+    <ResumeDocument
+      targetTitle={resumeTargetTitle(defaultRole)}
+      projection={defaultRole.resumeProjection}
+    />
+  );
 }

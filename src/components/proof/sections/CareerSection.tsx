@@ -1,6 +1,7 @@
 import { CAREER, SITE } from '@/content/site';
-import type { Proof } from '@/lib/types';
+import type { Proof, SurfaceStep } from '@/lib/types';
 import { ActionIcon } from '@/components/icon/Icon';
+import { SectionHead, sectionFrameClass } from '@/components/section/SectionFrame';
 import styles from './CareerSection.module.css';
 
 /**
@@ -11,14 +12,33 @@ import styles from './CareerSection.module.css';
  * beyond what was supplied, no proprietary metrics, no invented chronology. The
  * conventional record is the résumé's job, and the résumé bridge sits directly below.
  */
-export function CareerSection({ proofs }: { proofs: readonly Proof[] }) {
+export function CareerSection({
+  proofs,
+  step,
+}: {
+  proofs: readonly Proof[];
+  /** The plan step this section was placed as. Absent on `/`, which has no plan. */
+  step?: SurfaceStep;
+}) {
   return (
-    <section className={styles.section} id="sec-06" aria-labelledby="sec-06-title">
+    <section
+      className={`${styles.section} ${sectionFrameClass(step)}`.trim()}
+      id={step ? step.id : 'sec-06'}
+      aria-labelledby="sec-06-title"
+    >
+      {step ? (
+        <SectionHead step={step} title={CAREER.heading} titleId="sec-06-title" />
+      ) : null}
+
       <div className={styles.inner}>
-        <p className={styles.eyebrow}>{CAREER.eyebrow}</p>
-        <h2 className={styles.heading} id="sec-06-title">
-          {CAREER.heading}
-        </h2>
+        {step ? null : (
+          <>
+            <p className={styles.eyebrow}>{CAREER.eyebrow}</p>
+            <h2 className={styles.heading} id="sec-06-title">
+              {CAREER.heading}
+            </h2>
+          </>
+        )}
 
         <div className={styles.entries} id="about">
           {CAREER.entries.map((entry, index) => (

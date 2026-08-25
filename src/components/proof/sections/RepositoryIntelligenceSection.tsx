@@ -9,22 +9,21 @@ import { EvidenceLink } from '@/components/evidence/EvidenceLink';
 import { EvidencePanel } from '@/components/evidence/EvidencePanel';
 import { RepositoryDecisionDiff } from '@/components/interactions/RepositoryDecisionDiff';
 import { repositoryDecision } from '@/content/experiments/repository-decision';
-import { ChapterMark } from '@/components/proof/ChapterMark';
 import { HeldFixedRail } from '@/components/proof/HeldFixedRail';
 import {
   ProofAside,
+  ProofChapter,
   ProofColumns,
   ProofField,
   ProofLayer,
   ProofLayerBody,
   ProofLayerColumn,
   ProofList,
-  ProofMasthead,
   ProofProse,
   ProofSection,
   ProofSignature,
-  ProofThesis,
 } from '@/components/proof/ProofSection';
+import type { SurfaceStep } from '@/lib/types';
 import styles from './RepositoryIntelligenceSection.module.css';
 
 /**
@@ -46,24 +45,35 @@ import styles from './RepositoryIntelligenceSection.module.css';
  * immediately below it as a single line of boxes, which is the "repeated heading →
  * rule → same-width opener" rhythm the redesign set out to remove.
  */
-export function RepositoryIntelligenceSection() {
+export function RepositoryIntelligenceSection({ step }: { step?: SurfaceStep } = {}) {
   const proof = repositoryIntelligence;
 
+  /*
+   * The chapter furniture leaves the signature block when the surface has a page plan.
+   *
+   * On `/` the head belongs inside the inverted band: the band *is* the chapter, and a
+   * heading floating above it on light ground would read as a second opener. On a lens
+   * surface the band is one block inside a section the plan has already framed and
+   * numbered, so the head sits where every other section's head sits and the signature
+   * becomes what it actually is — the figure.
+   */
+  const chapter = (
+    <ProofChapter
+      proof={proof}
+      step={step}
+      label={`PROOF TWO · ${repositoryDecision.experiment}`}
+      meta="ONE RECORDED RUN · FROZEN ARTIFACT"
+      orientation="inline"
+      tone="dark"
+    />
+  );
+
   return (
-    <ProofSection proof={proof}>
+    <ProofSection proof={proof} step={step}>
+      {step ? chapter : null}
+
       <ProofSignature>
-        <ProofMasthead>
-          <ChapterMark
-            stage={proof.stage}
-            label={`PROOF TWO · ${repositoryDecision.experiment}`}
-            meta="ONE RECORDED RUN · FROZEN ARTIFACT"
-            title={proof.title}
-            titleId={`${proof.id}-title`}
-            orientation="inline"
-            tone="dark"
-          />
-          <ProofThesis>{proof.thesis}</ProofThesis>
-        </ProofMasthead>
+        {step ? null : chapter}
 
         <div className={styles.signatureRow}>
           <HeldFixedRail

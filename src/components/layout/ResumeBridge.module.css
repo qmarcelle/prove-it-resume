@@ -63,14 +63,14 @@
   display: flex;
   justify-content: space-between;
   gap: var(--space-4);
-  border: 1px solid var(--color-ink);
+  border: 1px solid var(--color-action-fill);
   border-radius: var(--radius);
-  background: var(--color-ink);
+  background: var(--color-action-fill);
   padding: 0.8125rem 1.125rem;
   font-family: var(--font-mono);
   font-size: 0.781rem;
   letter-spacing: 0.05em;
-  color: var(--color-inverse-ink);
+  color: var(--color-action-ink);
 }
 
 .primary:hover {
@@ -80,11 +80,11 @@
 }
 
 .pageCount {
-  color: var(--color-inverse-accent);
+  color: var(--color-action-ink-quiet);
 }
 
 .primary:hover .pageCount {
-  color: var(--color-inverse-ink);
+  color: var(--color-action-ink);
 }
 
 /* The second line: reachable, deliberately not competing with the download. */

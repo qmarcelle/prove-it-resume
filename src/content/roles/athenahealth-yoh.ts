@@ -15,7 +15,9 @@ import { prioritiseMapping } from '@/lib/mapping';
  * supplied and a mapping for one cannot be inferred.
  */
 export const athenahealthYoh: RoleLens = {
+  kind: 'role',
   slug: 'athenahealth-yoh',
+  resumeProjection: 'default',
   roleTitle: 'Senior AI Platform Engineer',
   organisation: 'athenahealth / Yoh',
   roleFitHeading: 'What these systems have to do with your problem.',

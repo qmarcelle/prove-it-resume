@@ -404,6 +404,13 @@
   font-weight: 600;
 }
 
+/* The compact form of a file-shaped name, matching `.systemNameCode` at footnote size. */
+.alsoNameCode {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
 /*
  * `margin-top: auto` pins this to the foot of the page box — the reason the pages are
  * explicitly sized rather than left to the print engine.
@@ -415,6 +422,20 @@
   display: flex;
   gap: 10px;
   align-items: baseline;
+}
+
+/*
+ * The same boundary where another block follows it.
+ *
+ * A projection that closes its sheet on a stated limit anchors it; one that states a
+ * limit mid-page must not, or `margin-top: auto` pushes the blocks below it off the
+ * bottom of a page box that cannot reflow. Two classes rather than one with a modifier
+ * because the difference is a single declaration and this is where a clipped sheet
+ * comes from.
+ */
+.boundaryInline {
+  composes: boundary;
+  margin-top: 0;
 }
 
 .boundaryLabel {
@@ -506,6 +527,67 @@
   white-space: nowrap;
 }
 
+/* ── Agent-platform receipts ──────────────────────────────────────────────────
+ * A denser relative of `.system`: an identifier, a title, a status, and one paragraph.
+ * No VERIFY link, because there is no public artifact to point at — the block's own
+ * boundary says so rather than the row implying otherwise with a dead affordance.
+ */
+.receipt {
+  border-top: 1px solid var(--color-border);
+  padding-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.receiptLead {
+  composes: receipt;
+  border-top: 2px solid var(--color-ink);
+}
+
+.receiptHead {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+/*
+ * The identifier is set in the mono face and in the accent, like the VERIFY links it
+ * sits where. It is the checkable part of the row — an interviewer can ask about
+ * META-268 by name — so it reads as the row's handle rather than as metadata.
+ */
+.receiptId {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--color-accent);
+  flex: 0 0 auto;
+}
+
+.receiptTitle {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: normal;
+  flex: 1 1 auto;
+}
+
+.receiptStatus {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  color: var(--color-meta-quiet);
+  white-space: nowrap;
+}
+
+.receiptBody {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--color-ink-secondary);
+  text-wrap: pretty;
+}
+
 /* ── 04 Foundation ────────────────────────────────────────────────────────── */
 .foundation {
   border-top: 1px solid var(--color-border);
@@ -553,6 +635,54 @@
   display: flex;
   align-items: baseline;
   gap: 10px;
+}
+
+/* ── Grouped capabilities ─────────────────────────────────────────────────────
+ * Heading above the rows, not beside them: the block's own 140px rail plus a nested
+ * label column left each run ~200px to wrap in, which cost two lines a row.
+ */
+.capabilityBlock {
+  border-top: 2px solid var(--color-ink);
+  padding-top: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.capabilityBlockLabel {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.09em;
+  color: var(--color-meta-quiet);
+}
+
+.capabilityRows {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* A grouped capability row: a fixed mono label, then the run. */
+.capabilityRow {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.capabilityLabel {
+  flex: 0 0 118px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.07em;
+  color: var(--color-meta);
+}
+
+.capabilityItems {
+  flex: 1 1 auto;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--color-ink-secondary);
+  text-wrap: pretty;
 }
 
 .degree {

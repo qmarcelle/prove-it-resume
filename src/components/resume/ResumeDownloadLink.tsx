@@ -3,7 +3,7 @@ import { ActionIcon } from '@/components/icon/Icon';
 import type { IconSize } from '@/components/icon/Icon';
 import { isResolved } from '@/lib/evidence';
 import { resumeDownloadName, resumePdfPath } from '@/lib/resume';
-import type { RoleLens } from '@/lib/types';
+import type { AnyLens } from '@/lib/types';
 
 /**
  * The one place a résumé download can be rendered.
@@ -32,7 +32,7 @@ export function ResumeDownloadLink({
   iconSize = 12,
   children,
 }: {
-  lens: RoleLens;
+  lens: AnyLens;
   className?: string;
   label: string;
   iconSize?: IconSize;

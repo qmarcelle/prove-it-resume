@@ -39,28 +39,56 @@ src/
     page.tsx              the durable evidence surface
     role/[slug]/page.tsx  the same surface, projected through a role lens
                           (athenahealth-yoh, end-to-end-delivery)
+    linear/page.tsx       an application surface — its own composition,
+                          the same evidence
+    resume/print/         the print sources the PDFs are rendered from
   components/             presentation; no content lives here
-  content/                durable proof, claims, decisions, role lenses
+    resume/parts/         print primitives
+    resume/layouts/       the two explicit résumé compositions
+    application/          sections that exist only on an application surface
+  content/                durable proof, claims, decisions, lenses
     experiments/          the frozen runs the interactions are bound to
+    resume/facts.ts       the durable résumé fact corpus
+    resume/projections/   what a given reader should see first
+    applications/         application lenses
+    linear/receipts.ts    curated public receipts from a private workspace
   lib/                    types, the evidence rule, lens projection
   styles/tokens.css       the design language as custom properties
 design/reference/claude/  the original design export, preserved unmodified
 docs/                     design import, ADRs, content audit, performance,
-                          interaction contract, design provenance
+                          interaction contract, design provenance,
+                          the Linear application surface
 ```
 
-Three ideas carry the design:
+Five ideas carry the design:
 
 **Content is data.** Proofs, claims, and boundaries live in typed modules under
 `src/content/`, not inside JSX. `boundary` is a required field on `Proof`, so a proof
 cannot ship without stating its limits.
 
-**Role lenses are projections, not forks.** A `RoleLens` may reorder and reframe; it
-holds no proof content, so it structurally cannot change a claim. `/` and `/role/<slug>`
-render the same component with a different lens. A test asserts that every row in every
-lens exists _verbatim_ in the durable mapping, so a lens cannot author copy for one
-audience — `/role/end-to-end-delivery` reorders the durable rows into delivery sequence
-rather than writing its own.
+**Lenses are projections, not forks.** A lens may reorder and reframe; it holds no proof
+content, so it structurally cannot change a claim. `/` and `/role/<slug>` render the same
+component with a different lens. A test asserts that every row in every lens exists
+_verbatim_ in the durable mapping, so a lens cannot author copy for one audience —
+`/role/end-to-end-delivery` reorders the durable rows into delivery sequence rather than
+writing its own.
+
+**An application surface is a route, not a second application.** `/linear` is a
+first-class page addressed to one organisation: its own reading order, its own hero
+framing, its own résumé. It shares the evidence, the tokens, the evidence rule, the
+interactions, the PDF pipeline, and the deploy, so a URL path is the isolation boundary
+and there is no second copy to drift. `ApplicationLens` is distinct from `RoleLens`
+because it owns a route and a page plan; the registries stay separate so `/role/linear`
+404s rather than becoming a second address for the same application. See
+[ADR 0010](docs/decisions/0010-application-lenses-and-resume-projections.md) and
+[`docs/linear-application-surface.md`](docs/linear-application-surface.md).
+
+**The résumé is durable facts plus projections over them.** `content/resume/facts.ts`
+holds the chronology, the systems, and the capabilities; a projection selects facts by id,
+orders them, and frames them. It has no field in which to put a fact. Tests assert that
+every printed bullet exists verbatim in the corpus, that no projection states a quantity
+the corpus has not established, and that none of them claims one of the facts recorded as
+unverified.
 
 **Server Components by default.** `"use client"` appears in fourteen files, all genuinely
 interactive. The page works before hydration: anchors, the evidence index, every link,
@@ -130,7 +158,15 @@ pnpm exec playwright install chromium
 ```
 
 Accessibility is a gate rather than a follow-up: axe-core runs against the durable page,
-a role lens, and the page with every disclosure open, at desktop and at 320px.
+a role lens, the Linear application surface, and each with every disclosure open, at
+desktop and at 320px.
+
+The résumé PDFs are generated from real print routes and committed:
+
+```bash
+pnpm resume:pdf        # regenerate every variant from the manifest
+pnpm resume:pdf:check  # verify the committed artifacts are still current
+```
 
 ## Evidence policy
 
@@ -155,6 +191,7 @@ anchor.
 - All six proof stages, the Evidence Index, and the Claim Ledger
 - Guided proof navigation, active-stage tracking, evidence disclosures
 - Role-lens projection with the supplied `athenahealth / Yoh` lens
+- An application surface at `/linear`, with a Linear-specific résumé projection
 - Decision Receipt component; all seven receipts answered from the decision record
 - Three progressive-disclosure interactions, each bound to a frozen public artifact:
   the Repository Decision Diff, the Interlock counterfactual, and the Vreko semantic
@@ -179,9 +216,15 @@ evidence link on the site.
 
 **Awaiting owner-supplied content**
 
-- No résumé PDF was supplied; résumé support is wired but the link is disabled
-- LinkedIn and email are unresolved — publishing a contact address is the owner's call,
-  not something to infer
+- The frontend framework used at BlueCross, if any, is not established by anything
+  supplied here, so no projection names one
+- Per-audience product ownership (member, broker, employer) is not established; the
+  corpus names the Portal Refresh, CIAM and Shared Health initiatives and nothing
+  beneath them
+- The 08/2016 – 08/2019 developer period is title-only
+
+Each is recorded in `UNVERIFIED` in `src/content/resume/facts.ts`, and a test fails if a
+projection ever claims one.
 
 The complete list, with what each item needs, is in
 [`docs/content-audit.md`](docs/content-audit.md).

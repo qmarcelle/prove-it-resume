@@ -1,11 +1,35 @@
 import { RESUME, SITE } from '@/content/site';
 import { ResumeDownloadLink } from '@/components/resume/ResumeDownloadLink';
-import type { RoleLens } from '@/lib/types';
+import type { AnyLens } from '@/lib/types';
 import { isResolved } from '@/lib/evidence';
 import { WalkProofButton } from '@/components/proof/WalkProofButton';
 import { ActionIcon } from '@/components/icon/Icon';
 import { BoundedField } from './BoundedField';
 import styles from './Hero.module.css';
+
+/**
+ * The words in the hero. The durable site copy is the default; an application lens
+ * supplies its own, because the first screen is where an application surface has to
+ * establish that it was written for this reader rather than found by them.
+ *
+ * Framing only — it names no system and states no metric. Everything a reader can
+ * check is below the fold, in the proofs, unchanged.
+ */
+export type HeroFraming = {
+  eyebrow: string;
+  headline: string;
+  thesis: string;
+  supporting: string;
+  capabilities: readonly string[];
+};
+
+const DURABLE_FRAMING: HeroFraming = {
+  eyebrow: SITE.eyebrow,
+  headline: SITE.headline,
+  thesis: SITE.thesis,
+  supporting: SITE.supporting,
+  capabilities: SITE.capabilities,
+};
 
 /**
  * Hero. A Server Component apart from the single "Walk the proof" button, which is the
@@ -15,17 +39,25 @@ import styles from './Hero.module.css';
  * claim lead, the thesis supports, and the résumé is a quiet secondary link rather than
  * a competing call to action.
  */
-export function Hero({ lens, children }: { lens: RoleLens; children?: React.ReactNode }) {
+export function Hero({
+  lens,
+  framing = DURABLE_FRAMING,
+  children,
+}: {
+  lens: AnyLens;
+  framing?: HeroFraming;
+  children?: React.ReactNode;
+}) {
   const resumeAvailable = isResolved(RESUME);
 
   return (
     <section className={styles.hero} id="top">
       <div className={styles.inner}>
         <div className={styles.lede}>
-          <p className={styles.eyebrow}>{SITE.eyebrow}</p>
-          <h1 className={styles.headline}>{SITE.headline}</h1>
-          <p className={styles.thesis}>{SITE.thesis}</p>
-          <p className={styles.supporting}>{SITE.supporting}</p>
+          <p className={styles.eyebrow}>{framing.eyebrow}</p>
+          <h1 className={styles.headline}>{framing.headline}</h1>
+          <p className={styles.thesis}>{framing.thesis}</p>
+          <p className={styles.supporting}>{framing.supporting}</p>
 
           <div className={styles.actions}>
             <WalkProofButton affordance="advance-sequence" className={styles.primary}>
@@ -50,7 +82,7 @@ export function Hero({ lens, children }: { lens: RoleLens; children?: React.Reac
           </div>
 
           <ul className={styles.capabilities}>
-            {SITE.capabilities.map((capability) => (
+            {framing.capabilities.map((capability) => (
               <li className={styles.capability} key={capability}>
                 {capability}
               </li>
