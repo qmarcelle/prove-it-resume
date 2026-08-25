@@ -102,18 +102,40 @@ test.describe('evidence disclosures', () => {
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
   });
 
-  test('unresolved evidence renders no link', async ({ page }) => {
+  // This used to assert that the Interlock drawer had no artifact and said so. It
+  // does now, so the assertion is inverted rather than deleted: the property worth
+  // holding was never "Interlock is unresolved", it was "a CTA never points somewhere
+  // that isn't the artifact". `evidence.test.ts` and `EvidenceLink.test.tsx` cover the
+  // unresolved branch directly; this covers the rendered page.
+  test('every evidence CTA is a real outbound artifact link', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByRole('button', { name: /Inspect evidence.*EV-ILK/ }).click();
+    for (const code of ['EV-VRK', 'EV-WSJ', 'EV-ILK']) {
+      await page
+        .getByRole('button', { name: new RegExp(`Inspect evidence.*${code}`) })
+        .click();
+    }
 
-    // The Interlock drawer has no verified artifact yet; it must state that, not link out.
-    const drawer = page.locator('#sec-04');
-    await expect(drawer.getByText('VERIFY BEFORE PUBLISHING').first()).toBeVisible();
-    await expect(drawer.getByRole('link', { name: /INSPECT/ })).toHaveCount(0);
+    const links = page
+      .locator('[id^="sec-"]')
+      .getByRole('link', { name: /INSPECT|OPEN GITHUB|VIEW REPOSITORY|READ CASE/ });
+    const count = await links.count();
+    expect(count).toBeGreaterThan(0);
+
+    for (let i = 0; i < count; i += 1) {
+      const href = await links.nth(i).getAttribute('href');
+      // Not an on-page anchor: landing back on the section you are already reading
+      // teaches the reader nothing.
+      expect(href, 'evidence CTA must not be an on-page anchor').not.toMatch(/^#/);
+      // Not the bare profile: a profile page is not the artifact a row names.
+      expect(href, 'evidence CTA must not be the bare GitHub profile').not.toBe(
+        'https://github.com/qmarcelle',
+      );
+      expect(href).toMatch(/^https:\/\//);
+    }
   });
 
-  test('the one verified artifact is a real outbound link', async ({ page }) => {
+  test('a verified artifact is a real outbound link', async ({ page }) => {
     await page.goto('/');
 
     const tally = page
@@ -123,6 +145,18 @@ test.describe('evidence disclosures', () => {
       'href',
       'https://www.workspacejson.dev/showcase/tally',
     );
+  });
+
+  test('the resume bridge still states its gap rather than linking out', async ({
+    page,
+  }) => {
+    await page.goto('/');
+
+    // No resume file was supplied, so the bridge must show the gap where the download
+    // button would be. This is the surface that keeps the evidence rule honest now
+    // that every proof row resolves.
+    const bridge = page.locator('#resume');
+    await expect(bridge.getByText('RÉSUMÉ PDF — NOT YET PUBLISHED')).toBeVisible();
   });
 });
 
