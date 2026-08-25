@@ -10,31 +10,125 @@
   gap: var(--space-5);
 }
 
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: var(--text-meta-sm);
-  letter-spacing: var(--tracking-meta);
-  color: var(--color-accent);
+/*
+ * The one dark chapter.
+ *
+ * Inset rather than full-bleed: the page measure and gutters are owned by the layout
+ * shell, and reaching past them from inside a section would mean either changing that
+ * shell or overlapping the proof-progress rail that sits beside it. So the ground
+ * changes without the measure moving, which is the point — the chapter is marked by
+ * contrast and density, not by a different width.
+ */
+.dark {
+  border-bottom-color: var(--color-inverse-border);
+  border-radius: var(--radius);
+  background: var(--color-inverse-bg);
+  color: var(--color-inverse-ink);
+  padding: var(--space-8) var(--space-6);
 }
 
+/* ── Masthead: chapter mark and thesis, sharing one row ───────────────────── */
 .masthead {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding-bottom: 0.875rem;
-  border-bottom: var(--rule-strong);
-}
-
-.title {
-  font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.5rem);
-  letter-spacing: -0.035em;
+  flex-wrap: wrap;
+  gap: var(--space-5) var(--space-7);
+  align-items: flex-end;
 }
 
 .thesis {
-  font-size: 1.0625rem;
-  font-weight: 500;
-  color: var(--color-ink-strong);
+  flex: 1 1 420px;
+  min-width: 0;
   max-width: 56ch;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--color-ink-strong);
+}
+
+.dark .thesis {
+  color: var(--color-inverse-ink-quiet);
+  max-width: 66ch;
+}
+
+/* ── Proof layer ──────────────────────────────────────────────────────────── */
+.layer {
+  border-top: var(--rule);
+  background: var(--color-surface-subtle);
+  margin-top: var(--space-3);
+}
+
+.layerInner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6) var(--space-7);
+  padding: var(--space-6) var(--space-5);
+}
+
+.layerDark {
+  border-top-color: var(--color-inverse-border);
+  background: none;
+}
+
+.layerDark .layerInner {
+  padding-inline: 0;
+}
+
+.layerColumn {
+  display: flex;
+  flex: 1 1 320px;
+  flex-direction: column;
+  gap: 0.625rem;
+  min-width: 0;
+}
+
+.layerColumnNarrow {
+  flex: 0 1 260px;
+}
+
+/*
+ * `EvidenceLink` is tuned for its common case: an evidence *row*, where the call to
+ * action sits hard right of the label and must never break across lines. Both of those
+ * rules misfire when the same link is stacked in a column under its own title —
+ * `margin-left: auto` right-aligns each one independently, staircasing them by text
+ * width, and `nowrap` runs a long title straight off the side of a narrow viewport.
+ *
+ * Reset at the call site rather than in the primitive: the row is what `EvidenceLink`
+ * is for, and a variant prop would put the burden on every future caller to know which
+ * one they want.
+ */
+.layerColumn > a {
+  margin-left: 0;
+  align-self: flex-start;
+  white-space: normal;
+}
+
+.layerLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-ink-muted);
+}
+
+.layerLabelAccent {
+  color: var(--color-accent);
+}
+
+.layerDark .layerLabel {
+  color: var(--color-inverse-ink-quiet);
+}
+
+.layerDark .layerLabelAccent {
+  color: var(--color-inverse-accent);
+}
+
+.layerBody {
+  font-size: 0.844rem;
+  line-height: 1.6;
+  color: var(--color-ink-secondary);
+}
+
+.layerDark .layerBody {
+  color: var(--color-inverse-ink-quiet);
+  max-width: 74ch;
 }
 
 /* Two-column body: prose left, evidence panel right, reflowing by basis. */

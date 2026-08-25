@@ -1,0 +1,149 @@
+.mark {
+  display: flex;
+  min-width: 0;
+}
+
+/* ── Horizontal: oversized number beside the title ────────────────────────── */
+.horizontal {
+  align-items: baseline;
+  gap: var(--space-5);
+}
+
+/*
+ * The chapter number is background furniture, and the export set it in the rule colour
+ * to say so. That is a stroke colour: as 64px text on canvas it lands at 1.31:1, well
+ * under the 3:1 that large text owes. `--color-meta` is the quietest token that clears
+ * it, at 3.5:1 — still plainly recessive, and actually legible.
+ */
+.number {
+  font-family: var(--font-mono);
+  font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4rem);
+  font-weight: 500;
+  line-height: 0.9;
+  color: var(--color-meta);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-accent);
+}
+
+.title {
+  font-size: clamp(1.75rem, 1.1rem + 2.6vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+/* ── Inline: one metadata line, title beneath ─────────────────────────────── */
+.inline {
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem var(--space-6);
+  align-items: baseline;
+}
+
+.inlineLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--color-accent);
+}
+
+.metaSecondary {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-meta);
+}
+
+.inline .title {
+  line-height: 1.08;
+  max-width: 26ch;
+}
+
+/* ── Vertical: number over a rule, label rotated ──────────────────────────── */
+.vertical {
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  padding-top: 0.375rem;
+}
+
+.vertical .number {
+  font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+}
+
+.rule {
+  flex: 1;
+  width: 1px;
+  min-height: var(--space-8);
+  background: var(--color-border);
+}
+
+.verticalLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.14em;
+  color: var(--color-accent);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+/*
+ * The vertical rail costs a full column of gutter, which a narrow viewport does not
+ * have. Below the two-column breakpoint it lays back down: the rule collapses and the
+ * label returns to normal writing mode, so the chapter still reads without the section
+ * losing its measure to a rotated strip.
+ */
+@media (max-width: 900px) {
+  .vertical {
+    flex-direction: row;
+    align-items: baseline;
+    gap: var(--space-4);
+    padding-top: 0;
+  }
+
+  .rule {
+    display: none;
+  }
+
+  .verticalLabel {
+    writing-mode: horizontal-tb;
+    transform: none;
+  }
+}
+
+/* ── Dark tone ────────────────────────────────────────────────────────────── */
+.dark .number {
+  color: var(--color-inverse-border);
+}
+
+.dark .label,
+.dark .inlineLabel,
+.dark .verticalLabel {
+  color: var(--color-inverse-accent);
+}
+
+.dark .metaSecondary {
+  color: var(--color-inverse-ink-quiet);
+}
+
+.dark .rule {
+  background: var(--color-inverse-border);
+}

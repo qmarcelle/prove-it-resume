@@ -1,153 +1,123 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { vrekoArchitecture } from '@/content/experiments/vreko-architecture';
 import { VrekoArchitectureTrace } from './VrekoArchitectureTrace';
 
 /**
- * The behaviours worth pinning: the trace never moves without a user, expansion happens
- * in place rather than swapping diagrams, and the public/private boundary is stated on
- * every node rather than implied.
+ * The behaviours worth pinning after the containment redesign.
+ *
+ * The diagram no longer expands and no longer steps a trace, so the old contract — zoom
+ * in, walk hop by hop — is gone. What replaced it has to keep the same guarantees:
+ * nothing moves without a user, the publication state of every layer is stated rather
+ * than left to the stroke, and the panel tells you what a crossing withholds.
  */
 describe('VrekoArchitectureTrace', () => {
   const renderTrace = () => render(<VrekoArchitectureTrace data={vrekoArchitecture} />);
 
-  it('rests on a simple three-box overview', () => {
+  const panel = () => screen.getByRole('complementary');
+
+  it('draws every layer at rest, inside and outside the boundary', () => {
     renderTrace();
 
-    expect(screen.getByText('AI coding assistant')).toBeVisible();
-    expect(screen.getByText('Vreko')).toBeVisible();
-    expect(screen.getByText('Your workspace')).toBeVisible();
+    // Asserted as controls, not as text: the selected layer's name also appears as the
+    // panel heading, and the point here is that all six are reachable in the diagram.
+    for (const name of [
+      'AI coding assistant',
+      'Hosted edge',
+      'Local edge',
+      'MCP protocol surface',
+      'Vreko platform',
+      'Your workspace',
+    ]) {
+      expect(screen.getByRole('button', { name: new RegExp(name) })).toBeVisible();
+    }
+  });
 
-    // No containers until the reader asks for them.
-    expect(screen.queryByText('Hosted edge')).toBeNull();
-    expect(screen.getByRole('button', { name: /Explore architecture/ })).toHaveAttribute(
-      'aria-expanded',
-      'false',
+  it('opens on a selected layer, so the panel is never empty', () => {
+    renderTrace();
+
+    expect(within(panel()).getByRole('heading', { name: 'Hosted edge' })).toBeVisible();
+    expect(screen.getByRole('button', { name: /Hosted edge/ })).toHaveAttribute(
+      'aria-pressed',
+      'true',
     );
   });
 
-  it('expands the same container in place rather than replacing the diagram', async () => {
+  it('moves the panel to whichever layer is chosen', async () => {
     const user = userEvent.setup();
     renderTrace();
 
-    await user.click(screen.getByRole('button', { name: /Explore architecture/ }));
+    await user.click(screen.getByRole('button', { name: /Vreko platform/ }));
 
-    // The neighbours and the system's own identity survive the zoom — that is what
-    // makes it zoom rather than navigation.
-    expect(screen.getByText('AI coding assistant')).toBeVisible();
-    expect(screen.getByText('Vreko')).toBeVisible();
-    expect(screen.getByText('Your workspace')).toBeVisible();
-
-    // And the interior is now present.
-    expect(screen.getByText('Hosted edge')).toBeVisible();
-    expect(screen.getByText('MCP protocol surface')).toBeVisible();
-    expect(screen.getByText('Vreko platform')).toBeVisible();
+    expect(
+      within(panel()).getByRole('heading', { name: 'Vreko platform' }),
+    ).toBeVisible();
+    expect(within(panel()).getByText(/Publication boundary/)).toBeVisible();
   });
 
-  it('discloses a container’s components one level deeper', async () => {
+  it('states what a crossing withholds rather than only what it carries', async () => {
     const user = userEvent.setup();
     renderTrace();
 
-    await user.click(screen.getByRole('button', { name: /Explore architecture/ }));
-    expect(screen.queryByText('API key authentication')).toBeNull();
+    await user.click(screen.getByRole('button', { name: /Vreko platform/ }));
 
-    const toggles = screen.getAllByRole('button', { name: /Show internals/ });
-    await user.click(toggles[0]);
-
-    expect(screen.getByText('API key authentication')).toBeVisible();
-    expect(screen.getByText(/Terminates HTTPS/)).toBeVisible();
+    expect(within(panel()).getByText('WITHHELD')).toBeVisible();
+    expect(
+      within(panel()).getByText(/No implementation of this layer is published/),
+    ).toBeVisible();
   });
 
-  it('collapses back to the overview', async () => {
+  /*
+   * The local edge is a second entry point, not a further boundary inward, so the
+   * content records no crossing for it. The panel must then omit the crossing fields
+   * rather than invent one — this is the case that would tempt a future edit to fill
+   * the gap with plausible text.
+   */
+  it('omits the crossing fields for a layer with no recorded hop', async () => {
     const user = userEvent.setup();
     renderTrace();
 
-    await user.click(screen.getByRole('button', { name: /Explore architecture/ }));
-    await user.click(
-      (await screen.findAllByRole('button', { name: /Show internals/ }))[0],
-    );
-    await user.click(screen.getByRole('button', { name: /^Collapse$/ }));
+    await user.click(screen.getByRole('button', { name: /Local edge/ }));
 
-    expect(screen.queryByText('Hosted edge')).toBeNull();
-    // Collapsing also drops the disclosed interiors, so reopening is not a surprise.
-    expect(screen.queryByText('API key authentication')).toBeNull();
+    expect(within(panel()).getByRole('heading', { name: 'Local edge' })).toBeVisible();
+    expect(within(panel()).queryByText('BOUNDARY CROSSED')).toBeNull();
+    expect(within(panel()).queryByText('CARRIES')).toBeNull();
   });
 
-  it('never advances the trace on its own', () => {
-    renderTrace();
-
-    expect(screen.getByRole('button', { name: /Trace a request/ })).toBeVisible();
-    expect(screen.queryByRole('button', { name: /Next hop/ })).toBeNull();
-    expect(screen.getByText(/Nothing advances on a timer/)).toBeVisible();
-  });
-
-  it('steps the trace forward and back only when asked', async () => {
+  it('discloses a layer’s components only while it is selected', async () => {
     const user = userEvent.setup();
     renderTrace();
 
-    await user.click(screen.getByRole('button', { name: /Trace a request/ }));
-    expect(screen.getByText('Assistant issues a tool call')).toBeVisible();
-    expect(screen.getByRole('button', { name: /Previous hop/ })).toBeDisabled();
+    expect(screen.getByText(/API key authentication/)).toBeVisible();
 
-    await user.click(screen.getByRole('button', { name: /Next hop/ }));
-    expect(screen.getByText('Crosses into the hosted edge')).toBeVisible();
-    // Twice: once in the visible hop detail, once in the status region that announces
-    // the crossing to a screen reader. Both are required.
-    expect(screen.getAllByText(/HTTPS · authentication/)).toHaveLength(2);
-    expect(screen.getByRole('status')).toHaveTextContent('Hop 2 of 5');
+    await user.click(screen.getByRole('button', { name: /Local edge/ }));
 
-    await user.click(screen.getByRole('button', { name: /Previous hop/ }));
-    expect(screen.getByText('Assistant issues a tool call')).toBeVisible();
+    expect(screen.queryByText(/API key authentication/)).toBeNull();
+    expect(screen.getByText(/vrekod daemon/)).toBeVisible();
   });
 
-  it('expands the architecture when a trace starts, so the hop has somewhere to land', async () => {
-    const user = userEvent.setup();
+  it('states publication state on every layer rather than implying it', () => {
     renderTrace();
 
-    await user.click(screen.getByRole('button', { name: /Trace a request/ }));
-    expect(screen.getByText('Hosted edge')).toBeVisible();
-  });
-
-  it('resets the trace', async () => {
-    const user = userEvent.setup();
-    renderTrace();
-
-    await user.click(screen.getByRole('button', { name: /Trace a request/ }));
-    await user.click(screen.getByRole('button', { name: /Reset trace/ }));
-
-    expect(screen.getByRole('button', { name: /Trace a request/ })).toBeVisible();
-    expect(screen.queryByText('Assistant issues a tool call')).toBeNull();
-  });
-
-  it('states publication state on every container rather than implying it', async () => {
-    const user = userEvent.setup();
-    renderTrace();
-
-    await user.click(screen.getByRole('button', { name: /Explore architecture/ }));
-
-    expect(screen.getAllByText('PUBLIC').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('NOT PUBLISHED').length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/PUBLISHED/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/DECLARED, NOT PUBLISHED/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/OUTSIDE/).length).toBeGreaterThan(0);
   });
 
   it('publishes the command that re-derives the public boundary', () => {
     renderTrace();
 
-    expect(screen.getByText(/npm view @vreko\/intelligence version/)).toBeVisible();
-    expect(screen.getByText('@vreko/intelligence')).toBeVisible();
-    expect(screen.getByText('vreko-mcp-server')).toBeVisible();
+    expect(
+      within(panel()).getByText(/npm view @vreko\/intelligence version/),
+    ).toBeVisible();
   });
 
-  it('records the contradictions in the public material instead of resolving them', () => {
+  it('never advances on its own', () => {
     renderTrace();
 
-    expect(
-      screen.getByText(/The edge is described two ways in the same repository./),
-    ).toBeVisible();
-    expect(screen.getByText(/no reconciliation is invented here/)).toBeVisible();
-    expect(
-      screen.getByText(/No implementation source is published in any of the three/),
-    ).toBeVisible();
+    expect(screen.queryByRole('button', { name: /Next hop/ })).toBeNull();
+    expect(screen.queryByRole('button', { name: /Trace a request/ })).toBeNull();
   });
 
   it('uses no ARIA tree semantics', () => {
@@ -156,15 +126,11 @@ describe('VrekoArchitectureTrace', () => {
     expect(container.querySelector('[role="treeitem"]')).toBeNull();
   });
 
-  it('never renders internal level identifiers', async () => {
-    const user = userEvent.setup();
+  it('never renders internal level or hop identifiers', () => {
     const { container } = renderTrace();
-
-    await user.click(screen.getByRole('button', { name: /Explore architecture/ }));
-    const toggles = screen.getAllByRole('button', { name: /Show internals/ });
-    for (const toggle of toggles) await user.click(toggle);
 
     expect(container.textContent).not.toMatch(/\bL[012]\b/);
     expect(container.textContent).not.toMatch(/\bHOP [1-5]\b/);
+    expect(container.textContent).not.toMatch(/hop-[a-z]+/);
   });
 });

@@ -14,8 +14,9 @@ const diff = (page: Page) =>
   page.locator('section').filter({ hasText: 'Repository decision diff' }).first();
 const interlock = (page: Page) =>
   page.locator('section').filter({ hasText: 'Interlock counterfactual' }).first();
-const vreko = (page: Page) =>
-  page.locator('section').filter({ hasText: 'Public architecture' }).first();
+// Keyed on the section id rather than heading text: the redesign moved the heading
+// into ChapterMark, and a locator that tracks copy breaks on every wording change.
+const vreko = (page: Page) => page.locator('#sec-02');
 
 /** Opens every disclosure the three interactions have. */
 async function openEverything(page: Page) {
@@ -29,17 +30,23 @@ async function openEverything(page: Page) {
     .getByRole('button', { name: /Perturb the evidence/ })
     .click();
 
+  /*
+   * The containment diagram has no expand step — every layer is drawn at rest and one
+   * is always selected. Walking all six is the equivalent sweep: it puts each layer's
+   * components on screen and each hop's detail through the panel, which is the surface
+   * the contrast and focus checks below need to see.
+   */
   const architecture = vreko(page);
-  await architecture.getByRole('button', { name: /Explore architecture/ }).click();
-
-  // Clicking a toggle renames it to "Hide internals", so the matching set shrinks as we
-  // go. Always take the first remaining one rather than a stale index.
-  const remaining = () => architecture.getByRole('button', { name: /Show internals/ });
-  for (let guard = 0; (await remaining().count()) > 0 && guard < 10; guard += 1) {
-    await remaining().first().click();
+  for (const layer of [
+    'AI coding assistant',
+    'Hosted edge',
+    'Local edge',
+    'MCP protocol surface',
+    'Vreko platform',
+    'Your workspace',
+  ]) {
+    await architecture.getByRole('button', { name: new RegExp(layer) }).click();
   }
-
-  await architecture.getByRole('button', { name: /Trace a request/ }).click();
 
   /*
    * Let the disclosure fades finish before anything is measured. Axe samples computed
@@ -185,70 +192,57 @@ test.describe('interlock counterfactual', () => {
   });
 });
 
-test.describe('vreko architecture trace', () => {
-  test('expands in place, keeping its neighbours', async ({ page }) => {
+test.describe('vreko containment diagram', () => {
+  test('draws every layer at rest, with none of them moving', async ({ page }) => {
     await page.goto('/');
     const panel = vreko(page);
 
-    // Offsets are measured relative to the panel, not the viewport: clicking scrolls
-    // the page, and viewport coordinates would report that as movement.
+    // Offsets are measured relative to the section, not the viewport: selecting a layer
+    // scrolls the page, and viewport coordinates would report that as movement.
     const offsetInPanel = async () =>
       panel.evaluate((root) => {
-        const node = [...root.querySelectorAll('*')].find(
-          (el) => el.textContent?.trim() === 'AI coding assistant',
+        const node = [...root.querySelectorAll('button')].find((el) =>
+          el.textContent?.includes('AI coding assistant'),
         )!;
         return node.getBoundingClientRect().top - root.getBoundingClientRect().top;
       });
 
     const before = await offsetInPanel();
-    await panel.getByRole('button', { name: /Explore architecture/ }).click();
+    await panel.getByRole('button', { name: /Vreko platform/ }).click();
 
-    // The upstream neighbour is still present and has not moved within the diagram:
-    // the system box grew downward, it was not replaced.
-    const after = await offsetInPanel();
-    expect(Math.abs(after - before)).toBeLessThan(4);
-
-    await expect(panel.getByText('Hosted edge', { exact: true })).toBeVisible();
-    await expect(panel.getByText('Your workspace')).toBeVisible();
+    /*
+     * Selecting a different layer discloses its components and hides the previous
+     * one's, so the boxes below the selection do move. The upstream neighbour sits
+     * above every layer in the diagram and must not: that is what makes this a diagram
+     * being annotated rather than one being replaced.
+     */
+    expect(Math.abs((await offsetInPanel()) - before)).toBeLessThan(4);
+    await expect(panel.getByRole('button', { name: /Hosted edge/ })).toBeVisible();
+    await expect(panel.getByRole('button', { name: /Your workspace/ })).toBeVisible();
   });
 
-  test('discloses internals one level deeper and collapses back', async ({ page }) => {
+  test('moves the detail panel to the selected layer', async ({ page }) => {
     await page.goto('/');
     const panel = vreko(page);
+    const detail = panel.getByRole('complementary');
 
-    await panel.getByRole('button', { name: /Explore architecture/ }).click();
-    await panel
-      .getByRole('button', { name: /Show internals/ })
-      .first()
-      .click();
-    await expect(panel.getByText('API key authentication')).toBeVisible();
+    await expect(detail.getByRole('heading', { name: 'Hosted edge' })).toBeVisible();
 
-    await panel.getByRole('button', { name: /^Collapse$/ }).click();
-    await expect(panel.getByText('Hosted edge', { exact: true })).toHaveCount(0);
+    await panel.getByRole('button', { name: /Vreko platform/ }).click();
+    await expect(detail.getByRole('heading', { name: 'Vreko platform' })).toBeVisible();
+    await expect(detail.getByText('WITHHELD')).toBeVisible();
   });
 
-  test('the trace is user-stepped and never auto-advances', async ({ page }) => {
+  test('never advances on its own', async ({ page }) => {
     await page.goto('/');
     const panel = vreko(page);
+    const detail = panel.getByRole('complementary');
 
-    await panel.getByRole('button', { name: /Trace a request/ }).click();
-    await expect(
-      panel.getByText('Assistant issues a tool call', { exact: true }),
-    ).toBeVisible();
+    await expect(detail.getByRole('heading', { name: 'Hosted edge' })).toBeVisible();
 
-    // Wait well past any plausible choreography; the hop must not move on its own.
+    // Wait well past any plausible choreography; the selection must not move itself.
     await page.waitForTimeout(1500);
-    await expect(
-      panel.getByText('Assistant issues a tool call', { exact: true }),
-    ).toBeVisible();
-
-    await panel.getByRole('button', { name: /Next hop/ }).click();
-    await expect(
-      panel.getByText('Crosses into the hosted edge', { exact: true }),
-    ).toBeVisible();
-
-    await panel.getByRole('button', { name: /Reset trace/ }).click();
-    await expect(panel.getByRole('button', { name: /Trace a request/ })).toBeVisible();
+    await expect(detail.getByRole('heading', { name: 'Hosted edge' })).toBeVisible();
   });
 
   test('states the public boundary with a re-derivable command', async ({ page }) => {
@@ -258,8 +252,8 @@ test.describe('vreko architecture trace', () => {
     await expect(
       panel.getByText(/npm view @vreko\/intelligence version/).first(),
     ).toBeVisible();
-    await expect(panel.getByText('@vreko/intelligence').first()).toBeVisible();
-    await expect(panel.getByText(/4 PUBLISHED · 9 NOT PUBLISHED/)).toBeVisible();
+    await expect(panel.getByText(/4 published packages/)).toBeVisible();
+    await expect(panel.getByText(/9 declared and unpublished/)).toBeVisible();
   });
 
   test('exposes no storyboard level identifiers', async ({ page }) => {
@@ -296,10 +290,14 @@ test.describe('reduced motion', () => {
         .getByText(/ALLOW_PARALLEL/)
         .first(),
     ).toBeVisible();
-    await expect(vreko(page).getByText('API key authentication')).toBeVisible();
+    // `openEverything` leaves the last layer selected, so the panel is showing the
+    // workspace hop and the diagram is showing that layer's own interior.
     await expect(
-      vreko(page).getByText('Assistant issues a tool call', { exact: true }),
+      vreko(page).getByRole('complementary').getByRole('heading', {
+        name: 'Your workspace',
+      }),
     ).toBeVisible();
+    await expect(vreko(page).getByText(/writes .agents\/workspace.json/)).toBeVisible();
   });
 
   test('interlock bars are at their final widths immediately', async ({ page }) => {

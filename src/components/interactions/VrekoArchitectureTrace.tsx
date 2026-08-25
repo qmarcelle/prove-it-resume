@@ -1,437 +1,351 @@
 'use client';
 
-import { useId, useState } from 'react';
+import { useMemo } from 'react';
 import type {
   ArchitectureContainer,
-  PublicationState,
+  TraceHop,
   VrekoArchitectureData,
 } from '@/lib/interactions';
-import { EvidenceLink } from '@/components/evidence/EvidenceLink';
 import { useDeepLinkedState } from './useDeepLinkedState';
 import styles from './VrekoArchitectureTrace.module.css';
 
 /**
- * Vreko architecture — semantic zoom over one diagram, plus a user-stepped request trace.
+ * Vreko as containment: nested boundaries, opened in place.
  *
- * The rule the design set and this keeps: **the box you opened stays the box you are
- * looking inside.** Expanding the system does not swap in a second, denser picture. The
- * same container keeps its label and its position; its interior grows downward and its
- * neighbours move around it. The reader never navigates away from the argument.
+ * The previous version was a semantic zoom with a separate stepped trace beneath it —
+ * expand the system, then walk a request through it hop by hop. Two controls, two
+ * mental models, and the trace's hops were a list you read *after* the diagram rather
+ * than something the diagram showed.
  *
- * Two deliberate departures from the storyboard:
+ * The redesign collapses both into one: every layer is drawn where it actually sits,
+ * inside or outside the publication boundary, and selecting one puts its hop detail in
+ * the panel beside it. The boundary is the diagram's own geometry — solid stroke for
+ * published, dashed for declared-but-unpublished, hairline for outside the system — so
+ * the public/private split is read off the picture rather than off a legend of badges.
  *
- * - **No ARIA tree.** The storyboard specified `role="treeitem"` because the diagram is
- *   visually nested. A tree brings an interaction contract — typeahead, one tab stop for
- *   the whole widget, Home/End across every node — that this content does not need and
- *   that would be worse if half-implemented. Nested `<button aria-expanded>` disclosures
- *   inside real lists say the same thing with semantics every screen reader already
- *   handles well.
- * - **No auto-advancing trace.** One user action is one boundary crossing, at every
- *   motion setting. A timed walk would imply throughput, which is a claim this section
- *   does not make.
+ * What did not change is the evidence. Every layer, hop, publication state and
+ * discrepancy is the same record it was; this rearranges how they are reached.
  *
- * The publication state on every node is the point of the interaction. It is not
- * decoration: four of these packages resolve on the npm registry and nine return 404,
- * and the reader is given the command to check.
+ * Selection, not expansion, is the state — one layer is always selected, so the panel
+ * is never empty and there is no "nothing here yet" frame to design around.
  */
-
-/** Call-to-action wording per source, so no two links read the same. */
-const SOURCE_CTA: Record<string, string> = {
-  'vrk-src-architecture': 'INSPECT ARCHITECTURE',
-  'vrk-src-manifest': 'INSPECT PACKAGE MANIFEST',
-  'vrk-src-cli': 'INSPECT CLI SURFACE',
-};
-
-const PUBLICATION_LABEL: Record<PublicationState, string> = {
-  public: 'PUBLIC',
-  'declared-not-published': 'NOT PUBLISHED',
-  external: 'EXTERNAL',
-};
-
 export function VrekoArchitectureTrace({ data }: { data: VrekoArchitectureData }) {
-  const panelId = useId();
+  const { external, system, containers, trace } = data;
 
-  /** Level 0 is the resting three-box view; level 1 opens the system in place. */
-  const [expanded, setExpanded] = useDeepLinkedState(
-    'architecture',
-    'overview',
-    (raw) => raw === 'overview' || raw === 'expanded',
+  /** Draw order, outside → in → outside. Ids come from the content, not from here. */
+  const layers = useMemo(
+    () => [external.upstream, ...containers, external.downstream],
+    [external.upstream, external.downstream, containers],
   );
-  const isExpanded = expanded === 'expanded';
 
-  /** Which containers have had their interiors disclosed. Independent of the trace. */
-  const [openContainers, setOpenContainers] = useState<readonly string[]>([]);
+  const [selectedId, setSelectedId] = useDeepLinkedState('layer', 'hosted-edge', (raw) =>
+    layers.some((layer) => layer.id === raw),
+  );
 
-  /** null means the trace has not been started. Never advances on its own. */
-  const [hop, setHop] = useState<number | null>(null);
+  const selected =
+    layers.find((layer) => layer.id === selectedId) ??
+    layers.find((layer) => layer.id === 'hosted-edge') ??
+    layers[0];
 
-  const toggleContainer = (id: string) => {
-    setOpenContainers((current) =>
-      current.includes(id) ? current.filter((c) => c !== id) : [...current, id],
-    );
-  };
+  /*
+   * The hop is joined to the container rather than stored on it. A hop describes a
+   * *crossing into* a layer, and not every layer has one — the local edge is a second
+   * entry point rather than a further boundary inward — so the panel renders the
+   * crossing fields only where a crossing was actually recorded.
+   */
+  const hop = trace.find((entry) => entry.atContainerId === selected.id);
 
-  const collapse = () => {
-    setExpanded('overview');
-    setOpenContainers([]);
-    setHop(null);
-  };
-
-  const activeHop = hop === null ? null : data.trace[hop];
-  const activeContainerId = activeHop?.atContainerId ?? null;
+  const byId = (id: string) => containers.find((container) => container.id === id);
+  const hosted = byId('hosted-edge');
+  const local = byId('local-edge');
+  const protocol = byId('protocol-surface');
+  const platform = byId('platform');
 
   return (
-    <section className={styles.wrap} aria-labelledby={`${panelId}-title`}>
-      <div className={styles.header}>
-        <h3 className={styles.title} id={`${panelId}-title`}>
-          Public architecture
-        </h3>
-        <span className={styles.headerCode}>
-          {data.publicPackages.length} PUBLISHED · {data.privatePackages.length} NOT
-          PUBLISHED
-        </span>
-      </div>
+    <div className={styles.wrap}>
+      <div className={styles.diagram}>
+        <Legend />
 
-      <p className={styles.question}>{data.question}</p>
-
-      <div className={styles.diagram} id={panelId}>
-        <Node
-          container={data.external.upstream}
-          tone="external"
-          active={activeContainerId === data.external.upstream.id}
+        <OutsideNode
+          container={external.upstream}
+          selected={selected.id === external.upstream.id}
+          onSelect={setSelectedId}
         />
+        <Flow>↓ JSON-RPC + workspace path</Flow>
 
-        <Connector />
-
-        {/*
-         * The system box. At rest it is one node; expanded, the same node grows an
-         * interior. Its heading and position are unchanged either way, which is what
-         * makes this zoom rather than navigation.
-         */}
-        <div
-          className={[
-            styles.system,
-            isExpanded ? styles.systemExpanded : '',
-            activeContainerId !== null &&
-            activeContainerId !== data.external.upstream.id &&
-            activeContainerId !== data.external.downstream.id
-              ? styles.systemActive
-              : '',
-          ]
-            .filter(Boolean)
-            .join(' ')}
-        >
+        <div className={styles.system}>
           <div className={styles.systemHead}>
-            <div className={styles.systemIdentity}>
-              <span className={styles.nodeKind}>SYSTEM UNDER DESCRIPTION</span>
-              <span className={styles.systemName}>{data.system.name}</span>
-              {data.system.identifier ? (
-                <span className={styles.identifier}>{data.system.identifier}</span>
-              ) : null}
-            </div>
-
-            <button
-              type="button"
-              className={styles.zoom}
-              aria-expanded={isExpanded}
-              aria-controls={`${panelId}-interior`}
-              onClick={() => (isExpanded ? collapse() : setExpanded('expanded'))}
-            >
-              {isExpanded ? 'Collapse' : 'Explore architecture'}
-            </button>
+            <span className={styles.systemName}>{system.name}</span>
+            <span className={styles.systemId}>{system.identifier}</span>
           </div>
 
-          <p className={styles.systemSummary}>{data.system.summary}</p>
+          <div className={styles.edges}>
+            {hosted ? (
+              <LayerNode
+                container={hosted}
+                selected={selected.id === hosted.id}
+                onSelect={setSelectedId}
+              />
+            ) : null}
+            {local ? (
+              <LayerNode
+                container={local}
+                selected={selected.id === local.id}
+                onSelect={setSelectedId}
+              />
+            ) : null}
+          </div>
 
-          {isExpanded ? (
-            <div className={styles.interior} id={`${panelId}-interior`}>
-              {data.containers.map((container) => (
-                <Container
-                  key={container.id}
-                  container={container}
-                  open={openContainers.includes(container.id)}
-                  onToggle={() => toggleContainer(container.id)}
-                  active={activeContainerId === container.id}
-                />
-              ))}
-            </div>
+          <Flow>↓ both edges converge</Flow>
+
+          {protocol ? (
+            <LayerNode
+              container={protocol}
+              selected={selected.id === protocol.id}
+              onSelect={setSelectedId}
+              wide
+            />
+          ) : null}
+
+          {platform ? (
+            <LayerNode
+              container={platform}
+              selected={selected.id === platform.id}
+              onSelect={setSelectedId}
+              wide
+            />
           ) : null}
         </div>
 
-        <Connector />
-
-        <Node
-          container={data.external.downstream}
-          tone="external"
-          active={activeContainerId === data.external.downstream.id}
+        <Flow>↓ reads the repository at the supplied path</Flow>
+        <OutsideNode
+          container={external.downstream}
+          selected={selected.id === external.downstream.id}
+          onSelect={setSelectedId}
         />
       </div>
 
-      {/* ---- The request trace ---- */}
-      <div className={styles.traceBlock}>
-        <div className={styles.traceHead}>
-          <span className={styles.sectionLabel}>Trace one request</span>
-          <div className={styles.traceControls}>
-            {hop === null ? (
-              <button
-                type="button"
-                className={styles.traceButton}
-                onClick={() => {
-                  setExpanded('expanded');
-                  setHop(0);
-                }}
-              >
-                Trace a request
-              </button>
-            ) : (
-              <>
-                <button
-                  type="button"
-                  className={styles.traceButton}
-                  onClick={() => setHop((h) => Math.max(0, (h ?? 0) - 1))}
-                  disabled={hop === 0}
-                >
-                  ← Previous hop
-                </button>
-                <span className={styles.tracePosition} aria-hidden="true">
-                  {hop + 1} / {data.trace.length}
-                </span>
-                <button
-                  type="button"
-                  className={styles.traceButton}
-                  onClick={() =>
-                    setHop((h) => Math.min(data.trace.length - 1, (h ?? 0) + 1))
-                  }
-                  disabled={hop === data.trace.length - 1}
-                >
-                  Next hop →
-                </button>
-                <button
-                  type="button"
-                  className={styles.traceReset}
-                  onClick={() => setHop(null)}
-                >
-                  Reset trace
-                </button>
-              </>
-            )}
-          </div>
-        </div>
+      <DetailPanel container={selected} hop={hop} data={data} />
+    </div>
+  );
+}
 
-        <p className="visually-hidden" role="status">
-          {activeHop
-            ? `Hop ${(hop ?? 0) + 1} of ${data.trace.length}: ${activeHop.label}. Boundary: ${activeHop.boundary}.`
-            : 'Trace not started.'}
-        </p>
+function Legend() {
+  return (
+    <div className={styles.legend}>
+      <span className={styles.legendTitle}>PUBLICATION BOUNDARY MODEL</span>
+      <span className={styles.legendItem}>
+        <span className={`${styles.swatch} ${styles.swatchPublic}`} aria-hidden="true" />
+        PUBLISHED
+      </span>
+      <span className={styles.legendItem}>
+        <span
+          className={`${styles.swatch} ${styles.swatchDeclared}`}
+          aria-hidden="true"
+        />
+        DECLARED, NOT PUBLISHED
+      </span>
+      <span className={styles.legendItem}>
+        <span
+          className={`${styles.swatch} ${styles.swatchExternal}`}
+          aria-hidden="true"
+        />
+        OUTSIDE THE SYSTEM
+      </span>
+    </div>
+  );
+}
 
-        {activeHop ? (
-          <div className={styles.hop}>
-            <span className={styles.hopLabel}>{activeHop.label}</span>
-            <dl className={styles.hopDetail}>
-              <div className={styles.hopRow}>
-                <dt>BOUNDARY</dt>
-                <dd>{activeHop.boundary}</dd>
-              </div>
-              <div className={styles.hopRow}>
-                <dt>CARRIES</dt>
-                <dd>{activeHop.carries}</dd>
-              </div>
-              {activeHop.withheld ? (
-                <div className={styles.hopRow}>
-                  <dt>OUTSIDE IT</dt>
-                  <dd>{activeHop.withheld}</dd>
-                </div>
-              ) : null}
-            </dl>
-          </div>
-        ) : (
-          <p className={styles.traceHint}>
-            Five hops, stepped one at a time. Nothing advances on a timer — a request
-            crossing a boundary is a fact about structure, not about speed.
-          </p>
-        )}
-      </div>
+function Flow({ children }: { children: React.ReactNode }) {
+  return (
+    <div className={styles.flow} aria-hidden="true">
+      <span>{children}</span>
+    </div>
+  );
+}
 
-      {/* ---- The boundary, checkable ---- */}
-      <div className={styles.boundaryBlock}>
-        <span className={styles.sectionLabel}>Where the public boundary falls</span>
-        <div className={styles.packages}>
-          <div className={styles.packageColumn}>
-            <span className={styles.packageHeading}>Published</span>
-            <ul className={styles.packageList}>
-              {data.publicPackages.map((pkg) => (
-                <li key={pkg.name}>
-                  <span className={styles.packageName}>{pkg.name}</span>
-                  <span className={styles.packageVersion}>{pkg.version}</span>
+/** Publication state, spelled out. Never inferred from the stroke alone. */
+const PUBLICATION_LABEL: Record<string, string> = {
+  public: 'PUBLISHED',
+  'declared-not-published': 'DECLARED, NOT PUBLISHED',
+  external: 'OUTSIDE',
+};
+
+function OutsideNode({
+  container,
+  selected,
+  onSelect,
+}: {
+  container: ArchitectureContainer;
+  selected: boolean;
+  onSelect: (id: string) => void;
+}) {
+  return (
+    <button
+      className={`${styles.outside} ${selected ? styles.outsideSelected : ''}`}
+      type="button"
+      aria-pressed={selected}
+      onClick={() => onSelect(container.id)}
+    >
+      <span className={styles.nodeName}>{container.name}</span>
+      <span className={styles.nodeMeta}>
+        {container.identifier} · {PUBLICATION_LABEL[container.publication]}
+      </span>
+    </button>
+  );
+}
+
+/**
+ * One layer inside the system boundary.
+ *
+ * The selection marker is a separate element rather than a border colour change: a
+ * border that changes colour on selection competes with the stroke that encodes
+ * publication state, and the publication stroke is the one carrying evidence.
+ */
+function LayerNode({
+  container,
+  selected,
+  onSelect,
+  wide = false,
+}: {
+  container: ArchitectureContainer;
+  selected: boolean;
+  onSelect: (id: string) => void;
+  wide?: boolean;
+}) {
+  const declared = container.publication === 'declared-not-published';
+
+  return (
+    <div className={`${styles.layer} ${wide ? styles.layerWide : ''}`}>
+      <span
+        className={`${styles.marker} ${selected ? styles.markerOn : ''}`}
+        aria-hidden="true"
+      />
+      <div className={`${styles.layerBox} ${declared ? styles.layerDeclared : ''}`}>
+        <button
+          className={styles.layerButton}
+          type="button"
+          aria-pressed={selected}
+          onClick={() => onSelect(container.id)}
+        >
+          <span className={styles.nodeName}>{container.name}</span>
+          <span className={styles.nodeMeta}>
+            {container.identifier} · {PUBLICATION_LABEL[container.publication]}
+          </span>
+        </button>
+
+        {selected ? (
+          <ul className={styles.components}>
+            {container.components.map((component) => {
+              const unpublished = component.publication === 'declared-not-published';
+              return (
+                <li className={styles.component} key={component.id}>
+                  <span
+                    className={`${styles.bullet} ${unpublished ? styles.bulletQuiet : ''}`}
+                    aria-hidden="true"
+                  >
+                    {unpublished ? '▫' : '▪'}
+                  </span>
+                  <span className={styles.componentBody}>
+                    {component.name}
+                    {component.identifier ? (
+                      <span className={styles.componentId}>
+                        {' '}
+                        — {component.identifier}
+                      </span>
+                    ) : null}
+                  </span>
                 </li>
-              ))}
-            </ul>
-          </div>
-          <div className={styles.packageColumn}>
-            <span className={styles.packageHeading}>Depended on, not published</span>
-            <ul className={styles.packageList}>
-              {data.privatePackages.map((name) => (
-                <li key={name}>
-                  <span className={styles.packageNameQuiet}>{name}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-        <p className={styles.verifyMethod}>{data.boundaryVerification.method}</p>
-        {data.boundaryVerification.command ? (
-          <code className={styles.command}>{data.boundaryVerification.command}</code>
+              );
+            })}
+          </ul>
         ) : null}
       </div>
+    </div>
+  );
+}
 
-      {/* ---- Recorded contradictions in the public material ---- */}
-      <div className={styles.discrepancies}>
-        <span className={styles.sectionLabel}>
-          Where the public material disagrees with itself
+/**
+ * The selected layer, in full, beside the diagram.
+ *
+ * `aria-live="polite"` because selection changes this region without moving focus: a
+ * reader driving the diagram from the keyboard would otherwise click a layer and be
+ * told nothing at all.
+ */
+function DetailPanel({
+  container,
+  hop,
+  data,
+}: {
+  container: ArchitectureContainer;
+  hop: TraceHop | undefined;
+  data: VrekoArchitectureData;
+}) {
+  return (
+    <aside className={styles.panel} aria-live="polite">
+      <div className={styles.panelHead}>
+        <span className={styles.panelEyebrow}>SELECTED LAYER</span>
+        <h3 className={styles.panelTitle}>{container.name}</h3>
+        <span className={styles.panelId}>
+          {container.identifier} · {PUBLICATION_LABEL[container.publication]}
         </span>
-        <ul className={styles.discrepancyList}>
-          {data.discrepancies.map((item) => (
-            <li className={styles.discrepancy} key={item.id}>
-              <span className={styles.discrepancySummary}>{item.summary}</span>
-              <p className={styles.discrepancyDetail}>{item.detail}</p>
-            </li>
-          ))}
-        </ul>
       </div>
 
-      <div className={styles.footer}>
-        <p className={styles.boundary}>
-          <span className={styles.boundaryLabel}>WHAT THIS DOES NOT SHOW</span>
-          {data.boundary}
-        </p>
-        <div className={styles.sources}>
-          {data.sources.map((source) => (
-            <EvidenceLink
-              key={source.id}
-              reference={source}
-              /*
-               * Each link names the artifact it opens. Three identical "INSPECT SOURCE"
-               * calls to action would leave a reader guessing which one is the
-               * architecture and which one is the manifest — which is the same failure
-               * the evidence rule exists to prevent, one level down.
-               */
-              cta={SOURCE_CTA[source.id] ?? 'INSPECT SOURCE'}
-            />
-          ))}
-        </div>
+      <p className={styles.panelSummary}>{container.summary}</p>
+
+      <div className={styles.panelFields}>
+        {hop ? (
+          <>
+            <Field label="BOUNDARY CROSSED" strong>
+              {hop.boundary}
+            </Field>
+            <Field label="CARRIES">{hop.carries}</Field>
+          </>
+        ) : null}
+
+        {hop?.withheld ? (
+          <div className={styles.withheld}>
+            <span className={styles.withheldLabel}>WITHHELD</span>
+            <p className={styles.withheldBody}>{hop.withheld}</p>
+          </div>
+        ) : null}
+
+        <Field label="PROVENANCE" mono>
+          {container.provenance.source}
+          {container.provenance.revision
+            ? ` @ ${container.provenance.revision.slice(0, 7)}`
+            : ''}
+        </Field>
       </div>
-    </section>
+
+      <div className={styles.rederive}>
+        <span className={styles.panelEyebrow}>RE-DERIVE THE SPLIT</span>
+        <code className={styles.command}>{data.boundaryVerification.command}</code>
+        <p className={styles.rederiveBody}>{data.boundaryVerification.method}</p>
+      </div>
+    </aside>
   );
 }
 
-/** An external box: named, but explicitly not part of the system under description. */
-function Node({
-  container,
-  tone,
-  active,
+function Field({
+  label,
+  children,
+  strong = false,
+  mono = false,
 }: {
-  container: ArchitectureContainer;
-  tone: 'external';
-  active: boolean;
+  label: string;
+  children: React.ReactNode;
+  strong?: boolean;
+  mono?: boolean;
 }) {
   return (
-    <div
-      className={[styles.node, styles[tone], active ? styles.nodeActive : '']
-        .filter(Boolean)
-        .join(' ')}
-    >
-      <span className={styles.nodeKind}>{PUBLICATION_LABEL.external}</span>
-      <span className={styles.nodeName}>{container.name}</span>
-      {container.identifier ? (
-        <span className={styles.identifier}>{container.identifier}</span>
-      ) : null}
-      <p className={styles.nodeSummary}>{container.summary}</p>
-    </div>
-  );
-}
-
-/** One container inside the system, with its interior available on demand. */
-function Container({
-  container,
-  open,
-  onToggle,
-  active,
-}: {
-  container: ArchitectureContainer;
-  open: boolean;
-  onToggle: () => void;
-  active: boolean;
-}) {
-  const id = useId();
-
-  return (
-    <div
-      className={[
-        styles.container,
-        active ? styles.containerActive : '',
-        container.publication === 'declared-not-published' ? styles.containerSealed : '',
-      ]
-        .filter(Boolean)
-        .join(' ')}
-    >
-      <div className={styles.containerHead}>
-        <div className={styles.containerIdentity}>
-          <span className={styles.publication}>
-            {PUBLICATION_LABEL[container.publication]}
-          </span>
-          <span className={styles.containerName}>{container.name}</span>
-          {container.identifier ? (
-            <span className={styles.identifier}>{container.identifier}</span>
-          ) : null}
-        </div>
-
-        <button
-          type="button"
-          className={styles.disclose}
-          aria-expanded={open}
-          aria-controls={id}
-          onClick={onToggle}
-        >
-          {open ? 'Hide internals' : 'Show internals'}
-        </button>
-      </div>
-
-      <p className={styles.containerSummary}>{container.summary}</p>
-
-      {open ? (
-        <div className={styles.components} id={id}>
-          <ul className={styles.componentList}>
-            {container.components.map((component) => (
-              <li className={styles.component} key={component.id}>
-                <div className={styles.componentHead}>
-                  <span className={styles.componentName}>{component.name}</span>
-                  {component.identifier ? (
-                    <span className={styles.identifier}>{component.identifier}</span>
-                  ) : null}
-                  <span className={styles.publicationQuiet}>
-                    {PUBLICATION_LABEL[component.publication]}
-                  </span>
-                </div>
-                <p className={styles.componentBody}>{component.responsibility}</p>
-              </li>
-            ))}
-          </ul>
-          <p className={styles.containerProvenance}>
-            {container.provenance.source}
-            {container.provenance.revision
-              ? ` @ ${container.provenance.revision.slice(0, 8)}`
-              : ''}
-          </p>
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
-function Connector() {
-  return (
-    <div className={styles.connector} aria-hidden="true">
-      <span className={styles.connectorRule} />↓
+    <div className={styles.field}>
+      <span className={styles.fieldLabel}>{label}</span>
+      <p
+        className={`${styles.fieldBody} ${strong ? styles.fieldStrong : ''} ${mono ? styles.fieldMono : ''}`}
+      >
+        {children}
+      </p>
     </div>
   );
 }
