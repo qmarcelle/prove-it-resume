@@ -287,47 +287,67 @@ keeps, changes, creates and removes, and that list was followed.
 ## Fourth import — `Prove It Resume - Hero Concept B.dc.html`
 
 Preserved at `design/reference/claude/Prove It Resume - Hero Concept B.dc.html`
-(sha256 `edd40d1d…ff83a5a3`). Unlike the first three it was retrieved from the Claude
+(sha256 `4267530b…bac5419f`). Unlike the first three it was retrieved from the Claude
 Design project rather than a download bundle, so that hash is of the file as committed
 here.
 
-"The Bounded Field": a 108-frame, 30fps hero sequence, authored as a prototype for a
-`.lottie` asset. Three dashed fragments align onto an evidence baseline, a decision
-boundary closes around them, and they consolidate into one solid unit with a terminus
-mark.
+**This is the second pass.** The first, "The Bounded Field", is kept alongside it as
+`Prove It Resume - Hero Concept B (first pass).dc.html` (sha256 `edd40d1d…ff83a5a3`),
+because ADR 0009 was written against it and because the second pass exists to fix it. The
+export states the fault in its own words: the first version "resolved into two rules, a
+black bar, and an amber square: abstract geometry that communicated craft and nothing
+specific, and that lost its meaning the moment the motion stopped".
+
+"The Bounded Path": a 108-frame, 30fps hero sequence, authored as a prototype for a
+`.lottie` asset. Four dashed nodes settle onto one axis and connect left to right —
+repository, evidence, agent, decision — a bracket rises to enclose the middle two, a node
+outside it is excluded, and the decision fills as the only saturated mark on the stage.
 
 Two things were taken from it.
 
 **The sequence**, built as `BoundedField` — in CSS, not as an animation asset, on the
 export's own recommendation that the prototype ships and the runtime decision waits for
 real readers. Its governing rule is _geometry in SVG, labels in DOM_: nothing in the
-drawing is a word, a number, or a claim, and the four station labels plus the per-beat
-caption are DOM text positioned against the stage. It is the fourth animated treatment on
-the page, which the interaction contract requires be decided explicitly —
-`docs/decisions/0009-a-fourth-animated-treatment.md`.
+drawing is a word, a number, or a claim, and the four station labels, the bracket's BOUND
+label, and the per-beat caption are all DOM text positioned against the stage. It is the
+fourth animated treatment on the page, which the interaction contract requires be decided
+explicitly — `docs/decisions/0009-a-fourth-animated-treatment.md`.
 
 **The concept marks**, in `src/components/concept`. The export's own "marks derived from
 the settled frame" panel supplies four crops of the final composition, drawn at the same
-weight and with the same dashed-to-solid convention. Three are placed: a bounded field on
-`ClaimBoundary`, a solid unit on an evidence baseline on the evidence panel's resolution
-count, and two unaligned dashed fragments on a stated gap. The fourth, SHIPPED, is not —
-see the deviation below.
+weight and with the same dashed-to-solid convention. Three are placed: a bracketed pair on
+`ClaimBoundary`, one node feeding another on the evidence panel's resolution count, and two
+unconnected dashed nodes on a stated gap. The fourth, DECISION, is not — see the deviation
+below.
 
 Deviations from this import specifically:
 
-- **The excluded candidate stays visible.** The export fades the stray fragment to
-  nothing once the boundary closes. It ships held at 0.35 opacity, outside the bound, on
-  the grounds that a hero which erases what it ruled out contradicts a page that types
-  `boundary` as a kind of evidence. Reasoning in ADR 0009; both variants remain behind one
-  constant.
-- **SHIPPED is not vendored.** Its only natural home is `EvidenceStatus`, whose marks are
+- **The excluded node is excluded, as the export authored it.** The first pass shipped it
+  held at 0.35 opacity rather than faded out, on the grounds that a hero which erases what
+  it ruled out contradicts a page that types `boundary` as a kind of evidence. The second
+  pass changes that argument's premise: its four stations are named and the stray is not,
+  so at rest it is an unlabelled dashed box standing after the answer — the exact
+  illegibility this pass was drawn to remove. The boundary itself is still rendered and
+  still named, because the bracket and its BOUND label survive to the settled frame. Both
+  variants remain behind one constant. Reasoning in ADR 0009.
+- **DECISION is not vendored.** Its only natural home is `EvidenceStatus`, whose marks are
   inline-chip scale while these are card scale. Re-cutting that component is new geometry
   the export does not supply, and a vendored shape nothing uses is dead code. Recorded as
   an open decision in ADR 0008.
+- **The marks lost their accent.** The settled frame spends its single accent on the
+  decision node, and none of the three placed marks is a crop of that node, so the mark set
+  is now monochrome — ink for a node or an edge, ink-tertiary for a bracket, border-dashed
+  for what is unresolved.
+- **The bracket is dropped on viewport width, the labels redistribute on stage width.**
+  The export drops the bracket and the stray below 640px. That is kept as a viewport rule
+  while the station layout stays a container rule, because a 1024px window gives this
+  figure a 390px stage: the labels have to redistribute there, but the bracket is still
+  perfectly legible, and gating both on stage width would throw away the B2 beat on an
+  ordinary laptop.
 - **Station labels give way before the type does.** Deviation 8 below set an 11.5px
-  microtype floor and it holds here: where four mono words stop clearing their ticks, a
-  container query switches them to a distributed row and hides the ticks, rather than
-  shrinking the words.
+  microtype floor and it holds here: where four mono words stop clearing their node
+  columns, a container query switches them to an evenly distributed row — still in
+  sequence order, which is the fact they carry — rather than shrinking the words.
 - **No frame controls.** The export's prototype has a frame scrubber and a replay button
   for authoring. Its own export constraints say production has neither, and it does not.
 

@@ -1,7 +1,7 @@
 /*
  * The mark keeps the composition's own weights: 1.25 units of stroke on a 64×40 grid, the
- * same dashed-to-solid convention, and the one accent. Colours are tokens, never literals,
- * so a mark inside a dark panel is a token remap rather than a second drawing.
+ * same dashed-to-solid convention, and the same two inks. Colours are tokens, never
+ * literals, so a mark inside a dark panel is a token remap rather than a second drawing.
  */
 .mark {
   display: inline-block;
@@ -9,23 +9,24 @@
   vertical-align: -0.15em;
 }
 
+/* A node, or the edge between two of them. */
 .mark :global(.cmInk) {
   fill: var(--color-ink);
 }
 
-.mark :global(.cmAccent) {
-  fill: var(--color-accent);
+/* The bracket. Quieter than what it encloses, because an enclosure is not a claim. */
+.mark :global(.cmQuiet) {
+  fill: var(--color-ink-tertiary);
 }
 
-.mark :global(.cmOutline) {
-  fill: none;
-  stroke: var(--color-ink-tertiary);
-  stroke-width: 1.25;
-}
-
+/*
+ * Unresolved: hollow and dashed, at the composition's own beat-zero setting. The dash is
+ * 2 units here rather than the stage's 4 — a node is 7 units across at this scale, and a
+ * 4-unit dash would draw one segment and read as solid.
+ */
 .mark :global(.cmDashed) {
   fill: none;
   stroke: var(--color-border-dashed);
-  stroke-dasharray: 4 4;
+  stroke-dasharray: 2 2;
   stroke-width: 1.25;
 }

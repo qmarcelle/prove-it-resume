@@ -18,7 +18,13 @@ ships as CSS rather than as an animation runtime. A fifth would need the same tr
 
 One number moves with it. The ~900ms choreography cap below was written for disclosures
 the reader operates, where a long sequence means waiting on a control; the hero is a
-single play-once sequence at 3.2 seconds. That exception is named there, not assumed.
+single play-once sequence measured at 3.05 seconds end to end. That exception is named
+there, not assumed.
+
+The cap's premise is what makes the exception safe. Nobody is waiting on this one: it is
+not a control, it plays once on the stage's first meaningful entry into the viewport, and
+it has no replay. A reader who wants the finished picture already has it — that is the
+frame the server sent.
 
 ---
 

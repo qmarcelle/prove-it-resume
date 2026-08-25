@@ -1,5 +1,5 @@
 /*
- * Hero composition — "The Bounded Field".
+ * Hero composition — "The Bounded Path".
  *
  * Every colour here is an existing token. The export names four values and all four were
  * already in `tokens.css`: ink, ink-tertiary, border-dashed, accent. No hue is introduced,
@@ -33,34 +33,81 @@
   position: relative;
   border: var(--rule);
   background: var(--color-surface);
-  padding: var(--space-3) var(--space-3) var(--space-2);
+  padding: var(--space-4) var(--space-3) var(--space-2);
 }
 
+/*
+ * The beat-0 scatter stays inside this box — the widest excursion puts a node at y=21 and
+ * the lowest at y=133, against a 14–140 view. `overflow: visible` covers stroke width at
+ * the extremes only, so the reserved height is honest.
+ */
 .svg {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 640 / 300;
+  aspect-ratio: 640 / 126;
   overflow: visible;
 }
 
 /* ── The layers ─────────────────────────────────────────────────────────────── */
 
-.bound {
-  stroke: var(--color-ink);
+/*
+ * A node is dashed and hollow until it has settled, solid-stroked once it has, and filled
+ * once it is live. Three states, one shape: the dashed-to-solid convention is the same one
+ * the concept marks and the evidence rows use, so it is read rather than decoded.
+ */
+.node {
+  fill: none;
+  stroke: var(--color-border-dashed);
   stroke-width: 1.5;
-  opacity: 0;
+  stroke-dasharray: 4 4;
 }
 
-.baseline {
+.node[data-solid='true'] {
+  stroke-dasharray: 0 0;
+}
+
+.node[data-live='true'] {
+  fill: var(--color-ink);
+  stroke: var(--color-ink);
+}
+
+/* The only fully saturated accent fill in the composition. It arrives last, and small. */
+.decision[data-live='true'] {
   fill: var(--color-accent);
+  stroke: var(--color-accent);
+}
+
+.edge {
+  stroke: var(--color-ink);
+  stroke-width: 1.5;
+}
+
+.edgeHead {
+  fill: none;
+  stroke: var(--color-ink);
+  stroke-width: 1.5;
+}
+
+/* The last edge is the only one that changes colour, because it is the one that produces
+   the answer. */
+.edge[data-accent='true'],
+.edgeHead[data-accent='true'] {
+  stroke: var(--color-accent);
 }
 
 /*
- * The candidate outside the decision boundary. Dashed because it was never resolved, and
- * still drawn at beat three because a boundary that erases what it excludes is not a
- * boundary the rest of this page would recognise.
+ * The bracket. It encloses evidence and agent — the surface the decision is made inside —
+ * and it is the boundary this page will not collapse: it survives to the settled frame,
+ * named, while the unlabelled node beyond it does not.
  */
+.bound {
+  fill: none;
+  stroke: var(--color-ink-tertiary);
+  stroke-width: 1.5;
+}
+
+/* The node outside the bracket. Dashed because it was never resolved. */
 .stray {
   fill: none;
   stroke: var(--color-border-dashed);
@@ -68,81 +115,42 @@
   stroke-dasharray: 4 4;
 }
 
-.fragment {
-  fill: none;
-  stroke: var(--color-border-dashed);
-  stroke-width: 1.5;
-  stroke-dasharray: 5 5;
-}
-
-.terminus {
-  fill: var(--color-accent);
-}
-
-.tick {
-  fill: var(--color-ink);
-}
-
-/* ── Beats ──────────────────────────────────────────────────────────────────── */
-
-/* B1 — the fragments have landed on the evidence and resolved. */
-.svg[data-beat='1'] .fragment,
-.svg[data-beat='2'] .fragment {
-  fill: var(--color-surface-muted);
-  stroke: var(--color-ink-tertiary);
-  stroke-dasharray: 0 0;
-}
-
-/* B2 — the boundary has closed. */
-.svg[data-beat='2'] .bound,
-.svg[data-beat='3'] .bound {
-  opacity: 1;
-}
-
-/* B3 — one unit. */
-.svg[data-beat='3'] .fragment {
-  fill: var(--color-ink);
-  stroke: var(--color-ink);
-  stroke-dasharray: 0 0;
-}
-
 /* ── Motion ─────────────────────────────────────────────────────────────────── */
 
 /*
- * Opacity plus one of transform or fill, per element. No overshoot, no spring, nothing
- * longer than the beat it belongs to.
+ * Opacity plus one of transform or fill, per element — which is why the node's position
+ * and the node's resolution are two layers. Nothing overshoots, springs, or runs longer
+ * than the beat it belongs to.
  */
-.playing .bound {
-  transition:
-    opacity 300ms cubic-bezier(0.22, 0, 0.18, 1),
-    transform 300ms cubic-bezier(0.22, 0, 0.18, 1);
+.playing .nodeGroup,
+.playing .edgeDraw {
+  transition: transform 340ms cubic-bezier(0.22, 0, 0.18, 1);
 }
 
-.playing .baseline {
-  transition: transform 420ms cubic-bezier(0.22, 0, 0.18, 1);
-}
-
-.playing .stray,
-.playing .terminus,
-.playing .tick {
+.playing .node {
   transition:
-    opacity 300ms cubic-bezier(0.22, 0, 0.18, 1),
-    transform 300ms cubic-bezier(0.22, 0, 0.18, 1);
-}
-
-.playing .fragment {
-  transition:
-    transform 300ms cubic-bezier(0.22, 0, 0.18, 1),
     fill 300ms ease,
     stroke 300ms ease,
     stroke-dasharray 300ms ease;
 }
 
+.playing .edgeHead {
+  transition: opacity 240ms ease;
+}
+
+.playing .bound,
+.playing .stray {
+  transition:
+    opacity 300ms ease,
+    transform 340ms cubic-bezier(0.22, 0, 0.18, 1);
+}
+
 /* ── Stations ───────────────────────────────────────────────────────────────── */
 
 /*
- * DOM text, absolutely positioned against the stage rather than drawn into it. The row
- * reserves its own height so nothing below it moves as labels change weight.
+ * DOM text, positioned against the stage rather than drawn into it. The row reserves its
+ * own height — two lines, stations then BOUND — so nothing below it moves as labels change
+ * weight or as the bracket's name arrives.
  */
 /*
  * Narrow by default: an evenly distributed row.
@@ -150,37 +158,64 @@
  * The stations cannot shrink to fit. `docs/design-import.md` raised this page's microtype
  * to an 11.5px floor on the grounds that metadata below it "reads as texture rather than
  * information", and that floor is authoritative — so where four mono words stop fitting
- * against their ticks, the layout gives way rather than the type. Distributed, they still
- * read left to right in sequence order, which is the fact they carry; the ticks they
- * would have misaligned against are hidden at the same breakpoint, so nothing is left
- * pointing at the wrong place.
+ * against their columns, the layout gives way rather than the type. Distributed, they
+ * still read left to right in sequence order, which is the fact they carry.
  */
 .stations {
   display: flex;
+  flex-wrap: wrap;
+  align-content: start;
   justify-content: space-between;
   gap: var(--space-2);
-  margin-top: 0.25rem;
-  min-height: 1.125rem;
+  margin-top: var(--space-1);
+  min-height: 2.125rem;
 }
 
 /*
- * Centred on the tick each names, which is what ties the word to the geometry. The
- * ticks sit 100 units apart, so at the stage's native measure the four labels clear each
- * other; tracking is dialled back from the usual metadata setting because "BOUNDARY" and
- * "PRODUCTION" are the two longest words in the set and they are also the two closest
- * together.
+ * Centred on the node each names, which is what ties the word to the geometry. Tracking is
+ * dialled back from the usual metadata setting because REPOSITORY is the longest word in
+ * the set and it sits nearest the stage's left edge.
  */
 .station {
   white-space: nowrap;
   font-family: var(--font-mono);
   font-size: var(--text-meta-sm);
   letter-spacing: 0.04em;
-  color: var(--color-meta);
+  color: var(--color-meta-quiet);
   transition: color 300ms ease;
 }
 
 .station[data-reached='true'] {
   color: var(--color-ink);
+  font-weight: 500;
+}
+
+/*
+ * `visibility`, not opacity alone. A transparent word is still a word to a contrast
+ * checker, which reads it blended against the stage and fails it — and it is still a word
+ * to a screen reader, announcing a bracket that has not been drawn yet. Hidden until the
+ * bracket arrives, it is neither. Visibility is deliberately not transitioned: it snaps
+ * on at the start of the fade in, and snaps off instantly on the rewind, which is what
+ * the rewind wants everywhere else too.
+ */
+.boundLabel {
+  /* Its own row, centred: the bracket it names is centred on the stage too, and a fifth
+     word in the station row would read as a fifth station. */
+  flex: 0 0 100%;
+  text-align: center;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-ink-tertiary);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.boundLabel[data-shown='true'] {
+  visibility: visible;
+  opacity: 1;
 }
 
 /* ── Caption ────────────────────────────────────────────────────────────────── */
@@ -206,9 +241,9 @@
 }
 
 /*
- * Wide enough for the words to sit on the marks they name. Below this the two longest,
- * BOUNDARY and PRODUCTION, overlap — their ticks are 100 units apart, which stops being
- * enough room somewhere around a 460px stage.
+ * Wide enough for the words to sit on the marks they name. Below this, REPOSITORY and
+ * EVIDENCE overlap — their columns are 180 units apart, which stops being enough room
+ * somewhere around a 480px stage.
  */
 @container bounded-field (min-width: 480px) {
   .stations {
@@ -216,28 +251,41 @@
     position: relative;
   }
 
-  .station {
+  .station,
+  .boundLabel {
     position: absolute;
-    top: 0;
     transform: translateX(-50%);
   }
-}
 
-@container bounded-field (max-width: 479.98px) {
-  .tick {
-    display: none;
+  .station {
+    top: 0;
+  }
+
+  /* Hangs under the gap between EVIDENCE and AGENT, on the bracket's own centre line. */
+  .boundLabel {
+    top: 1.1875rem;
   }
 }
 
 /*
- * Below 640px the bounds and the excluded candidate are dropped, per the export. At that
- * width they are two hairlines at the extreme edges and a 48-unit rectangle beyond them —
- * detail that reads as noise rather than as an enclosure. The fragments, the baseline,
- * and the terminus carry the sequence on their own.
+ * Below a 640px viewport the bracket and the excluded node are dropped, per the export. At
+ * that width they are a hairline enclosure and a 40-unit rectangle beyond the answer —
+ * detail that reads as noise. The four nodes and three edges carry the sequence alone.
+ *
+ * This is a viewport rule and the station layout above is a stage-width rule, deliberately:
+ * a 1024px window gives this figure a 390px stage, where the labels have to redistribute
+ * but the bracket is still perfectly legible. Gating both on stage width would have thrown
+ * away the B2 beat on an ordinary laptop.
  */
 @media (max-width: 640px) {
   .bound,
-  .stray {
+  .stray,
+  .boundLabel {
     display: none;
+  }
+
+  /* One row of labels left to reserve, so reserve one. */
+  .stations {
+    min-height: 1.0625rem;
   }
 }

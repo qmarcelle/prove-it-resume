@@ -95,11 +95,12 @@ its hash, treatment, and every deviation are recorded in
 [`docs/design-provenance.md`](docs/design-provenance.md), and the durable rules it
 produced are in [`docs/interaction-contract.md`](docs/interaction-contract.md).
 
-A fourth import, "Hero Concept B — The Bounded Field", supplied the hero composition and
-the abstract marks cropped from its settled frame. It is committed with the others. It
-was authored as a prototype for a `.lottie` asset and ships as CSS, on its own
-recommendation that the prototype deploy first and the runtime decision wait for real
-readers.
+A fourth import, "Hero Concept B", supplied the hero composition and the marks cropped
+from its settled frame. Both of its passes are committed with the others: "The Bounded
+Path" is the one that ships, and "The Bounded Field" is kept beside it because the
+decision record cites it and the second pass exists to correct it. It was authored as a
+prototype for a `.lottie` asset and ships as CSS, on its own recommendation that the
+prototype deploy first and the runtime decision wait for real readers.
 
 ## Local development
 

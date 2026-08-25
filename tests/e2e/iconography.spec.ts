@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 /**
  * The icon system's guarantees, checked against the built page rather than the source.
@@ -90,7 +90,44 @@ test('every affordance still carries its word', async ({ page }) => {
   expect(unnamed).toEqual([]);
 });
 
+/*
+ * The hero's sequence is driven by `setTimeout`, so its wall-clock length is a floor and
+ * not a bound: with the suite at full parallelism these timers are starved and a ~3s
+ * choreography has been observed still sitting on beat zero six seconds in. These budgets
+ * are generous on purpose — a slow machine is not a regression, and Playwright resolves
+ * as soon as the attribute lands, so the passing case costs nothing.
+ */
+const REWIND_MS = 10_000;
+const SETTLE_MS = 30_000;
+
+/** Longer than the whole sequence, for asserting that it has *not* run. */
+const PAST_SEQUENCE_MS = 5_000;
+
+const stageOf = (page: Page) => page.locator('svg[data-beat]');
+const figureOf = (page: Page) => page.locator('figure:has(svg[data-beat])');
+
+/*
+ * Arrive at the figure and watch it finish.
+ *
+ * Two waits, and the first one is the load-bearing one. `data-beat="3"` is already true
+ * at first paint — the server renders the settled frame and the sequence rewinds into it
+ * — so waiting only for beat 3 passes instantly and reads the composition before it has
+ * played. Beat 0 first proves the rewind happened; the scroll then satisfies the viewport
+ * gate, which is a no-op on a viewport where the figure was already on screen.
+ */
+async function playThrough(page: Page) {
+  const stage = stageOf(page);
+  await expect(stage).toHaveAttribute('data-beat', '0', { timeout: REWIND_MS });
+  await figureOf(page).scrollIntoViewIfNeeded();
+  await expect(stage).toHaveAttribute('data-beat', '3', { timeout: SETTLE_MS });
+
+  return stage;
+}
+
 test.describe('the hero composition', () => {
+  // The budgets above only bind if the per-test ceiling clears them.
+  test.describe.configure({ timeout: 60_000 });
+
   test('settles to the same frame under reduced motion', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
@@ -98,7 +135,7 @@ test.describe('the hero composition', () => {
     const stage = page.locator('svg[data-beat]');
     await expect(stage).toHaveAttribute('data-beat', '3');
     // The sequence never runs, so the frame is still B3 well past its duration.
-    await page.waitForTimeout(3600);
+    await page.waitForTimeout(PAST_SEQUENCE_MS);
     await expect(stage).toHaveAttribute('data-beat', '3');
   });
 
@@ -115,45 +152,73 @@ test.describe('the hero composition', () => {
   test('runs its beats and comes to rest', async ({ page }) => {
     await page.goto('/');
 
-    const stage = page.locator('svg[data-beat]');
     // Rewound to the start, then played forward without being touched.
-    await expect(stage).toHaveAttribute('data-beat', '0', { timeout: 2000 });
-    await expect(stage).toHaveAttribute('data-beat', '3', { timeout: 6000 });
+    await playThrough(page);
   });
 
   /*
-   * The excluded candidate stays drawn. `boundary` is part of `EvidenceKind` on purpose,
-   * and the interaction contract says claim boundaries are "rendered, never collapsed" —
-   * a hero whose last beat erased what it ruled out would contradict the page under it.
+   * It plays on first meaningful viewport entry, not on mount. A sequence that had
+   * already finished by the time the reader scrolled to it would be a load-order
+   * accident, and the beats are the claim — they are worth nothing unwatched.
    */
-  test('keeps the ruled-out candidate visible outside the boundary', async ({ page }) => {
+  test('waits for the stage to be on screen before it plays', async ({ page }) => {
+    // Short enough that the figure starts well below the fold in either project.
+    await page.setViewportSize({
+      width: page.viewportSize()?.width ?? 1280,
+      height: 380,
+    });
     await page.goto('/');
 
-    /*
-     * Wait for the rewind before waiting for the rest. `data-beat="3"` is already true
-     * at first paint — the server renders the settled frame and the sequence rewinds
-     * into it — so waiting only for beat 3 passes instantly and reads the composition
-     * before it has played.
-     */
-    const stage = page.locator('svg[data-beat]');
-    await expect(stage).toHaveAttribute('data-beat', '0', { timeout: 2000 });
-    await expect(stage).toHaveAttribute('data-beat', '3', { timeout: 6000 });
+    const stage = stageOf(page);
+    await expect(stage).toHaveAttribute('data-beat', '0', { timeout: REWIND_MS });
+    await expect(figureOf(page)).not.toBeInViewport();
 
-    const opacity = await page
-      .locator('svg[data-beat] rect[stroke-dasharray="4 4"], svg[data-beat] rect')
-      .evaluateAll((els) => {
-        const stray = els.find((el) => el.getAttribute('x') === '576');
-        return stray ? Number(stray.getAttribute('opacity')) : null;
-      });
+    // Well past the whole sequence. Nothing was scrolled to, so nothing has played.
+    await page.waitForTimeout(PAST_SEQUENCE_MS);
+    await expect(stage).toHaveAttribute('data-beat', '0');
 
-    expect(opacity).toBeGreaterThan(0);
-    expect(opacity).toBeLessThan(1);
+    await figureOf(page).scrollIntoViewIfNeeded();
+    await expect(stage).toHaveAttribute('data-beat', '3', { timeout: SETTLE_MS });
+  });
+
+  /*
+   * The bracket is a claim boundary, and this page renders those rather than collapsing
+   * them to make a picture tidier — `boundary` sits inside `EvidenceKind` on purpose. So
+   * it survives to the settled frame with its name attached.
+   */
+  test('keeps the named boundary in the settled frame', async ({ page, viewport }) => {
+    // Below 640px the bracket is dropped, per the export. That case is asserted below.
+    test.skip((viewport?.width ?? 0) <= 640, 'the bracket is not drawn at this width');
+
+    await page.goto('/');
+    const stage = await playThrough(page);
+
+    await expect(stage.locator('path[d^="M 250 96"]')).toHaveAttribute('opacity', '1');
+    await expect(figureOf(page).getByText('BOUND', { exact: true })).toBeVisible();
+  });
+
+  /*
+   * The node outside the bracket is excluded, never absorbed — it leaves outward, and it
+   * is not standing in the settled frame. It is the one mark on the stage with no station
+   * label, and the export's second pass exists because an anonymous dashed box left
+   * beside the answer is what stopped the first frame being readable cold.
+   */
+  test('excludes the unnamed node rather than absorbing it', async ({ page }) => {
+    await page.goto('/');
+    const stage = await playThrough(page);
+
+    const stray = stage.locator('rect[x="592"]');
+    await expect(stray).toHaveAttribute('opacity', '0');
+    // Outward: the stage is 640 units wide and it left to the right of everything.
+    await expect(stray).toHaveAttribute('transform', 'translate(26 0)');
   });
 
   test('is clean to axe mid-sequence as well as at rest', async ({ page }) => {
     await page.goto('/');
+    // Arrive at the figure, which is what starts the sequence at all.
+    await figureOf(page).scrollIntoViewIfNeeded();
     await expect(page.locator('svg[data-beat="1"], svg[data-beat="2"]')).toBeVisible({
-      timeout: 3000,
+      timeout: SETTLE_MS,
     });
 
     const results = await new AxeBuilder({ page })

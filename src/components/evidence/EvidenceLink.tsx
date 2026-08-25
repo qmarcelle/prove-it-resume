@@ -53,8 +53,8 @@ export function EvidenceLink({
     <span className={variant === 'block' ? styles.unresolvedBlock : styles.unresolved}>
       {/*
        * The stated gap gets a mark, and pointedly not an action icon: there is nothing
-       * here to do. It is the hero's two unaligned fragments, still dashed, never
-       * brought onto an evidence baseline — the same shape the composition opens on.
+       * here to do. It is two of the hero's nodes, still dashed, still off the axis and
+       * connected to nothing — the same shape the composition opens on.
        */}
       {variant === 'block' ? <ConceptMark name="unresolved" /> : null}
       {variant === 'block' ? UNRESOLVED_LABEL : 'VERIFY BEFORE PUBLISHING'}
