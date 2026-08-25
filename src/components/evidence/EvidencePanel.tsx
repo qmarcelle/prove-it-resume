@@ -61,11 +61,11 @@ export function EvidencePanel({
 
       <div className={styles.footer}>
         {/*
-         * The composition's settled state, cropped: a solid unit standing on the amber
-         * evidence baseline. It marks the one line on the panel that says how much of
-         * this actually resolves.
+         * The composition's settled state, cropped: one node feeding another. It marks
+         * the one line on the panel that says how much of this actually resolves — the
+         * count of evidence rows that reach an artifact rather than stopping at a claim.
          */}
-        <ConceptMark className={styles.footerMark} name="on-evidence" />
+        <ConceptMark className={styles.footerMark} name="one-edge" />
         {sourceNote ??
           `${counts.resolved} of ${counts.total} evidence items resolve to an inspectable artifact`}
       </div>

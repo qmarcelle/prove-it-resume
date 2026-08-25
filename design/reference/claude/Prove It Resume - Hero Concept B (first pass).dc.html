@@ -35,10 +35,10 @@
     <div style="max-width: 1280px; margin: 0 auto; padding: 44px 32px 40px; display: flex; flex-wrap: wrap; gap: 40px;">
 
       <div style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 16px;">
-        <p style="margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.1em; color: #8A5A12;">CONCEPT B · THE BOUNDED PATH</p>
-        <h1 style="margin: 0; font-size: 34px; line-height: 1.12; letter-spacing: -0.035em; font-weight: 700; max-width: 22ch; text-wrap: pretty;">Four unconnected nodes resolve into one labelled path.</h1>
-        <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #45443E; max-width: 56ch; text-wrap: pretty;">The settled frame has to survive being screenshotted. So it resolves into a diagram a cold reader can name without having watched anything: repository, evidence, agent, decision, with the middle two enclosed and the decision the only saturated mark on the stage.</p>
-        <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #45443E; max-width: 56ch; text-wrap: pretty;">The animation earns its keep by showing which direction causality runs and what got excluded, then getting out of the way. Nodes, edges, and the bracket are geometry, which is what makes this a dotLottie candidate. The four labels are DOM text positioned against the stage, so copy stays editable, translatable, and readable by a screen reader while the vector runtime owns only the shapes.</p>
+        <p style="margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.1em; color: #8A5A12;">CONCEPT B · THE BOUNDED FIELD</p>
+        <h1 style="margin: 0; font-size: 34px; line-height: 1.12; letter-spacing: -0.035em; font-weight: 700; max-width: 22ch; text-wrap: pretty;">Three fragments become one deployable unit inside a boundary.</h1>
+        <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #45443E; max-width: 56ch; text-wrap: pretty;">Concept A transformed a request record in place: its content was text, so it stayed in the DOM. This one is pure geometry, which is what makes it a candidate for dotLottie. Nothing in the drawing is a word, a number, or a claim. The four labels beneath it are DOM text positioned against the stage, so copy stays editable, translatable, and readable by a screen reader while the vector runtime owns only the shapes.</p>
+        <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #45443E; max-width: 56ch; text-wrap: pretty;">The settled frame is the point. It is a composition worth looking at with the animation switched off, and it is the seed of the icon system: a bounded field, a solid unit, an evidence baseline, a terminus mark.</p>
       </div>
 
       <!-- ---------- STAGE ---------- -->
@@ -50,33 +50,31 @@
           </div>
 
           <div style="padding: 8px 10px 14px;">
-            <svg viewBox="0 14 640 126" role="img" aria-label="{{ altText }}" style="display: block; width: 100%; height: auto; overflow: visible;">
-              <sc-for list="{{ edges }}" as="e" hint-placeholder-count="3">
-                <g transform="{{ e.tf }}" style="transition: transform 340ms cubic-bezier(0.22,0,0.18,1);">
-                  <line x1="{{ e.x1 }}" y1="86" x2="{{ e.x2 }}" y2="86" stroke="{{ e.stroke }}" stroke-width="1.5" style="transition: stroke 300ms ease;"></line>
-                </g>
-                <path d="{{ e.head }}" fill="none" stroke="{{ e.stroke }}" stroke-width="1.5" opacity="{{ e.headOp }}" style="transition: opacity 240ms ease, stroke 300ms ease;"></path>
-              </sc-for>
+            <svg viewBox="0 0 640 300" role="img" aria-label="{{ altText }}" style="display: block; width: 100%; height: auto; overflow: visible;">
+              <line x1="80" y1="48" x2="80" y2="252" stroke="#1A1A17" stroke-width="1.5" opacity="{{ bounds.op }}" transform="{{ bounds.tfL }}" style="transition: opacity 300ms cubic-bezier(0.22,0,0.18,1), transform 300ms cubic-bezier(0.22,0,0.18,1);"></line>
+              <line x1="560" y1="48" x2="560" y2="252" stroke="#1A1A17" stroke-width="1.5" opacity="{{ bounds.op }}" transform="{{ bounds.tfR }}" style="transition: opacity 300ms cubic-bezier(0.22,0,0.18,1), transform 300ms cubic-bezier(0.22,0,0.18,1);"></line>
 
-              <g opacity="{{ bound.op }}" transform="{{ bound.tf }}" style="transition: opacity 300ms ease, transform 340ms cubic-bezier(0.22,0,0.18,1);">
-                <path d="M 250 96 L 250 126 L 420 126 L 420 96" fill="none" stroke="#55534C" stroke-width="1.5"></path>
+              <g transform="{{ baseline.tf }}" style="transition: transform 420ms cubic-bezier(0.22,0,0.18,1);">
+                <rect x="100" y="209" width="300" height="1.5" fill="{{ accentColor }}"></rect>
               </g>
 
-              <rect x="592" y="74" width="40" height="24" fill="none" stroke="#B3AFA4" stroke-width="1.5" stroke-dasharray="4 4" opacity="{{ stray.op }}" transform="{{ stray.tf }}" style="transition: opacity 300ms ease, transform 300ms cubic-bezier(0.22,0,0.18,1);"></rect>
+              <rect x="576" y="176" width="48" height="28" fill="none" stroke="#B3AFA4" stroke-width="1.5" stroke-dasharray="4 4" opacity="{{ stray.op }}" transform="{{ stray.tf }}" style="transition: opacity 300ms cubic-bezier(0.22,0,0.18,1), transform 300ms cubic-bezier(0.22,0,0.18,1);"></rect>
 
-              <sc-for list="{{ nodes }}" as="n" hint-placeholder-count="4">
-                <g transform="{{ n.tf }}" style="transition: transform 340ms cubic-bezier(0.22,0,0.18,1);">
-                  <circle cx="{{ n.cx }}" cy="86" r="{{ n.r }}" fill="{{ n.fill }}" stroke="{{ n.stroke }}" stroke-width="1.5" stroke-dasharray="{{ n.dash }}" opacity="{{ n.circleOp }}" style="transition: fill 300ms ease, stroke 300ms ease, stroke-dasharray 300ms ease, opacity 240ms ease;"></circle>
-                  <rect x="{{ n.sx }}" y="76" width="20" height="20" fill="{{ n.fill }}" stroke="{{ n.stroke }}" stroke-width="1.5" stroke-dasharray="{{ n.dash }}" opacity="{{ n.squareOp }}" style="transition: fill 300ms ease, stroke 300ms ease, stroke-dasharray 300ms ease, opacity 240ms ease;"></rect>
-                </g>
+              <sc-for list="{{ shapes }}" as="s" hint-placeholder-count="3">
+                <rect x="{{ s.x }}" y="160" width="100" height="40" transform="{{ s.tf }}" fill="{{ s.fill }}" stroke="{{ s.stroke }}" stroke-width="1.5" stroke-dasharray="{{ s.dash }}" style="transition: transform 300ms cubic-bezier(0.22,0,0.18,1), fill 300ms ease, stroke 300ms ease, stroke-dasharray 300ms ease;"></rect>
+              </sc-for>
+
+              <rect x="412" y="192" width="18" height="18" fill="{{ accentColor }}" opacity="{{ terminus.op }}" transform="{{ terminus.tf }}" style="transition: opacity 300ms cubic-bezier(0.22,0,0.18,1), transform 300ms cubic-bezier(0.22,0,0.18,1);"></rect>
+
+              <sc-for list="{{ ticks }}" as="t" hint-placeholder-count="4">
+                <rect x="{{ t.x }}" y="240" width="1.5" height="10" fill="#1A1A17" opacity="{{ t.op }}" style="transition: opacity 300ms ease;"></rect>
               </sc-for>
             </svg>
 
-            <div style="position: relative; height: 34px; margin-top: 8px;">
+            <div style="position: relative; height: 18px; margin-top: 4px;">
               <sc-for list="{{ stations }}" as="st" hint-placeholder-count="4">
                 <span style="{{ st.style }}">{{ st.label }}</span>
               </sc-for>
-              <span style="{{ boundLabelStyle }}">BOUND</span>
             </div>
           </div>
         </div>
@@ -95,7 +93,7 @@
           <button type="button" onClick="{{ replay }}" style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #66645D; background: none; border: 1px solid #DEDBD2; border-radius: 2px; padding: 6px 10px; cursor: pointer;" style-hover="color: #8A5A12; border-color: #D9C8A8;">↻ PLAY ONCE</button>
         </div>
 
-        <figcaption style="font-size: 13.5px; line-height: 1.55; color: #55534C; text-wrap: pretty;">Scrub the four frames to read the sequence without watching it, and judge B3 on its own — it is what most visitors will actually see. In production there are no controls: it plays once on mount and stops at B3.</figcaption>
+        <figcaption style="font-size: 13.5px; line-height: 1.55; color: #55534C; text-wrap: pretty;">Scrub the four frames to read the sequence without watching it. In production there are no controls: it plays once on mount and stops at B3.</figcaption>
       </figure>
     </div>
   </section>
@@ -151,7 +149,7 @@
       <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px;">
         <div style="flex: 1 1 340px; border: 1px solid #DEDBD2; background: #FFFFFF; padding: 16px; display: flex; flex-direction: column; gap: 14px;">
           <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #7A4F0F;">MARKS DERIVED FROM THE SETTLED FRAME</span>
-          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #55534C; text-wrap: pretty;">Each of these is a crop of the final diagram, drawn with the same stroke weight, the same dashed-to-solid convention, and the same single accent. Node, edge, bracket, and decision square are now the page's static icon vocabulary — the same grammar the Repository Intelligence section already uses, so the hero reads as its index rather than as ornament.</p>
+          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #55534C; text-wrap: pretty;">Each of these is a crop of the final composition, drawn with the same stroke weight, the same dashed-to-solid convention, and the same single accent. They give the page a static icon vocabulary that reads as the same system without any of them animating.</p>
           <div style="display: flex; flex-wrap: wrap; gap: 12px;">
             <sc-for list="{{ marks }}" as="m" hint-placeholder-count="4">
               <div style="flex: 1 1 130px; border: 1px solid #EDEAE1; padding: 12px; display: flex; flex-direction: column; gap: 9px; align-items: flex-start;">
@@ -180,15 +178,15 @@
       <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px;">
         <div style="flex: 1 1 300px; border-top: 2px solid #1A1A17; padding-top: 12px; display: flex; flex-direction: column; gap: 7px;">
           <h3 style="margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -0.015em;">Why this one earns a runtime and A does not</h3>
-          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #55534C; text-wrap: pretty;">Three edges drawing on, a bracket stroking up-across-down, dashes resolving to solid: these are drawing problems, and a vector runtime with real trim paths and easing control will do them better than scaled CSS transforms will. Concept A had no drawing problem, only a state problem, so it costs nothing to keep in the DOM.</p>
+          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #55534C; text-wrap: pretty;">A dashed stroke resolving to solid, three forms closing a gap, a boundary sweeping in: these are drawing problems, and a vector runtime with real easing curves and stroke control will do them better than four CSS transitions will. Concept A had no drawing problem, only a state problem, so it costs nothing to keep in the DOM.</p>
         </div>
         <div style="flex: 1 1 300px; border-top: 2px solid #1A1A17; padding-top: 12px; display: flex; flex-direction: column; gap: 7px;">
           <h3 style="margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -0.015em;">Ship the prototype, port the asset</h3>
           <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #55534C; text-wrap: pretty;">This CSS version is deployable as-is, which means the decision to buy an animation is deferred until after the concept has been in front of real readers. If it is kept, the .lottie replaces the animated layers only and the settled SVG stays as the reduced-motion and no-JS state.</p>
         </div>
         <div style="flex: 1 1 300px; border-top: 2px solid #1A1A17; padding-top: 12px; display: flex; flex-direction: column; gap: 7px;">
-          <h3 style="margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -0.015em;">The risk this version fixes</h3>
-          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #55534C; text-wrap: pretty;">The first pass resolved into two rules, a black bar, and an amber square: abstract geometry that communicated craft and nothing specific, and that lost its meaning the moment the motion stopped. Labelling the nodes costs one line of the composition's purity and buys a resting state a cold reader can describe in five seconds. That trade is not close.</p>
+          <h3 style="margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -0.015em;">The risk to watch</h3>
+          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #55534C; text-wrap: pretty;">Abstract geometry can communicate craft while communicating nothing specific. Concept A names its fields, so a reader learns what the work is; B is a mood with a structure under it. The honest test is whether someone who watches B once can say what you do. If they cannot, A is the hero and B becomes the icon system.</p>
         </div>
       </div>
     </div>
@@ -199,18 +197,18 @@
 const EASE = 'cubic-bezier(0.22, 0, 0.18, 1)';
 const D = 300;
 
-const STATIONS = ['REPOSITORY', 'EVIDENCE', 'AGENT', 'DECISION'];
-const STAGE = ['UNRESOLVED', 'ON EVIDENCE', 'BOUNDED', 'SETTLED'];
+const STATIONS = ['AGENT', 'CONTEXT', 'BOUNDARY', 'PRODUCTION'];
+const STAGE = ['FRAGMENTED', 'ALIGNED ON EVIDENCE', 'BOUNDED', 'SETTLED'];
 const ALT = [
-  'Four dashed hollow nodes scattered off a common axis, unconnected.',
-  'The nodes have settled onto one axis and repository connects to evidence.',
-  'A bracket encloses evidence and agent, evidence connects to agent, and a stray node outside the bracket is gone.',
-  'A four-node diagram: repository to evidence to agent to a filled amber decision square, with evidence and agent enclosed by a bracket labelled bound.'
+  'Three dashed rectangles scattered above an empty field.',
+  'The three rectangles have dropped onto a common baseline.',
+  'Two vertical boundary lines enclose the field; a stray rectangle outside it is gone.',
+  'The three rectangles have closed into one solid unit on an amber baseline, with a filled terminus mark at its right.'
 ];
 
-const NODE_X = [80, 260, 420, 570];
-// Beat-0 scatter: each node off the axis and off its column.
-const SCATTER = [[14, -46], [-22, 40], [26, -58], [-16, 34]];
+// Beat-0 scatter, then beat-1/2 spacing, then contiguous at beat 3.
+const SCATTER = [[6, -74], [44, -108], [32, -58]];
+const SPACED = [0, 20, 40];
 
 class Component extends DCLogic {
   state = { beat: 0 };
@@ -251,46 +249,29 @@ class Component extends DCLogic {
       altText: ALT[b],
       accentColor: accent,
 
-      nodes: NODE_X.map((x, i) => {
-        const off = dropped ? [0, 0] : SCATTER[i];
-        const decision = i === 3;
-        const live = decision ? merged : dropped;
+      shapes: [0, 1, 2].map((i) => {
+        const dx = merged ? 0 : SPACED[i] + (dropped ? 0 : SCATTER[i][0]);
+        const dy = dropped ? 0 : SCATTER[i][1];
         return {
-          tf: `translate(${off[0]} ${off[1]})`,
-          cx: x, sx: x - 10, r: 7,
-          circleOp: decision ? 0 : 1,
-          squareOp: decision ? 1 : 0,
-          fill: live ? (decision ? accent : '#1A1A17') : 'none',
-          stroke: live ? (decision ? accent : '#1A1A17') : '#B3AFA4',
-          dash: dropped ? '0 0' : '4 4'
+          x: 100 + i * 100,
+          tf: `translate(${dx} ${dy})`,
+          fill: merged ? '#1A1A17' : dropped ? '#F6F5F0' : 'none',
+          stroke: merged ? '#1A1A17' : dropped ? '#55534C' : '#B3AFA4',
+          dash: dropped ? '0 0' : '5 5'
         };
       }),
 
-      // Each edge draws left-to-right by scaling from its own start point.
-      edges: [0, 1, 2].map((i) => {
-        const on = i === 0 ? dropped : i === 1 ? bounded : merged;
-        const x1 = NODE_X[i] + 14, x2 = NODE_X[i + 1] - 16;
-        return {
-          x1, x2,
-          tf: `translate(${x1} 0) scale(${on ? 1 : 0} 1) translate(${-x1} 0)`,
-          stroke: i === 2 && merged ? accent : '#1A1A17',
-          head: `M ${x2 - 6} 81 L ${x2} 86 L ${x2 - 6} 91`,
-          headOp: on ? 1 : 0
-        };
-      }),
+      baseline: { tf: `translate(100 0) scale(${dropped ? 1 : 0} 1) translate(-100 0)` },
+      bounds: { op: bounded ? 1 : 0, tfL: `translate(${bounded ? 0 : -16} 0)`, tfR: `translate(${bounded ? 0 : 16} 0)` },
+      stray: { op: bounded ? 0 : 1, tf: `translate(${bounded ? 28 : 0} 0)` },
+      terminus: { op: merged ? 1 : 0, tf: `translate(${merged ? 0 : -10} 0)` },
 
-      bound: { op: bounded ? 1 : 0, tf: `translate(0 ${bounded ? 0 : -10})` },
-      stray: { op: bounded ? 0 : 1, tf: `translate(${bounded ? 26 : 0} 0)` },
+      ticks: [100, 200, 300, 400].map((x, i) => ({ x, op: i <= b ? 1 : 0.3 })),
 
-      stations: STATIONS.map((label, i) => {
-        const live = i === 3 ? merged : dropped;
-        return {
-          label,
-          style: `position: absolute; top: 0; left: ${NODE_X[i] / 6.4}%; transform: translateX(-50%); white-space: nowrap; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.07em; color: ${live ? '#1A1A17' : '#6E6C64'}; font-weight: ${live ? 500 : 400}; transition: color 300ms ease;`
-        };
-      }),
-
-      boundLabelStyle: `position: absolute; top: 19px; left: ${335 / 6.4}%; transform: translateX(-50%); white-space: nowrap; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #55534C; opacity: ${bounded ? 1 : 0}; transition: opacity 300ms ease;`,
+      stations: STATIONS.map((label, i) => ({
+        label,
+        style: `position: absolute; top: 0; left: ${(100 + i * 100) / 6.4}%; transform: translateX(-50%); white-space: nowrap; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.07em; color: ${i <= b ? '#1A1A17' : '#6E6C64'}; font-weight: ${i <= b ? 500 : 400}; transition: color 300ms ease;`
+      })),
 
       frames: [0, 1, 2, 3].map((n) => ({
         id: `B${n}`,
@@ -301,44 +282,39 @@ class Component extends DCLogic {
       })),
 
       beatSheet: [
-        { id: 'B0', frames: '0 – 24', what: 'Hold. Four dashed hollow nodes sit off the axis and off their columns, unconnected. Nothing moves for the first eight tenths of a second.', says: 'Four things exist but nothing relates them yet. The reader is allowed to notice the incompleteness before anything animates.' },
-        { id: 'B1', frames: '24 – 48', what: 'The nodes settle onto one horizontal axis, their dashes resolve to solid ink, and the first edge draws from repository into evidence.', says: 'Repository material becomes evidence. Causality runs left to right and never reverses.' },
-        { id: 'B2', frames: '48 – 72', what: 'The evidence-to-agent edge draws, a bracket rises to enclose those two nodes, and a stray dashed node outside it slides right and fades.', says: 'The agent decides inside a bounded evidence surface. Something outside that surface is deliberately excluded.' },
-        { id: 'B3', frames: '72 – 100', what: 'The final edge draws in amber and the decision node fills as a solid amber square. Frames 100–108 hold.', says: 'The decision is the output, and it is the only saturated thing on the stage.' }
+        { id: 'B0', frames: '0 – 24', what: 'Hold. Three dashed rectangles sit at different heights above an empty field, unfilled and unrelated. Nothing moves for the first eight tenths of a second.', says: 'The work starts with something incomplete, and the reader is allowed to notice that before anything animates.' },
+        { id: 'B1', frames: '24 – 48', what: 'An amber rule draws left to right beneath them. Each rectangle drops onto it, gains a fill and a solid stroke, and the dash resolves.', says: 'Evidence arrives first and the fragments align to it. Causality runs in one direction.' },
+        { id: 'B2', frames: '48 – 72', what: 'Two vertical rules close in from the edges. A fourth rectangle sitting outside the right rule slides out and fades. The field is now enclosed.', says: 'The decision gets a boundary, and something is deliberately ruled out by it.' },
+        { id: 'B3', frames: '72 – 100', what: 'The three rectangles close their gaps into one contiguous solid, and a filled terminus mark appears at the right end of the baseline. Frames 100–108 hold.', says: 'One unit, bounded, on the evidence, shipped. The composition then stays put.' }
       ],
 
       layers: [
-        { name: 'node.1–4', prop: 'position, fill, stroke', span: '24 → 96', note: 'Four copies of one shape layer, three circles and one square. Position on x and y only; no rotation, no scale. Dash resolves on the same keyframes as the fill.' },
-        { name: 'edge.repo→ev', prop: 'trim path', span: '30 → 48', note: 'Draw-on left to right with its arrowhead fading in on the last three frames. All three edges share one curve.' },
-        { name: 'edge.ev→agent', prop: 'trim path', span: '52 → 70', note: 'Mirror of the first edge, one beat later.' },
-        { name: 'bound.bracket', prop: 'trim path, position', span: '54 → 72', note: 'Draws up-across-down as one stroke, rising 10px into place. It must read as enclosing, not as a container that was always there.' },
-        { name: 'ruled-out.stray', prop: 'position, opacity', span: '56 → 74', note: 'Exits outward, never inward. It must be obvious it was excluded rather than absorbed.' },
-        { name: 'edge.agent→dec', prop: 'trim path, stroke', span: '76 → 94', note: 'The only edge that changes colour. Stroke goes to accent on the same frames as the draw-on.' },
-        { name: 'node.decision', prop: 'fill', span: '84 → 96', note: 'The only fully saturated accent fill in the composition. Arrives last and small.' }
+        { name: 'fragment.1–3', prop: 'position, fill, stroke', span: '24 → 100', note: 'Three copies of one shape layer. Position only on x and y; no rotation, no scale. Dash resolves on the same keyframes as the fill.' },
+        { name: 'evidence.baseline', prop: 'trim path', span: '24 → 44', note: 'Draw-on left to right. This is the one layer that should read as a gesture rather than a state change.' },
+        { name: 'bound.left', prop: 'position, opacity', span: '48 → 64', note: '16px inward travel. Keep both bounds on identical curves so the enclosure reads as one act.' },
+        { name: 'bound.right', prop: 'position, opacity', span: '48 → 64', note: 'Mirror of bound.left.' },
+        { name: 'ruled-out.stray', prop: 'position, opacity', span: '52 → 70', note: 'Exits outward, never inward. It must be obvious it was excluded rather than absorbed.' },
+        { name: 'terminus', prop: 'position, opacity', span: '80 → 96', note: 'The only fully saturated accent fill in the composition. Arrives last and small.' },
+        { name: 'station.ticks', prop: 'opacity', span: '24 → 96', note: 'Four ticks resolving in step with the beats. Geometry only; the four words are DOM text outside the asset.' }
       ],
 
       marks: [
-        { label: 'BOUNDED', parts: [
-          { x: 14, y: 16, w: 7, h: 7, fill: '#1A1A17', stroke: 'none', dash: '0' },
-          { x: 42, y: 16, w: 7, h: 7, fill: '#1A1A17', stroke: 'none', dash: '0' },
-          { x: 23, y: 19, w: 17, h: 1.25, fill: '#1A1A17', stroke: 'none', dash: '0' },
-          { x: 11, y: 27, w: 1.25, h: 6, fill: '#55534C', stroke: 'none', dash: '0' },
-          { x: 11, y: 32, w: 40, h: 1.25, fill: '#55534C', stroke: 'none', dash: '0' },
-          { x: 50, y: 27, w: 1.25, h: 6, fill: '#55534C', stroke: 'none', dash: '0' }
+        { label: 'BOUNDED FIELD', parts: [
+          { x: 8, y: 8, w: 1.25, h: 24, fill: '#1A1A17', stroke: 'none', dash: '0' },
+          { x: 54, y: 8, w: 1.25, h: 24, fill: '#1A1A17', stroke: 'none', dash: '0' },
+          { x: 18, y: 16, w: 28, h: 10, fill: 'none', stroke: '#55534C', dash: '0' }
         ] },
-        { label: 'ONE EDGE', parts: [
-          { x: 8, y: 16, w: 7, h: 7, fill: '#1A1A17', stroke: 'none', dash: '0' },
-          { x: 17, y: 19, w: 30, h: 1.25, fill: '#1A1A17', stroke: 'none', dash: '0' },
-          { x: 49, y: 16, w: 7, h: 7, fill: '#1A1A17', stroke: 'none', dash: '0' }
+        { label: 'ON EVIDENCE', parts: [
+          { x: 10, y: 14, w: 44, h: 12, fill: '#1A1A17', stroke: 'none', dash: '0' },
+          { x: 10, y: 29, w: 44, h: 1.5, fill: accent, stroke: 'none', dash: '0' }
         ] },
         { label: 'UNRESOLVED', parts: [
-          { x: 12, y: 11, w: 7, h: 7, fill: 'none', stroke: '#B3AFA4', dash: '2 2' },
-          { x: 40, y: 24, w: 7, h: 7, fill: 'none', stroke: '#B3AFA4', dash: '2 2' }
+          { x: 10, y: 10, w: 20, h: 9, fill: 'none', stroke: '#B3AFA4', dash: '4 4' },
+          { x: 34, y: 22, w: 20, h: 9, fill: 'none', stroke: '#B3AFA4', dash: '4 4' }
         ] },
-        { label: 'DECISION', parts: [
-          { x: 8, y: 16, w: 7, h: 7, fill: '#1A1A17', stroke: 'none', dash: '0' },
-          { x: 17, y: 19, w: 24, h: 1.25, fill: accent, stroke: 'none', dash: '0' },
-          { x: 43, y: 13, w: 13, h: 13, fill: accent, stroke: 'none', dash: '0' }
+        { label: 'SHIPPED', parts: [
+          { x: 8, y: 15, w: 34, h: 11, fill: '#1A1A17', stroke: 'none', dash: '0' },
+          { x: 46, y: 13, w: 14, h: 14, fill: accent, stroke: 'none', dash: '0' }
         ] }
       ],
 
@@ -347,7 +323,6 @@ class Component extends DCLogic {
         { k: 'PAYLOAD', v: 'Under 12 KB for the asset. Shape layers only: no imported SVG, no images, no fonts, no expressions, no mattes.' },
         { k: 'PLAYBACK', v: 'autoplay once, loop off, no state machine. The asset has no interactive states because the hero has no interaction.' },
         { k: 'LAST FRAME', v: 'Frame 108 must be pixel-identical to the static SVG fallback, so the handoff between them is invisible.' },
-        { k: 'LABELS', v: 'The four station labels and BOUND stay outside the asset as DOM text, aligned to node columns by percentage. The .lottie contains no type.' },
         { k: 'REDUCED MOTION', v: 'Player never mounts. The static SVG is the whole hero.' },
         { k: 'LAYOUT', v: 'Fixed aspect-ratio box reserved in CSS, so the player mounting cannot shift anything. CLS zero by construction.' },
         { k: 'LCP', v: 'The headline stays the LCP element. If the asset ever becomes LCP, the hero has been built wrong.' },
@@ -357,30 +332,33 @@ class Component extends DCLogic {
     };
   }
 
-  // Static silhouettes for the frame-strip buttons: dot = node, bar = edge.
+  // Static silhouettes for the frame-strip buttons.
   thumb(n, accent) {
-    const DOT_X = [7, 25, 43, 58];
-    const hollow = (x, y) => ({ x, y, w: 8, h: 8, fill: 'none', stroke: '#8F8B80', dash: '0' });
-    const solid = (x, y) => ({ x, y, w: 8, h: 8, fill: '#1A1A17', stroke: 'none', dash: '0' });
-    const edge = (x, w) => ({ x, y: 22.5, w, h: 1.25, fill: '#1A1A17', stroke: 'none', dash: '0' });
-
-    if (n === 0) return [hollow(7, 9), hollow(25, 27), hollow(43, 7), hollow(58, 25)];
-    if (n === 1) return [solid(DOT_X[0], 19), solid(DOT_X[1], 19), hollow(DOT_X[2], 19), hollow(DOT_X[3], 19), edge(16, 9)];
+    if (n === 0) return [
+      { x: 8, y: 6, w: 14, h: 7, fill: 'none', stroke: '#B3AFA4', dash: '3 3' },
+      { x: 30, y: 3, w: 14, h: 7, fill: 'none', stroke: '#B3AFA4', dash: '3 3' },
+      { x: 50, y: 11, w: 14, h: 7, fill: 'none', stroke: '#B3AFA4', dash: '3 3' }
+    ];
+    if (n === 1) return [
+      { x: 8, y: 20, w: 14, h: 8, fill: '#F6F5F0', stroke: '#55534C', dash: '0' },
+      { x: 26, y: 20, w: 14, h: 8, fill: '#F6F5F0', stroke: '#55534C', dash: '0' },
+      { x: 44, y: 20, w: 14, h: 8, fill: '#F6F5F0', stroke: '#55534C', dash: '0' },
+      { x: 8, y: 30, w: 50, h: 1.25, fill: accent, stroke: 'none', dash: '0' }
+    ];
     if (n === 2) return [
-      solid(DOT_X[0], 19), solid(DOT_X[1], 19), solid(DOT_X[2], 19), hollow(DOT_X[3], 19),
-      edge(16, 9), edge(34, 9),
-      { x: 26, y: 29, w: 1.25, h: 5, fill: '#55534C', stroke: 'none', dash: '0' },
-      { x: 26, y: 33, w: 24, h: 1.25, fill: '#55534C', stroke: 'none', dash: '0' },
-      { x: 49, y: 29, w: 1.25, h: 5, fill: '#55534C', stroke: 'none', dash: '0' }
+      { x: 3, y: 6, w: 1.25, h: 28, fill: '#1A1A17', stroke: 'none', dash: '0' },
+      { x: 63, y: 6, w: 1.25, h: 28, fill: '#1A1A17', stroke: 'none', dash: '0' },
+      { x: 10, y: 20, w: 14, h: 8, fill: '#F6F5F0', stroke: '#55534C', dash: '0' },
+      { x: 28, y: 20, w: 14, h: 8, fill: '#F6F5F0', stroke: '#55534C', dash: '0' },
+      { x: 46, y: 20, w: 14, h: 8, fill: '#F6F5F0', stroke: '#55534C', dash: '0' },
+      { x: 10, y: 30, w: 50, h: 1.25, fill: accent, stroke: 'none', dash: '0' }
     ];
     return [
-      solid(DOT_X[0], 19), solid(DOT_X[1], 19), solid(DOT_X[2], 19),
-      { x: DOT_X[3], y: 18, w: 10, h: 10, fill: accent, stroke: 'none', dash: '0' },
-      edge(16, 9), edge(34, 9),
-      { x: 52, y: 22.5, w: 6, h: 1.25, fill: accent, stroke: 'none', dash: '0' },
-      { x: 26, y: 29, w: 1.25, h: 5, fill: '#55534C', stroke: 'none', dash: '0' },
-      { x: 26, y: 33, w: 24, h: 1.25, fill: '#55534C', stroke: 'none', dash: '0' },
-      { x: 49, y: 29, w: 1.25, h: 5, fill: '#55534C', stroke: 'none', dash: '0' }
+      { x: 3, y: 6, w: 1.25, h: 28, fill: '#1A1A17', stroke: 'none', dash: '0' },
+      { x: 63, y: 6, w: 1.25, h: 28, fill: '#1A1A17', stroke: 'none', dash: '0' },
+      { x: 10, y: 20, w: 38, h: 8, fill: '#1A1A17', stroke: 'none', dash: '0' },
+      { x: 51, y: 20, w: 8, h: 8, fill: accent, stroke: 'none', dash: '0' },
+      { x: 10, y: 30, w: 38, h: 1.25, fill: accent, stroke: 'none', dash: '0' }
     ];
   }
 }

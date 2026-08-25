@@ -23,14 +23,19 @@ hand into semantic HTML, React components, TypeScript content models, and CSS Mo
 | `Prove It Resume.dc.html` | **Primary artifact.** Full-page mockup, interaction logic, and all draft copy. This is the authority for the port. |
 | `Prove It Resume - Visual Directions.dc.html` | Reference only. Three explored directions plus the locked language, "Direction C·1 — Technical Review, hybridized", v0.1. |
 | `Prove It Resume - Redesign.dc.html` | Third import. Partial redesign of the three proof sections and the résumé state, with its own handoff plan band. Cut at `41defda`. |
-| `Prove It Resume - Hero Concept B.dc.html` | Fourth import. "The Bounded Field" — a hero sequence prototype, and the geometry the concept-mark vocabulary is cropped from. Retrieved from the Claude Design project rather than a download bundle, so the hash below is of the file as committed here. |
-| `support.js` | Claude Design viewer runtime. Reference only. |
+| `Prove It Resume - Hero Concept B.dc.html` | Fifth import, and the authority for the hero. "The Bounded Path" — a second pass at the hero sequence that replaces the first pass's abstract field with four labelled nodes, and the geometry the concept-mark vocabulary is cropped from. |
+| `Prove It Resume - Hero Concept B (first pass).dc.html` | Superseded. "The Bounded Field", the version `docs/decisions/0009-a-fourth-animated-treatment.md` was originally written against. Kept because that record cites it, and because the second pass's stated purpose is to fix what this one got wrong. |
+| `support.js` | Claude Design viewer runtime. Reference only — it resolves `{{ }}` bindings, `<sc-for>`, `style-hover`, and the `DCLogic` base class for the viewer, and none of that survives into the port. |
 | `thumbnail.webp` | Export preview image. Reference only. |
 
 ## SHA-256
 
+The two Hero Concept B files were retrieved from the Claude Design project rather
+than a download bundle, so their hashes are of the files as committed here.
+
 ```
-edd40d1d4cbac78b9d1a22556834e5909ead07b3fcdf483edbe84f31ff83a5a3  Prove It Resume - Hero Concept B.dc.html
+edd40d1d4cbac78b9d1a22556834e5909ead07b3fcdf483edbe84f31ff83a5a3  Prove It Resume - Hero Concept B (first pass).dc.html
+4267530b9ea8be73acc1f7a93d19c4157bd2af8d4d929738dffb643dbac5419f  Prove It Resume - Hero Concept B.dc.html
 73052f8a63f211ce549fb205c62254100666d02ceb19e39b535c8338e1b90380  Prove It Resume - Redesign.dc.html
 843bdbac8670f3bca3b32fe4b314ac498da208b98c2367d8f05bb3299e76815f  Prove It Resume - Visual Directions.dc.html
 e8fe55189bbeeb8563c6cf4ab894de7b88f22210fd90070f16ac96a2dceba5e0  Prove It Resume.dc.html
