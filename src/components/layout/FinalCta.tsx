@@ -1,9 +1,11 @@
 import { FINAL_CTA, RESUME, SITE } from '@/content/site';
+import { ResumeDownloadLink } from '@/components/resume/ResumeDownloadLink';
+import type { RoleLens } from '@/lib/types';
 import { isResolved } from '@/lib/evidence';
 import { WalkProofButton } from '@/components/proof/WalkProofButton';
 import styles from './FinalCta.module.css';
 
-export function FinalCta() {
+export function FinalCta({ lens }: { lens: RoleLens }) {
   const resumeAvailable = isResolved(RESUME);
 
   return (
@@ -26,10 +28,10 @@ export function FinalCta() {
           >
             GitHub ↗<span className="visually-hidden"> — opens in a new tab</span>
           </a>
-          {resumeAvailable && RESUME.href ? (
-            <a className={styles.secondary} href={RESUME.href} download>
+          {resumeAvailable ? (
+            <ResumeDownloadLink className={styles.secondary} lens={lens}>
               Résumé PDF ↓
-            </a>
+            </ResumeDownloadLink>
           ) : (
             <span className={styles.pending}>RÉSUMÉ — NOT YET PUBLISHED</span>
           )}

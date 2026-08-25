@@ -1,0 +1,49 @@
+{
+  "variants": [
+    {
+      "slug": "default",
+      "route": "/resume/print",
+      "pdfPath": "/qwynn-marcelle-resume.pdf",
+      "fingerprint": "aad72c64c78509e0b00ecb7e0f98cbefc358ecda9d1562b1fcf9b149c00242c3",
+      "links": [
+        "https://github.com/qmarcelle",
+        "https://qwynn.marcellelabs.io/",
+        "https://vreko.dev/",
+        "https://www.workspacejson.dev/",
+        "https://interlock.marcellelabs.io/",
+        "https://qwynn.marcellelabs.io/"
+      ],
+      "pages": 2
+    },
+    {
+      "slug": "athenahealth-yoh",
+      "route": "/resume/print/athenahealth-yoh",
+      "pdfPath": "/qwynn-marcelle-resume-athenahealth-yoh.pdf",
+      "fingerprint": "36d1f273d582d7bfdbed44df1f54eff36346bcc622171e7c3b9a8477658dea69",
+      "links": [
+        "https://github.com/qmarcelle",
+        "https://qwynn.marcellelabs.io/",
+        "https://vreko.dev/",
+        "https://www.workspacejson.dev/",
+        "https://interlock.marcellelabs.io/",
+        "https://qwynn.marcellelabs.io/"
+      ],
+      "pages": 2
+    },
+    {
+      "slug": "end-to-end-delivery",
+      "route": "/resume/print/end-to-end-delivery",
+      "pdfPath": "/qwynn-marcelle-resume-end-to-end-delivery.pdf",
+      "fingerprint": "ad0d86dc6387857078f861a882f0ccb317cf7a180e27567e468feb14d4349b01",
+      "links": [
+        "https://github.com/qmarcelle",
+        "https://qwynn.marcellelabs.io/",
+        "https://vreko.dev/",
+        "https://www.workspacejson.dev/",
+        "https://interlock.marcellelabs.io/",
+        "https://qwynn.marcellelabs.io/"
+      ],
+      "pages": 2
+    }
+  ]
+}

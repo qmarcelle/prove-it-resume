@@ -137,9 +137,89 @@ See `docs/content-audit.md` for the complete list.
 The export itself already flags this in the résumé section:
 `[VERIFY BEFORE PUBLISHING] file + profile URLs`.
 
+## Second import — `Prove It Resume - PDF.dc.html`
+
+A second Claude Design artifact was imported later: an explicitly paginated two-page
+letter résumé, plus the `doc-page.js` page-box scaffold it depends on.
+
+| File                              | Treatment                                                                                      |
+| --------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `Prove It Resume - PDF.dc.html`   | **Primary.** Two-page résumé, all copy, `targetTitle`/`showVerifyLinks`/`showNonprofit` props. |
+| `doc-page.js`                     | Page-box contract. Reimplemented, not vendored — see below.                                    |
+| `uploads/QwynnMarcelleResume.pdf` | An earlier hand-made export. Superseded by the generated artifact; not imported.               |
+
+### What `doc-page.js` specifies, and what was taken from it
+
+`doc-page.js` is an omelette starter scaffold that implements a `<doc-page>` custom
+element. Only its **explicit pagination** mode is relevant: one `<section class="page">`
+per sheet, each printed at a fixed page box with `overflow: hidden`. Its documented
+contract, reproduced in `ResumeDocument.module.css`:
+
+- `@page { size: 8.5in 11in; margin: 0 }` — zero margin leaves Chrome no margin box in
+  which to draw its date/URL/page-count furniture, so the visual inset lives on the
+  page's own padding instead.
+- Width **and** height rather than width + `aspect-ratio`: the component's own comments
+  record that the ratio is a six-decimal rounding of the same division and that a few
+  millionths of overflow spills a blank sheet after every page.
+- `break-before: page` between sheets, and `print-color-adjust: exact`.
+
+The scaffold itself is not vendored. It carries a shadow-DOM viewer shell, a desk
+background, running header/footer slots, scaled-fit mode, and a WebKit `thead`/`tfoot`
+workaround — none of which this document uses, and all of which would have to be
+maintained. The ~40 lines of print CSS that matter are reimplemented and annotated.
+
+### Deviations in the résumé port
+
+1. **VERIFY links resolve to the published sites.** The export pointed Vreko's at
+   `github.com/qmarcelle`. All three systems now publish real sites, so the links are
+   `vreko.dev`, `workspacejson.dev` and `interlock.marcellelabs.io` — the same
+   published-first rule the evidence rows follow.
+2. **`targetTitle` comes from the role lens.** The export took it as a standalone prop.
+   It is now `RoleLens.resumeTitle ?? roleTitle`, so the PDF downloaded from a role page
+   carries that lens's title. `resumeTitle` exists because the masthead is a single mono
+   line sharing a fixed measure with the domains string: the neutral lens's chip wording
+   wraps there, and a wrapped masthead pushes the whole document down ~21px.
+3. **Colours are the site tokens, not the export's literals.** The palette is identical
+   apart from the quietest greys, which this project darkened for legibility
+   (deviation 8 above). That applies at least as strongly to 9.5px metadata on paper.
+   Type sizes remain the export's literal px values — nothing reflows on a fixed sheet.
+4. **`showVerifyLinks` / `showNonprofit` are not props.** Both defaulted to true and
+   nothing in the site toggles them; they can return as lens fields if a reason appears.
+5. **The masthead's domains line drops one notch**, from `11px / 0.05em` to
+   `10.5px / 0.03em`. It shares one fixed 7.3in measure with the target title, and the
+   export tunes that pair to fit with **1.3px to spare — 0.2% of the line**. That
+   survives on the machine the design was drawn on and nowhere else: CI's Linux Chromium
+   wrapped the same markup to two lines, which on a fixed page box pushes the document
+   down ~21px and clips page two's footer. The new sizes are ones the document already
+   uses (10.5px matches the block-number rails) and buy 4.4% headroom on the neutral
+   lens, 15–16% on the other two. The 22 fidelity probes are unaffected — the domains
+   string sits on its own row, so nothing below it moves.
+
+### Fidelity check
+
+The port was measured against a render of the export's own markup rather than judged by
+eye: 22 probes across both pages, comparing x, y, width and height of every structural
+element. All 22 match exactly. Three discrepancies were found and fixed this way, none
+of which were visible without measuring:
+
+| Symptom                                                                           | Cause                                                                                                                    |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Everything below the masthead drifted down, page-two footer clipped off the sheet | `globals.css` sets `body { line-height: 1.6 }`; the export leaves line-height at `normal` except where it states a value |
+| Foundation and profile blocks ran 3–9px long                                      | The export sets a _different_ body gap per block — 9px, 12px, 8px — rather than one shared rhythm                        |
+| Role titles measured ~7px narrow                                                  | `globals.css` tracks `h1`–`h4` at `-0.025em`; the export gives `h4` no tracking                                          |
+
+`tests/e2e/resume.spec.ts` locks the page box, the single-line masthead, and the
+bottom-anchored elements, because on a fixed sheet with `overflow: hidden` these fail by
+silent clipping rather than by visible wrapping.
+
+The generated PDFs are checked against their routes by content fingerprint rather than by
+byte comparison — Chromium's output is deterministic on one machine but differs across
+platforms, since builds subset embedded fonts differently. ADR 0007.
+
 ## Content placeholders in the export
 
-- Résumé PDF: no file supplied; every résumé CTA points at `#resume`.
+- Résumé PDF: **resolved.** The second import supplied the document; `pnpm resume:pdf`
+  renders it. Originally: no file supplied, every résumé CTA pointed at `#resume`.
 - LinkedIn and Email: point at `#resume`.
 - "Professional work: Marcelle Labs ↗": points at `#`.
 - The seven decision prompts have questions but no answers.

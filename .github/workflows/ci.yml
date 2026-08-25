@@ -60,3 +60,42 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+
+  # The résumé PDFs are committed artifacts generated from `/resume/print`, and the
+  # failure mode is a résumé that silently stops matching the site. The check compares a
+  # fingerprint of the route's rendered text and links against the one recorded when the
+  # PDF was generated, and validates the committed PDF's own structure — pages, page
+  # size, link destinations.
+  #
+  # It deliberately does NOT regenerate and diff the bytes. Chromium's PDF output is
+  # deterministic on one machine but not across platforms: the same commit produces 285KB
+  # on macOS and 229KB here, because the two builds subset the embedded fonts
+  # differently. That difference is not drift, and testing for it only fails every
+  # artifact generated on a laptop.
+  resume:
+    name: Résumé PDF is current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm exec playwright install --with-deps chromium
+
+      - run: pnpm build
+
+      - run: pnpm resume:pdf:check
+
+      - name: Explain a drifted résumé
+        if: ${{ failure() }}
+        run: |
+          echo "::error::The committed résumé PDFs no longer match /resume/print."
+          echo "Run 'pnpm build && pnpm resume:pdf' and commit public/*.pdf"
+          echo "together with scripts/resume-artifacts.json."

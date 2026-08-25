@@ -1,0 +1,593 @@
+/*
+ * Résumé document geometry.
+ *
+ * Sizes here are literal px, not the site's responsive type tokens. This is a fixed
+ * 8.5in × 11in artifact: nothing reflows, there is no viewport to respond to, and the
+ * design's exact values are the specification. The *colours* are the shared tokens,
+ * because the palette is identical to the export apart from the quietest greys, which
+ * this project darkened for legibility (see docs/design-import.md, deviation 8) —
+ * a decision that applies at least as strongly to 9.5px metadata on paper.
+ */
+
+/* ── Page box ────────────────────────────────────────────────────────────────
+ * Ported from the export's <doc-page size="letter"> with explicit pagination.
+ * The component owns the geometry; content owns its insets.
+ */
+.document {
+  --page-w: 8.5in;
+  --page-h: 11in;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 48px 24px;
+  background: #f5f5f4;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.page {
+  width: var(--page-w);
+  height: var(--page-h);
+  box-sizing: border-box;
+  padding: 0.55in 0.6in 0.45in;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  /*
+   * The site body sets `line-height: 1.6`, which is right for reading a web page and
+   * wrong for this document: the export leaves line-height at `normal` except where it
+   * states a value, and inheriting 1.6 grows every unstated block by ~35%. On a fixed
+   * page box that does not reflow, it silently pushed the page-two footer past the
+   * bottom edge, where `overflow: hidden` clipped it.
+   */
+  line-height: normal;
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  overflow: hidden;
+
+  /* Screen-only card chrome; removed at print. */
+  border-radius: 7px;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 25%);
+}
+
+.page:last-child {
+  padding: 0.5in 0.6in 0.4in;
+  gap: 12px;
+}
+
+/*
+ * Print geometry.
+ *
+ * `@page { margin: 0 }` leaves Chrome no margin box to draw its date/URL/page-count
+ * furniture in, so the sheet is genuinely full-bleed and the visual inset comes from
+ * the page's own padding. `size` is pinned to the same values the boxes use, so the
+ * card and the sheet cannot disagree.
+ *
+ * Width *and* height rather than width + aspect-ratio: the ratio is a rounding of the
+ * same division, and a few millionths of overflow spills a blank sheet after every page.
+ */
+@page {
+  size: 8.5in 11in;
+  margin: 0;
+}
+
+@media print {
+  .document {
+    display: block;
+    padding: 0;
+    background: none;
+    min-height: 0;
+  }
+
+  .page {
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+    /* Backgrounds and rules are information here, not decoration. */
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .page + .page {
+    break-before: page;
+  }
+}
+
+/* ── Masthead ─────────────────────────────────────────────────────────────── */
+.masthead {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mastheadTop {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.name {
+  margin: 0;
+  font-size: 38px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+.pageMeta {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.09em;
+  color: var(--color-meta);
+  padding-bottom: 3px;
+  white-space: nowrap;
+}
+
+.targetRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 18px;
+  border-top: 2px solid var(--color-ink);
+  padding-top: 7px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.09em;
+}
+
+.targetTitle {
+  color: var(--color-accent);
+}
+
+/*
+ * The domains line shares one fixed 7.3in measure with the target title, and the export
+ * tunes that pair to fit with about 1.3px to spare — 0.2% of the line. That survives on
+ * the machine the design was drawn on and nowhere else: on CI's Linux Chromium the same
+ * markup wrapped to two lines, which on a fixed page box pushes the whole document down
+ * ~21px.
+ *
+ * So this metadata line drops one notch, to sizes the document already uses elsewhere
+ * (10.5px matches the block-number rails), which buys ~31px of headroom — 4.4%. The
+ * reduced tracking follows the same reasoning as deviation 8 in docs/design-import.md.
+ * `tests/e2e/resume.spec.ts` asserts the headroom, not just the line count, so a future
+ * title that eats it fails here rather than on someone else's platform.
+ */
+.domains {
+  color: var(--color-meta-quiet);
+  margin-left: auto;
+  font-size: 10.5px;
+  letter-spacing: 0.03em;
+}
+
+.contactRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  border-top: 1px solid var(--color-border);
+  padding-top: 7px;
+  font-size: 12.5px;
+  color: var(--color-ink-secondary);
+}
+
+.contactLink {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+/* ── Running head, page 2 ─────────────────────────────────────────────────── */
+.runningHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  border-bottom: 2px solid var(--color-ink);
+  padding-bottom: 6px;
+}
+
+.runningName {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* ── Numbered block: label rail + body ────────────────────────────────────── */
+.block {
+  display: flex;
+  gap: 24px;
+}
+
+/*
+ * The last block on each page grows to fill it, which is what lets the boundary note
+ * and the document footer sit on the bottom rule via `margin-top: auto`.
+ */
+.blockGrow {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.blockLabel {
+  flex: 0 0 112px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-top: 3px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  color: var(--color-accent);
+}
+
+/*
+ * Page two's rails sit 1px higher than page one's in the export (2px vs 3px). Kept
+ * rather than harmonised: the running head above them is a different height, and the
+ * export tuned each rail to its own page.
+ */
+.blockLabelPage2 {
+  composes: blockLabel;
+  padding-top: 2px;
+}
+
+.blockLabelNote {
+  font-size: 9.5px;
+  line-height: 1.5;
+  letter-spacing: 0.05em;
+  color: var(--color-meta);
+}
+
+.blockBody {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 03 / Enterprise experience packs its roles tighter than the systems list. */
+.blockBodyTight {
+  composes: blockBody;
+  gap: 8px;
+}
+
+/*
+ * 01 / Profile and 04 / Foundation. The export sets a different gap on each block's
+ * body — 9px, 12px, 8px — rather than one shared rhythm. On a fixed page box those
+ * 3px differences accumulate into a visibly different bottom edge, so they are kept
+ * distinct rather than harmonised.
+ */
+.blockBodyNarrow {
+  composes: blockBody;
+  gap: 9px;
+}
+
+/* ── 01 Profile ───────────────────────────────────────────────────────────── */
+.profileHeading {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.22;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  max-width: 32ch;
+  text-wrap: pretty;
+}
+
+.profileBody {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-ink-strong);
+  text-wrap: pretty;
+}
+
+/* ── 02 Selected systems ──────────────────────────────────────────────────── */
+.system {
+  border-top: 1px solid var(--color-border);
+  padding-top: 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* The first article opens the section, so it carries the heavier rule. */
+.systemLead {
+  composes: system;
+  border-top: 2px solid var(--color-ink);
+}
+
+.systemHead {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.systemName {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.systemNameCode {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 14.5px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.systemSummary {
+  font-size: 12.5px;
+  color: var(--color-ink-strong);
+  flex: 1 1 auto;
+}
+
+.verify {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.bullets {
+  margin: 0;
+  padding-left: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--color-ink-secondary);
+}
+
+.stackLine {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--color-meta-quiet);
+}
+
+.also {
+  border-top: 1px solid var(--color-border);
+  padding-top: 8px;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.alsoLabel {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.09em;
+  color: var(--color-meta);
+  flex: 0 0 auto;
+}
+
+.alsoBody {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--color-ink-secondary);
+  text-wrap: pretty;
+}
+
+.alsoName {
+  font-weight: 600;
+}
+
+/*
+ * `margin-top: auto` pins this to the foot of the page box — the reason the pages are
+ * explicitly sized rather than left to the print engine.
+ */
+.boundary {
+  margin-top: auto;
+  border-top: 1px solid var(--color-border);
+  padding-top: 7px;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.boundaryLabel {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.09em;
+  color: var(--color-meta-quiet);
+  flex: 0 0 auto;
+}
+
+.boundaryBody {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--color-ink-tertiary);
+  text-wrap: pretty;
+}
+
+/* ── 03 Enterprise experience ─────────────────────────────────────────────── */
+.employerHead {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.employerName {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.employerSpan {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-ink-secondary);
+  margin-left: auto;
+}
+
+.employerLocation {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-meta);
+}
+
+.role {
+  border-top: 1px solid var(--color-border);
+  padding-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.roleLead {
+  composes: role;
+  border-top: 2px solid var(--color-ink);
+}
+
+.roleCompact {
+  composes: role;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.roleHead {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+/*
+ * `letter-spacing: normal` is a reset, not a value: globals.css tracks h1–h4 at
+ * -0.025em for the site's display type, and the export gives these role titles no
+ * tracking at all. Without the reset each title measures ~7px narrow.
+ */
+.roleTitle {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: normal;
+}
+
+.roleDates {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--color-meta-quiet);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* ── 04 Foundation ────────────────────────────────────────────────────────── */
+.foundation {
+  border-top: 1px solid var(--color-border);
+  padding-top: 7px;
+  display: flex;
+  gap: 18px;
+}
+
+.foundationLead {
+  composes: foundation;
+  border-top: 2px solid var(--color-ink);
+}
+
+.foundationLabel {
+  flex: 0 0 140px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.09em;
+  color: var(--color-meta-quiet);
+}
+
+.foundationStack {
+  flex: 1 1 auto;
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--color-ink-secondary);
+  text-wrap: pretty;
+}
+
+.foundationRows {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* The nonprofit entry pairs a title row with its own prose, so it sits tighter. */
+.foundationRowsTight {
+  composes: foundationRows;
+  gap: 3px;
+}
+
+.educationRow {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.degree {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.institution {
+  font-size: 12.5px;
+  color: var(--color-ink-tertiary);
+}
+
+.educationDates {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--color-meta-quiet);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.certifications {
+  flex: 1 1 auto;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-ink-strong);
+}
+
+.certificationsEarlier {
+  font-size: 11.5px;
+  color: var(--color-meta-quiet);
+}
+
+.nonprofitBody {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--color-ink-secondary);
+  text-wrap: pretty;
+}
+
+.docFooter {
+  margin-top: auto;
+  border-top: 2px solid var(--color-ink);
+  padding-top: 7px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 16px;
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--color-meta-quiet);
+}
+
+.footerLink {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.footerTrailing {
+  margin-left: auto;
+}

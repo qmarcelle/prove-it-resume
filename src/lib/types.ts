@@ -21,6 +21,23 @@ export type EvidenceKind =
   | 'research'
   | 'boundary';
 
+/**
+ * A pinned, immutable citation sitting behind a row's user-facing call to action.
+ *
+ * The rule for these links is that the reader should land on the published site or
+ * docs — that is the artifact a person can actually read. But a published page is a
+ * live surface: it can be rewritten, and a claim that cites one cites a moving target.
+ * So a row may also carry the exact frozen artifact the claim was made against, which
+ * renders as a quiet secondary citation rather than as the call to action.
+ *
+ * Both fields or neither, enforced here rather than by review: a source href with no
+ * label renders as an unreadable URL, and a label with no href is a citation with
+ * nothing behind it.
+ */
+export type SourcePin =
+  | { sourceHref: string; sourceLabel: string }
+  | { sourceHref?: never; sourceLabel?: never };
+
 export type EvidenceRef = {
   id: string;
   kind: EvidenceKind;
@@ -38,7 +55,7 @@ export type EvidenceRef = {
    * `verified: false` suppresses the call to action entirely — see `resolveEvidence`.
    */
   verified: boolean;
-};
+} & SourcePin;
 
 /** A row in a proof's "VERIFY THIS" panel: the shorter, scannable evidence list. */
 export type EvidenceSummaryRow = {
@@ -52,7 +69,7 @@ export type EvidenceSummaryRow = {
   verified: boolean;
   /** Text of the call to action when resolved, e.g. "READ CASE". */
   cta?: string;
-};
+} & SourcePin;
 
 export type ProofStatusTone = 'shipped' | 'implemented' | 'controlled';
 
@@ -166,6 +183,15 @@ export type RoleLens = {
   slug: string;
   /** Title shown in the ROLE LENS chip. */
   roleTitle: string;
+  /**
+   * Masthead title for this lens's résumé PDF, when the chip's wording is too long.
+   *
+   * The chip sits in a flexible column and may wrap freely; the résumé masthead is a
+   * single mono line sharing a fixed 7.3in measure with the domains string, and a title
+   * that wraps there pushes the whole document down by ~21px. Absent means the chip's
+   * title already fits.
+   */
+  resumeTitle?: string;
   /** Organisation shown beside it. Absent on the durable, neutral root lens. */
   organisation?: string;
   /** Overrides the Role Fit heading when the lens wants to name the problem directly. */

@@ -1,4 +1,6 @@
 import { RESUME, SITE } from '@/content/site';
+import { ResumeDownloadLink } from '@/components/resume/ResumeDownloadLink';
+import type { RoleLens } from '@/lib/types';
 import { isResolved } from '@/lib/evidence';
 import styles from './SiteHeader.module.css';
 
@@ -8,7 +10,13 @@ import styles from './SiteHeader.module.css';
  * The in-page nav is a real `<nav>` of ordinary anchors, so it works before hydration
  * and without JavaScript entirely.
  */
-export function SiteHeader({ showAvailability }: { showAvailability: boolean }) {
+export function SiteHeader({
+  showAvailability,
+  lens,
+}: {
+  showAvailability: boolean;
+  lens: RoleLens;
+}) {
   const resumeAvailable = isResolved(RESUME);
 
   return (
@@ -31,10 +39,10 @@ export function SiteHeader({ showAvailability }: { showAvailability: boolean }) 
           <a href={SITE.github} target="_blank" rel="noreferrer noopener">
             GitHub ↗<span className="visually-hidden"> — opens in a new tab</span>
           </a>
-          {resumeAvailable && RESUME.href ? (
-            <a className={styles.resume} href={RESUME.href} download>
+          {resumeAvailable ? (
+            <ResumeDownloadLink className={styles.resume} lens={lens}>
               Résumé PDF ↓
-            </a>
+            </ResumeDownloadLink>
           ) : (
             <span className={styles.resumeUnavailable}>Résumé — not yet published</span>
           )}
