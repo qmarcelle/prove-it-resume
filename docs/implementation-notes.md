@@ -58,8 +58,9 @@ page. Two things guard it: the type shape, and tests in `src/content/content.tes
 that assert no record points at the bare GitHub profile or at an on-page anchor — the two
 ways the design draft produced links that looked like evidence and were not.
 
-Panels report their own honesty: "0 of 8 evidence items resolve to an inspectable
-artifact". That is more useful to a skeptic than an unqualified "evidence source" line.
+Panels report their own honesty: "3 of 12 evidence items resolve to an inspectable
+artifact". That is more useful to a skeptic than an unqualified "evidence source" line —
+and it moves when the evidence does. Two of the three panels now read "8 of 8".
 
 ## Role lenses
 
@@ -83,7 +84,7 @@ projections of one work, and indexing them would advertise every open applicatio
 
 ## Client/server boundary
 
-Server Components by default. `"use client"` appears in nine files:
+Server Components by default. `"use client"` appears in twelve files:
 
 | File                      | Why it needs the client                                            |
 | ------------------------- | ------------------------------------------------------------------ |
@@ -94,8 +95,11 @@ Server Components by default. `"use client"` appears in nine files:
 | `EvidenceDisclosure`      | Open/closed state                                                  |
 | `ClaimLedger`             | Open/closed state                                                  |
 | `DecisionReceipt`         | Open/closed state                                                  |
-| `InterlockCounterfactual` | Arm selection                                                      |
-| `RepositoryDecisionDiff`  | Plan selection                                                     |
+| `InterlockCounterfactual` | Stage selection and the perturbation control                       |
+| `RepositoryDecisionDiff`  | Disclosure stage                                                   |
+| `VrekoArchitectureTrace`  | Zoom level, per-container disclosure, trace position               |
+| `StepControl`             | Roving tabindex and arrow-key handling                             |
+| `useDeepLinkedState`      | Reads and writes the query string                                  |
 
 The pattern that makes this work is `ProofNavProvider` rendering `children` untouched:
 server-rendered sections pass _through_ the client provider without crossing the
@@ -195,13 +199,20 @@ is kept; media queries appear only where flex cannot express the change:
 
 ## Testing
 
-- **Unit and component** (`vitest`, 51 tests): the evidence rule, lens projection,
-  content integrity, and the render behaviour that depends on verification state. No
-  snapshot tests — they would pin the markup without asserting anything true.
-- **Browser** (`playwright`, 54 tests across desktop and a 320px viewport): page loads,
+- **Unit and component** (`vitest`, 100 tests): the evidence rule, lens projection,
+  content integrity, the render behaviour that depends on verification state, the three
+  interactions' state machines, and integrity of the bound experiment data. No snapshot
+  tests — they would pin the markup without asserting anything true.
+- **Browser** (`playwright`, 110 tests across desktop and a 320px viewport): page loads,
   section presence, guided navigation, rail tracking, disclosures, role-lens resolution
   and 404, keyboard reachability, focus visibility, reduced motion, overflow at five
-  widths, and axe-core accessibility on three page states.
+  widths with every interaction open, and axe-core accessibility on five page states
+  including the interacting ones.
+
+`src/test/setup.ts` resets `window.history` between tests. The interactions reflect their
+stage into the query string, and jsdom keeps one history per file — without the reset, a
+test that steps an interaction forward leaves the next one mounted already advanced,
+which looks like a component bug and is not one.
 
 The browser suite runs against a real production build, because static output, hydration,
 and layout differ between `next dev` and `next build`, and it is the built artifact that
@@ -210,6 +221,27 @@ ships.
 One test is worth calling out: `content.test.ts` asserts that no decision receipt carries
 a `decision`. That will fail the moment real reasoning is added — deliberately, so the
 change is made consciously rather than sliding in.
+
+## The three interactions
+
+`docs/interaction-contract.md` holds the durable rules; three notes belong here because
+they are architectural rather than behavioural.
+
+**No animation dependency was added.** Every transition is a CSS transition or keyframe.
+`motion` was considered and rejected: nothing here needs layout animation or
+interruptible physics, and the page budget is better spent elsewhere. `dependencies` is
+still exactly `next`, `react`, `react-dom`.
+
+**Animation is not the state model.** Each interaction is a state machine with named,
+addressable states; animation interpolates between them. Every state renders correctly
+with animation fully disabled, which is what makes the reduced-motion path a CSS-only
+concern with no JavaScript branch to desynchronise.
+
+**The data model follows the evidence, not the design.** `src/lib/interactions.ts` was
+written after the frozen artifacts were read. The clearest case: `DecisionEvidence.kind`
+is an open string rather than a union, because the run the diff is bound to contains no
+co-change evidence at all — the taxonomy the design assumed would be load-bearing was
+absent, and a type built around it could not have displayed the real result.
 
 ## Dependency choices
 

@@ -40,10 +40,12 @@ src/
     role/[slug]/page.tsx  the same surface, projected through a role lens
   components/             presentation; no content lives here
   content/                durable proof, claims, decisions, role lenses
+    experiments/          the frozen runs the interactions are bound to
   lib/                    types, the evidence rule, lens projection
   styles/tokens.css       the design language as custom properties
 design/reference/claude/  the original design export, preserved unmodified
-docs/                     design import, ADRs, content audit, performance
+docs/                     design import, ADRs, content audit, performance,
+                          interaction contract, design provenance
 ```
 
 Three ideas carry the design:
@@ -76,6 +78,12 @@ served.
 
 [`docs/design-import.md`](docs/design-import.md) records what was extracted, where each
 piece landed, and every deliberate deviation from the mockup.
+
+A later motion-and-disclosure storyboard drove the three progressive-disclosure
+interactions. It was consumed as an interaction specification and **not** committed —
+its hash, treatment, and every deviation are recorded in
+[`docs/design-provenance.md`](docs/design-provenance.md), and the durable rules it
+produced are in [`docs/interaction-contract.md`](docs/interaction-contract.md).
 
 ## Local development
 

@@ -34,6 +34,29 @@ Present in the design export and used as-is.
 | Career themes and tags                                      | `content/site.ts`                       | Theme-level, as the export specified.                          |
 | `athenahealth / Yoh` lens title and organisation            | `content/roles/athenahealth-yoh.ts`     | From the export's prop defaults.                               |
 
+### Bound during the interaction pass (2026-08-24)
+
+Read from public artifacts and checked to resolve. Every GitHub link is pinned to a full
+commit sha, enforced by `src/content/experiments/experiments.test.ts`.
+
+| Item                                     | Source                                                                     | Notes                                                                                                                |
+| ---------------------------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Repository decision diff — the whole run | `workspacejson/datahub-agent` @ `3607805f`, `evaluation/hac-152/`          | Frozen paired-model run. Digests re-checked locally with `shasum -a 256 -c SHA256SUMS`; all three artifacts matched. |
+| Interlock counterfactual — all figures   | `Marcelle-Labs/interlock` @ `4239474a`, `experiments/hac-330/evidence/`    | Bound, `130`, arms `140`/`120`, `WITHHOLD_SERIALIZE`, `ALLOW_PARALLEL`, coupling support 8/10, both basis revisions. |
+| Interlock evidence rows (4 of 4)         | Same packet, plus `experiments/hac-342/` for the cloud run                 | HAC-330, HAC-340 and HAC-343 are kept as three separate results.                                                     |
+| Vreko evidence rows (4 of 4)             | `vreko-dev/mcp-server` @ `c98e7ae1`, `vreko-dev/vreko-cli` @ `b096ce3b`    | Architecture, command surface and manifest. See the corrections below.                                               |
+| Vreko public/private package split       | npm registry, checked 2026-08-24                                           | Four packages resolve; nine declared dependencies return 404. `npm view` is published as the re-derivation.          |
+| Decision-time information study          | `workspacejson/datahub-agent` @ `3607805f`, `evaluation/hac-152/README.md` | Bound to one run, and labelled as one run rather than promoted to a general finding.                                 |
+
+### Claims corrected because the evidence said less
+
+| Claim                                                                                               | Correction                                                                                                                                                                          |
+| --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Vreko: "Public repository containing the server implementation, tool contracts, and configuration." | Withdrawn. None of the three public repositories contain implementation source; they are distribution and documentation surfaces, and only `dist/` ships to npm.                    |
+| Vreko architecture: "Transport → MCP protocol → intelligence layer"                                 | Replaced with the published decomposition, "HTTP edge → MCP protocol surface → platform". Authentication sits at the HTTP edge, not inside the intelligence layer.                  |
+| Vreko boundary                                                                                      | Extended to state that the core implementation is not published, and that no accuracy figure exists for the CLI's AI-attributed change detection, which its README calls heuristic. |
+| Interlock boundary                                                                                  | Extended with the packet's own negative finding: co-change evidence is a detector with false negatives, and repository-scale behaviour is explicitly not measured.                  |
+
 ---
 
 ## Requires evidence link
@@ -44,28 +67,19 @@ Each renders `VERIFY BEFORE PUBLISHING` in place of a call to action.
 In the export these pointed either at `#sec-0N` — the section the reader is already in —
 or at the general GitHub profile. Neither is the artifact the row names.
 
-**Vreko** (`EV-VRK`) — 0 of 8 resolved
+The Vreko (`EV-VRK`) and Interlock (`EV-ILK`) panels are no longer in this section: both
+now report **8 of 8 evidence items resolve to an inspectable artifact**.
 
-- Vreko MCP Server repository
-- Architecture: transport → MCP protocol → intelligence layer
-- Agent lifecycle: brief → pulse → learn → end
-- Local + hosted execution paths
+**Repository Intelligence** (`EV-WSJ`) — 3 of 12 resolved
 
-**Repository Intelligence** (`EV-WSJ`) — 2 of 12 resolved (both the Tally case)
+Still unresolved. Each names an artifact that exists publicly, but the exact destination
+has not been confirmed to be the thing the row claims, so none of them link.
 
 - Canonical `workspace.json` specification (Apache-2.0)
 - JSON Schema / types
 - CLI / producer tooling
 - `workspace.json` for Codex — agent-side hooks and repository history
 - Integrations
-- Decision-time information study
-
-**Interlock** (`EV-ILK`) — 0 of 8 resolved
-
-- Controlled counterfactual comparison
-- Frozen evidence packet
-- Independent verifier
-- Cloud traversal: Google ADK + Vertex AI + Cloud Run + MCP proxy
 
 **Supporting**
 
@@ -79,13 +93,12 @@ or at the general GitHub profile. Neither is the artifact the row names.
 
 Values that should not ship publicly until checked against reality.
 
-| Item                                                                              | Where                         | Concern                                                                                                                                                                             |
-| --------------------------------------------------------------------------------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Interlock counterfactual figures — `140 > 130`, `WITHHOLD_SERIALIZE`, `120 ≤ 130` | `content/proofs/interlock.ts` | Carried over from the design prototype and **labelled in the UI as prototype values**. They are not bound to a published evidence packet. Publish the packet or remove the figures. |
-| `~10 YEARS` enterprise healthcare                                                 | `content/site.ts`             | From the export. Confirm against the actual record before publishing.                                                                                                               |
-| `REV 2026.08`                                                                     | `content/site.ts`             | A static string from the export. Decide whether it should be a build stamp.                                                                                                         |
-| `AVAILABLE FOR STAFF / PRINCIPAL AI PLATFORM WORK`                                | `content/site.ts`             | Confirm this is currently true before it goes live.                                                                                                                                 |
-| `Steward, workspace.json`                                                         | `content/site.ts`             | Confirm the stewardship framing is accurate and current.                                                                                                                            |
+| Item                                               | Where             | Concern                                                                     |
+| -------------------------------------------------- | ----------------- | --------------------------------------------------------------------------- |
+| `~10 YEARS` enterprise healthcare                  | `content/site.ts` | From the export. Confirm against the actual record before publishing.       |
+| `REV 2026.08`                                      | `content/site.ts` | A static string from the export. Decide whether it should be a build stamp. |
+| `AVAILABLE FOR STAFF / PRINCIPAL AI PLATFORM WORK` | `content/site.ts` | Confirm this is currently true before it goes live.                         |
+| `Steward, workspace.json`                          | `content/site.ts` | Confirm the stewardship framing is accurate and current.                    |
 
 ---
 
@@ -100,7 +113,6 @@ Not present in any supplied material. Not invented.
 | **Email address**                     | Pointed at `#resume` in the export.                                                                                                                | Same, on the `email` record. Consider whether a public address is wanted at all.                                                                                                                                                                                                                                          |
 | **Marcelle Labs URL**                 | Pointed at `#` in the export.                                                                                                                      | Same, on the `marcelle-labs` record.                                                                                                                                                                                                                                                                                      |
 | **Decision receipt answers** (7)      | Questions supplied, reasoning not.                                                                                                                 | Populate `constraint` / `alternatives` / `decision` / `tradeoff` / `evidence` / `wouldChangeIf` in `content/decisions/index.ts`. The answered branch is implemented and tested. Note that `src/content/content.test.ts` asserts receipts are unanswered — update that test deliberately when the first real answer lands. |
-| **Repository decision diff data**     | No plan pair exists in the export.                                                                                                                 | Pass a `RepositoryDecisionDiffData` to `<RepositoryDecisionDiff>` in the Repository Intelligence section. Layout, state machine, and accessibility are done.                                                                                                                                                              |
 | **Career chronology**                 | Deliberately theme-level per the export's own note about employer confidentiality.                                                                 | This is the résumé's job, not the site's. No change recommended.                                                                                                                                                                                                                                                          |
 | **Additional role lenses**            | Only the `athenahealth / Yoh` lens was supplied.                                                                                                   | Add a `RoleLens` record per role, from real material. Do not infer mappings.                                                                                                                                                                                                                                              |
 | **Canonical origin / `metadataBase`** | No domain confirmed.                                                                                                                               | Set `metadataBase` in `src/app/layout.tsx` once a domain exists; the sitemap and Open Graph URLs then resolve absolutely.                                                                                                                                                                                                 |
