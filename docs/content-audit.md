@@ -61,8 +61,9 @@ row names.
 | Interlock's "frozen evidence packet" and "independent verifier" rows pointed at `experiments/hac-342/` — the _cloud_ run's packet and verifier. | Repointed at HAC-330's own `evidence/arms.json` and `bin/verify-packet.mjs`. The rows sit directly under "controlled experiment", so opening a different experiment's packet quietly merged HAC-330 and HAC-340 — which the source repository explicitly forbids. The cloud row keeps the cloud artifacts and is labelled a separate run. |
 | Vreko's agent-lifecycle row used the anchor `#the-v2-agentic-workflow`, which is not a heading in that README.                                  | Repointed at `#what-is-vreko-mcp-server`, where the lifecycle is documented. A dead anchor lands the reader at the top of the page, which reads as working evidence and is not.                                                                                                                                                           |
 
-Every outbound link on the built pages was then checked: 22 of 22 return 200, and every
-anchor corresponds to a real heading.
+Every outbound link on the site was then checked with all disclosures open, across `/`
+and both role lenses: **23 of 23 return 200**, and every `#anchor` corresponds to a real
+heading in the target README.
 
 ### Claims corrected because the evidence said less
 
