@@ -43,14 +43,37 @@ for (const { route, title } of ROUTES) {
     }
   });
 
-  test(`${route} keeps its masthead title on one line`, async ({ page }) => {
+  test(`${route} keeps its masthead title on one line, with room to spare`, async ({
+    page,
+  }) => {
     await printPage(page, route);
 
     await expect(page.getByText(title, { exact: true })).toBeVisible();
 
-    // Two mono lines at 11px would be ~44px. A wrap here shifts the whole document.
+    // Two mono lines would be ~41px. A wrap here shifts the whole document down and, on
+    // a fixed page box, clips the footer off the bottom of page two.
     const row = await page.locator('#resume-page-1 header > div').nth(1).boundingBox();
     expect(row?.height).toBeLessThan(32);
+
+    /*
+     * Headroom, not just line count. The title and the domains string share one fixed
+     * measure, and the export's own tuning left 1.3px of slack — which fit on macOS and
+     * wrapped on Linux, because font metrics differ between Chromium builds. Asserting
+     * the margin is what makes this catch a too-long title here rather than on whatever
+     * platform someone else runs.
+     */
+    const slack = await page.evaluate(() => {
+      const el = document.querySelectorAll('#resume-page-1 header > div')[1];
+      if (!el) return -1;
+      const used = [...el.children].reduce(
+        (total, child) => total + child.getBoundingClientRect().width,
+        0,
+      );
+      const GAP = 18;
+      return el.clientWidth - used - GAP;
+    });
+
+    expect(slack, 'masthead must not sit within a hair of wrapping').toBeGreaterThan(12);
   });
 
   test(`${route} keeps bottom-anchored content inside the page`, async ({ page }) => {

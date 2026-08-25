@@ -185,6 +185,15 @@ maintained. The ~40 lines of print CSS that matter are reimplemented and annotat
    Type sizes remain the export's literal px values — nothing reflows on a fixed sheet.
 4. **`showVerifyLinks` / `showNonprofit` are not props.** Both defaulted to true and
    nothing in the site toggles them; they can return as lens fields if a reason appears.
+5. **The masthead's domains line drops one notch**, from `11px / 0.05em` to
+   `10.5px / 0.03em`. It shares one fixed 7.3in measure with the target title, and the
+   export tunes that pair to fit with **1.3px to spare — 0.2% of the line**. That
+   survives on the machine the design was drawn on and nowhere else: CI's Linux Chromium
+   wrapped the same markup to two lines, which on a fixed page box pushes the document
+   down ~21px and clips page two's footer. The new sizes are ones the document already
+   uses (10.5px matches the block-number rails) and buy 4.4% headroom on the neutral
+   lens, 15–16% on the other two. The 22 fidelity probes are unaffected — the domains
+   string sits on its own row, so nothing below it moves.
 
 ### Fidelity check
 

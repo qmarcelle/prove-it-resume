@@ -143,10 +143,24 @@
   color: var(--color-accent);
 }
 
+/*
+ * The domains line shares one fixed 7.3in measure with the target title, and the export
+ * tunes that pair to fit with about 1.3px to spare — 0.2% of the line. That survives on
+ * the machine the design was drawn on and nowhere else: on CI's Linux Chromium the same
+ * markup wrapped to two lines, which on a fixed page box pushes the whole document down
+ * ~21px.
+ *
+ * So this metadata line drops one notch, to sizes the document already uses elsewhere
+ * (10.5px matches the block-number rails), which buys ~31px of headroom — 4.4%. The
+ * reduced tracking follows the same reasoning as deviation 8 in docs/design-import.md.
+ * `tests/e2e/resume.spec.ts` asserts the headroom, not just the line count, so a future
+ * title that eats it fails here rather than on someone else's platform.
+ */
 .domains {
   color: var(--color-meta-quiet);
   margin-left: auto;
-  letter-spacing: 0.05em;
+  font-size: 10.5px;
+  letter-spacing: 0.03em;
 }
 
 .contactRow {
