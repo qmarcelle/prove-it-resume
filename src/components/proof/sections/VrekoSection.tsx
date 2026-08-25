@@ -1,6 +1,7 @@
 import { vreko } from '@/content/proofs';
 import { EvidencePanel } from '@/components/evidence/EvidencePanel';
-import { ArchitectureStrip } from '@/components/proof/ArchitectureStrip';
+import { VrekoArchitectureTrace } from '@/components/interactions/VrekoArchitectureTrace';
+import { vrekoArchitecture } from '@/content/experiments/vreko-architecture';
 import {
   ProofAside,
   ProofColumns,
@@ -14,22 +15,19 @@ import {
 /**
  * 02 — Vreko.
  *
- * The architecture is presented as a semantic list rather than an animation. The claim
- * is "these are the layers and this is their order", and an ordered list states that
- * exactly, works in every assistive technology, and costs nothing. A "trace a request"
- * enhancement can be added later if it would explain something the list cannot.
+ * The architecture was a static five-item list until the public repositories were
+ * audited. That audit changed the section's argument: none of the three public
+ * repositories contain implementation source, and the honest claim is not "here are the
+ * layers" but "here is exactly how much of this you can inspect, and here is the
+ * command that proves where the line falls". A list cannot make that argument; the
+ * semantic zoom can, because the publication state of every node is part of the
+ * diagram rather than a footnote under it.
  */
-const VREKO_ARCHITECTURE = [
-  'CODING AGENT',
-  'MCP TRANSPORT',
-  'TOOL CONTRACT',
-  'SESSION / CONTEXT',
-  'INTELLIGENCE',
-] as const;
-
 export function VrekoSection() {
   return (
     <ProofSection proof={vreko}>
+      <VrekoArchitectureTrace data={vrekoArchitecture} />
+
       <ProofColumns>
         <ProofProse>
           {vreko.fields.map((field) => (
@@ -37,12 +35,6 @@ export function VrekoSection() {
               {field.body}
             </ProofField>
           ))}
-
-          <ArchitectureStrip
-            label="ARCHITECTURE"
-            nodes={VREKO_ARCHITECTURE}
-            orientation="vertical"
-          />
 
           {vreko.technologies ? (
             <ProofTags label="ENGINEERING SURFACE" tags={vreko.technologies} />
