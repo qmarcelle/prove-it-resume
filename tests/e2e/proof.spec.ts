@@ -139,6 +139,10 @@ test.describe('evidence disclosures', () => {
    * Interlock's row must stay pinned to the local controlled experiment. The repository
    * publishes HAC-330, HAC-340 and HAC-343 as three separate results and says so
    * explicitly, so a row drifting to the cloud packet would quietly merge two of them.
+   *
+   * The row now has two destinations — the published cockpit as the call to action and
+   * the commit-pinned packet as the citation — so both are checked. Either one drifting
+   * to the cloud run is the failure this guards against.
    */
   test('the Interlock counterfactual row points at HAC-330, not the cloud run', async ({
     page,
@@ -146,11 +150,18 @@ test.describe('evidence disclosures', () => {
     await page.goto('/');
     await page.getByRole('button', { name: /Inspect evidence.*EV-ILK/ }).click();
 
-    const packet = page
-      .locator('#sec-04')
-      .getByRole('link', { name: /INSPECT PACKET/ })
-      .first();
+    const section = page.locator('#sec-04');
+
+    const packet = section.getByRole('link', { name: /INSPECT PACKET/ }).first();
     await expect(packet).toHaveAttribute(
+      'href',
+      /interlock\.marcellelabs\.io\/\?run=hac330-local&proof=local&state=run\.local\./,
+    );
+
+    const pinned = section
+      .getByRole('link', { name: /source: interlock@[0-9a-f]+ · hac-330\/arms\.json/ })
+      .first();
+    await expect(pinned).toHaveAttribute(
       'href',
       /Marcelle-Labs\/interlock\/blob\/[0-9a-f]{40}\/experiments\/hac-330/,
     );
@@ -168,16 +179,23 @@ test.describe('evidence disclosures', () => {
     );
   });
 
-  test('the resume bridge still states its gap rather than linking out', async ({
-    page,
-  }) => {
+  /*
+   * This test used to assert the opposite: no résumé file had been supplied, so the
+   * bridge stated the gap where a download button would be. A résumé is now generated
+   * from `/resume/print`, so the assertion is inverted rather than deleted — the
+   * property worth holding was never "there is no résumé", it was "the bridge tells the
+   * truth about whether there is one". `ResumeBridge` still renders the gap when the
+   * `RESUME` record is unresolved, which `EvidenceLink.test.tsx` covers directly.
+   */
+  test('the resume bridge offers the generated download', async ({ page }) => {
     await page.goto('/');
 
-    // No resume file was supplied, so the bridge must show the gap where the download
-    // button would be. This is the surface that keeps the evidence rule honest now
-    // that every proof row resolves.
     const bridge = page.locator('#resume');
-    await expect(bridge.getByText('RÉSUMÉ PDF — NOT YET PUBLISHED')).toBeVisible();
+    await expect(bridge.getByText('RÉSUMÉ PDF — NOT YET PUBLISHED')).toBeHidden();
+
+    const download = bridge.getByRole('link', { name: /Download résumé PDF/ });
+    await expect(download).toHaveAttribute('href', '/qwynn-marcelle-resume.pdf');
+    await expect(download).toHaveAttribute('download', /\.pdf$/);
   });
 });
 

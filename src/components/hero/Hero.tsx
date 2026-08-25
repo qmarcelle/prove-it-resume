@@ -1,4 +1,6 @@
 import { RESUME, SITE } from '@/content/site';
+import { ResumeDownloadLink } from '@/components/resume/ResumeDownloadLink';
+import type { RoleLens } from '@/lib/types';
 import { isResolved } from '@/lib/evidence';
 import { WalkProofButton } from '@/components/proof/WalkProofButton';
 import styles from './Hero.module.css';
@@ -11,7 +13,7 @@ import styles from './Hero.module.css';
  * claim lead, the thesis supports, and the résumé is a quiet secondary link rather than
  * a competing call to action.
  */
-export function Hero({ children }: { children?: React.ReactNode }) {
+export function Hero({ lens, children }: { lens: RoleLens; children?: React.ReactNode }) {
   const resumeAvailable = isResolved(RESUME);
 
   return (
@@ -33,10 +35,8 @@ export function Hero({ children }: { children?: React.ReactNode }) {
               <span className={styles.divider} aria-hidden="true">
                 ·
               </span>
-              {resumeAvailable && RESUME.href ? (
-                <a href={RESUME.href} download>
-                  Résumé ↓
-                </a>
+              {resumeAvailable ? (
+                <ResumeDownloadLink lens={lens}>Résumé ↓</ResumeDownloadLink>
               ) : (
                 <span className={styles.pending}>Résumé — not yet published</span>
               )}

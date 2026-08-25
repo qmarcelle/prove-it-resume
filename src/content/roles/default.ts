@@ -11,6 +11,9 @@ import type { RoleLens } from '@/lib/types';
 export const defaultRole: RoleLens = {
   slug: 'default',
   roleTitle: 'Staff / Principal · AI Platform & Developer Systems',
+  // The design export's own default masthead title. The chip's wording carries the
+  // middot and the second noun phrase, which overflow the résumé's single mono line.
+  resumeTitle: 'Staff / Principal AI Platform Engineer',
   roleFitHeading: 'What these systems have to do with your problem.',
   proofOrder: ['vreko', 'repository-intelligence', 'interlock'],
   mapping: [

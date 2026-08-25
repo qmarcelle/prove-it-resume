@@ -36,20 +36,23 @@ export const SITE = {
 /**
  * Résumé asset.
  *
- * No résumé file was supplied with the design export — every résumé CTA in the mockup
- * pointed at `#resume`, and the export itself carried the note
- * "[VERIFY BEFORE PUBLISHING] file + profile URLs".
+ * The design export supplied no file, so this record sat unresolved and every résumé
+ * CTA rendered as a stated gap. There is now a résumé: `Prove It Resume - PDF.dc.html`
+ * was ported to `/resume/print`, and `pnpm resume:pdf` renders it with Chromium's print
+ * engine into `public/`.
  *
- * Résumé support is kept in the architecture. To enable it: drop the file at
- * `public/qwynn-marcelle-resume.pdf`, set `href`, and flip `verified`. Nothing else
- * needs to change — every résumé CTA reads this one record.
+ * `href` is the neutral lens's file and is what this record *means*: a résumé exists and
+ * can be downloaded. Which of the three generated files a given page serves is decided
+ * by `resumePdfPath`, because a role lens changes the masthead title and therefore the
+ * artifact, while the fact of having a résumé is the same fact everywhere.
  */
 export const RESUME: EvidenceRef = {
   id: 'resume',
   kind: 'source',
   title: 'Traditional résumé (PDF)',
   description: 'Conventional chronology, for processes that require one.',
-  verified: false,
+  href: '/qwynn-marcelle-resume.pdf',
+  verified: true,
 };
 
 /**

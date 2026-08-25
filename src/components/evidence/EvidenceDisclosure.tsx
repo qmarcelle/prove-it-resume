@@ -5,6 +5,7 @@ import { evidenceKindLabel } from '@/lib/evidence';
 import type { EvidenceRef } from '@/lib/types';
 import { ClaimBoundary } from './ClaimBoundary';
 import { EvidenceLink } from './EvidenceLink';
+import { EvidenceSource } from './EvidenceSource';
 import styles from './EvidenceDisclosure.module.css';
 
 /**
@@ -65,6 +66,7 @@ export function EvidenceDisclosure({
                 {row.description ? (
                   <span className={styles.rowDetail}>{row.description}</span>
                 ) : null}
+                <EvidenceSource reference={row} />
               </div>
             </div>
           ))}

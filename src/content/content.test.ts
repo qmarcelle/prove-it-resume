@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { PROOFS } from '@/content/proofs';
 import { CLAIMS } from '@/content/claims';
@@ -6,6 +8,9 @@ import { PROFILES, RESUME } from '@/content/site';
 import { neverAskTwice } from '@/content/supporting/never-ask-twice';
 import { PROOF_STEPS } from '@/lib/proof-steps';
 import { isResolved } from '@/lib/evidence';
+import { ROLE_LENSES, defaultRole } from '@/content/roles';
+import { resumePdfPath } from '@/lib/resume';
+import { PUBLISHED_ORIGINS } from '@/content/published';
 
 /**
  * Content-integrity tests.
@@ -129,10 +134,120 @@ describe('evidence integrity', () => {
     }
   });
 
-  it('resolves only destinations that are absolute https URLs', () => {
+  /*
+   * Evidence lives elsewhere and must say so with an absolute URL. The one exception is
+   * an artifact this site generates and serves itself — currently the résumé PDF —
+   * which is a root-relative path. That exception is enumerated rather than pattern-
+   * matched, so a relative href cannot appear anywhere else by accident.
+   */
+  const SELF_HOSTED = new Set([RESUME.id]);
+
+  it('resolves external evidence only to absolute https URLs', () => {
     for (const ref of allRefs) {
-      if (!isResolved(ref)) continue;
+      if (!isResolved(ref) || SELF_HOSTED.has(ref.id)) continue;
       expect(ref.href).toMatch(/^https:\/\//);
+    }
+  });
+
+  it('resolves self-hosted artifacts to a root-relative path', () => {
+    for (const ref of allRefs) {
+      if (!isResolved(ref) || !SELF_HOSTED.has(ref.id)) continue;
+      expect(ref.href).toMatch(/^\/[\w.-]+$/);
+    }
+  });
+});
+
+/**
+ * The generated résumé PDFs.
+ *
+ * These are committed artifacts, so the thing most likely to go wrong is a link to a
+ * file that was renamed or never regenerated. Checking the filesystem catches that at
+ * `pnpm test` rather than as a 404 for a reader who clicked "Download résumé".
+ */
+describe('résumé artifacts', () => {
+  const lenses = [defaultRole, ...ROLE_LENSES];
+
+  it('has a distinct generated PDF for every lens', () => {
+    const paths = lenses.map((lens) => resumePdfPath(lens));
+    expect(new Set(paths).size).toBe(paths.length);
+  });
+
+  it('has the file on disk that each lens links to', () => {
+    for (const lens of lenses) {
+      const file = join(process.cwd(), 'public', resumePdfPath(lens).replace(/^\//, ''));
+      expect(existsSync(file), `${resumePdfPath(lens)} is linked but not generated`).toBe(
+        true,
+      );
+    }
+  });
+
+  it('serves the neutral lens from the RESUME record', () => {
+    expect(RESUME.href).toBe(resumePdfPath(defaultRole));
+  });
+});
+
+/**
+ * The published-first rule.
+ *
+ * A reader should land on the site or docs a person can actually read; the repository
+ * the claim was written against belongs underneath as a citation, not as the
+ * destination. These checks keep that ordering from quietly inverting — the failure
+ * mode is a future contributor "fixing" a CTA back to a GitHub URL because it felt more
+ * precise, which is precisely the trade this made deliberately.
+ */
+describe('published-first linking', () => {
+  const allRefs = [
+    ...PROOFS.flatMap((proof) => [...proof.evidence, ...proof.summary]),
+    neverAskTwice.evidence,
+  ];
+
+  it('pairs every source pin with a label, and never the other way round', () => {
+    for (const ref of allRefs) {
+      expect(Boolean(ref.sourceHref)).toBe(Boolean(ref.sourceLabel));
+    }
+  });
+
+  it('never uses a source pin as the call to action', () => {
+    for (const ref of allRefs) {
+      if (!ref.sourceHref) continue;
+      expect(ref.href).not.toBe(ref.sourceHref);
+    }
+  });
+
+  it('points the call to action at a published surface whenever a pin exists', () => {
+    for (const ref of allRefs) {
+      if (!ref.sourceHref) continue;
+      expect(
+        PUBLISHED_ORIGINS.some((origin) => ref.href?.startsWith(origin)),
+        `${ref.id} has a pinned source, so its call to action must be a published page`,
+      ).toBe(true);
+    }
+  });
+
+  it('pins to an absolute https URL', () => {
+    for (const ref of allRefs) {
+      if (!ref.sourceHref) continue;
+      expect(ref.sourceHref).toMatch(/^https:\/\//);
+    }
+  });
+
+  it('keeps the Interlock cockpit links inside the contract it publishes', () => {
+    // The cockpit refuses substitution: an unrecognised run or state renders
+    // "Run unavailable" rather than the canonical run. These are the ids its published
+    // view-model declares, checked against the running site.
+    const RUNS = ['hac330-local', 'hac340-cloud'];
+    const STATES = ['run.local.treatment', 'run.local.baseline', 'run.cloud.overview'];
+
+    const cockpit = allRefs.filter((ref) =>
+      ref.href?.startsWith('https://interlock.marcellelabs.io/?'),
+    );
+    expect(cockpit.length).toBeGreaterThan(0);
+
+    for (const ref of cockpit) {
+      const params = new URL(ref.href as string).searchParams;
+      expect(RUNS).toContain(params.get('run'));
+      expect(['local', 'cloud']).toContain(params.get('proof'));
+      expect(STATES).toContain(params.get('state'));
     }
   });
 });

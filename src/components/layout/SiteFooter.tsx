@@ -1,4 +1,6 @@
 import { PROFILES, RESUME, SITE } from '@/content/site';
+import { ResumeDownloadLink } from '@/components/resume/ResumeDownloadLink';
+import type { RoleLens } from '@/lib/types';
 import { isResolved } from '@/lib/evidence';
 import styles from './SiteFooter.module.css';
 
@@ -11,7 +13,7 @@ import styles from './SiteFooter.module.css';
  * as not yet published. Restoring one is a matter of setting `href` and `verified` on
  * the record in `content/site.ts`.
  */
-export function SiteFooter() {
+export function SiteFooter({ lens }: { lens: RoleLens }) {
   const marcelleLabs = PROFILES.find((profile) => profile.id === 'marcelle-labs');
   const links = PROFILES.filter((profile) => profile.id !== 'marcelle-labs');
 
@@ -42,10 +44,8 @@ export function SiteFooter() {
             ),
           )}
 
-          {isResolved(RESUME) && RESUME.href ? (
-            <a href={RESUME.href} download>
-              Résumé ↓
-            </a>
+          {isResolved(RESUME) ? (
+            <ResumeDownloadLink lens={lens}>Résumé ↓</ResumeDownloadLink>
           ) : (
             <span className={styles.pending}>Résumé — not published</span>
           )}

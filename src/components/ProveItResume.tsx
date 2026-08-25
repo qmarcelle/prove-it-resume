@@ -49,9 +49,9 @@ export function ProveItResume({ lens }: { lens: RoleLens }) {
         Skip to the proof
       </a>
 
-      <SiteHeader showAvailability={lens.showAvailability} />
+      <SiteHeader lens={lens} showAvailability={lens.showAvailability} />
 
-      <Hero>
+      <Hero lens={lens}>
         <EvidenceIndex proofs={proofs} />
       </Hero>
 
@@ -69,13 +69,13 @@ export function ProveItResume({ lens }: { lens: RoleLens }) {
           <RoleLensSection lens={lens} />
           <CareerSection proofs={proofs} />
           <SupportingEvidence />
-          <ResumeBridge />
+          <ResumeBridge lens={lens} />
           <ClaimLedger />
         </main>
       </div>
 
-      <FinalCta />
-      <SiteFooter />
+      <FinalCta lens={lens} />
+      <SiteFooter lens={lens} />
       <GuidedProofNav />
     </ProofNavProvider>
   );

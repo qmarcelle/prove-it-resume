@@ -1,4 +1,5 @@
 import type { Proof } from '@/lib/types';
+import { PUBLISHED_SITES } from '../published';
 
 /**
  * Interlock publishes its evidence pinned to a commit rather than a branch, so the
@@ -18,6 +19,32 @@ import type { Proof } from '@/lib/types';
  */
 const ILK_REPO = 'https://github.com/Marcelle-Labs/interlock';
 const ILK_PIN = '75253e38791e69f7e2a4bb3a041044a9114c32f0';
+const ILK_PIN_SHORT = ILK_PIN.slice(0, 12);
+
+/**
+ * The published verification cockpit. Every call to action below points here, because
+ * it is the surface a reader can actually work through; the commit-pinned artifact each
+ * row was written against stays as the citation underneath.
+ *
+ * The deep-link vocabulary is the cockpit's own, taken from its published contract
+ * (`/media/hac-341/evidence/view-model.json`, `deepLink.shape`) and checked against the
+ * running site rather than inferred: `run.local.treatment` and `run.local.baseline`
+ * resolve, and so does `run.cloud.overview`. The cockpit refuses substitution — an
+ * unrecognised run or state renders "Run unavailable · Substitution refused" instead of
+ * quietly showing the canonical run — so a stale link here degrades loudly, which is the
+ * behaviour this content model wants.
+ *
+ * The cockpit displays `PUBLICATION 75253e38791e…` for the cloud run: the same commit
+ * these rows pin. The front door and the citation agree by construction.
+ */
+const ILK_COCKPIT = PUBLISHED_SITES.interlock;
+const ilkRun = (run: string, proof: string, state: string) =>
+  `${ILK_COCKPIT}?run=${run}&proof=${proof}&state=${state}`;
+
+/** HAC-330, the controlled local experiment, at its evidence-bound arm. */
+const ILK_LOCAL = ilkRun('hac330-local', 'local', 'run.local.treatment');
+/** HAC-340, the Google Cloud traversal, republished for logged-out inspection as HAC-342. */
+const ILK_CLOUD = ilkRun('hac340-cloud', 'cloud', 'run.cloud.overview');
 
 export const interlock: Proof = {
   id: 'interlock',
@@ -46,16 +73,20 @@ export const interlock: Proof = {
       id: 'ilk-experiment',
       label: 'Controlled experiment',
       detail: 'HAC-330 · 24/24 acceptance checks',
-      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/README.md`,
+      href: ILK_LOCAL,
       verified: true,
+      sourceHref: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/README.md`,
+      sourceLabel: `interlock@${ILK_PIN_SHORT} · hac-330/README.md`,
       cta: 'INSPECT EXPERIMENT',
     },
     {
       id: 'ilk-packet',
       label: 'Frozen evidence packet',
       detail: 'three arms, decisions, invariant reports',
-      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/evidence/arms.json`,
+      href: ILK_LOCAL,
       verified: true,
+      sourceHref: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/evidence/arms.json`,
+      sourceLabel: `interlock@${ILK_PIN_SHORT} · hac-330/arms.json`,
       cta: 'INSPECT PACKET',
     },
     {
@@ -63,8 +94,10 @@ export const interlock: Proof = {
       label: 'Independent verifier',
       detail: 'pnpm check:packet',
       detailIsCode: true,
-      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/bin/verify-packet.mjs`,
+      href: ILK_LOCAL,
       verified: true,
+      sourceHref: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/bin/verify-packet.mjs`,
+      sourceLabel: `interlock@${ILK_PIN_SHORT} · verify-packet.mjs`,
       cta: 'INSPECT VERIFIER',
     },
     {
@@ -75,8 +108,10 @@ export const interlock: Proof = {
       label: 'Cloud traversal · separate run',
       detail: 'Google ADK + Vertex AI + Cloud Run + MCP proxy',
       detailIsCode: true,
-      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-342/evidence/cloud-run.public.json`,
+      href: ILK_CLOUD,
       verified: true,
+      sourceHref: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-342/evidence/cloud-run.public.json`,
+      sourceLabel: `interlock@${ILK_PIN_SHORT} · cloud-run.public.json`,
       cta: 'INSPECT CLOUD PACKET',
     },
   ],
@@ -87,8 +122,10 @@ export const interlock: Proof = {
       title: 'Controlled counterfactual comparison',
       description:
         'Paired arms with and without evidence-bound coordination before shared-state mutation. Re-runnable: pnpm hac330.',
-      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/README.md`,
+      href: ILK_LOCAL,
       verified: true,
+      sourceHref: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/README.md`,
+      sourceLabel: `interlock@${ILK_PIN_SHORT} · hac-330/README.md`,
     },
     {
       id: 'ilk-ev-packet',
@@ -96,8 +133,10 @@ export const interlock: Proof = {
       title: 'Frozen evidence packet',
       description:
         'Recorded run artifacts held fixed so the comparison can be re-checked after the fact. Published at a pinned commit, not a branch, and the packet digest is recomputable with shasum.',
-      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/evidence/arms.json`,
+      href: ILK_LOCAL,
       verified: true,
+      sourceHref: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/evidence/arms.json`,
+      sourceLabel: `interlock@${ILK_PIN_SHORT} · hac-330/arms.json`,
     },
     {
       id: 'ilk-ev-verifier',
@@ -105,8 +144,10 @@ export const interlock: Proof = {
       title: 'Independent verifier',
       description:
         'Verification separated from execution so the checking path does not share the decision path.',
-      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/bin/verify-packet.mjs`,
+      href: ILK_LOCAL,
       verified: true,
+      sourceHref: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/bin/verify-packet.mjs`,
+      sourceLabel: `interlock@${ILK_PIN_SHORT} · verify-packet.mjs`,
     },
     {
       id: 'ilk-ev-cloud',
@@ -114,8 +155,10 @@ export const interlock: Proof = {
       title: 'Google Cloud participation (HAC-340) — a separate run',
       description:
         'One recorded traversal through an authenticated decision/execution boundary, with the mutation and an independently authenticated read-back kept as separate facts. Published for logged-out inspection as HAC-342, with its own verifier. It does not reproduce the counterfactual above.',
-      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-342/bin/verify-public-packet.mjs`,
+      href: ILK_CLOUD,
       verified: true,
+      sourceHref: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-342/bin/verify-public-packet.mjs`,
+      sourceLabel: `interlock@${ILK_PIN_SHORT} · verify-public-packet.mjs`,
     },
   ],
   boundary:

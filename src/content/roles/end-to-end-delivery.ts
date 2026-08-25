@@ -21,6 +21,7 @@ import { defaultRole } from './default';
 export const endToEndDelivery: RoleLens = {
   slug: 'end-to-end-delivery',
   roleTitle: 'End-to-end delivery · discovery through production verification',
+  resumeTitle: 'End-to-end delivery engineer',
   roleFitHeading: 'Discover → architect → build → test → release → deploy → verify.',
   // Interlock first: it is the only claim carrying a frozen packet, an independent
   // verifier and an explicit not-claimed list, which is what "verified" has to mean.

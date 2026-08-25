@@ -1,10 +1,11 @@
 import type { EvidenceRef, Proof } from '@/lib/types';
+import { PUBLISHED_SITES } from '../published';
 
 /**
  * The one confirmed external artifact in the supplied design: the Tally case study.
  * It appears twice in the export with the same URL, so it is treated as verified.
  */
-export const TALLY_CASE_URL = 'https://www.workspacejson.dev/showcase/tally';
+export const TALLY_CASE_URL = `${PUBLISHED_SITES.workspaceJson}/showcase/tally`;
 
 /**
  * The canonical workspace.json repositories. Authority is split deliberately:
@@ -12,7 +13,15 @@ export const TALLY_CASE_URL = 'https://www.workspacejson.dev/showcase/tally';
  * producer; `integrations` holds host-side consumers. The Codex adapter still
  * publishes from the historical `workspace-json` namespace, which is why that one URL
  * points there rather than at the canonical organization.
+ *
+ * The published site at `workspacejson.dev` is the standard's own front door, so it
+ * carries the calls to action: `/spec/` is the specification, `/schema/v1.json` the
+ * machine-checkable contract, `/getting-started/` the producer path, `/governance/` the
+ * stewardship model, and `/implementations/codex/` the agent adapter. The repositories
+ * stay as the pinned sources — a specification is only as good as the tree it is
+ * committed in, and that is what a reader checking the claim wants.
  */
+const WSJ_SITE = PUBLISHED_SITES.workspaceJson;
 const WSJ_STANDARD = 'https://github.com/workspacejson/standard';
 const WSJ_CLI = 'https://github.com/workspacejson/cli';
 const WSJ_INTEGRATIONS = 'https://github.com/workspacejson/integrations';
@@ -59,8 +68,10 @@ export const repositoryLayers: readonly RepositoryLayer[] = [
         id: 'codex-adapter',
         kind: 'source',
         title: 'workspace.json for Codex',
-        href: WSJ_CODEX,
+        href: `${WSJ_SITE}/implementations/codex/`,
         verified: true,
+        sourceHref: WSJ_CODEX,
+        sourceLabel: 'workspace-json/codex-mcp',
       },
     },
   },
@@ -143,31 +154,39 @@ export const repositoryIntelligence: Proof = {
     {
       id: 'wsj-spec',
       label: 'Canonical specification',
-      href: WSJ_STANDARD,
+      href: `${WSJ_SITE}/spec/`,
       verified: true,
-      cta: 'VIEW REPOSITORY',
+      sourceHref: WSJ_STANDARD,
+      sourceLabel: 'workspacejson/standard',
+      cta: 'READ THE SPEC',
     },
     {
       id: 'wsj-schema',
       label: 'JSON Schema / types',
-      href: `${WSJ_STANDARD}/tree/main/packages/spec`,
+      href: `${WSJ_SITE}/schema/v1.json`,
       verified: true,
+      sourceHref: `${WSJ_STANDARD}/tree/main/packages/spec`,
+      sourceLabel: 'workspacejson/standard · packages/spec',
       cta: 'INSPECT',
     },
     {
       id: 'wsj-cli',
       label: 'CLI / producer tooling',
-      href: WSJ_CLI,
+      href: `${WSJ_SITE}/getting-started/`,
       verified: true,
+      sourceHref: WSJ_CLI,
+      sourceLabel: 'workspacejson/cli',
       cta: 'INSPECT',
     },
     {
       id: 'wsj-codex',
       label: 'Codex implementation',
       detail: 'agent-side hooks and repository history',
-      href: WSJ_CODEX,
+      href: `${WSJ_SITE}/implementations/codex/`,
       verified: true,
-      cta: 'OPEN GITHUB',
+      sourceHref: WSJ_CODEX,
+      sourceLabel: 'workspace-json/codex-mcp',
+      cta: 'OPEN DOCS',
     },
     {
       id: 'wsj-tally',
@@ -180,6 +199,8 @@ export const repositoryIntelligence: Proof = {
     {
       id: 'wsj-integrations',
       label: 'Integrations',
+      // No published page covers the host-side consumer repos; /conformance/ states the
+      // obligations, not the implementations. The repository stays the artifact.
       href: WSJ_INTEGRATIONS,
       verified: true,
       cta: 'INSPECT',
@@ -192,8 +213,10 @@ export const repositoryIntelligence: Proof = {
       title: 'Canonical specification (Apache-2.0)',
       description:
         'Descriptive standard for committing repository-derived information in a deterministic, tool-consumable form.',
-      href: WSJ_STANDARD,
+      href: `${WSJ_SITE}/spec/`,
       verified: true,
+      sourceHref: WSJ_STANDARD,
+      sourceLabel: 'workspacejson/standard',
     },
     {
       id: 'wsj-ev-schema',
@@ -201,8 +224,10 @@ export const repositoryIntelligence: Proof = {
       title: 'JSON Schema / types',
       description:
         'Machine-checkable contract separating producers of repository intelligence from its consumers.',
-      href: `${WSJ_STANDARD}/tree/main/packages/spec`,
+      href: `${WSJ_SITE}/schema/v1.json`,
       verified: true,
+      sourceHref: `${WSJ_STANDARD}/tree/main/packages/spec`,
+      sourceLabel: 'workspacejson/standard · packages/spec',
     },
     {
       id: 'wsj-ev-cli',
@@ -210,8 +235,10 @@ export const repositoryIntelligence: Proof = {
       title: 'CLI / producer tooling',
       description:
         'Reference producer that generates and validates the committed artifact.',
-      href: WSJ_CLI,
+      href: `${WSJ_SITE}/getting-started/`,
       verified: true,
+      sourceHref: WSJ_CLI,
+      sourceLabel: 'workspacejson/cli',
     },
     {
       id: 'wsj-ev-codex',
@@ -219,8 +246,10 @@ export const repositoryIntelligence: Proof = {
       title: 'workspace.json for Codex',
       description:
         'Agent-side implementation: portable repository history surfaced through hooks and MCP before an evidenced risky edit lands.',
-      href: WSJ_CODEX,
+      href: `${WSJ_SITE}/implementations/codex/`,
       verified: true,
+      sourceHref: WSJ_CODEX,
+      sourceLabel: 'workspace-json/codex-mcp',
     },
     {
       id: 'wsj-ev-tally',
@@ -237,6 +266,8 @@ export const repositoryIntelligence: Proof = {
       title: 'Decision-time information study (preregistered)',
       description:
         'Preregistered characterization of which qualifying historical relationships survive the projection at decision time, frozen before any result was computed. No model was run: it measures what the artifact carries, not whether an agent is helped by it.',
+      // The preregistered study is not republished on the site; the Tally proof ledger
+      // is a different artifact and must not stand in for it.
       href: `${WSJ_CLI}/tree/main/docs/evidence/meta-375`,
       verified: true,
     },

@@ -2,6 +2,7 @@ import { countResolved } from '@/lib/evidence';
 import type { EvidenceRef, EvidenceSummaryRow, ProofStatus } from '@/lib/types';
 import { EvidenceDisclosure } from './EvidenceDisclosure';
 import { EvidenceLink } from './EvidenceLink';
+import { EvidenceSource } from './EvidenceSource';
 import { EvidenceStatus } from './EvidenceStatus';
 import styles from './EvidencePanel.module.css';
 
@@ -53,6 +54,7 @@ export function EvidencePanel({
             ) : null}
             <EvidenceLink reference={row} cta={row.cta} />
           </div>
+          <EvidenceSource reference={row} />
         </div>
       ))}
 

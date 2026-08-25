@@ -1,4 +1,4 @@
-import type { EvidenceKind, EvidenceRef, EvidenceSummaryRow } from './types';
+import type { EvidenceKind, EvidenceRef, EvidenceSummaryRow, SourcePin } from './types';
 
 /**
  * The evidence-integrity rule, in one place.
@@ -27,6 +27,18 @@ export function resolveEvidence(ref: {
 
 export function isResolved(ref: { href?: string; verified: boolean }): boolean {
   return resolveEvidence(ref).status === 'resolved';
+}
+
+/**
+ * The pinned citation behind a row, when one was recorded.
+ *
+ * Deliberately a separate resolver from `resolveEvidence`. A source pin is not a second
+ * call to action and is not gated on `verified`: it is the frozen artifact the claim was
+ * written against, and its whole value is that it cannot change. The type guarantees the
+ * pair arrives together, so there is nothing here to validate — only to hand back.
+ */
+export function resolveSource(ref: SourcePin): { href: string; label: string } | null {
+  return ref.sourceHref ? { href: ref.sourceHref, label: ref.sourceLabel } : null;
 }
 
 /** Shown wherever a call to action would otherwise be. Matches the design export. */

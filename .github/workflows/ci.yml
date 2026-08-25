@@ -60,3 +60,35 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+
+  # The résumé PDFs are committed artifacts generated from `/resume/print`. Regenerating
+  # them here and failing on any diff is what stops the committed file from drifting away
+  # from the route it claims to be a rendering of — the failure mode being a résumé that
+  # silently stops matching the site. Generation is byte-deterministic (the PDF's
+  # creation and modification timestamps are normalised), so a diff means real change.
+  resume:
+    name: Résumé PDF is current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm exec playwright install --with-deps chromium
+
+      - run: pnpm build
+
+      - run: pnpm resume:pdf:check
+
+      - name: Explain a drifted résumé
+        if: ${{ failure() }}
+        run: |
+          echo "::error::The committed résumé PDFs no longer match /resume/print."
+          echo "Run 'pnpm build && pnpm resume:pdf' and commit the result."

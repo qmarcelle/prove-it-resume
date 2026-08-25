@@ -1,4 +1,6 @@
 import { PROFILES, RESUME, RESUME_BRIDGE } from '@/content/site';
+import { ResumeDownloadLink } from '@/components/resume/ResumeDownloadLink';
+import type { RoleLens } from '@/lib/types';
 import { isResolved } from '@/lib/evidence';
 import styles from './ResumeBridge.module.css';
 
@@ -10,7 +12,7 @@ import styles from './ResumeBridge.module.css';
  * removed is the pretence: no file was supplied, so there is no download button that
  * would 404, and the gap is stated where the button would have been.
  */
-export function ResumeBridge() {
+export function ResumeBridge({ lens }: { lens: RoleLens }) {
   const resumeAvailable = isResolved(RESUME);
   const linkedin = PROFILES.find((profile) => profile.id === 'linkedin');
   const linkedinAvailable = linkedin ? isResolved(linkedin) : false;
@@ -26,10 +28,10 @@ export function ResumeBridge() {
         </div>
 
         <div className={styles.actions}>
-          {resumeAvailable && RESUME.href ? (
-            <a className={styles.primary} href={RESUME.href} download>
+          {resumeAvailable ? (
+            <ResumeDownloadLink className={styles.primary} lens={lens}>
               Download résumé PDF ↓
-            </a>
+            </ResumeDownloadLink>
           ) : (
             <span className={styles.pending}>RÉSUMÉ PDF — NOT YET PUBLISHED</span>
           )}
