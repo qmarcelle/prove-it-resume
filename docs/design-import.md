@@ -158,9 +158,11 @@ Each is deliberate; rationale recorded here and, where structural, in `docs/deci
 2. **"Ask me to defend a decision" is a Decision Receipt, not a checkbox list.** The
    export collects selections and prints "N selected · bring these to the conversation",
    which asks the evaluator to do work and returns nothing. Replaced with a
-   `DecisionReceipt` disclosure per question. Because no answers exist in the supplied
-   material, every receipt renders in an explicit _awaiting_ state — the question, the
-   receipt's shape, and a stated gap. No architectural reasoning was invented. ADR 0006.
+   `DecisionReceipt` disclosure per question. No answers existed in the supplied
+   material; they were recovered afterwards from the Linear issues and Fibery Open
+   Questions that recorded each decision when it was made, and all seven are now
+   answered. The _awaiting_ state remains the rendering for any future question without
+   a record. No architectural reasoning was invented. ADR 0006.
 
 3. **Résumé demoted.** The export gives "Open traditional résumé" a bordered button of
    nearly equal weight to "Walk the proof". Per the brief the hierarchy is

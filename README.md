@@ -142,7 +142,7 @@ anchor.
 - All six proof stages, the Evidence Index, and the Claim Ledger
 - Guided proof navigation, active-stage tracking, evidence disclosures
 - Role-lens projection with the supplied `athenahealth / Yoh` lens
-- Decision Receipt component, with an explicit awaiting state
+- Decision Receipt component; all seven receipts answered from the decision record
 - Three progressive-disclosure interactions, each bound to a frozen public artifact:
   the Repository Decision Diff, the Interlock counterfactual, and the Vreko semantic
   zoom and request trace
@@ -169,7 +169,6 @@ evidence link on the site.
 - No résumé PDF was supplied; résumé support is wired but the link is disabled
 - LinkedIn and email are unresolved — publishing a contact address is the owner's call,
   not something to infer
-- The seven Decision Receipts have questions but no answers
 
 The complete list, with what each item needs, is in
 [`docs/content-audit.md`](docs/content-audit.md).

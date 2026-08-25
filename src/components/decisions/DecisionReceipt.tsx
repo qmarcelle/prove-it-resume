@@ -1,7 +1,9 @@
 'use client';
 
 import { useId, useState } from 'react';
+import { EvidenceLink } from '@/components/evidence/EvidenceLink';
 import { RECEIPT_SECTIONS } from '@/content/decisions';
+import { evidenceKindLabel } from '@/lib/evidence';
 import type { DecisionReceipt as Receipt } from '@/lib/types';
 import styles from './DecisionReceipt.module.css';
 
@@ -14,11 +16,14 @@ import styles from './DecisionReceipt.module.css';
  * opens into the receipt itself: constraint, alternatives, decision, tradeoff, evidence,
  * and what would change the decision now.
  *
- * Every receipt is currently unanswered, because the supplied material contains the
- * questions but none of the reasoning. Rather than hide that, an unanswered receipt
- * shows its own shape with each section marked as awaiting. An evaluator learns what
- * they would get and that it is not written yet, which is true and useful; a fabricated
- * rationale would be neither.
+ * The awaiting branch below is not dead code kept for symmetry. Receipts are populated
+ * from recorded reasoning, and a question that has been asked but not yet answered from
+ * a real decision record renders its own shape with each section marked as awaiting —
+ * which is true and useful, where a fabricated rationale would be neither.
+ *
+ * `EVIDENCE` renders only when a receipt carries rows. The site's evidence-integrity
+ * rule applies unchanged here: `EvidenceLink` is the only thing that can produce an
+ * href, so a row without a confirmed artifact states the gap instead of linking.
  */
 function ReceiptBody({ receipt }: { receipt: Receipt }) {
   if (!receipt.decision) {
@@ -71,6 +76,30 @@ function ReceiptBody({ receipt }: { receipt: Receipt }) {
         <div className={styles.field}>
           <span className={styles.fieldLabel}>FAILURE MODE / TRADEOFF</span>
           <p className={styles.fieldBody}>{receipt.tradeoff}</p>
+        </div>
+      ) : null}
+
+      {receipt.evidence?.length ? (
+        <div className={styles.field}>
+          <span className={styles.fieldLabel}>EVIDENCE</span>
+          <ul className={styles.evidenceList}>
+            {receipt.evidence.map((reference) => (
+              <li className={styles.evidenceRow} key={reference.id}>
+                <span className={styles.evidenceKind}>
+                  {evidenceKindLabel(reference.kind)}
+                </span>
+                <span className={styles.evidenceText}>
+                  <span className={styles.evidenceTitle}>{reference.title}</span>
+                  {reference.description ? (
+                    <span className={styles.evidenceDescription}>
+                      {reference.description}
+                    </span>
+                  ) : null}
+                </span>
+                <EvidenceLink reference={reference} />
+              </li>
+            ))}
+          </ul>
         </div>
       ) : null}
 

@@ -218,9 +218,12 @@ The browser suite runs against a real production build, because static output, h
 and layout differ between `next dev` and `next build`, and it is the built artifact that
 ships.
 
-One test is worth calling out: `content.test.ts` asserts that no decision receipt carries
-a `decision`. That will fail the moment real reasoning is added — deliberately, so the
-change is made consciously rather than sliding in.
+One test is worth calling out: `content.test.ts` asserts that every decision receipt
+carries a `decision` _and_ its `constraint`, `tradeoff`, and `wouldChangeIf`. It
+previously asserted the opposite — that no receipt carried a `decision` — so that
+populating one had to be a conscious change rather than something that slid in. It was
+inverted when the receipts were answered from the decision record (ADR 0006). A receipt
+that states a decision without its cost now fails the suite.
 
 ## The three interactions
 
