@@ -2,6 +2,7 @@ import { interlock } from '@/content/proofs';
 import { INTERLOCK_RELEVANCE } from '@/content/proofs/interlock';
 import { EvidencePanel } from '@/components/evidence/EvidencePanel';
 import { InterlockCounterfactual } from '@/components/interactions/InterlockCounterfactual';
+import { interlockHac330 } from '@/content/experiments/interlock-hac330';
 import {
   ProofAside,
   ProofColumns,
@@ -20,7 +21,7 @@ import styles from './InterlockSection.module.css';
 export function InterlockSection() {
   return (
     <ProofSection proof={interlock}>
-      <InterlockCounterfactual />
+      <InterlockCounterfactual data={interlockHac330} />
 
       <ProofColumns>
         <ProofProse>

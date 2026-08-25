@@ -2,159 +2,525 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  padding: var(--space-5);
+  border: var(--rule);
+  border-top: var(--rule-strong);
+  background: var(--color-surface);
+  /*
+   * These panels quote real identifiers — 40-hex revisions, dataset URNs, digests,
+   * repository-relative paths. Those are single unbreakable tokens, and one of them is
+   * enough to set the width of the whole page on a 320px screen. `anywhere` (rather
+   * than `break-word`) is deliberate: it is the value that also affects min-content
+   * sizing, which is what flex and grid children actually measure against.
+   */
+  overflow-wrap: anywhere;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: var(--rule-quiet);
+}
+
+.title {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--color-ink);
+}
+
+.headerCode {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-meta);
+}
+
+.question {
+  max-width: 62ch;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--color-ink-tertiary);
 }
 
 .controls {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border: 1px dashed var(--color-border-dashed);
+  background: var(--color-surface-subtle);
 }
 
-.switch {
-  display: inline-flex;
-  border: var(--rule);
-  background: var(--color-surface);
+.controlBlock {
+  display: flex;
+  flex: 1 1 20rem;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
-.option {
-  padding: 0.5625rem 0.875rem;
-  min-height: 44px;
-  background: transparent;
-  border: 0;
+.controlLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-meta);
+}
+
+.controlBody {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-ink-tertiary);
+}
+
+.fixedList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3125rem;
+  list-style: none;
+}
+
+.fixedList li {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  line-height: 1.55;
+  color: var(--color-ink-tertiary);
+  overflow-wrap: anywhere;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.scaleHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+}
+
+.scaleTitle {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-ink-secondary);
+}
+
+.invariant {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-meta);
+  overflow-wrap: anywhere;
+}
+
+.caption {
+  max-width: 68ch;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--color-ink-tertiary);
+}
+
+/* ---- The shared scale ---- */
+
+.track {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5) 0 0;
+}
+
+/*
+ * One marker for both arms. It runs the full height of the track, which is what makes
+ * "the same constraint" a visual fact rather than a claim about two aligned charts.
+ */
+.marker {
+  position: absolute;
+  top: 0;
+  bottom: 1.75rem;
+  width: 0;
+  border-left: 2px solid var(--color-ink);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.markerLabel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateX(-50%);
+  padding: 0.0625rem 0.375rem;
+  background: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-canvas);
+  white-space: nowrap;
+}
+
+.arm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.armHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  /*
+   * Everything in this row is packed left, deliberately. Right-aligning the joint total
+   * put it at roughly 80% of the width, which is exactly where the constraint marker
+   * runs — the number and the line collided at desktop widths. Keeping the figures
+   * left keeps the right-hand band clear for the marker at every width.
+   */
+  justify-content: flex-start;
+  gap: var(--space-2) var(--space-3);
+}
+
+.armLabel {
   font-family: var(--font-mono);
   font-size: var(--text-meta);
   letter-spacing: var(--tracking-meta-tight);
   color: var(--color-ink-secondary);
-  cursor: pointer;
-  transition:
-    background-color 120ms ease,
-    color 120ms ease;
 }
 
-.option + .option {
-  border-left: var(--rule);
+.armTotals {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-3);
 }
 
-.option[aria-pressed='true'] {
-  background: var(--color-ink);
-  color: var(--color-canvas);
+.armTotal {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
 }
 
-.hint {
+/*
+ * Verdict tone never rides on colour alone: "holds" is a solid accent rule under the
+ * label, "breached" is a dashed graphite rule. Both are legible in greyscale, and the
+ * word itself is the primary signal.
+ */
+.verdictHolds,
+.verdictBreached {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  padding-bottom: 0.125rem;
+}
+
+.verdictHolds {
+  color: var(--color-accent-deep);
+  border-bottom: 2px solid var(--color-accent);
+}
+
+.verdictBreached {
+  color: var(--color-ink-secondary);
+  border-bottom: 2px dashed var(--color-ink-secondary);
+}
+
+.bar {
+  display: flex;
+  height: 1.75rem;
+  border: var(--rule);
+  background: var(--color-surface-muted);
+  overflow: hidden;
+}
+
+.segment {
+  height: 100%;
+  background: var(--color-ink-secondary);
+  border-right: 1px solid var(--color-canvas);
+  transition: width 260ms ease;
+}
+
+/*
+ * Pending claims are hatched rather than tinted, so "claimed but not yet written" reads
+ * as a different *kind* of quantity rather than a different colour of the same one.
+ */
+.segmentPending {
+  height: 100%;
+  border-right: 1px solid var(--color-canvas);
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--color-accent-border) 0,
+    var(--color-accent-border) 3px,
+    var(--color-accent-surface) 3px,
+    var(--color-accent-surface) 7px
+  );
+  transition: width 260ms ease;
+}
+
+.segmentLine {
   font-family: var(--font-mono);
   font-size: var(--text-meta-sm);
   letter-spacing: var(--tracking-meta-tight);
   color: var(--color-meta);
 }
 
-.arm {
+.axis {
   display: flex;
-  flex-direction: column;
-  background: var(--color-surface);
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-meta-quiet);
+}
+
+/* ---- Evidence condition and perturbation ---- */
+
+.evidenceBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-4);
+  padding: var(--space-4);
   border: var(--rule);
+  background: var(--color-surface-subtle);
 }
 
-.armActive {
-  border-color: var(--color-accent-border);
+.evidenceState {
+  display: flex;
+  flex: 1 1 22rem;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
-.armHeader {
-  padding: 0.6875rem 1rem;
-  border-bottom: var(--rule-quiet);
-  background: var(--color-surface-muted);
+.evidenceStateLabel {
   font-family: var(--font-mono);
   font-size: var(--text-meta-sm);
   letter-spacing: var(--tracking-meta);
   color: var(--color-ink-secondary);
 }
 
-.armActive .armHeader {
-  background: var(--color-accent-surface);
-  color: var(--color-accent-deep);
-}
-
-.armBody {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: 1.125rem 1rem;
-}
-
-.line {
-  font-size: 0.938rem;
+.evidenceSummary {
+  font-size: 0.875rem;
   line-height: 1.6;
+  color: var(--color-ink-tertiary);
+}
+
+.evidenceFiles,
+.evidenceBasis {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  line-height: 1.55;
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-meta);
+  overflow-wrap: anywhere;
+}
+
+.perturb {
+  flex: none;
+  min-height: 44px;
+  padding: 0.625rem 0.875rem;
+  border: var(--rule);
+  background: var(--color-surface);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-ink-secondary);
+  cursor: pointer;
+}
+
+.perturb[aria-pressed='true'] {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-canvas);
+}
+
+.perturbNote {
+  padding: var(--space-3) var(--space-4);
+  border-left: 3px solid var(--color-accent);
+  background: var(--color-accent-surface);
+  font-size: 0.875rem;
+  line-height: 1.65;
   color: var(--color-ink-secondary);
 }
 
-.decision {
-  align-self: flex-start;
-  padding: 0.4375rem 0.625rem;
+/* ---- Decision trace ---- */
+
+.sectionLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-meta);
+}
+
+.trace {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.traceList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+}
+
+.traceStage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-left: var(--space-4);
+  border-left: var(--rule);
+}
+
+.traceStageLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-ink-secondary);
+}
+
+.traceArms {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.traceLine {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-ink-tertiary);
+}
+
+.traceArmName {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-meta);
+}
+
+.traceDecision {
+  display: inline-block;
+  margin-right: var(--space-2);
+  padding: 0.125rem 0.375rem;
   border: 1px solid var(--color-accent-border);
   background: var(--color-accent-surface);
   font-family: var(--font-mono);
-  font-size: 0.875rem;
-  letter-spacing: 0.04em;
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
   color: var(--color-accent-deep);
 }
 
-.figure {
-  padding: var(--space-2) 0;
-  font-family: var(--font-mono);
-  font-size: 1.875rem;
-  letter-spacing: -0.01em;
-  color: var(--color-ink);
+/* ---- Frozen packet ---- */
+
+.packet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: var(--rule);
+  background: var(--color-surface-subtle);
 }
 
-.armFooter {
+.distinctions {
   display: flex;
-  align-items: center;
-  gap: 0.5625rem;
-  padding: 0.6875rem 1rem;
-  border-top: var(--rule-quiet);
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.distinctions li {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
   font-family: var(--font-mono);
   font-size: var(--text-meta-sm);
-  letter-spacing: var(--tracking-meta);
+  letter-spacing: var(--tracking-meta-tight);
   color: var(--color-ink-secondary);
 }
 
-.armActive .armFooter {
-  color: var(--color-accent-deep);
+.verifyMethod {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-ink-tertiary);
 }
 
-.markSatisfied {
-  width: 4px;
-  height: 9px;
-  background: var(--color-accent);
-  flex: none;
+.command {
+  align-self: flex-start;
+  max-width: 100%;
+  padding: 0.4375rem 0.625rem;
+  border: var(--rule);
+  background: var(--color-surface-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  color: var(--color-ink);
+  overflow-wrap: anywhere;
 }
 
-.markInvalid {
-  width: 9px;
-  height: 9px;
-  border: 1px solid var(--color-ink-secondary);
-  transform: rotate(45deg);
-  flex: none;
-}
+/* ---- Footer ---- */
 
-.provenance {
+.footer {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2) var(--space-3);
-  align-items: baseline;
-  padding: 0.75rem 1rem;
-  border: 1px dashed var(--color-border-dashed);
-  background: var(--color-surface-subtle);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta-sm);
-  line-height: 1.6;
-  letter-spacing: var(--tracking-meta-tight);
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-4);
+  padding-top: var(--space-4);
+  border-top: var(--rule);
+}
+
+.boundary {
+  display: flex;
+  flex: 1 1 26rem;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: 0.875rem;
+  line-height: 1.65;
   color: var(--color-ink-muted);
 }
 
-@media (max-width: 400px) {
-  .figure {
-    font-size: 1.5rem;
+.boundaryLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-meta);
+}
+
+@media (max-width: 640px) {
+  .wrap {
+    padding: var(--space-4);
+  }
+
+  .controls,
+  .evidenceBar {
+    padding: var(--space-3);
+  }
+
+  .armTotal {
+    font-size: 1.25rem;
+  }
+
+  .perturb {
+    width: 100%;
+  }
+}
+
+/*
+ * Reduced motion: bars render at their final widths with no width transition. The
+ * ordering the animation carried is carried instead by the decision trace, where every
+ * stage is stamped with its own label — intent before mutation is read, not watched.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .segment,
+  .segmentPending {
+    transition: none;
   }
 }
