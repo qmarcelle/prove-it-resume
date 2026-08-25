@@ -6,6 +6,7 @@ import { EvidenceLink } from '@/components/evidence/EvidenceLink';
 import { StepControl, type Step } from './StepControl';
 import { BoundAxis } from '@/components/proof/BoundAxis';
 import { useDeepLinkedState } from './useDeepLinkedState';
+import { CopyableCommand } from './CopyableCommand';
 import styles from './InterlockCounterfactual.module.css';
 
 /**
@@ -216,7 +217,10 @@ export function InterlockCounterfactual({
               <>
                 <p className={styles.verifyMethod}>{data.verification.method}</p>
                 {data.verification.command ? (
-                  <code className={styles.command}>{data.verification.command}</code>
+                  <CopyableCommand
+                    className={styles.command}
+                    command={data.verification.command}
+                  />
                 ) : null}
               </>
             ) : null}

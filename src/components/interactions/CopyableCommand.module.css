@@ -1,0 +1,25 @@
+/*
+ * Deliberately quiet. This sits beside a re-check command inside a panel that already
+ * carries a call to action to the frozen artifact, and a second loud control there would
+ * compete with the evidence link rather than support it.
+ */
+.copy {
+  align-self: flex-start;
+  padding: 0.25rem 0.5rem;
+  border: var(--rule);
+  border-radius: var(--radius);
+  background: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-meta);
+  cursor: pointer;
+  transition:
+    color 120ms ease,
+    border-color 120ms ease;
+}
+
+.copy:hover {
+  border-color: var(--color-accent-border);
+  color: var(--color-accent-deep);
+}

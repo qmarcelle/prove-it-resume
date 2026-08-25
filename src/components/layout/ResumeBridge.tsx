@@ -3,6 +3,7 @@ import { RESUME_DOCUMENT } from '@/content/resume';
 import { ResumeDownloadLink } from '@/components/resume/ResumeDownloadLink';
 import type { RoleLens } from '@/lib/types';
 import { isResolved } from '@/lib/evidence';
+import { ActionIcon } from '@/components/icon/Icon';
 import styles from './ResumeBridge.module.css';
 
 /**
@@ -43,8 +44,11 @@ export function ResumeBridge({ lens }: { lens: RoleLens }) {
 
         <div className={styles.actions}>
           {resumeAvailable ? (
-            <ResumeDownloadLink className={styles.primary} lens={lens}>
-              <span>RÉSUMÉ · PDF ↓</span>
+            <ResumeDownloadLink
+              className={styles.primary}
+              label="RÉSUMÉ · PDF"
+              lens={lens}
+            >
               <span className={styles.pageCount}>{RESUME_DOCUMENT.pages} PP</span>
             </ResumeDownloadLink>
           ) : (
@@ -58,7 +62,8 @@ export function ResumeBridge({ lens }: { lens: RoleLens }) {
               target="_blank"
               rel="noreferrer noopener"
             >
-              View LinkedIn ↗
+              View LinkedIn
+              <ActionIcon affordance="visit-external-site" size={12} />
               <span className="visually-hidden"> — opens in a new tab</span>
             </a>
           ) : (

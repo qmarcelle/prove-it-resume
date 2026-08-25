@@ -1,3 +1,6 @@
+import { ConceptMark } from '@/components/concept/ConceptMark';
+import { ActionIcon } from '@/components/icon/Icon';
+import { affordanceForCta } from '@/components/icon/semantics';
 import { UNRESOLVED_LABEL, resolveEvidence } from '@/lib/evidence';
 import styles from './EvidenceLink.module.css';
 
@@ -34,13 +37,26 @@ export function EvidenceLink({
         target="_blank"
         rel="noreferrer noopener"
       >
-        {cta} ↗<span className="visually-hidden"> — {name}, opens in a new tab</span>
+        {cta}
+        {/*
+         * The mark predicts what is on the other side: a boxed arrow for an artifact to
+         * inspect, a page for a document to read. Both were `↗`, which promised only
+         * "somewhere else" — and shared that glyph with visiting a profile.
+         */}
+        <ActionIcon affordance={affordanceForCta(cta)} size={12} />
+        <span className="visually-hidden"> — {name}, opens in a new tab</span>
       </a>
     );
   }
 
   return (
     <span className={variant === 'block' ? styles.unresolvedBlock : styles.unresolved}>
+      {/*
+       * The stated gap gets a mark, and pointedly not an action icon: there is nothing
+       * here to do. It is the hero's two unaligned fragments, still dashed, never
+       * brought onto an evidence baseline — the same shape the composition opens on.
+       */}
+      {variant === 'block' ? <ConceptMark name="unresolved" /> : null}
       {variant === 'block' ? UNRESOLVED_LABEL : 'VERIFY BEFORE PUBLISHING'}
       <span className="visually-hidden">
         {' '}

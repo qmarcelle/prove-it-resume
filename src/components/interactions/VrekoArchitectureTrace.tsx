@@ -7,6 +7,7 @@ import type {
   VrekoArchitectureData,
 } from '@/lib/interactions';
 import { useDeepLinkedState } from './useDeepLinkedState';
+import { CopyableCommand } from './CopyableCommand';
 import styles from './VrekoArchitectureTrace.module.css';
 
 /**
@@ -320,7 +321,17 @@ function DetailPanel({
 
       <div className={styles.rederive}>
         <span className={styles.panelEyebrow}>RE-DERIVE THE SPLIT</span>
-        <code className={styles.command}>{data.boundaryVerification.command}</code>
+        {/*
+         * Guarded, where the previous `<code>` was not: `command` is optional on
+         * `Verification`, and without a guard an absent one rendered an empty bordered
+         * box that looked like a command someone had forgotten to fill in.
+         */}
+        {data.boundaryVerification.command ? (
+          <CopyableCommand
+            className={styles.command}
+            command={data.boundaryVerification.command}
+          />
+        ) : null}
         <p className={styles.rederiveBody}>{data.boundaryVerification.method}</p>
       </div>
     </aside>

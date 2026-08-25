@@ -5,6 +5,7 @@ import type { PlanStepChange, RepositoryDecisionDiffData } from '@/lib/interacti
 import { EvidenceLink } from '@/components/evidence/EvidenceLink';
 import { StepControl, type Step } from './StepControl';
 import { useDeepLinkedState } from './useDeepLinkedState';
+import { CopyableCommand } from './CopyableCommand';
 import styles from './RepositoryDecisionDiff.module.css';
 
 /**
@@ -275,7 +276,10 @@ export function RepositoryDecisionDiff({
               <span className={styles.sectionLabel}>Re-check this run</span>
               <p className={styles.verifyMethod}>{data.verification.method}</p>
               {data.verification.command ? (
-                <code className={styles.command}>{data.verification.command}</code>
+                <CopyableCommand
+                  className={styles.command}
+                  command={data.verification.command}
+                />
               ) : null}
               {data.artifactDigest ? (
                 <span className={styles.digest}>{data.artifactDigest}</span>

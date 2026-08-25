@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+import { ActionIcon } from '@/components/icon/Icon';
 import styles from './StepControl.module.css';
 
 export type Step = {
@@ -122,7 +123,8 @@ export function StepControl({
           disabled={active === 0}
           aria-controls={controls}
         >
-          ← Previous
+          <ActionIcon affordance="reverse-sequence" placement="leading" size={12} />
+          Previous
         </button>
         <span className={styles.position} aria-hidden="true">
           {active + 1} / {steps.length}
@@ -134,7 +136,8 @@ export function StepControl({
           disabled={active === steps.length - 1}
           aria-controls={controls}
         >
-          Next →
+          Next
+          <ActionIcon affordance="advance-sequence" size={12} />
         </button>
       </div>
     </div>

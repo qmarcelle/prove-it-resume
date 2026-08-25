@@ -59,10 +59,15 @@
 .footer {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
   padding: 0.6875rem 1rem;
   background: var(--color-surface-subtle);
   font-family: var(--font-mono);
   font-size: var(--text-meta-sm);
   color: var(--color-meta);
+}
+
+/* Tightened against the count it marks, so the two read as one statement. */
+.footerMark {
+  flex: none;
 }

@@ -1,0 +1,31 @@
+/*
+ * The icon is a fixed box in flow. Nothing here may change its size: the width and
+ * height attributes on the element are the layout contract, and CSS that overrode them
+ * would reintroduce the layout shift they exist to prevent.
+ */
+.icon {
+  display: inline-block;
+  flex: none;
+  /*
+   * Optical, not metric. Sitting an icon on the text baseline leaves it looking high,
+   * because its mass is centred while a lowercase word's is not. A tenth of an em down
+   * puts the two centres on the same line at every size used here.
+   */
+  vertical-align: -0.1em;
+}
+
+/*
+ * One gap for the whole site, in em so it tracks the type it sits in. A mark set closer
+ * than this reads as part of the last letter; further, as a separate object.
+ */
+.trailing {
+  margin-inline-start: 0.34em;
+}
+
+.leading {
+  margin-inline-end: 0.34em;
+}
+
+.alone {
+  vertical-align: middle;
+}

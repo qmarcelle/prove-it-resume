@@ -1,3 +1,4 @@
+import { ConceptMark } from '@/components/concept/ConceptMark';
 import { countResolved } from '@/lib/evidence';
 import type { EvidenceRef, EvidenceSummaryRow, ProofStatus } from '@/lib/types';
 import { EvidenceDisclosure } from './EvidenceDisclosure';
@@ -59,6 +60,12 @@ export function EvidencePanel({
       ))}
 
       <div className={styles.footer}>
+        {/*
+         * The composition's settled state, cropped: a solid unit standing on the amber
+         * evidence baseline. It marks the one line on the panel that says how much of
+         * this actually resolves.
+         */}
+        <ConceptMark className={styles.footerMark} name="on-evidence" />
         {sourceNote ??
           `${counts.resolved} of ${counts.total} evidence items resolve to an inspectable artifact`}
       </div>

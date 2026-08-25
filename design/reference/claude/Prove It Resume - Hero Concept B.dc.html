@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #FAF9F6; color: #1A1A17; font-family: 'Public Sans', system-ui, sans-serif; }
+  a { color: #55534C; text-decoration: none; }
+  a:hover { color: #8A5A12; }
+  button { font: inherit; }
+  :focus-visible { outline: 2px solid #8A5A12; outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</helmet>
+
+<div style="display: flex; flex-direction: column; background: #FAF9F6;">
+
+  <div style="border-bottom: 1px solid #DEDBD2; background: #F2F0E9;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 11px 32px; display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 20px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em;">
+      <span style="color: #7A4F0F;">HERO CONCEPT B · COMPOSITION</span>
+      <span style="color: #66645D;">SEQUENCE PROTOTYPE FOR .LOTTIE AUTHORING</span>
+      <span style="margin-left: auto; color: #66645D;">GEOMETRY IN SVG · LABELS IN DOM</span>
+    </div>
+  </div>
+
+  <section style="border-bottom: 1px solid #DEDBD2;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 44px 32px 40px; display: flex; flex-wrap: wrap; gap: 40px;">
+
+      <div style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 16px;">
+        <p style="margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.1em; color: #8A5A12;">CONCEPT B · THE BOUNDED FIELD</p>
+        <h1 style="margin: 0; font-size: 34px; line-height: 1.12; letter-spacing: -0.035em; font-weight: 700; max-width: 22ch; text-wrap: pretty;">Three fragments become one deployable unit inside a boundary.</h1>
+        <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #45443E; max-width: 56ch; text-wrap: pretty;">Concept A transformed a request record in place: its content was text, so it stayed in the DOM. This one is pure geometry, which is what makes it a candidate for dotLottie. Nothing in the drawing is a word, a number, or a claim. The four labels beneath it are DOM text positioned against the stage, so copy stays editable, translatable, and readable by a screen reader while the vector runtime owns only the shapes.</p>
+        <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #45443E; max-width: 56ch; text-wrap: pretty;">The settled frame is the point. It is a composition worth looking at with the animation switched off, and it is the seed of the icon system: a bounded field, a solid unit, an evidence baseline, a terminus mark.</p>
+      </div>
+
+      <!-- ---------- STAGE ---------- -->
+      <figure style="flex: 1 1 520px; min-width: 0; margin: 0; display: flex; flex-direction: column; gap: 14px;">
+        <div style="border: 1px solid #DEDBD2; background: #FFFFFF;">
+          <div style="display: flex; align-items: baseline; gap: 12px; padding: 9px 14px; border-bottom: 1px solid #EDEAE1; background: #FCFBF8; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em;">
+            <span style="color: #7A4F0F;">{{ frameId }}</span>
+            <span style="margin-left: auto; color: #66645D;">{{ stageLabel }}</span>
+          </div>
+
+          <div style="padding: 8px 10px 14px;">
+            <svg viewBox="0 0 640 300" role="img" aria-label="{{ altText }}" style="display: block; width: 100%; height: auto; overflow: visible;">
+              <line x1="80" y1="48" x2="80" y2="252" stroke="#1A1A17" stroke-width="1.5" opacity="{{ bounds.op }}" transform="{{ bounds.tfL }}" style="transition: opacity 300ms cubic-bezier(0.22,0,0.18,1), transform 300ms cubic-bezier(0.22,0,0.18,1);"></line>
+              <line x1="560" y1="48" x2="560" y2="252" stroke="#1A1A17" stroke-width="1.5" opacity="{{ bounds.op }}" transform="{{ bounds.tfR }}" style="transition: opacity 300ms cubic-bezier(0.22,0,0.18,1), transform 300ms cubic-bezier(0.22,0,0.18,1);"></line>
+
+              <g transform="{{ baseline.tf }}" style="transition: transform 420ms cubic-bezier(0.22,0,0.18,1);">
+                <rect x="100" y="209" width="300" height="1.5" fill="{{ accentColor }}"></rect>
+              </g>
+
+              <rect x="576" y="176" width="48" height="28" fill="none" stroke="#B3AFA4" stroke-width="1.5" stroke-dasharray="4 4" opacity="{{ stray.op }}" transform="{{ stray.tf }}" style="transition: opacity 300ms cubic-bezier(0.22,0,0.18,1), transform 300ms cubic-bezier(0.22,0,0.18,1);"></rect>
+
+              <sc-for list="{{ shapes }}" as="s" hint-placeholder-count="3">
+                <rect x="{{ s.x }}" y="160" width="100" height="40" transform="{{ s.tf }}" fill="{{ s.fill }}" stroke="{{ s.stroke }}" stroke-width="1.5" stroke-dasharray="{{ s.dash }}" style="transition: transform 300ms cubic-bezier(0.22,0,0.18,1), fill 300ms ease, stroke 300ms ease, stroke-dasharray 300ms ease;"></rect>
+              </sc-for>
+
+              <rect x="412" y="192" width="18" height="18" fill="{{ accentColor }}" opacity="{{ terminus.op }}" transform="{{ terminus.tf }}" style="transition: opacity 300ms cubic-bezier(0.22,0,0.18,1), transform 300ms cubic-bezier(0.22,0,0.18,1);"></rect>
+
+              <sc-for list="{{ ticks }}" as="t" hint-placeholder-count="4">
+                <rect x="{{ t.x }}" y="240" width="1.5" height="10" fill="#1A1A17" opacity="{{ t.op }}" style="transition: opacity 300ms ease;"></rect>
+              </sc-for>
+            </svg>
+
+            <div style="position: relative; height: 18px; margin-top: 4px;">
+              <sc-for list="{{ stations }}" as="st" hint-placeholder-count="4">
+                <span style="{{ st.style }}">{{ st.label }}</span>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px;">
+          <sc-for list="{{ frames }}" as="f" hint-placeholder-count="4">
+            <button type="button" onClick="{{ f.go }}" aria-pressed="{{ f.on }}" style="{{ f.style }}">
+              <svg viewBox="0 0 72 40" style="display: block; width: 72px; height: 40px;">
+                <sc-for list="{{ f.marks }}" as="m" hint-placeholder-count="3">
+                  <rect x="{{ m.x }}" y="{{ m.y }}" width="{{ m.w }}" height="{{ m.h }}" fill="{{ m.fill }}" stroke="{{ m.stroke }}" stroke-width="1" stroke-dasharray="{{ m.dash }}"></rect>
+                </sc-for>
+              </svg>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.07em;">{{ f.id }}</span>
+            </button>
+          </sc-for>
+          <button type="button" onClick="{{ replay }}" style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #66645D; background: none; border: 1px solid #DEDBD2; border-radius: 2px; padding: 6px 10px; cursor: pointer;" style-hover="color: #8A5A12; border-color: #D9C8A8;">↻ PLAY ONCE</button>
+        </div>
+
+        <figcaption style="font-size: 13.5px; line-height: 1.55; color: #55534C; text-wrap: pretty;">Scrub the four frames to read the sequence without watching it. In production there are no controls: it plays once on mount and stops at B3.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ---------- SEQUENCE ---------- -->
+  <section style="border-bottom: 1px solid #DEDBD2;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 40px 32px 44px; display: flex; flex-direction: column; gap: 22px;">
+      <div style="display: flex; flex-direction: column; gap: 8px; border-bottom: 2px solid #1A1A17; padding-bottom: 12px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em; color: #8A5A12;">SEQUENCE · 30 FPS · 108 FRAMES</span>
+        <h2 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.03em;">What each beat asserts, and what an animator actually keyframes</h2>
+      </div>
+
+      <div style="border: 1px solid #DEDBD2; background: #FFFFFF;">
+        <div style="display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 9px 14px; border-bottom: 1px solid #DEDBD2; background: #F2F0E9; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #66645D;">
+          <span style="flex: 0 1 54px;">BEAT</span>
+          <span style="flex: 0 1 96px;">FRAMES</span>
+          <span style="flex: 1 1 260px;">WHAT HAPPENS</span>
+          <span style="flex: 1 1 200px;">WHAT IT SAYS</span>
+        </div>
+        <sc-for list="{{ beatSheet }}" as="b" hint-placeholder-count="4">
+          <div style="display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 13px 14px; border-bottom: 1px solid #EDEAE1;">
+            <span style="flex: 0 1 54px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #7A4F0F;">{{ b.id }}</span>
+            <span style="flex: 0 1 96px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #1A1A17;">{{ b.frames }}</span>
+            <span style="flex: 1 1 260px; font-size: 14px; line-height: 1.55; color: #45443E; text-wrap: pretty;">{{ b.what }}</span>
+            <span style="flex: 1 1 200px; font-size: 14px; line-height: 1.55; color: #55534C; text-wrap: pretty;">{{ b.says }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="border: 1px solid #DEDBD2; background: #FFFFFF;">
+        <div style="display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 9px 14px; border-bottom: 1px solid #DEDBD2; background: #F2F0E9; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #66645D;">
+          <span style="flex: 0 1 150px;">LAYER</span>
+          <span style="flex: 0 1 130px;">ANIMATES</span>
+          <span style="flex: 0 1 96px;">IN / OUT</span>
+          <span style="flex: 1 1 220px;">NOTE</span>
+        </div>
+        <sc-for list="{{ layers }}" as="l" hint-placeholder-count="7">
+          <div style="display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 12px 14px; border-bottom: 1px solid #EDEAE1;">
+            <span style="flex: 0 1 150px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #1A1A17;">{{ l.name }}</span>
+            <span style="flex: 0 1 130px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.06em; color: #7A4F0F;">{{ l.prop }}</span>
+            <span style="flex: 0 1 96px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #55534C;">{{ l.span }}</span>
+            <span style="flex: 1 1 220px; font-size: 14px; line-height: 1.55; color: #45443E; text-wrap: pretty;">{{ l.note }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- DERIVED MARKS + CONSTRAINTS ---------- -->
+  <section style="background: #F6F5F0;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 40px 32px 56px; display: flex; flex-direction: column; gap: 26px;">
+
+      <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px;">
+        <div style="flex: 1 1 340px; border: 1px solid #DEDBD2; background: #FFFFFF; padding: 16px; display: flex; flex-direction: column; gap: 14px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #7A4F0F;">MARKS DERIVED FROM THE SETTLED FRAME</span>
+          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #55534C; text-wrap: pretty;">Each of these is a crop of the final composition, drawn with the same stroke weight, the same dashed-to-solid convention, and the same single accent. They give the page a static icon vocabulary that reads as the same system without any of them animating.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+            <sc-for list="{{ marks }}" as="m" hint-placeholder-count="4">
+              <div style="flex: 1 1 130px; border: 1px solid #EDEAE1; padding: 12px; display: flex; flex-direction: column; gap: 9px; align-items: flex-start;">
+                <svg viewBox="0 0 64 40" style="display: block; width: 64px; height: 40px;">
+                  <sc-for list="{{ m.parts }}" as="p" hint-placeholder-count="3">
+                    <rect x="{{ p.x }}" y="{{ p.y }}" width="{{ p.w }}" height="{{ p.h }}" fill="{{ p.fill }}" stroke="{{ p.stroke }}" stroke-width="1.25" stroke-dasharray="{{ p.dash }}"></rect>
+                  </sc-for>
+                </svg>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.07em; color: #45443E;">{{ m.label }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="flex: 1 1 300px; border: 1px solid #DEDBD2; background: #FFFFFF; padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #7A4F0F;">EXPORT CONSTRAINTS</span>
+          <sc-for list="{{ constraints }}" as="c" hint-placeholder-count="8">
+            <div style="display: flex; gap: 10px; align-items: baseline;">
+              <span style="flex: 0 0 120px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.07em; color: #66645D;">{{ c.k }}</span>
+              <span style="flex: 1 1 auto; font-size: 14px; line-height: 1.55; color: #45443E; text-wrap: pretty;">{{ c.v }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px;">
+        <div style="flex: 1 1 300px; border-top: 2px solid #1A1A17; padding-top: 12px; display: flex; flex-direction: column; gap: 7px;">
+          <h3 style="margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -0.015em;">Why this one earns a runtime and A does not</h3>
+          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #55534C; text-wrap: pretty;">A dashed stroke resolving to solid, three forms closing a gap, a boundary sweeping in: these are drawing problems, and a vector runtime with real easing curves and stroke control will do them better than four CSS transitions will. Concept A had no drawing problem, only a state problem, so it costs nothing to keep in the DOM.</p>
+        </div>
+        <div style="flex: 1 1 300px; border-top: 2px solid #1A1A17; padding-top: 12px; display: flex; flex-direction: column; gap: 7px;">
+          <h3 style="margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -0.015em;">Ship the prototype, port the asset</h3>
+          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #55534C; text-wrap: pretty;">This CSS version is deployable as-is, which means the decision to buy an animation is deferred until after the concept has been in front of real readers. If it is kept, the .lottie replaces the animated layers only and the settled SVG stays as the reduced-motion and no-JS state.</p>
+        </div>
+        <div style="flex: 1 1 300px; border-top: 2px solid #1A1A17; padding-top: 12px; display: flex; flex-direction: column; gap: 7px;">
+          <h3 style="margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -0.015em;">The risk to watch</h3>
+          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #55534C; text-wrap: pretty;">Abstract geometry can communicate craft while communicating nothing specific. Concept A names its fields, so a reader learns what the work is; B is a mood with a structure under it. The honest test is whether someone who watches B once can say what you do. If they cannot, A is the hero and B becomes the icon system.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;autoplay&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;beatMs&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:800,&quot;min&quot;:300,&quot;max&quot;:1600,&quot;step&quot;:20,&quot;unit&quot;:&quot;ms&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#8A5A12&quot;,&quot;options&quot;:[&quot;#8A5A12&quot;,&quot;#7A4F0F&quot;,&quot;#1A1A17&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Motion&quot;}}">
+const EASE = 'cubic-bezier(0.22, 0, 0.18, 1)';
+const D = 300;
+
+const STATIONS = ['AGENT', 'CONTEXT', 'BOUNDARY', 'PRODUCTION'];
+const STAGE = ['FRAGMENTED', 'ALIGNED ON EVIDENCE', 'BOUNDED', 'SETTLED'];
+const ALT = [
+  'Three dashed rectangles scattered above an empty field.',
+  'The three rectangles have dropped onto a common baseline.',
+  'Two vertical boundary lines enclose the field; a stray rectangle outside it is gone.',
+  'The three rectangles have closed into one solid unit on an amber baseline, with a filled terminus mark at its right.'
+];
+
+// Beat-0 scatter, then beat-1/2 spacing, then contiguous at beat 3.
+const SCATTER = [[6, -74], [44, -108], [32, -58]];
+const SPACED = [0, 20, 40];
+
+class Component extends DCLogic {
+  state = { beat: 0 };
+  timers = [];
+
+  componentDidMount() {
+    const reduced = typeof matchMedia === 'function'
+      && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || this.props.autoplay === false) { this.setState({ beat: 3 }); return; }
+    this.run();
+  }
+
+  componentWillUnmount() { this.clear(); }
+  clear() { this.timers.forEach(clearTimeout); this.timers = []; }
+
+  run() {
+    this.clear();
+    const step = this.props.beatMs ?? 800;
+    [1, 2, 3].forEach((b, i) => {
+      this.timers.push(setTimeout(() => this.setState({ beat: b }), step * (i + 1)));
+    });
+  }
+
+  replay = () => { this.clear(); this.setState({ beat: 0 }); this.timers.push(setTimeout(() => this.run(), 60)); };
+  goTo = (n) => () => { this.clear(); this.setState({ beat: n }); };
+
+  renderVals() {
+    const b = this.state.beat;
+    const accent = this.props.accent ?? '#8A5A12';
+    const dropped = b >= 1;
+    const bounded = b >= 2;
+    const merged = b >= 3;
+    void D; void EASE;
+    return {
+      replay: this.replay,
+      frameId: `FRAME B${b}`,
+      stageLabel: STAGE[b],
+      altText: ALT[b],
+      accentColor: accent,
+
+      shapes: [0, 1, 2].map((i) => {
+        const dx = merged ? 0 : SPACED[i] + (dropped ? 0 : SCATTER[i][0]);
+        const dy = dropped ? 0 : SCATTER[i][1];
+        return {
+          x: 100 + i * 100,
+          tf: `translate(${dx} ${dy})`,
+          fill: merged ? '#1A1A17' : dropped ? '#F6F5F0' : 'none',
+          stroke: merged ? '#1A1A17' : dropped ? '#55534C' : '#B3AFA4',
+          dash: dropped ? '0 0' : '5 5'
+        };
+      }),
+
+      baseline: { tf: `translate(100 0) scale(${dropped ? 1 : 0} 1) translate(-100 0)` },
+      bounds: { op: bounded ? 1 : 0, tfL: `translate(${bounded ? 0 : -16} 0)`, tfR: `translate(${bounded ? 0 : 16} 0)` },
+      stray: { op: bounded ? 0 : 1, tf: `translate(${bounded ? 28 : 0} 0)` },
+      terminus: { op: merged ? 1 : 0, tf: `translate(${merged ? 0 : -10} 0)` },
+
+      ticks: [100, 200, 300, 400].map((x, i) => ({ x, op: i <= b ? 1 : 0.3 })),
+
+      stations: STATIONS.map((label, i) => ({
+        label,
+        style: `position: absolute; top: 0; left: ${(100 + i * 100) / 6.4}%; transform: translateX(-50%); white-space: nowrap; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.07em; color: ${i <= b ? '#1A1A17' : '#6E6C64'}; font-weight: ${i <= b ? 500 : 400}; transition: color 300ms ease;`
+      })),
+
+      frames: [0, 1, 2, 3].map((n) => ({
+        id: `B${n}`,
+        on: n === b,
+        go: this.goTo(n),
+        style: `display: flex; align-items: center; gap: 9px; padding: 6px 10px 6px 6px; border: 1px solid ${n === b ? '#1A1A17' : '#DEDBD2'}; border-radius: 2px; background: ${n === b ? '#FFFFFF' : 'transparent'}; color: ${n === b ? '#1A1A17' : '#66645D'}; cursor: pointer;`,
+        marks: this.thumb(n, accent)
+      })),
+
+      beatSheet: [
+        { id: 'B0', frames: '0 – 24', what: 'Hold. Three dashed rectangles sit at different heights above an empty field, unfilled and unrelated. Nothing moves for the first eight tenths of a second.', says: 'The work starts with something incomplete, and the reader is allowed to notice that before anything animates.' },
+        { id: 'B1', frames: '24 – 48', what: 'An amber rule draws left to right beneath them. Each rectangle drops onto it, gains a fill and a solid stroke, and the dash resolves.', says: 'Evidence arrives first and the fragments align to it. Causality runs in one direction.' },
+        { id: 'B2', frames: '48 – 72', what: 'Two vertical rules close in from the edges. A fourth rectangle sitting outside the right rule slides out and fades. The field is now enclosed.', says: 'The decision gets a boundary, and something is deliberately ruled out by it.' },
+        { id: 'B3', frames: '72 – 100', what: 'The three rectangles close their gaps into one contiguous solid, and a filled terminus mark appears at the right end of the baseline. Frames 100–108 hold.', says: 'One unit, bounded, on the evidence, shipped. The composition then stays put.' }
+      ],
+
+      layers: [
+        { name: 'fragment.1–3', prop: 'position, fill, stroke', span: '24 → 100', note: 'Three copies of one shape layer. Position only on x and y; no rotation, no scale. Dash resolves on the same keyframes as the fill.' },
+        { name: 'evidence.baseline', prop: 'trim path', span: '24 → 44', note: 'Draw-on left to right. This is the one layer that should read as a gesture rather than a state change.' },
+        { name: 'bound.left', prop: 'position, opacity', span: '48 → 64', note: '16px inward travel. Keep both bounds on identical curves so the enclosure reads as one act.' },
+        { name: 'bound.right', prop: 'position, opacity', span: '48 → 64', note: 'Mirror of bound.left.' },
+        { name: 'ruled-out.stray', prop: 'position, opacity', span: '52 → 70', note: 'Exits outward, never inward. It must be obvious it was excluded rather than absorbed.' },
+        { name: 'terminus', prop: 'position, opacity', span: '80 → 96', note: 'The only fully saturated accent fill in the composition. Arrives last and small.' },
+        { name: 'station.ticks', prop: 'opacity', span: '24 → 96', note: 'Four ticks resolving in step with the beats. Geometry only; the four words are DOM text outside the asset.' }
+      ],
+
+      marks: [
+        { label: 'BOUNDED FIELD', parts: [
+          { x: 8, y: 8, w: 1.25, h: 24, fill: '#1A1A17', stroke: 'none', dash: '0' },
+          { x: 54, y: 8, w: 1.25, h: 24, fill: '#1A1A17', stroke: 'none', dash: '0' },
+          { x: 18, y: 16, w: 28, h: 10, fill: 'none', stroke: '#55534C', dash: '0' }
+        ] },
+        { label: 'ON EVIDENCE', parts: [
+          { x: 10, y: 14, w: 44, h: 12, fill: '#1A1A17', stroke: 'none', dash: '0' },
+          { x: 10, y: 29, w: 44, h: 1.5, fill: accent, stroke: 'none', dash: '0' }
+        ] },
+        { label: 'UNRESOLVED', parts: [
+          { x: 10, y: 10, w: 20, h: 9, fill: 'none', stroke: '#B3AFA4', dash: '4 4' },
+          { x: 34, y: 22, w: 20, h: 9, fill: 'none', stroke: '#B3AFA4', dash: '4 4' }
+        ] },
+        { label: 'SHIPPED', parts: [
+          { x: 8, y: 15, w: 34, h: 11, fill: '#1A1A17', stroke: 'none', dash: '0' },
+          { x: 46, y: 13, w: 14, h: 14, fill: accent, stroke: 'none', dash: '0' }
+        ] }
+      ],
+
+      constraints: [
+        { k: 'RUNTIME', v: 'dotlottie-web only, lazy-imported after first paint. The hero must render its settled SVG before any player script is requested.' },
+        { k: 'PAYLOAD', v: 'Under 12 KB for the asset. Shape layers only: no imported SVG, no images, no fonts, no expressions, no mattes.' },
+        { k: 'PLAYBACK', v: 'autoplay once, loop off, no state machine. The asset has no interactive states because the hero has no interaction.' },
+        { k: 'LAST FRAME', v: 'Frame 108 must be pixel-identical to the static SVG fallback, so the handoff between them is invisible.' },
+        { k: 'REDUCED MOTION', v: 'Player never mounts. The static SVG is the whole hero.' },
+        { k: 'LAYOUT', v: 'Fixed aspect-ratio box reserved in CSS, so the player mounting cannot shift anything. CLS zero by construction.' },
+        { k: 'LCP', v: 'The headline stays the LCP element. If the asset ever becomes LCP, the hero has been built wrong.' },
+        { k: 'COLOR', v: 'Four values, all from tokens.css: ink, ink-tertiary, border-dashed, accent. Runtime theming stays off; the tokens are the source of truth.' },
+        { k: 'MOBILE', v: 'Bounds and stray layer are dropped below 640px. The fragments, baseline, and terminus survive.' }
+      ]
+    };
+  }
+
+  // Static silhouettes for the frame-strip buttons.
+  thumb(n, accent) {
+    if (n === 0) return [
+      { x: 8, y: 6, w: 14, h: 7, fill: 'none', stroke: '#B3AFA4', dash: '3 3' },
+      { x: 30, y: 3, w: 14, h: 7, fill: 'none', stroke: '#B3AFA4', dash: '3 3' },
+      { x: 50, y: 11, w: 14, h: 7, fill: 'none', stroke: '#B3AFA4', dash: '3 3' }
+    ];
+    if (n === 1) return [
+      { x: 8, y: 20, w: 14, h: 8, fill: '#F6F5F0', stroke: '#55534C', dash: '0' },
+      { x: 26, y: 20, w: 14, h: 8, fill: '#F6F5F0', stroke: '#55534C', dash: '0' },
+      { x: 44, y: 20, w: 14, h: 8, fill: '#F6F5F0', stroke: '#55534C', dash: '0' },
+      { x: 8, y: 30, w: 50, h: 1.25, fill: accent, stroke: 'none', dash: '0' }
+    ];
+    if (n === 2) return [
+      { x: 3, y: 6, w: 1.25, h: 28, fill: '#1A1A17', stroke: 'none', dash: '0' },
+      { x: 63, y: 6, w: 1.25, h: 28, fill: '#1A1A17', stroke: 'none', dash: '0' },
+      { x: 10, y: 20, w: 14, h: 8, fill: '#F6F5F0', stroke: '#55534C', dash: '0' },
+      { x: 28, y: 20, w: 14, h: 8, fill: '#F6F5F0', stroke: '#55534C', dash: '0' },
+      { x: 46, y: 20, w: 14, h: 8, fill: '#F6F5F0', stroke: '#55534C', dash: '0' },
+      { x: 10, y: 30, w: 50, h: 1.25, fill: accent, stroke: 'none', dash: '0' }
+    ];
+    return [
+      { x: 3, y: 6, w: 1.25, h: 28, fill: '#1A1A17', stroke: 'none', dash: '0' },
+      { x: 63, y: 6, w: 1.25, h: 28, fill: '#1A1A17', stroke: 'none', dash: '0' },
+      { x: 10, y: 20, w: 38, h: 8, fill: '#1A1A17', stroke: 'none', dash: '0' },
+      { x: 51, y: 20, w: 8, h: 8, fill: accent, stroke: 'none', dash: '0' },
+      { x: 10, y: 30, w: 38, h: 1.25, fill: accent, stroke: 'none', dash: '0' }
+    ];
+  }
+}
+</script>
+</body>
+</html>

@@ -2,6 +2,7 @@ import { RESUME, SITE } from '@/content/site';
 import { ResumeDownloadLink } from '@/components/resume/ResumeDownloadLink';
 import type { RoleLens } from '@/lib/types';
 import { isResolved } from '@/lib/evidence';
+import { ActionIcon } from '@/components/icon/Icon';
 import styles from './SiteHeader.module.css';
 
 /**
@@ -37,12 +38,16 @@ export function SiteHeader({
 
         <div className={styles.actions}>
           <a href={SITE.github} target="_blank" rel="noreferrer noopener">
-            GitHub ↗<span className="visually-hidden"> — opens in a new tab</span>
+            GitHub
+            <ActionIcon affordance="visit-external-site" size={12} />
+            <span className="visually-hidden"> — opens in a new tab</span>
           </a>
           {resumeAvailable ? (
-            <ResumeDownloadLink className={styles.resume} lens={lens}>
-              Résumé PDF ↓
-            </ResumeDownloadLink>
+            <ResumeDownloadLink
+              className={styles.resume}
+              label="Résumé PDF"
+              lens={lens}
+            />
           ) : (
             <span className={styles.resumeUnavailable}>Résumé — not yet published</span>
           )}

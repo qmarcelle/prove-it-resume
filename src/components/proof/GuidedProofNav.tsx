@@ -1,6 +1,7 @@
 'use client';
 
 import { useProofNav } from './ProofNavProvider';
+import { ActionIcon } from '@/components/icon/Icon';
 import styles from './GuidedProofNav.module.css';
 
 /**
@@ -29,7 +30,8 @@ export function GuidedProofNav() {
         onClick={previous}
         disabled={activeIndex === 0}
       >
-        ← PREV
+        <ActionIcon affordance="reverse-sequence" placement="leading" size={12} />
+        PREV
       </button>
       <span className={styles.position} aria-live="polite">
         <span className="visually-hidden">Stage </span>
@@ -42,7 +44,8 @@ export function GuidedProofNav() {
         onClick={next}
         disabled={activeIndex === steps.length - 1}
       >
-        NEXT →
+        NEXT
+        <ActionIcon affordance="advance-sequence" size={12} />
       </button>
       <button
         type="button"
@@ -50,7 +53,7 @@ export function GuidedProofNav() {
         onClick={exitGuided}
         aria-label="Exit guided mode"
       >
-        ✕
+        <ActionIcon affordance="exit-mode" placement="alone" size={12} />
       </button>
     </div>
   );

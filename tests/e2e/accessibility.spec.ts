@@ -32,7 +32,7 @@ test('revealed content is also clean', async ({ page }) => {
   await page.getByRole('button', { name: /Inspect evidence.*EV-ILK/ }).click();
   await page.getByRole('button', { name: /SHOW CLAIM LEDGER/ }).click();
   await page.getByRole('button', { name: /Why MCP instead of another/ }).click();
-  await page.getByRole('button', { name: 'Walk the proof →' }).click();
+  await page.getByRole('button', { name: 'Walk the proof', exact: true }).click();
 
   const results = await analyse(page);
   expect(results.violations).toEqual([]);
@@ -83,7 +83,7 @@ test('reduced-motion preference disables smooth scrolling', async ({ page }) => 
   expect(behaviour).toBe('auto');
 
   // Guided navigation must still work with motion suppressed.
-  await page.getByRole('button', { name: 'Walk the proof →' }).click();
+  await page.getByRole('button', { name: 'Walk the proof', exact: true }).click();
   await expect(
     page.getByRole('group', { name: 'Guided proof navigation' }),
   ).toBeVisible();

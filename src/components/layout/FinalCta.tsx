@@ -3,6 +3,7 @@ import { ResumeDownloadLink } from '@/components/resume/ResumeDownloadLink';
 import type { RoleLens } from '@/lib/types';
 import { isResolved } from '@/lib/evidence';
 import { WalkProofButton } from '@/components/proof/WalkProofButton';
+import { ActionIcon } from '@/components/icon/Icon';
 import styles from './FinalCta.module.css';
 
 export function FinalCta({ lens }: { lens: RoleLens }) {
@@ -17,8 +18,8 @@ export function FinalCta({ lens }: { lens: RoleLens }) {
         <p className={styles.body}>{FINAL_CTA.body}</p>
 
         <div className={styles.actions}>
-          <WalkProofButton className={styles.primary}>
-            Walk the proof again ↑
+          <WalkProofButton affordance="move-up-page" className={styles.primary}>
+            Walk the proof again
           </WalkProofButton>
           <a
             className={styles.secondary}
@@ -26,12 +27,17 @@ export function FinalCta({ lens }: { lens: RoleLens }) {
             target="_blank"
             rel="noreferrer noopener"
           >
-            GitHub ↗<span className="visually-hidden"> — opens in a new tab</span>
+            GitHub
+            <ActionIcon affordance="visit-external-site" size={14} />
+            <span className="visually-hidden"> — opens in a new tab</span>
           </a>
           {resumeAvailable ? (
-            <ResumeDownloadLink className={styles.secondary} lens={lens}>
-              Résumé PDF ↓
-            </ResumeDownloadLink>
+            <ResumeDownloadLink
+              className={styles.secondary}
+              iconSize={14}
+              label="Résumé PDF"
+              lens={lens}
+            />
           ) : (
             <span className={styles.pending}>RÉSUMÉ — NOT YET PUBLISHED</span>
           )}

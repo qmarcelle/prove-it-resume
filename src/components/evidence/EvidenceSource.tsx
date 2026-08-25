@@ -1,3 +1,4 @@
+import { ActionIcon } from '@/components/icon/Icon';
 import { resolveSource } from '@/lib/evidence';
 import type { SourcePin } from '@/lib/types';
 import styles from './EvidenceSource.module.css';
@@ -10,9 +11,14 @@ import styles from './EvidenceSource.module.css';
  * a commit-pinned file, a versioned schema — so that "inspect the run" and "cite the
  * evidence" stop competing for the same link.
  *
- * Rendered as `source: <label> ↗` in the metadata face, deliberately below the CTA in
- * visual weight. It is for the reader who wants to check the claim, not the reader
- * deciding whether to.
+ * Rendered in the metadata face, deliberately below the call to action in visual
+ * weight. It is for the reader who wants to check the claim, not the reader deciding
+ * whether to.
+ *
+ * Its mark is a locked document rather than the call to action's boxed arrow, because
+ * the distinction this component exists to draw — a pinned, immutable citation as
+ * against a live page that can be rewritten — is exactly what the shared `↗` used to
+ * hide.
  */
 export function EvidenceSource({ reference }: { reference: SourcePin }) {
   const source = resolveSource(reference);
@@ -25,7 +31,8 @@ export function EvidenceSource({ reference }: { reference: SourcePin }) {
       target="_blank"
       rel="noreferrer noopener"
     >
-      <span className={styles.prefix}>source:</span> {source.label} ↗
+      <span className={styles.prefix}>source:</span> {source.label}
+      <ActionIcon affordance="pinned-citation" size={12} />
       {/*
        * The row title is deliberately not repeated here. `EvidenceLink` already
        * announces it on the call to action immediately before this one, and the

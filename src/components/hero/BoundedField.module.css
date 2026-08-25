@@ -1,0 +1,243 @@
+/*
+ * Hero composition — "The Bounded Field".
+ *
+ * Every colour here is an existing token. The export names four values and all four were
+ * already in `tokens.css`: ink, ink-tertiary, border-dashed, accent. No hue is introduced,
+ * which is the standing rule — "one restrained signal accent, no second hue anywhere".
+ *
+ * Transitions attach only under `.playing`, so the rewind from the settled frame back to
+ * the start is instant and only the forward sequence animates.
+ */
+
+/*
+ * A query container, because what the station labels have to fit inside is the stage's
+ * own width, not the viewport's. The stage sits in a flexible column, so the two diverge
+ * — at a 1024px viewport this figure is 390px wide and at 900px it is 836px, and a
+ * viewport media query would get both cases wrong.
+ */
+.figure {
+  container: bounded-field / inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  min-width: 0;
+}
+
+/*
+ * The box is reserved by aspect ratio, not by content. Nothing here loads late, but the
+ * stage is the one element on the page whose height depends on a viewport-relative width,
+ * and an unreserved box would be a layout shift waiting for a slow first layout.
+ */
+.stage {
+  position: relative;
+  border: var(--rule);
+  background: var(--color-surface);
+  padding: var(--space-3) var(--space-3) var(--space-2);
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 640 / 300;
+  overflow: visible;
+}
+
+/* ── The layers ─────────────────────────────────────────────────────────────── */
+
+.bound {
+  stroke: var(--color-ink);
+  stroke-width: 1.5;
+  opacity: 0;
+}
+
+.baseline {
+  fill: var(--color-accent);
+}
+
+/*
+ * The candidate outside the decision boundary. Dashed because it was never resolved, and
+ * still drawn at beat three because a boundary that erases what it excludes is not a
+ * boundary the rest of this page would recognise.
+ */
+.stray {
+  fill: none;
+  stroke: var(--color-border-dashed);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+
+.fragment {
+  fill: none;
+  stroke: var(--color-border-dashed);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 5;
+}
+
+.terminus {
+  fill: var(--color-accent);
+}
+
+.tick {
+  fill: var(--color-ink);
+}
+
+/* ── Beats ──────────────────────────────────────────────────────────────────── */
+
+/* B1 — the fragments have landed on the evidence and resolved. */
+.svg[data-beat='1'] .fragment,
+.svg[data-beat='2'] .fragment {
+  fill: var(--color-surface-muted);
+  stroke: var(--color-ink-tertiary);
+  stroke-dasharray: 0 0;
+}
+
+/* B2 — the boundary has closed. */
+.svg[data-beat='2'] .bound,
+.svg[data-beat='3'] .bound {
+  opacity: 1;
+}
+
+/* B3 — one unit. */
+.svg[data-beat='3'] .fragment {
+  fill: var(--color-ink);
+  stroke: var(--color-ink);
+  stroke-dasharray: 0 0;
+}
+
+/* ── Motion ─────────────────────────────────────────────────────────────────── */
+
+/*
+ * Opacity plus one of transform or fill, per element. No overshoot, no spring, nothing
+ * longer than the beat it belongs to.
+ */
+.playing .bound {
+  transition:
+    opacity 300ms cubic-bezier(0.22, 0, 0.18, 1),
+    transform 300ms cubic-bezier(0.22, 0, 0.18, 1);
+}
+
+.playing .baseline {
+  transition: transform 420ms cubic-bezier(0.22, 0, 0.18, 1);
+}
+
+.playing .stray,
+.playing .terminus,
+.playing .tick {
+  transition:
+    opacity 300ms cubic-bezier(0.22, 0, 0.18, 1),
+    transform 300ms cubic-bezier(0.22, 0, 0.18, 1);
+}
+
+.playing .fragment {
+  transition:
+    transform 300ms cubic-bezier(0.22, 0, 0.18, 1),
+    fill 300ms ease,
+    stroke 300ms ease,
+    stroke-dasharray 300ms ease;
+}
+
+/* ── Stations ───────────────────────────────────────────────────────────────── */
+
+/*
+ * DOM text, absolutely positioned against the stage rather than drawn into it. The row
+ * reserves its own height so nothing below it moves as labels change weight.
+ */
+/*
+ * Narrow by default: an evenly distributed row.
+ *
+ * The stations cannot shrink to fit. `docs/design-import.md` raised this page's microtype
+ * to an 11.5px floor on the grounds that metadata below it "reads as texture rather than
+ * information", and that floor is authoritative — so where four mono words stop fitting
+ * against their ticks, the layout gives way rather than the type. Distributed, they still
+ * read left to right in sequence order, which is the fact they carry; the ticks they
+ * would have misaligned against are hidden at the same breakpoint, so nothing is left
+ * pointing at the wrong place.
+ */
+.stations {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: 0.25rem;
+  min-height: 1.125rem;
+}
+
+/*
+ * Centred on the tick each names, which is what ties the word to the geometry. The
+ * ticks sit 100 units apart, so at the stage's native measure the four labels clear each
+ * other; tracking is dialled back from the usual metadata setting because "BOUNDARY" and
+ * "PRODUCTION" are the two longest words in the set and they are also the two closest
+ * together.
+ */
+.station {
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: 0.04em;
+  color: var(--color-meta);
+  transition: color 300ms ease;
+}
+
+.station[data-reached='true'] {
+  color: var(--color-ink);
+}
+
+/* ── Caption ────────────────────────────────────────────────────────────────── */
+
+.caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+  font-size: 0.875rem;
+  color: var(--color-ink-tertiary);
+}
+
+.captionState {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-accent-deep);
+}
+
+.captionNote {
+  text-wrap: pretty;
+}
+
+/*
+ * Wide enough for the words to sit on the marks they name. Below this the two longest,
+ * BOUNDARY and PRODUCTION, overlap — their ticks are 100 units apart, which stops being
+ * enough room somewhere around a 460px stage.
+ */
+@container bounded-field (min-width: 480px) {
+  .stations {
+    display: block;
+    position: relative;
+  }
+
+  .station {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+  }
+}
+
+@container bounded-field (max-width: 479.98px) {
+  .tick {
+    display: none;
+  }
+}
+
+/*
+ * Below 640px the bounds and the excluded candidate are dropped, per the export. At that
+ * width they are two hairlines at the extreme edges and a 48-unit rectangle beyond them —
+ * detail that reads as noise rather than as an enclosure. The fragments, the baseline,
+ * and the terminus carry the sequence on their own.
+ */
+@media (max-width: 640px) {
+  .bound,
+  .stray {
+    display: none;
+  }
+}

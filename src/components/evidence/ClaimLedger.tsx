@@ -2,6 +2,7 @@
 
 import { useId, useState } from 'react';
 import { CLAIMS } from '@/content/claims';
+import { ActionIcon } from '@/components/icon/Icon';
 import styles from './ClaimLedger.module.css';
 
 /**
@@ -28,7 +29,11 @@ export function ClaimLedger() {
         onClick={() => setOpen((value) => !value)}
         id={`${panelId}-label`}
       >
-        {open ? 'HIDE CLAIM LEDGER −' : 'SHOW CLAIM LEDGER +'}
+        {open ? 'HIDE CLAIM LEDGER' : 'SHOW CLAIM LEDGER'}
+        <ActionIcon
+          affordance={open ? 'collapse-in-place' : 'expand-in-place'}
+          size={12}
+        />
         <span className={styles.toggleMeta}>CLAIM · EVIDENCE · BOUNDARY</span>
       </button>
 
