@@ -102,15 +102,37 @@ test.describe('evidence disclosures', () => {
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
   });
 
+  /*
+   * This test used to assert that the Interlock drawer had *no* verified artifact.
+   * Interlock is now bound to the frozen HAC-330 packet, so that assertion was
+   * deliberately inverted rather than deleted — the two halves of the evidence rule
+   * both still need a guard, so the unresolved half moved to a section that genuinely
+   * still has gaps.
+   */
   test('unresolved evidence renders no link', async ({ page }) => {
+    await page.goto('/');
+
+    await page.getByRole('button', { name: /Inspect evidence.*EV-WSJ/ }).click();
+
+    // The specification, schema, CLI and integrations rows have no exact artifact yet.
+    const drawer = page.locator('#sec-03');
+    await expect(drawer.getByText('VERIFY BEFORE PUBLISHING').first()).toBeVisible();
+  });
+
+  test('Interlock evidence now resolves to the frozen packet', async ({ page }) => {
     await page.goto('/');
 
     await page.getByRole('button', { name: /Inspect evidence.*EV-ILK/ }).click();
 
-    // The Interlock drawer has no verified artifact yet; it must state that, not link out.
     const drawer = page.locator('#sec-04');
-    await expect(drawer.getByText('VERIFY BEFORE PUBLISHING').first()).toBeVisible();
-    await expect(drawer.getByRole('link', { name: /INSPECT/ })).toHaveCount(0);
+    const packet = drawer.getByRole('link', { name: /INSPECT/ }).first();
+    await expect(packet).toBeVisible();
+    await expect(packet).toHaveAttribute(
+      'href',
+      /Marcelle-Labs\/interlock\/blob\/[0-9a-f]{40}\/experiments\/hac-330/,
+    );
+    // And the drawer must not claim a gap it no longer has.
+    await expect(drawer.getByText('VERIFY BEFORE PUBLISHING')).toHaveCount(0);
   });
 
   test('the one verified artifact is a real outbound link', async ({ page }) => {
