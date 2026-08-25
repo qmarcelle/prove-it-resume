@@ -186,12 +186,21 @@ export const repositoryIntelligence: Proof = {
       verified: true,
     },
     {
+      /*
+       * Partially answered, and the row now says which part. One frozen paired run
+       * exists: same task, same prompt digest, same model, same temperature-zero
+       * settings, with the context envelope as the only varying input. It shows one
+       * plan changing under one kind of repository evidence. It does not answer the
+       * general question — which signals, how often, at what cost — so the row is
+       * bound to the run rather than promoted to a finding.
+       */
       id: 'wsj-ev-research',
       kind: 'research',
-      title: 'Decision-time information study',
+      title: 'Decision-time information study — one bound run',
       description:
-        'Open question on which repository-derived signals, available at decision time, causally improve an agent decision.',
-      verified: false,
+        'The open question is which repository-derived signals, available at decision time, causally change an agent decision. One paired run is frozen and inspectable (HAC-152): resolving the exact producing source changed the plan from a refusal to a scoped edit. Notably it turned on source resolution, not on co-change — the run records that no co-change evidence was available at all.',
+      href: 'https://github.com/workspacejson/datahub-agent/blob/3607805fe1a00b6c18eac0d50371edad88fd5214/evaluation/hac-152/README.md',
+      verified: true,
     },
   ],
   boundary:
