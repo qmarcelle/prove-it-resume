@@ -19,7 +19,9 @@ import { defaultRole } from './default';
  * field in which to put evidence, which is what makes the projection safe.
  */
 export const endToEndDelivery: RoleLens = {
+  kind: 'role',
   slug: 'end-to-end-delivery',
+  resumeProjection: 'default',
   roleTitle: 'End-to-end delivery · discovery through production verification',
   resumeTitle: 'End-to-end delivery engineer',
   roleFitHeading: 'Discover → architect → build → test → release → deploy → verify.',

@@ -21,6 +21,7 @@ const ROUTES = [
   { route: '/resume/print', title: 'STAFF / PRINCIPAL AI PLATFORM ENGINEER' },
   { route: '/resume/print/athenahealth-yoh', title: 'SENIOR AI PLATFORM ENGINEER' },
   { route: '/resume/print/end-to-end-delivery', title: 'END-TO-END DELIVERY ENGINEER' },
+  { route: '/resume/print/linear', title: 'STAFF AI PRODUCT & PLATFORM ENGINEER' },
 ];
 
 async function printPage(page: Page, route: string) {
@@ -124,13 +125,60 @@ for (const { route, title } of ROUTES) {
     expect(row?.height, 'contact row must not wrap').toBeLessThan(32);
   });
 
+  /*
+   * The check that actually catches a clipped sheet.
+   *
+   * The bottom-anchored assertions below test the two elements that were clipped once
+   * before, which made them a regression test for one failure rather than a test of the
+   * property. A page box is `overflow: hidden`, so *any* block that outgrows it is
+   * silently cut — and a second layout, tuned by hand, is exactly where that happens
+   * next. Comparing each page's scroll height to its client height catches all of it,
+   * including content that overflows a flex child rather than the page itself.
+   */
+  test(`${route} fits its content inside both page boxes`, async ({ page }) => {
+    await printPage(page, route);
+
+    const overflow = await page.evaluate(() =>
+      [...document.querySelectorAll('[id^="resume-page-"]')].map((sheet) => ({
+        id: sheet.id,
+        over: sheet.scrollHeight - sheet.clientHeight,
+        // A block that outgrew its own box clips its last child even when the page
+        // itself reports no overflow.
+        blocks: [...sheet.children].map((block) => ({
+          text: (block.textContent ?? '').replace(/\s+/g, ' ').trim().slice(0, 40),
+          over: block.scrollHeight - Math.round(block.getBoundingClientRect().height),
+        })),
+      })),
+    );
+
+    for (const sheet of overflow) {
+      expect(sheet.over, `${sheet.id} overflows its page box`).toBeLessThanOrEqual(0);
+      for (const block of sheet.blocks) {
+        expect(
+          block.over,
+          `${sheet.id}: "${block.text}" is clipped by its own box`,
+        ).toBeLessThanOrEqual(0);
+      }
+    }
+  });
+
   test(`${route} keeps bottom-anchored content inside the page`, async ({ page }) => {
     await printPage(page, route);
 
-    // Both are pinned to the foot of their page with `margin-top: auto`; if anything
-    // above them grows, these are the first things clipped.
+    /*
+     * Both are pinned to the foot of their page with `margin-top: auto`; if anything
+     * above them grows, these are the first things clipped.
+     *
+     * The two layouts close page one on different blocks — the durable sheet on the
+     * systems boundary, the Linear sheet on the employment boundary — because they put
+     * different material there. Page two ends on the document footer in both.
+     */
+    const pageOneAnchor = route.endsWith('/linear')
+      ? 'Titles, dates, and scope are stated as held'
+      : 'Public source and recorded evidence';
+
     for (const [id, text] of [
-      ['#resume-page-1', 'Public source and recorded evidence'],
+      ['#resume-page-1', pageOneAnchor],
       ['#resume-page-2', 'FULL EVIDENCE SYSTEM'],
     ]) {
       const pageBox = await page.locator(id as string).boundingBox();
@@ -186,4 +234,99 @@ test('the generated PDF is served and is a real PDF', async ({ request }) => {
 
   const body = await response.body();
   expect(body.subarray(0, 5).toString('latin1')).toBe('%PDF-');
+});
+
+/**
+ * The Linear résumé is a content projection, not just a retitled one.
+ *
+ * These assert the three things that make it a different document: what leads the
+ * enterprise record, which system is promoted out of the footnote, and where the footer
+ * sends the reader. If a future refactor collapses the projection back into a title
+ * swap, this is what notices.
+ */
+test('the Linear résumé projects different content, from the same facts', async ({
+  page,
+}) => {
+  await printPage(page, '/resume/print/linear');
+
+  await expect(
+    page.getByText('AI PRODUCTS · AGENT SYSTEMS · FULL-STACK PRODUCT ENGINEERING'),
+  ).toBeVisible();
+
+  // Page one leads on customer-facing product work rather than on platform
+  // modernization, and the sentence is the durable one, promoted.
+  const firstBullet = page.locator('#resume-page-1 article ul li').first();
+  await expect(firstBullet).toContainText('Portal Refresh');
+
+  // Never Ask Twice is a full entry here; on the durable sheet it is the ALSO footnote.
+  await expect(page.locator('#resume-page-2 h3').first()).toHaveText('Never Ask Twice');
+
+  // The agent-platform receipts are on the sheet, by identifier.
+  for (const id of ['META-268', 'META-331', 'INFRA-11']) {
+    await expect(page.getByText(id, { exact: true })).toBeVisible();
+  }
+
+  // And the footer sends a Linear reader to the surface written for them.
+  await expect(
+    page.getByRole('link', { name: /qwynn\.marcellelabs\.io\/linear/ }),
+  ).toHaveAttribute('href', 'https://qwynn.marcellelabs.io/linear');
+});
+
+test('the durable résumé still leads on the durable record', async ({ page }) => {
+  await printPage(page, '/resume/print');
+
+  await expect(
+    page.getByText('AI PLATFORM · DEVELOPER SYSTEMS · SOFTWARE ARCHITECTURE'),
+  ).toBeVisible();
+  await expect(page.locator('#resume-page-1 article h3').first()).toHaveText('Vreko');
+  await expect(page.getByText('META-268')).toHaveCount(0);
+  await expect(
+    page.getByRole('link', { name: /qwynn\.marcellelabs\.io ↗/ }),
+  ).toHaveAttribute('href', 'https://qwynn.marcellelabs.io/');
+});
+
+test('the résumé manifest lists every variant exactly once', async ({ request }) => {
+  const response = await request.get('/resume/manifest.json');
+  expect(response.status()).toBe(200);
+
+  const { variants } = (await response.json()) as {
+    variants: { slug: string; route: string; pdfPath: string; downloadName: string }[];
+  };
+
+  const slugs = variants.map((variant) => variant.slug);
+  expect(new Set(slugs).size).toBe(slugs.length);
+  expect(slugs).toContain('linear');
+  expect(slugs.filter((slug) => slug === 'linear')).toHaveLength(1);
+
+  const linear = variants.find((variant) => variant.slug === 'linear');
+  expect(linear?.route).toBe('/resume/print/linear');
+  expect(linear?.pdfPath).toBe('/qwynn-marcelle-resume-linear.pdf');
+  expect(linear?.downloadName).toBe('Qwynn Marcelle - Resume (Linear).pdf');
+});
+
+test('every résumé call to action on /linear downloads the Linear PDF', async ({
+  page,
+}) => {
+  await page.goto('/linear');
+
+  const links = page.locator('a[href^="/qwynn-marcelle-resume"]');
+  expect(await links.count()).toBeGreaterThan(0);
+
+  for (const href of await links.evaluateAll((all) =>
+    all.map((link) => link.getAttribute('href')),
+  )) {
+    expect(href).toBe('/qwynn-marcelle-resume-linear.pdf');
+  }
+
+  await expect(links.first()).toHaveAttribute(
+    'download',
+    'Qwynn Marcelle - Resume (Linear).pdf',
+  );
+});
+
+test('the Linear PDF is served and is a real PDF', async ({ request }) => {
+  const response = await request.get('/qwynn-marcelle-resume-linear.pdf');
+  expect(response.status()).toBe(200);
+  expect(response.headers()['content-type']).toContain('application/pdf');
+  expect((await response.body()).subarray(0, 5).toString('latin1')).toBe('%PDF-');
 });

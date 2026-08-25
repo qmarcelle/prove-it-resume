@@ -175,11 +175,23 @@ export type RoleEvidenceMapping = {
 };
 
 /**
- * A role lens. It may change framing, ordering, and emphasis. It holds no proof content
- * of its own, which is what keeps every projection honest about the same underlying
- * evidence.
+ * The identifier of a résumé content projection — see `src/content/resume/`.
+ *
+ * Declared here rather than in the content module so a lens can name its projection
+ * without `lib` importing `content` and closing an import cycle.
  */
-export type RoleLens = {
+export type ResumeProjectionId = 'default' | 'linear';
+
+/**
+ * What every projection the public composition renders through must supply.
+ *
+ * Two kinds satisfy it: a `RoleLens`, addressable at `/role/<slug>`, and an
+ * `ApplicationLens`, which owns a first-class route of its own. Both are projections of
+ * the same durable evidence, and neither has a field in which to put proof content —
+ * that constraint is what makes "a lens cannot change a claim" structural rather than
+ * a convention someone has to remember.
+ */
+export type SurfaceLens = {
   slug: string;
   /** Title shown in the ROLE LENS chip. */
   roleTitle: string;
@@ -205,4 +217,162 @@ export type RoleLens = {
   metaDescription: string;
   /** True for the durable root lens; role routes are excluded from the sitemap. */
   isDefault: boolean;
+  /**
+   * Which résumé *content* projection this lens's PDF renders.
+   *
+   * Separate from `resumeTitle`, which is only the masthead line. A role lens changes
+   * the title and nothing else; an application lens may also select and order different
+   * durable facts. See ADR 0010.
+   */
+  resumeProjection: ResumeProjectionId;
 };
+
+/**
+ * A role lens. It may change framing, ordering, and emphasis. It holds no proof content
+ * of its own, which is what keeps every projection honest about the same underlying
+ * evidence.
+ */
+export type RoleLens = SurfaceLens & {
+  kind: 'role';
+};
+
+/**
+ * The outer geometry one section of an application surface is set in.
+ *
+ * Four frames, not four stylesheets. Every section on a lens surface — editorial,
+ * receipts, proof, the compact treatments — is drawn from the same index rail and the
+ * same content origin, and this is the only axis on which they are allowed to differ.
+ *
+ * - `standard` — the default. Section ground, an oversized index number, a ruled head.
+ * - `band` — the same head on its own tonal step, marking a block that groups without
+ *   boxing. Inset rather than full-bleed: the measure and the gutters belong to the
+ *   layout shell, and a section reaching past them would overlap the progress rail.
+ * - `compact` — `standard` with the head unruled and the title one step down, for a
+ *   section whose own figure is carrying the emphasis.
+ * - `inline` — no oversized number: index and eyebrow share one metadata line. For the
+ *   sections the plan deliberately demotes.
+ */
+export type SectionFrame = 'standard' | 'band' | 'compact' | 'inline';
+
+/**
+ * One section of an application surface's page plan, as authored.
+ *
+ * Note what is *not* here: the visible number. A page plan that carried its own numbers
+ * could disagree with its own order, and on this surface it did — proof sections were
+ * printing the stage they hold on `/` while the rail counted their position here. The
+ * number is stamped from position by `numberSections`, so the two cannot drift.
+ */
+export type SurfaceSection = {
+  /** DOM id of the section this step scrolls to. */
+  id: string;
+  /** How the section names itself in the rail and the header nav. */
+  label: string;
+  /** The section's visible eyebrow. The plan owns section identity, not the section. */
+  eyebrow: string;
+  frame: SectionFrame;
+  /**
+   * The durable proof this section renders, when it renders one.
+   *
+   * Declared here so the plan states the whole reading order in one list, including the
+   * proofs, rather than leaving their position to be inferred from `proofOrder`.
+   */
+  proof?: string;
+};
+
+/** One numbered stage in a surface's proof rail: a plan section, stamped with its position. */
+export type SurfaceStep = SurfaceSection & {
+  /** Two-digit visible sequence number, derived from position in the plan. */
+  n: string;
+};
+
+/**
+ * A curated receipt from the owner's private Linear workspace.
+ *
+ * The public bundle carries only these fields, and each one is written for publication
+ * rather than extracted: no issue description, no comment thread, no customer name, no
+ * workspace URL. `publicEvidenceHref` exists for the day a receipt has a *public*
+ * artifact behind it; a private Linear URL is not one, and `linear.test.ts` fails the
+ * build if one appears.
+ *
+ * The intended future seam is private Linear API → hard-coded allowlist → build-time
+ * sanitiser → this type → page. Never browser → private workspace.
+ */
+export type LinearReceipt = {
+  /** The workspace identifier, e.g. `META-268`. An identifier, not a link. */
+  identifier: string;
+  title: string;
+  /** The question the work was actually answering. */
+  question: string;
+  /** What was decided or found, written for a public reader. */
+  finding: string;
+  status: string;
+  /** What this receipt does not establish. Required, like every boundary here. */
+  boundary: string;
+  /** A *public* artifact, when one exists. Never a private workspace URL. */
+  publicEvidenceHref?: string;
+  /** ISO date on which the curated text above was checked against the source. */
+  verifiedAt: string;
+};
+
+/**
+ * An application lens: a first-class hiring surface for one organisation, at its own
+ * route, composed from the same durable evidence as `/`.
+ *
+ * Distinct from `RoleLens` because it carries things a role lens has no business
+ * carrying — its own public path, its own hero framing, its own page plan, and its own
+ * résumé content projection. Bolting those onto `RoleLens` as optional fields would
+ * turn the lightweight type into a bag of maybes, and would make "does this lens own a
+ * route?" a question you answer by reading the object rather than its type.
+ *
+ * What it deliberately does *not* carry is proof content. Like every lens it selects
+ * and orders; `linearReceipts` is the one place it introduces material of its own, and
+ * that material is typed, curated, boundary-bearing, and tested — not a `Proof`.
+ */
+export type ApplicationLens = SurfaceLens & {
+  kind: 'application';
+  /** The route this lens is served at, e.g. `/linear`. */
+  publicPath: string;
+  /** Required here: an application surface is always addressed to someone. */
+  organisation: string;
+  /** Hero framing for this application. Copy only — it states no new evidence. */
+  hero: {
+    eyebrow: string;
+    headline: string;
+    thesis: string;
+    supporting: string;
+    capabilities: readonly string[];
+    availability: string;
+  };
+  /**
+   * The reading order of this surface, and the single authority for it.
+   *
+   * Section order, visible section number, section identity, the header nav, and the
+   * guided rail are all read from this one list. Nothing on the page may state its own
+   * position — see `SurfaceSection`.
+   */
+  pagePlan: readonly SurfaceSection[];
+  /** Curated public receipts from the owner's private workspace, if any. */
+  receipts: readonly LinearReceipt[];
+  /**
+   * Section copy owned by this surface. States framing, never evidence.
+   *
+   * No eyebrow here: a section's identity is the page plan's to state, and copy that
+   * carried its own would be a second place for the surface to name the same section.
+   */
+  sections: {
+    history: { heading: string; body: string; boundary: string };
+    inPractice: { heading: string; body: string; boundary: string };
+    judgement: { heading: string };
+  };
+};
+
+/**
+ * Any lens the application actually renders through.
+ *
+ * A discriminated union rather than the bare `SurfaceLens`, so code that needs to ask
+ * "does this lens own a route of its own?" can narrow on `kind` instead of probing for
+ * a field. Components that only project evidence should still take `SurfaceLens`: not
+ * needing the discriminant is the signal that they treat both kinds identically, which
+ * is the property this whole design is trying to keep.
+ */
+export type AnyLens = RoleLens | ApplicationLens;

@@ -1,6 +1,6 @@
 import { PROFILES, RESUME, SITE } from '@/content/site';
 import { ResumeDownloadLink } from '@/components/resume/ResumeDownloadLink';
-import type { RoleLens } from '@/lib/types';
+import type { AnyLens } from '@/lib/types';
 import { isResolved } from '@/lib/evidence';
 import { ActionIcon } from '@/components/icon/Icon';
 import styles from './SiteFooter.module.css';
@@ -22,7 +22,7 @@ import styles from './SiteFooter.module.css';
  * link, where the point is that this destination behaves differently from its
  * neighbours.
  */
-export function SiteFooter({ lens }: { lens: RoleLens }) {
+export function SiteFooter({ lens }: { lens: AnyLens }) {
   const marcelleLabs = PROFILES.find((profile) => profile.id === 'marcelle-labs');
   const links = PROFILES.filter((profile) => profile.id !== 'marcelle-labs');
 

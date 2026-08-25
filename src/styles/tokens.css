@@ -44,6 +44,19 @@
   --color-accent-border: #d9c8a8;
   --color-accent-surface: #f6f1e6;
 
+  /*
+   * ---- The one primary action ----
+   *
+   * Named for what it is rather than for the colour it happens to be. A filled button
+   * that reached for `--color-ink` was making an assumption — that ink is dark — which
+   * held on every light surface and broke the moment a surface inverted: cream type on
+   * a cream fill. Stating the fill and its ink as a pair lets a surface answer with
+   * whatever its strongest mark is, and keeps the two from being chosen separately.
+   */
+  --color-action-fill: var(--color-ink);
+  --color-action-ink: var(--color-inverse-ink);
+  --color-action-ink-quiet: var(--color-inverse-accent);
+
   /* ---- Inverse scale: dark CTA and the decision panel ---- */
   --color-inverse-bg: #1a1a17;
   --color-inverse-ink: #faf9f6;
@@ -92,6 +105,68 @@
   --rule-strong: 2px solid var(--color-ink);
 
   --focus-ring: 2px solid var(--color-accent);
+}
+
+/*
+ * ── The Lit Work Surface ─────────────────────────────────────────────────────
+ *
+ * The dark scale the Linear application lens is set in. Original to that surface, and
+ * declared here rather than in a second token file because the two palettes are one
+ * system: the lens layout remaps the `--color-*` names above onto these, so every
+ * component keeps reading the tokens it already reads and inverts without knowing it.
+ *
+ * The thesis the values encode: nothing is boxed by default, structure comes from
+ * alignment and four tonal steps, and the only saturated mark on the page is the one
+ * place evidence has been verified. Amber is spent, not sprinkled.
+ *
+ * Two values are retuned from the supplied direction rather than copied. The direction
+ * sets metadata at #8B867D — 5.2:1 on the canvas, which it calls the floor — and that
+ * floor is measured against `--lens-canvas` alone; the same grey sits at 4.3:1 on
+ * `--lens-surface-active`, under AA on the surface where controls live. So the metadata
+ * step is lifted to #968f86 and the border steps left where they are, since a hairline
+ * carries no text. The four-step tonal ladder and the amber budget are unchanged.
+ */
+:root {
+  --lens-canvas: #121110;
+  --lens-surface: #191816;
+  --lens-surface-elevated: #1f1e1b;
+  --lens-surface-active: #272521;
+  --lens-band: #161514;
+
+  --lens-text: #f0ede6;
+  --lens-text-secondary: #b5afa4;
+  --lens-text-tertiary: #968f86;
+
+  --lens-border-subtle: #2b2926;
+  --lens-border-internal: #232120;
+  --lens-border-active: #3c3934;
+
+  --lens-accent: #d9a84e;
+  --lens-accent-text: #efc97e;
+  --lens-accent-edge: #8a6a28;
+  --lens-accent-field: #1c1913;
+
+  --lens-unresolved: #c4864f;
+
+  /*
+   * The ink a filled amber action carries. Two steps, both measured against the fill:
+   * the canvas at 8.7:1 for the label, and a deep amber-brown at 5.1:1 for the metadata
+   * beside it — quieter than the label without dropping under the floor.
+   */
+  --lens-accent-ink: #121110;
+  --lens-accent-ink-quiet: #4b3a10;
+
+  /*
+   * The index rail's tone. Retuned from the supplied direction, which sets the section
+   * number at #2F2D29 — 1.37:1 on this canvas, an ornament rather than a number.
+   *
+   * On this page it has to be countable: the defect being fixed is a surface whose
+   * visible sequence disagreed with itself, and a sequence a reader cannot read is not
+   * a fix. This is the quietest tone that still clears 3:1 on both the canvas and the
+   * band, which keeps it below the eyebrow beside it — the one element in that head
+   * allowed to be amber — without dropping out of the page.
+   */
+  --lens-index: #6b665e;
 }
 
 @media (max-width: 640px) {

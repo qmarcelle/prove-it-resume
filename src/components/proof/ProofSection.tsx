@@ -1,4 +1,6 @@
-import type { Proof } from '@/lib/types';
+import { ChapterMark } from './ChapterMark';
+import { SectionHead, sectionFrameClass } from '@/components/section/SectionFrame';
+import type { Proof, SurfaceStep } from '@/lib/types';
 import styles from './ProofSection.module.css';
 
 /**
@@ -24,20 +26,92 @@ import styles from './ProofSection.module.css';
 export function ProofSection({
   proof,
   tone = 'light',
+  step,
   children,
 }: {
   proof: Proof;
   tone?: 'light' | 'dark';
+  /**
+   * The page-plan step this proof was placed as, on a surface that has a plan.
+   *
+   * When present it replaces the shell's own rhythm with the surface's normalised
+   * section frame, so a proof sits in the same geometry as the editorial sections
+   * around it rather than in the proof shell's. Absent on `/`, where the six sections
+   * are the page and the shell's rhythm *is* the surface's.
+   */
+  step?: SurfaceStep;
   children: React.ReactNode;
 }) {
+  const framed = Boolean(step);
+
   return (
     <section
-      className={`${styles.section} ${tone === 'dark' ? styles.dark : ''}`}
-      id={proof.sectionId}
+      className={
+        framed
+          ? sectionFrameClass(step)
+          : `${styles.section} ${tone === 'dark' ? styles.dark : ''}`
+      }
+      id={step ? step.id : proof.sectionId}
       aria-labelledby={`${proof.id}-title`}
     >
-      <div className={styles.inner}>{children}</div>
+      <div className={framed ? styles.framedInner : styles.inner}>{children}</div>
     </section>
+  );
+}
+
+/**
+ * A proof's chapter furniture, sourced from wherever the surface keeps its sequence.
+ *
+ * This is the seam that removed the defect. A proof section used to state its own
+ * position twice over — `stage={vreko.stage}` and `label="PROOF ONE"` — and both were
+ * facts about `/`. Rendered on an application surface that reorders the proofs, they
+ * were simply wrong: Vreko printed `02 · PROOF ONE` in sixth position while the rail
+ * beside it counted `06`.
+ *
+ * With a `step` the section takes its number and its eyebrow from the page plan and
+ * states nothing. Without one it keeps the durable chapter mark, which is still the
+ * right furniture for the page the durable stages describe.
+ */
+export function ProofChapter({
+  proof,
+  step,
+  label,
+  meta,
+  orientation = 'horizontal',
+  tone = 'light',
+}: {
+  proof: Proof;
+  step?: SurfaceStep;
+  /** The durable chapter label. Used only when no plan step is supplied. */
+  label: string;
+  meta?: string;
+  orientation?: 'horizontal' | 'inline' | 'vertical';
+  tone?: 'light' | 'dark';
+}) {
+  if (step) {
+    return (
+      <SectionHead
+        step={step}
+        title={proof.title}
+        titleId={`${proof.id}-title`}
+        lead={proof.thesis}
+      />
+    );
+  }
+
+  return (
+    <ProofMasthead>
+      <ChapterMark
+        stage={proof.stage}
+        label={label}
+        meta={meta}
+        title={proof.title}
+        titleId={`${proof.id}-title`}
+        orientation={orientation}
+        tone={tone}
+      />
+      <ProofThesis>{proof.thesis}</ProofThesis>
+    </ProofMasthead>
   );
 }
 

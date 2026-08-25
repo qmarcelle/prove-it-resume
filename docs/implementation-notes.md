@@ -10,15 +10,24 @@ src/
   app/                    routes; all statically rendered
     page.tsx              the durable evidence surface
     role/[slug]/page.tsx  the same surface, projected through a role lens
+    linear/page.tsx       an application surface: its own composition, same evidence
+    resume/print/         the print sources the PDFs are rendered from
   components/             presentation only; no content lives here
-  content/                the durable proof, claims, decisions, and role lenses
+    resume/parts/         print primitives shared by both résumé layouts
+    resume/layouts/       the two explicit two-page compositions
+    application/          sections that exist only on an application surface
+  content/                the durable proof, claims, decisions, and lenses
+    resume/facts.ts       durable résumé facts; projections/ selects over them
+    applications/         application lenses
+    linear/receipts.ts    curated public receipts from a private workspace
   lib/                    types, the evidence rule, lens projection, proof steps
   styles/tokens.css       the design language as custom properties
 design/reference/claude/  the original Claude Design export, preserved unmodified
 ```
 
-The load-bearing idea: **content is data, presentation is components, and a role lens is
-a projection over the data.** Everything else follows from that.
+The load-bearing idea: **content is data, presentation is components, and a lens is a
+projection over the data.** Everything else follows from that — including the résumé,
+whose facts and projections are separated for the same reason.
 
 ## Content model
 
@@ -81,6 +90,92 @@ different projection under the URL the reader asked for.
 
 Role routes are `noindex`, canonical to `/`, and absent from the sitemap: they are
 projections of one work, and indexing them would advertise every open application.
+
+## Application lenses
+
+A role lens is generic: it says "read this for a platform role". An `ApplicationLens` is
+addressed to one organisation, owns a route of its own (`/linear`, not `/role/linear`),
+and carries what a generic lens has no business carrying — a public path, hero framing, a
+page plan, section copy, and curated receipts. Bolting those onto `RoleLens` as optional
+fields would leave every generic lens holding five nulls and make "does this lens own a
+page?" a question you answer by reading the object rather than its type.
+
+Both are `SurfaceLens`, and `AnyLens` is the discriminated union of the two. A component
+that takes `SurfaceLens` is one that treats both kinds identically — which is most of
+them, and is the property this design is trying to keep.
+
+The registries stay separate, and that is the point. `generateStaticParams` for
+`/role/[slug]` walks `ROLE_LENSES` only, and `dynamicParams: false` turns `/role/linear`
+into a 404 rather than a second public address for the same application. Everything
+downstream of routing walks `ALL_LENSES` instead: the résumé manifest, the PDF build, the
+download resolver, and the content tests. Registering an application lens therefore
+produces a print route, a PDF, a manifest entry, and a robots disallow with no edit
+anywhere else.
+
+`/linear` is a second composition (`ApplicationSurface`) rather than a flag on
+`ProveItResume`. The two differ in which sections appear, in what order, and what opens
+the page; encoding that as branches inside one component produces a file where every
+second line asks which surface it is on. Everything below the section level is shared,
+which is where duplication would actually cost something.
+
+`ProofNavProvider` takes its stages as a prop, defaulting to `PROOF_STEPS`, so the rail on
+an application surface maps the page in front of the reader rather than the durable six.
+
+## Résumé facts and projections
+
+`content/resume/facts.ts` holds what is true: identity, the employment chronology with
+individually addressable bullets, the systems, grouped capabilities, and credentials. A
+projection in `content/resume/projections/` is a set of selections over ids plus framing
+copy — which systems, in what order; which of a role's bullets, in what order; what to
+call each block. It has no field in which to put a fact.
+
+`resolveResume` applies one and **throws** on an id that no longer exists. A projection
+whose selection has gone stale has quietly stopped saying what its author meant, and on a
+fixed page box that failure is otherwise a gap nobody notices.
+
+Four invariants are executable rather than intended:
+
+- every bullet a projection renders exists verbatim in the fact corpus;
+- every number in a projection's framing prose is in `RESUME_QUANTITIES`, so "8 years"
+  cannot quietly become "10 years" for a reader who would prefer ten;
+- no projection names a fact recorded in `UNVERIFIED`;
+- every grouped capability also appears in the durable stack line, a system's tool chain,
+  or a role bullet.
+
+`UNVERIFIED` is the other half of that. It records the three facts a product-oriented
+projection would most like to have and does not: the frontend framework used at
+BlueCross, per-audience product ownership, and anything about 2016–2019 beyond the title
+held. They are absent from every projection because nothing supplied to this repository
+establishes them, and the record exists so that absence reads as a decision rather than
+an oversight.
+
+`ResumeDocument` is now a shell that resolves a projection and picks one of two explicit
+layouts. The layouts are written out rather than generated from a block list: there are
+exactly two, there is no third coming, and an interpreter plus a schema would trade a file
+anyone can read against the printed sheet for machinery nobody would.
+
+## The private workspace boundary
+
+`content/linear/receipts.ts` is the only channel between a private Linear workspace and
+this site. It exports a fixed array whose every field was written for publication rather
+than extracted: an identifier, the question, the finding, a status, a required boundary,
+and the date the summary was last checked. No fetch, no credential, no workspace URL.
+
+Receipts carry no link, and that is the honest rendering. No public artifact stands behind
+them, so under this site's own evidence rule they are stated claims — and they render the
+same `[VERIFY BEFORE PUBLISHING]` marker as any other unresolved row.
+
+The seam for a future live integration is documented and deliberately unbuilt:
+
+```
+private Linear API → hard-coded issue allowlist → build-time sanitiser
+→ LinearReceipt[] → page
+```
+
+Never browser → private workspace. `src/content/linear/linear.test.ts` scans all of
+`src/` for a workspace host or an API credential, and `tests/e2e/application.spec.ts`
+scans the served HTML and every rendered `href` — the artifact that actually leaves the
+building.
 
 ## Client/server boundary
 
@@ -313,3 +408,11 @@ instead), the `eslint` key is gone from `next.config`, and request APIs are asyn
 - Whether `RepositoryDecisionDiff` should live in the Repository Intelligence section or
   become its own stage once it has real data. It is currently in section 03, where its
   claim is made.
+- The proof rail on `/role/end-to-end-delivery` still lists the durable stage order while
+  the body renders the lens's order, so the rail and the page disagree there. `/linear`
+  does not have the problem because its rail is driven by the lens's page plan; the fix
+  for role lenses is to derive `PROOF_STEPS` from `proofOrder` the same way, and it was
+  left out of this change rather than widened into it.
+- Whether a second application lens should share `ApplicationSurface` or get its own
+  composition. One surface is not enough evidence to decide; the section components are
+  already parameterised by lens copy, so either is cheap.

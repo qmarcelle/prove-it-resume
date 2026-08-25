@@ -8,7 +8,8 @@ import { PROFILES, RESUME } from '@/content/site';
 import { neverAskTwice } from '@/content/supporting/never-ask-twice';
 import { PROOF_STEPS } from '@/lib/proof-steps';
 import { isResolved } from '@/lib/evidence';
-import { ROLE_LENSES, defaultRole } from '@/content/roles';
+import { ALL_RESUME_LENSES } from '@/content/lenses';
+import { defaultRole } from '@/content/roles';
 import { resumePdfPath } from '@/lib/resume';
 import { PUBLISHED_ORIGINS } from '@/content/published';
 
@@ -181,7 +182,9 @@ describe('evidence integrity', () => {
  * `pnpm test` rather than as a 404 for a reader who clicked "Download résumé".
  */
 describe('résumé artifacts', () => {
-  const lenses = [defaultRole, ...ROLE_LENSES];
+  // Every lens with a generated PDF, of either kind. Registering an application lens
+  // adds its artifact to this check without an edit here.
+  const lenses = ALL_RESUME_LENSES;
 
   it('has a distinct generated PDF for every lens', () => {
     const paths = lenses.map((lens) => resumePdfPath(lens));

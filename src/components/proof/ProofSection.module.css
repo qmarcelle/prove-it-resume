@@ -11,6 +11,20 @@
 }
 
 /*
+ * The same stack, on a surface whose outer frame is owned by the page plan.
+ *
+ * `.section` sets the rhythm on `/`, where the proofs *are* the page. Where a plan
+ * exists the frame supplies padding, ground and scroll offset, and all this has left to
+ * do is space the section's own blocks — so it deliberately carries no padding, no rule
+ * and no scroll margin, which would otherwise be applied twice.
+ */
+.framedInner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/*
  * The one dark chapter.
  *
  * Inset rather than full-bleed: the page measure and gutters are owned by the layout

@@ -7,6 +7,7 @@ import { interlockHac330 } from '@/content/experiments/interlock-hac330';
 import { ChapterMark } from '@/components/proof/ChapterMark';
 import {
   ProofAside,
+  ProofChapter,
   ProofColumns,
   ProofLayer,
   ProofLayerBody,
@@ -15,6 +16,7 @@ import {
   ProofSection,
   ProofThesis,
 } from '@/components/proof/ProofSection';
+import type { SurfaceStep } from '@/lib/types';
 import styles from './InterlockSection.module.css';
 
 /**
@@ -31,29 +33,44 @@ import styles from './InterlockSection.module.css';
  * in the markup because it is the point of the section. Everything above it is method;
  * that line is the discipline the method exists to serve.
  */
-export function InterlockSection() {
+export function InterlockSection({ step }: { step?: SurfaceStep } = {}) {
+  const figure = (
+    <InterlockCounterfactual
+      data={interlockHac330}
+      showControls={false}
+      showFooter={false}
+    />
+  );
+
   return (
-    <ProofSection proof={interlock}>
-      <div className={styles.chapterRow}>
-        <ChapterMark
-          stage={interlock.stage}
-          label={`PROOF THREE · ${interlockHac330.experiment}`}
-          orientation="vertical"
-        />
-
-        <div className={styles.chapterBody}>
-          <h2 className={styles.title} id={`${interlock.id}-title`}>
-            {interlock.title}
-          </h2>
-          <ProofThesis>{interlock.thesis}</ProofThesis>
-
-          <InterlockCounterfactual
-            data={interlockHac330}
-            showControls={false}
-            showFooter={false}
+    <ProofSection proof={interlock} step={step}>
+      {step ? (
+        <>
+          <ProofChapter
+            proof={interlock}
+            step={step}
+            label={`PROOF THREE · ${interlockHac330.experiment}`}
           />
+          {figure}
+        </>
+      ) : (
+        <div className={styles.chapterRow}>
+          <ChapterMark
+            stage={interlock.stage}
+            label={`PROOF THREE · ${interlockHac330.experiment}`}
+            orientation="vertical"
+          />
+
+          <div className={styles.chapterBody}>
+            <h2 className={styles.title} id={`${interlock.id}-title`}>
+              {interlock.title}
+            </h2>
+            <ProofThesis>{interlock.thesis}</ProofThesis>
+
+            {figure}
+          </div>
         </div>
-      </div>
+      )}
 
       <ProofColumns>
         <ProofProse>

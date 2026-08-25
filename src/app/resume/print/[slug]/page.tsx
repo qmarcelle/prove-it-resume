@@ -2,20 +2,25 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ResumeDocument } from '@/components/resume/ResumeDocument';
 import { resumeTargetTitle } from '@/lib/resume';
-import { getRoleLens, listRoleSlugs } from '@/lib/role-lens';
+import { getPrintableLens, listPrintableSlugs } from '@/lib/role-lens';
 
 /**
- * The printable résumé under one role lens.
+ * The printable résumé under one lens.
  *
- * The lens changes exactly one thing — the masthead's target title. That is the whole
- * of the design export's `targetTitle` prop, and widening it would turn a résumé into
- * something that says different things to different readers, which is the opposite of
- * what this artifact is for.
+ * A lens changes two things here: the masthead's target title, and which *content
+ * projection* renders. Role lenses change only the first — the durable résumé under a
+ * different heading — because a generic lens has no business reordering a career.
+ * An application lens may change both, and the Linear lens does: same corpus, different
+ * selection and different order. See ADR 0010.
+ *
+ * The route walks the combined registry rather than the role registry, so registering
+ * an application lens gives it a print route, a manifest entry, and a PDF with no edit
+ * here or in the build script.
  */
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return listRoleSlugs().map((slug) => ({ slug }));
+  return listPrintableSlugs().map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -24,7 +29,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const lens = getRoleLens(slug);
+  const lens = getPrintableLens(slug);
   if (!lens) return {};
 
   return {
@@ -33,14 +38,19 @@ export async function generateMetadata({
   };
 }
 
-export default async function RoleResumePrintPage({
+export default async function LensResumePrintPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const lens = getRoleLens(slug);
+  const lens = getPrintableLens(slug);
   if (!lens) notFound();
 
-  return <ResumeDocument targetTitle={resumeTargetTitle(lens)} />;
+  return (
+    <ResumeDocument
+      targetTitle={resumeTargetTitle(lens)}
+      projection={lens.resumeProjection}
+    />
+  );
 }

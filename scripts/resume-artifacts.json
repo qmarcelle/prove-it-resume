@@ -47,6 +47,22 @@
         "https://qwynn.marcellelabs.io/"
       ],
       "pages": 2
+    },
+    {
+      "slug": "linear",
+      "route": "/resume/print/linear",
+      "pdfPath": "/qwynn-marcelle-resume-linear.pdf",
+      "fingerprint": "04f7ca553e7e2581030bc4ad3d96672c475f24115a36b358e1e388e6576515cc",
+      "links": [
+        "mailto:qwynn@marcellelabs.io",
+        "https://www.linkedin.com/in/qmarcelle",
+        "https://github.com/qmarcelle",
+        "https://github.com/Marcelle-Labs/never-ask-twice/blob/main/docs/evaluation.md",
+        "https://interlock.marcellelabs.io/",
+        "https://www.workspacejson.dev/",
+        "https://qwynn.marcellelabs.io/linear"
+      ],
+      "pages": 2
     }
   ]
 }

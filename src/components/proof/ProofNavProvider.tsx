@@ -40,7 +40,22 @@ function prefersReducedMotion(): boolean {
   );
 }
 
-export function ProofNavProvider({ children }: { children: React.ReactNode }) {
+export function ProofNavProvider({
+  steps = PROOF_STEPS,
+  children,
+}: {
+  /**
+   * The stages this surface actually renders, in the order it renders them.
+   *
+   * A prop rather than the module constant because an application surface composes a
+   * different page: it drops the operating thesis, adds its own sections, and reorders
+   * the proofs. The rail is a map of the page in front of the reader, so a rail that
+   * always listed the durable six would be pointing at sections that are somewhere else
+   * or not there at all.
+   */
+  steps?: readonly ProofStep[];
+  children: React.ReactNode;
+}) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [guided, setGuided] = useState(false);
 
@@ -58,33 +73,36 @@ export function ProofNavProvider({ children }: { children: React.ReactNode }) {
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
-          const index = PROOF_STEPS.findIndex((step) => step.id === entry.target.id);
+          const index = steps.findIndex((step) => step.id === entry.target.id);
           if (index >= 0) setActiveIndex(index);
         }
       },
       { rootMargin: '-45% 0px -50% 0px', threshold: 0 },
     );
 
-    for (const step of PROOF_STEPS) {
+    for (const step of steps) {
       const element = document.getElementById(step.id);
       if (element) observer.observe(element);
     }
 
     return () => observer.disconnect();
-  }, []);
+  }, [steps]);
 
-  const goTo = useCallback((index: number) => {
-    const clamped = Math.max(0, Math.min(PROOF_STEPS.length - 1, index));
-    const element = document.getElementById(PROOF_STEPS[clamped].id);
-    if (!element) return;
+  const goTo = useCallback(
+    (index: number) => {
+      const clamped = Math.max(0, Math.min(steps.length - 1, index));
+      const element = document.getElementById(steps[clamped].id);
+      if (!element) return;
 
-    const top = element.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET;
-    window.scrollTo({ top, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+      const top = element.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET;
+      window.scrollTo({ top, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
 
-    // Set immediately rather than waiting for the observer, so the rail responds to the
-    // click even if the scroll is interrupted or the target is already in view.
-    setActiveIndex(clamped);
-  }, []);
+      // Set immediately rather than waiting for the observer, so the rail responds to
+      // the click even if the scroll is interrupted or the target is already in view.
+      setActiveIndex(clamped);
+    },
+    [steps],
+  );
 
   /*
    * Guided mode adds controls; it does not take the page over. Scrolling, anchors, and
@@ -98,7 +116,7 @@ export function ProofNavProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo<ProofNavValue>(
     () => ({
-      steps: PROOF_STEPS,
+      steps,
       activeIndex,
       guided,
       goTo,
@@ -107,7 +125,7 @@ export function ProofNavProvider({ children }: { children: React.ReactNode }) {
       next: () => goTo(activeIndex + 1),
       previous: () => goTo(activeIndex - 1),
     }),
-    [activeIndex, guided, goTo, startGuided],
+    [steps, activeIndex, guided, goTo, startGuided],
   );
 
   return <ProofNavContext value={value}>{children}</ProofNavContext>;

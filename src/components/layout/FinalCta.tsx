@@ -1,12 +1,12 @@
 import { FINAL_CTA, RESUME, SITE } from '@/content/site';
 import { ResumeDownloadLink } from '@/components/resume/ResumeDownloadLink';
-import type { RoleLens } from '@/lib/types';
+import type { AnyLens } from '@/lib/types';
 import { isResolved } from '@/lib/evidence';
 import { WalkProofButton } from '@/components/proof/WalkProofButton';
 import { ActionIcon } from '@/components/icon/Icon';
 import styles from './FinalCta.module.css';
 
-export function FinalCta({ lens }: { lens: RoleLens }) {
+export function FinalCta({ lens }: { lens: AnyLens }) {
   const resumeAvailable = isResolved(RESUME);
 
   return (

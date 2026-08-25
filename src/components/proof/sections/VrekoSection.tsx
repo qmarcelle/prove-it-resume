@@ -1,19 +1,18 @@
 import { vreko } from '@/content/proofs';
-import { ChapterMark } from '@/components/proof/ChapterMark';
 import { EvidenceLink } from '@/components/evidence/EvidenceLink';
 import { EvidencePanel } from '@/components/evidence/EvidencePanel';
 import { ProofScan } from '@/components/proof/ProofScan';
 import { VrekoArchitectureTrace } from '@/components/interactions/VrekoArchitectureTrace';
 import { vrekoArchitecture } from '@/content/experiments/vreko-architecture';
 import {
+  ProofChapter,
   ProofColumns,
   ProofLayer,
   ProofLayerBody,
   ProofLayerColumn,
-  ProofMasthead,
   ProofSection,
-  ProofThesis,
 } from '@/components/proof/ProofSection';
+import type { SurfaceStep } from '@/lib/types';
 
 /**
  * 02 — Vreko. Spatial grammar: containment.
@@ -29,7 +28,7 @@ import {
  * softened version of it — the scan layer is allowed to be shorter than the proof
  * layer, never kinder than it.
  */
-export function VrekoSection() {
+export function VrekoSection({ step }: { step?: SurfaceStep } = {}) {
   /*
    * PROBLEM and BUILT are the proof's own fields. EVIDENCE is counted from the package
    * lists rather than written down, so the sentence cannot drift from the split it
@@ -48,17 +47,13 @@ export function VrekoSection() {
   ];
 
   return (
-    <ProofSection proof={vreko}>
-      <ProofMasthead>
-        <ChapterMark
-          stage={vreko.stage}
-          label="PROOF ONE"
-          title={vreko.title}
-          titleId={`${vreko.id}-title`}
-          orientation="horizontal"
-        />
-        <ProofThesis>{vreko.thesis}</ProofThesis>
-      </ProofMasthead>
+    <ProofSection proof={vreko} step={step}>
+      <ProofChapter
+        proof={vreko}
+        step={step}
+        label="PROOF ONE"
+        orientation="horizontal"
+      />
 
       <ProofScan items={scan} />
 

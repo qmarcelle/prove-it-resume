@@ -424,6 +424,94 @@ Each is deliberate; rationale recorded here and, where structural, in `docs/deci
     concept marks are separate and are crops of the fourth import's settled frame. Full
     reasoning in `docs/decisions/0008-vendored-icon-set.md`.
 
+## The Linear Lens import — "The Lit Work Surface"
+
+A sixth import, scoped to `/linear` only. Two files, both preserved at
+`design/reference/claude/`:
+
+| File                                    | Treatment                                                                     |
+| --------------------------------------- | ----------------------------------------------------------------------------- |
+| `Prove It Resume - Linear Lens.dc.html` | **Primary.** Four desktop frames and three mobile frames of the lens surface. |
+| `Linear Lens - Design Spec.dc.html`     | The written specification: tokens, disposition, interaction, a11y, handoff.   |
+
+The direction, in the spec's own words:
+
+> **The Lit Work Surface** — "A warm charcoal field where nothing is boxed by default,
+> structure comes from alignment and tonal steps, and the only saturated mark on the page
+> is the one place evidence has been verified. Depth is a control you press, never a hover
+> you discover."
+
+### How it is implemented
+
+As a palette swap at the composition root, not a dark variant of anything. The
+`--lens-*` scale sits beside the light tokens in `tokens.css`, and
+`LensSurface.module.css` remaps the existing `--color-*` names onto it for the whole
+subtree. Every component below already reads those names, so the evidence panels, the
+disclosure controls, the decision diff, the counterfactual axis, the claim ledger, the
+header and the footer all invert without a parallel stylesheet — including components
+written later.
+
+This is the technique `ProofSignature` already uses for the durable page's one dark
+chapter, which is also why the `--color-inverse-*` pair is remapped here: the signature
+block reads that pair rather than raw hexes, so it lands inside this palette instead of
+importing the light page's graphite into a charcoal field.
+
+The generic `/` surface is unchanged. That is asserted rather than claimed: `/`,
+`/role/athenahealth-yoh`, `/role/end-to-end-delivery` and `/resume/print` render
+byte-identical full-page screenshots with and without the one shared-CSS change this
+import required, and neither `/` nor the role routes emit any lens or section-frame
+markup at all.
+
+### Deviations from the supplied direction
+
+1. **Section numbers are legible.** The frames set the index at `#2F2D29` — 1.37:1 on
+   the canvas, an ornament rather than a number. This surface's numbers had to become
+   countable, since the defect being fixed was a page whose visible sequence disagreed
+   with itself, so `--lens-index` is the quietest tone still clearing 3:1 on both the
+   canvas and the band.
+
+2. **Metadata lifted one step.** The spec calls `#8B867D` "the floor" at 5.2:1, which is
+   measured against the canvas alone; the same grey is 4.3:1 on `--lens-surface-active`,
+   where controls sit. Raised to `#968F86`, which clears AA on every surface in the
+   scale. The tonal ladder and the amber budget are unchanged.
+
+3. **The strong rule stays neutral.** `--rule-strong` appears at fourteen block tops.
+   Mapping it to the amber edge would have spent the page's one saturated mark on
+   section furniture and left a reader unable to tell a structural line from a verified
+   one, so it maps to the most raised border instead.
+
+4. **Bands are inset, not full-bleed.** The measure and the gutters belong to the layout
+   shell, and a full-bleed section would overlap the progress rail beside it. The band
+   bleeds by exactly its own padding and pulls its content back, so the ground changes
+   without the content origin moving.
+
+5. **Vreko keeps its evidence.** The disposition table marks `VrekoArchitectureTrace`
+   REMOVE and reduces Vreko to one row of platform depth. A lens may reorder evidence
+   and may not remove it, so the section keeps its diagram, its recorded contradictions
+   and its boundary; the demotion is carried by the `inline` frame.
+
+6. **The section content is the current content.** The frames also propose new material
+   — a four-stage progression with an audience and discipline grid, three receipts
+   redrawn as a dimension table, responsibility lanes and a lifecycle sequence, a
+   session-pair figure, cumulative depth 1–4 controls, six product-judgment rules. None
+   of that is implemented here. This pass reconciles the existing surface's structure
+   and treatment against the direction; the content model those figures would need is
+   not built, and inventing it to fill a frame is the move this site argues against.
+
+7. **`showAvailability` stays true.** The spec's handoff sets it false. The banner is a
+   per-lens flag and the lens is addressed to a reader for whom availability is
+   material, so the existing value is kept.
+
+### One shared primitive changed
+
+`--color-action-fill` / `--color-action-ink` / `--color-action-ink-quiet`. Three filled
+buttons — the hero's primary, the final call to action, the résumé download — reached for
+`--color-ink` as a fill and assumed it was dark. That assumption held on every light
+surface and produced cream type on a cream fill the moment one inverted. Naming the fill
+and its ink as a pair lets a surface answer with whatever its strongest mark is: ink on
+the light page, amber on the lens. The light values resolve to exactly what those rules
+resolved to before, which is what the screenshot comparison above verifies.
+
 ## Ambiguities requiring later review
 
 - Whether `github.com/qmarcelle` should remain the header/hero link once per-repository

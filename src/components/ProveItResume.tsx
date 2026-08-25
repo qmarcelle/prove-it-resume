@@ -20,7 +20,7 @@ import type { RoleLens } from '@/lib/types';
 import styles from './ProveItResume.module.css';
 
 /**
- * The whole experience, composed once and shared by `/` and `/role/[slug]`.
+ * The durable experience, composed once and shared by `/` and `/role/[slug]`.
  *
  * Two routes, one composition, one lens argument. That is what makes "role lenses are
  * projections, not forks" true in the code rather than only in the documentation: there
@@ -33,6 +33,12 @@ import styles from './ProveItResume.module.css';
  *
  * Proof sections are mapped by id rather than listed literally, so a lens that reorders
  * `proofOrder` reorders the page too.
+ *
+ * An *application* lens gets its own composition in `ApplicationSurface` rather than a
+ * branch here — it renders a different set of sections in a different order, and a
+ * component asking which surface it is on at every second line is two compositions
+ * wearing one name. Everything below the section level is shared, and the evidence is
+ * the same evidence; see ADR 0010.
  */
 const PROOF_SECTIONS: Record<string, () => React.ReactNode> = {
   vreko: VrekoSection,

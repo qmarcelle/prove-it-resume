@@ -1,0 +1,169 @@
+/*
+ * The one section frame.
+ *
+ * Two custom properties carry the whole geometry: `--section-index` is the width of the
+ * index rail, `--section-index-gap` the distance from it to the content origin. Every
+ * frame below sets its ground, its rhythm and its type scale, and none of them may
+ * touch those two — which is what makes "one horizontal anchor" a property of the
+ * stylesheet rather than a thing to check by eye on each new section.
+ */
+.frame {
+  --section-index: 3.25rem;
+  --section-index-gap: 1.125rem;
+  --section-number-size: 2.875rem;
+  --section-title-size: clamp(1.75rem, 1.2rem + 2.1vw, 2.125rem);
+
+  scroll-margin-top: var(--scroll-offset);
+}
+
+/* ── Frames ───────────────────────────────────────────────────────────────── */
+
+.standard {
+  composes: frame;
+  padding: var(--space-8) 0 var(--space-7);
+}
+
+/*
+ * A block that groups without boxing. One tonal step and two hairlines, no border on
+ * the sides and no radius: the band is a change of ground, not a card.
+ *
+ * The negative inline margin is what keeps the promise this file makes. A padded band
+ * would move its own content origin inward and put its index rail — and therefore its
+ * heading — 28px right of every unbanded section on the page, which is precisely the
+ * misalignment the frame exists to remove. So the ground bleeds outward by exactly the
+ * padding that pulls the content back, and the origin does not move. The bleed is
+ * always smaller than the layout's page gutter, so nothing reaches the viewport edge.
+ */
+.band {
+  composes: frame;
+  margin-top: var(--space-7);
+  margin-inline: calc(var(--space-6) * -1);
+  padding: var(--space-7) var(--space-6) var(--space-8);
+  background: var(--color-surface-muted);
+  border-top: var(--rule);
+  border-bottom: var(--rule);
+}
+
+/* The section's own figure is carrying the emphasis; the head steps back for it. */
+.compact {
+  composes: frame;
+  --section-title-size: clamp(1.5rem, 1.1rem + 1.6vw, 1.875rem);
+
+  padding: var(--space-8) 0 var(--space-7);
+}
+
+/* Deliberately demoted: the index drops to metadata scale and the title follows it. */
+.inline {
+  composes: frame;
+  --section-number-size: var(--text-meta-lg);
+  --section-title-size: 1.3125rem;
+
+  padding: var(--space-7) 0 var(--space-6);
+}
+
+/* ── Head ─────────────────────────────────────────────────────────────────── */
+
+.head {
+  display: grid;
+  grid-template-columns: var(--section-index) minmax(0, 1fr);
+  column-gap: var(--section-index-gap);
+  align-items: baseline;
+}
+
+.headRuled {
+  padding-bottom: var(--space-5);
+  border-bottom: var(--rule);
+}
+
+/*
+ * The index rail. Tabular figures because the column is fixed and the numbers are not:
+ * proportional digits would let `01` and `11` sit at different optical origins inside a
+ * rail whose whole job is that they do not.
+ */
+.index {
+  font-family: var(--font-mono);
+  font-size: var(--section-number-size);
+  font-weight: 500;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  /*
+   * The fallback lives in the `var()` rather than as a declaration on `.frame`, because
+   * `.frame` is on the section itself: a default declared there would sit closer to
+   * this rule than anything a surface could set on an ancestor, and would silently win.
+   */
+  color: var(--section-index-color, var(--color-border));
+  user-select: none;
+}
+
+.inline .index {
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-meta-quiet);
+}
+
+.headBody {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-5) var(--space-8);
+  min-width: 0;
+}
+
+.origin {
+  display: flex;
+  flex: 1 1 24rem;
+  flex-direction: column;
+  gap: 0.4375rem;
+  min-width: 0;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-accent);
+}
+
+.title {
+  font-size: var(--section-title-size);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.lead {
+  flex: 1 1 21rem;
+  min-width: 0;
+  max-width: 56ch;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-ink-tertiary);
+}
+
+/*
+ * Below the two-column break the index rail lies down.
+ *
+ * An oversized number costs a column that a narrow viewport does not have, and the rail
+ * is a device for aligning headings across sections — a job that does not exist once
+ * there is only one column. Number and eyebrow share a metadata line instead, which is
+ * the same demotion the `inline` frame makes at every width.
+ */
+@media (max-width: 700px) {
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4375rem;
+    align-items: stretch;
+  }
+
+  .index {
+    font-size: var(--text-meta-lg);
+    letter-spacing: var(--tracking-meta);
+    line-height: 1.4;
+    color: var(--color-meta-quiet);
+  }
+
+  .band {
+    margin-inline: calc(var(--space-4) * -1);
+    padding-inline: var(--space-4);
+  }
+}
