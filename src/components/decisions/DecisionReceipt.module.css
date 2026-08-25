@@ -134,3 +134,69 @@
   line-height: 1.6;
   color: var(--color-inverse-ink-quiet);
 }
+
+.evidenceList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.evidenceRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-inverse-border);
+}
+
+.evidenceRow:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+/*
+ * The call to action is rendered by EvidenceLink, which is styled for the light
+ * surface. These receipts sit on the inverse surface, so the accent is corrected here
+ * rather than by adding a variant prop to the one component that is allowed to emit an
+ * href — its single responsibility is resolution, not theming.
+ */
+.evidenceRow a {
+  color: var(--color-inverse-accent);
+}
+
+.evidenceKind {
+  flex: none;
+  min-width: 6.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-inverse-ink-quiet);
+}
+
+.evidenceText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.evidenceTitle {
+  font-size: 0.906rem;
+  line-height: 1.5;
+  color: var(--color-inverse-ink);
+}
+
+.evidenceDescription {
+  font-size: 0.844rem;
+  line-height: 1.55;
+  color: var(--color-inverse-ink-quiet);
+}
+
+@media (max-width: 520px) {
+  .evidenceRow {
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-3);
+  }
+}

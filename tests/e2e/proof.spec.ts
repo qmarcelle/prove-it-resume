@@ -196,15 +196,43 @@ test.describe('claim ledger', () => {
 });
 
 test.describe('decision receipts', () => {
-  test('open into the receipt shape rather than collecting selections', async ({
+  test('open into the answered receipt rather than collecting selections', async ({
     page,
   }) => {
     await page.goto('/');
 
     await page.getByRole('button', { name: /Why MCP instead of another/ }).click();
 
-    await expect(page.getByText(/has not been written yet/i)).toBeVisible();
-    await expect(page.getByText('WHAT WOULD CHANGE THE DECISION NOW')).toBeVisible();
+    const receipt = page.locator('#sec-05');
+    await expect(receipt.getByText('CONSTRAINT', { exact: true })).toBeVisible();
+    await expect(
+      receipt.getByText('ALTERNATIVES CONSIDERED', { exact: true }),
+    ).toBeVisible();
+    await expect(receipt.getByText('DECISION', { exact: true })).toBeVisible();
+    await expect(
+      receipt.getByText('FAILURE MODE / TRADEOFF', { exact: true }),
+    ).toBeVisible();
+    await expect(receipt.getByText('EVIDENCE', { exact: true })).toBeVisible();
+    await expect(
+      receipt.getByText('WHAT WOULD CHANGE THE DECISION NOW', { exact: true }),
+    ).toBeVisible();
+  });
+
+  test('reaches an inspectable artifact pinned to a revision', async ({ page }) => {
+    await page.goto('/');
+
+    await page
+      .getByRole('button', { name: /What did your experiments fail to prove/ })
+      .click();
+
+    // The receipt's whole argument is that the negative result is inspectable. If the
+    // evidence row degraded to the unresolved state, this receipt would be an assertion.
+    const link = page
+      .locator('#sec-05')
+      .getByRole('link', { name: /INSPECT/ })
+      .first();
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute('href', /\/(?:blob|tree)\/[0-9a-f]{40}\//);
   });
 });
 

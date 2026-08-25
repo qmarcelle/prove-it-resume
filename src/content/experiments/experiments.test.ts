@@ -3,6 +3,7 @@ import { repositoryDecision } from './repository-decision';
 import { interlockHac330 } from './interlock-hac330';
 import { vrekoArchitecture } from './vreko-architecture';
 import { PROOFS } from '@/content/proofs';
+import { DECISION_RECEIPTS } from '@/content/decisions';
 import { isResolved } from '@/lib/evidence';
 
 /**
@@ -14,6 +15,15 @@ import { isResolved } from '@/lib/evidence';
  */
 
 const GITHUB_BLOB = /^https:\/\/github\.com\/[^/]+\/[^/]+\/blob\/[0-9a-f]{40}\//;
+
+/**
+ * Receipts cite directories as well as files, so they take the same rule over `/tree/`.
+ * The proof rows deliberately do not: two of them point at `/tree/main/packages/spec`
+ * because the claim there is "a published machine-checkable contract exists", which is
+ * a claim about the living standard rather than about one revision of it.
+ */
+const GITHUB_PINNED =
+  /^https:\/\/github\.com\/[^/]+\/[^/]+\/(?:blob|tree)\/[0-9a-f]{40}\//;
 
 describe('evidence links', () => {
   it('pins every GitHub evidence link to a full commit sha, never a branch', () => {
@@ -31,6 +41,22 @@ describe('evidence links', () => {
       if (!href.includes('github.com') || !href.includes('/blob/')) continue;
       // A /blob/main/... link silently changes meaning when main moves.
       expect(href, `${href} is not pinned to an immutable revision`).toMatch(GITHUB_BLOB);
+    }
+  });
+
+  it('pins every receipt evidence link, directories included', () => {
+    // A receipt argues about a decision at a point in time. A link that follows main
+    // would quietly restate that argument against code the decision never saw — so a
+    // receipt citing an evidence tree has to name the revision the tree was read at.
+    const hrefs = DECISION_RECEIPTS.flatMap((receipt) =>
+      (receipt.evidence ?? []).map((reference) => reference.href),
+    ).filter((href): href is string => Boolean(href));
+
+    for (const href of hrefs) {
+      if (!href.includes('/blob/') && !href.includes('/tree/')) continue;
+      expect(href, `${href} is not pinned to an immutable revision`).toMatch(
+        GITHUB_PINNED,
+      );
     }
   });
 

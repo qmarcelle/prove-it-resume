@@ -78,11 +78,25 @@ describe('decision receipts', () => {
     }
   });
 
-  it('carries no fabricated reasoning while answers are unsupplied', () => {
-    // If this fails, someone populated a receipt. That is welcome — but it must come
-    // from verified reasoning, so update this test deliberately rather than silencing it.
+  it('answers every question from a recorded decision', () => {
+    // These were populated from the Linear issues and Fibery Open Questions that carried
+    // the reasoning when each decision was made. An unanswered receipt is still a valid
+    // state — the component renders its shape as AWAITING — but a partial one is not: a
+    // receipt that states a decision without its constraint or its cost is the kind of
+    // tidied-up rationale this section exists to avoid.
     for (const receipt of DECISION_RECEIPTS) {
-      expect(receipt.decision).toBeUndefined();
+      expect(receipt.decision).toBeTruthy();
+      expect(receipt.constraint).toBeTruthy();
+      expect(receipt.tradeoff).toBeTruthy();
+      expect(receipt.wouldChangeIf).toBeTruthy();
+    }
+  });
+
+  it('never links a receipt to an artifact it has not confirmed', () => {
+    for (const receipt of DECISION_RECEIPTS) {
+      for (const reference of receipt.evidence ?? []) {
+        if (reference.verified) expect(reference.href).toBeTruthy();
+      }
     }
   });
 });
