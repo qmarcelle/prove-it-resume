@@ -1,7 +1,20 @@
+/*
+ * The completion state sits on its own quiet ground. It is the one place on the page
+ * handing over a file rather than an argument, and the change of surface is what marks
+ * that shift without needing a heavier rule or a second accent.
+ */
 .section {
-  padding: 2.75rem 0;
   border-bottom: var(--rule);
+  background: var(--color-surface-subtle);
+  padding: var(--space-7) var(--space-5);
   scroll-margin-top: var(--scroll-offset);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-accent);
 }
 
 .inner {
@@ -34,24 +47,53 @@
 
 .actions {
   display: flex;
-  flex: 0 1 auto;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-3);
+  flex: 0 1 340px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.625rem;
+  min-width: 0;
 }
 
+/*
+ * The download states its own weight. `2 PP` is the first thing anyone wants to know
+ * about a résumé, and putting it inside the button means the reader does not have to
+ * download the file to find out.
+ */
 .primary {
-  padding: 0.75rem 1.125rem;
-  background: var(--color-ink);
-  color: var(--color-canvas);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  border: 1px solid var(--color-ink);
   border-radius: var(--radius);
-  font-size: 0.906rem;
-  font-weight: 600;
+  background: var(--color-ink);
+  padding: 0.8125rem 1.125rem;
+  font-family: var(--font-mono);
+  font-size: 0.781rem;
+  letter-spacing: 0.05em;
+  color: var(--color-inverse-ink);
 }
 
 .primary:hover {
+  border-color: var(--color-accent);
   background: var(--color-accent);
   text-decoration: none;
+}
+
+.pageCount {
+  color: var(--color-inverse-accent);
+}
+
+.primary:hover .pageCount {
+  color: var(--color-inverse-ink);
+}
+
+/* The second line: reachable, deliberately not competing with the download. */
+.secondary {
+  padding: 0.1875rem 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-accent-deep);
 }
 
 .pending {

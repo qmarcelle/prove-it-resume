@@ -129,6 +129,13 @@ const RESUME_ROLES: readonly ResumeRole[] = [
 export const RESUME_DOCUMENT = {
   name: 'QWYNN MARCELLE',
   revision: 'REV 2026.08',
+  /**
+   * Sheets in the rendered document. Stated here so the résumé call to action can say
+   * how long it is without a second copy of the number living in the CTA; the document
+   * is two explicit page boxes and `resume.spec.ts` asserts exactly that count, so the
+   * two cannot drift apart silently.
+   */
+  pages: 2,
   domains: 'AI PLATFORM · DEVELOPER SYSTEMS · SOFTWARE ARCHITECTURE',
   location: 'Ooltewah, Tennessee',
   /*
