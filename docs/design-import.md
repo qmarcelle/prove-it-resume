@@ -203,6 +203,10 @@ of which were visible without measuring:
 bottom-anchored elements, because on a fixed sheet with `overflow: hidden` these fail by
 silent clipping rather than by visible wrapping.
 
+The generated PDFs are checked against their routes by content fingerprint rather than by
+byte comparison — Chromium's output is deterministic on one machine but differs across
+platforms, since builds subset embedded fonts differently. ADR 0007.
+
 ## Content placeholders in the export
 
 - Résumé PDF: **resolved.** The second import supplied the document; `pnpm resume:pdf`

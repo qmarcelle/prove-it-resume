@@ -36,17 +36,36 @@ Verified in the output: `/Link` annotations carrying real `/URI` values, `Type0`
 font subsets with `/FontFile` (vector, selectable, searchable), and a `/MediaBox` of
 `0 0 612 792` — exactly US Letter — because `preferCSSPageSize` honours the `@page` rule.
 
-Generation is byte-deterministic: Chromium stamps `/CreationDate` and `/ModDate` into
-every file, and both are normalised to fixed values with equal-length replacements so no
-cross-reference offset moves. CI regenerates and fails if anything differs.
+Chromium stamps `/CreationDate` and `/ModDate` into every file; both are normalised with
+equal-length replacements so no cross-reference offset moves. That makes regeneration
+byte-stable **on one machine**, which keeps `git status` quiet when nothing changed.
+
+It does **not** make output reproducible across platforms, and an early version of this
+decision assumed it did. CI proved otherwise on the first run: the same commit produces
+285KB on macOS and 229KB on Linux, because the two Chromium builds subset and embed the
+font programs differently. A byte-comparison in CI therefore fails for every artifact
+generated on a laptop, while saying nothing about whether the résumé is current.
+
+The check instead compares what has to be true and is platform-independent:
+
+1. **A content fingerprint** — a hash of the print route's rendered text and its ordered
+   link destinations, recorded in `scripts/resume-artifacts.json` when the PDF is
+   generated. This is DOM, not rendering, so it is identical everywhere. It answers the
+   question the check exists for: _was the résumé edited without regenerating the PDF?_
+2. **The committed PDF's own structure** — that it is a real PDF, two pages, US Letter,
+   carrying the same link destinations the route has.
+
+What this deliberately does not catch is rasterization differences between two Chromium
+builds, which are not drift.
 
 ## Consequences
 
 - A deploy needs no browser at build or request time, and the download is a static file
   with no cold start and no per-invocation cost.
 - The committed artifact can drift from the route it claims to render. That is the real
-  risk here, and it is why `pnpm resume:pdf:check` runs in CI as its own job — checking
-  `git status`, not just `git diff`, so a generated-but-never-committed file also fails.
+  risk here, and it is why `pnpm resume:pdf:check` runs in CI as its own job.
+- Regenerating the PDFs also rewrites `scripts/resume-artifacts.json`; both must be
+  committed together, and the CI failure message says so.
 - One PDF per role lens, generated from a manifest the app itself publishes at
   `/resume/manifest.json`. Adding a lens adds its PDF with no change to the script.
 - The document cannot reflow. A fixed page box with `overflow: hidden` fails by silent

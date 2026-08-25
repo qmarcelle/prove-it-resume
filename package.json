@@ -12,7 +12,7 @@
     "dev": "next dev",
     "build": "next build",
     "resume:pdf": "node scripts/build-resume-pdf.mts",
-    "resume:pdf:check": "node scripts/build-resume-pdf.mts && test -z \"$(git status --porcelain -- public)\" || { git status --short -- public; exit 1; }",
+    "resume:pdf:check": "node scripts/build-resume-pdf.mts --check",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
