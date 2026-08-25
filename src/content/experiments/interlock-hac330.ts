@@ -24,8 +24,20 @@ import type { InterlockCounterfactualData } from '@/lib/interactions';
  */
 
 const REPO = 'https://github.com/Marcelle-Labs/interlock';
-const REV = '4239474ace02ccb1492cc67cd768e2c4ef43c9db';
-const HAC330 = `${REPO}/blob/${REV}/experiments/hac-330`;
+
+/*
+ * The pin the repository itself publishes its evidence under. Every HAC-330 artifact
+ * used here is byte-identical between this revision and the one the packet was read at
+ * (blob shas compared), so the site quotes one pin rather than two for the same file.
+ */
+const PIN = '75253e38791e69f7e2a4bb3a041044a9114c32f0';
+const HAC330 = `${REPO}/blob/${PIN}/experiments/hac-330`;
+
+/*
+ * HAC-343 is pinned separately and deliberately: its judge export is *not* identical
+ * between the two revisions, and the figures quoted below were read at this one.
+ */
+const HAC343_REV = '4239474ace02ccb1492cc67cd768e2c4ef43c9db';
 
 const BASELINE_BASIS = 'eb67a6f56b3bf7e71846e7324d21af44565c0b70';
 const PERTURBED_BASIS = 'db8a63ec9405191bdd40d0ed0fc69684fca5d17b';
@@ -349,6 +361,6 @@ export const INTERLOCK_BROADER_EVALUATION = {
   title: 'HAC-343 bounded operational comparison',
   description:
     'Sixteen scenarios run through four coordination strategies. Interlock missed 0 of 2 cross-target hazards and parallelised 2 of 2 independent opportunities; per-target locking, which is correct for the hazard it addresses, missed 2 of 2.',
-  href: `${REPO}/blob/${REV}/experiments/hac-343/evidence/judge-export.json`,
+  href: `${REPO}/blob/${HAC343_REV}/experiments/hac-343/evidence/judge-export.json`,
   verified: true,
 };

@@ -142,8 +142,14 @@ and the design source is wrong.
 
 - No inspect call to action without an exact artifact. Unresolved rows render as stated
   gaps.
-- Every GitHub evidence link is pinned to a full 40-character commit sha. A `/blob/main/`
-  link silently changes meaning when main moves; a test enforces this.
+- Every GitHub evidence link on the three primary proofs is pinned to a full
+  40-character commit sha, enforced by a test. A `/blob/main/` link silently changes
+  meaning when main moves, which matters most where the claim is about a specific frozen
+  result. The one supporting-work link deliberately tracks `main`, because it names a
+  living evaluation document rather than a frozen artifact.
+- Anchored links must point at a heading that exists. A dead `#anchor` lands the reader
+  at the top of the page, which looks like working evidence and is not — one was found
+  and corrected during this pass.
 - No two links in one panel share a call-to-action label. "INSPECT SOURCE" three times
   leaves the reader guessing which is which.
 - Claim boundaries are rendered, never collapsed to make an interaction tidier.

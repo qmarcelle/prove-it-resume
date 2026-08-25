@@ -1,24 +1,23 @@
 import type { Proof } from '@/lib/types';
 
 /**
- * Interlock evidence, bound to the frozen HAC-330 packet.
+ * Interlock publishes its evidence pinned to a commit rather than a branch, so the
+ * packet a reader opens is the packet the claim was made against. Those URLs are
+ * reproduced here at the same pin; a branch link would silently drift.
  *
- * The counterfactual figures that used to live here (`140 > 130`, `WITHHOLD_SERIALIZE`,
- * `120 <= 130`) were carried over from the design draft and labelled in the UI as
- * unverified prototype values. They are now read from `experiments/hac-330/evidence/`
- * instead — see `src/content/experiments/interlock-hac330.ts`. The three figures turned
- * out to match the frozen packet exactly, but they are used because the packet says so,
- * not because the draft did.
+ * **The rows for the controlled experiment point at HAC-330's own artifacts.** They
+ * briefly pointed at HAC-342 — the public republication of the *cloud* run — which
+ * meant a row labelled "frozen evidence packet", sitting directly under "controlled
+ * experiment", opened a different experiment's packet. The repository is explicit that
+ * HAC-330, HAC-340 and HAC-343 are three separate results and are never combined, so a
+ * row that quietly merges two of them is exactly the failure the evidence rule exists
+ * to prevent. The cloud row keeps the cloud artifacts and says it is a separate run.
  *
- * The three experiments stay distinct, as the source repository insists:
- * HAC-330 is the controlled local causal experiment, HAC-340 is a separate recorded
- * Google Cloud traversal (published for logged-out inspection as HAC-342), and HAC-343
- * is a broader bounded operational comparison.
+ * The counterfactual figures themselves are read from the packet, in
+ * `src/content/experiments/interlock-hac330.ts`.
  */
-const INTERLOCK_REPO = 'https://github.com/Marcelle-Labs/interlock';
-const INTERLOCK_REV = '4239474ace02ccb1492cc67cd768e2c4ef43c9db';
-const HAC330 = `${INTERLOCK_REPO}/blob/${INTERLOCK_REV}/experiments/hac-330`;
-const HAC342 = `${INTERLOCK_REPO}/blob/${INTERLOCK_REV}/experiments/hac-342`;
+const ILK_REPO = 'https://github.com/Marcelle-Labs/interlock';
+const ILK_PIN = '75253e38791e69f7e2a4bb3a041044a9114c32f0';
 
 export const interlock: Proof = {
   id: 'interlock',
@@ -47,7 +46,7 @@ export const interlock: Proof = {
       id: 'ilk-experiment',
       label: 'Controlled experiment',
       detail: 'HAC-330 · 24/24 acceptance checks',
-      href: `${HAC330}/README.md`,
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/README.md`,
       verified: true,
       cta: 'INSPECT EXPERIMENT',
     },
@@ -55,7 +54,7 @@ export const interlock: Proof = {
       id: 'ilk-packet',
       label: 'Frozen evidence packet',
       detail: 'three arms, decisions, invariant reports',
-      href: `${HAC330}/evidence/arms.json`,
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/evidence/arms.json`,
       verified: true,
       cta: 'INSPECT PACKET',
     },
@@ -64,29 +63,31 @@ export const interlock: Proof = {
       label: 'Independent verifier',
       detail: 'pnpm check:packet',
       detailIsCode: true,
-      href: `${HAC330}/bin/verify-packet.mjs`,
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/bin/verify-packet.mjs`,
       verified: true,
       cta: 'INSPECT VERIFIER',
     },
     {
       id: 'ilk-cloud',
-      // A *separate* run from the counterfactual above, and labelled as such. HAC-340
-      // did not reproduce the 140/120 comparison in Google Cloud.
+      // A separate recorded run, labelled as one. HAC-340 does not reproduce the
+      // counterfactual above, and the repository is explicit that the two are never
+      // combined — so this row must not borrow the controlled experiment's artifacts.
       label: 'Cloud traversal · separate run',
-      detail: 'HAC-340, published for inspection as HAC-342',
-      href: `${HAC342}/README.md`,
+      detail: 'Google ADK + Vertex AI + Cloud Run + MCP proxy',
+      detailIsCode: true,
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-342/evidence/cloud-run.public.json`,
       verified: true,
-      cta: 'INSPECT CLOUD EVIDENCE',
+      cta: 'INSPECT CLOUD PACKET',
     },
   ],
   evidence: [
     {
       id: 'ilk-ev-experiment',
       kind: 'experiment',
-      title: 'HAC-330 controlled counterfactual',
+      title: 'Controlled counterfactual comparison',
       description:
-        'Three arms over one decision function: uncoordinated, treated with real mined evidence, and a perturbed-evidence control. Identical final tree and identical code across arms, so the difference is attributable to the evidence.',
-      href: `${HAC330}/README.md`,
+        'Paired arms with and without evidence-bound coordination before shared-state mutation. Re-runnable: pnpm hac330.',
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/README.md`,
       verified: true,
     },
     {
@@ -94,8 +95,8 @@ export const interlock: Proof = {
       kind: 'observed',
       title: 'Frozen evidence packet',
       description:
-        'Committed run artifacts, digest-bound and byte-reproducible, so the comparison can be re-checked after the fact without rerunning it.',
-      href: `${HAC330}/evidence/arms.json`,
+        'Recorded run artifacts held fixed so the comparison can be re-checked after the fact. Published at a pinned commit, not a branch, and the packet digest is recomputable with shasum.',
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/evidence/arms.json`,
       verified: true,
     },
     {
@@ -103,22 +104,22 @@ export const interlock: Proof = {
       kind: 'observed',
       title: 'Independent verifier',
       description:
-        'Re-checks the committed packet without the pinned sibling checkout, so the checking path does not share the decision path.',
-      href: `${HAC330}/bin/verify-packet.mjs`,
+        'Verification separated from execution so the checking path does not share the decision path.',
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-330/bin/verify-packet.mjs`,
       verified: true,
     },
     {
       id: 'ilk-ev-cloud',
       kind: 'deployed',
-      title: 'Google Cloud participation (HAC-340), published as HAC-342',
+      title: 'Google Cloud participation (HAC-340) — a separate run',
       description:
-        'One recorded Gemini + Google ADK + Cloud Run traversal through the Interlock MCP proxy, with a receipt-bound mutation read back by a separately authenticated principal. A separate run: it does not reproduce the counterfactual above, and Agent Runtime and Agent Gateway did not participate.',
-      href: `${HAC342}/README.md`,
+        'One recorded traversal through an authenticated decision/execution boundary, with the mutation and an independently authenticated read-back kept as separate facts. Published for logged-out inspection as HAC-342, with its own verifier. It does not reproduce the counterfactual above.',
+      href: `${ILK_REPO}/blob/${ILK_PIN}/experiments/hac-342/bin/verify-public-packet.mjs`,
       verified: true,
     },
   ],
   boundary:
-    'A bounded experiment under stated conditions: one constraint, one environment, one pair of intents, on synthetic commit histories. It is not a universal safety proof. Co-change evidence is a detector with false negatives — the packet’s own control arm shows a real coupling going undetected because history never exercised it — and behaviour at repository scale is explicitly not measured. ALLOW is not VERIFIED; OBSERVED is not SAFE.',
+    'A bounded experiment under stated conditions. The controlled counterfactual ran locally; the Google Cloud traversal is a separate recorded run, and neither is evidence for the other. It is not a universal safety proof, and it does not establish behavior outside the constraint and environment described in the evidence packet. The repository states the full not-claimed list in DISCLOSURE.md.',
 };
 
 /** Why this experiment belongs in a résumé at all. */

@@ -58,9 +58,9 @@ page. Two things guard it: the type shape, and tests in `src/content/content.tes
 that assert no record points at the bare GitHub profile or at an on-page anchor — the two
 ways the design draft produced links that looked like evidence and were not.
 
-Panels report their own honesty: "3 of 12 evidence items resolve to an inspectable
-artifact". That is more useful to a skeptic than an unqualified "evidence source" line —
-and it moves when the evidence does. Two of the three panels now read "8 of 8".
+Panels report their own honesty — "8 of 8 evidence items resolve to an inspectable
+artifact" — which is more useful to a skeptic than an unqualified "evidence source" line,
+and which moves when the evidence does. It read "0 of 8" until the artifacts existed.
 
 ## Role lenses
 

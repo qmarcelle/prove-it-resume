@@ -36,17 +36,33 @@ Present in the design export and used as-is.
 
 ### Bound during the interaction pass (2026-08-24)
 
-Read from public artifacts and checked to resolve. Every GitHub link is pinned to a full
-commit sha, enforced by `src/content/experiments/experiments.test.ts`.
+What the three interactions themselves read, in `src/content/experiments/`. This is
+separate from the evidence-panel rows, which are bound in `src/content/proofs/`. Every
+GitHub link in both places is pinned to a full commit sha, enforced by
+`src/content/experiments/experiments.test.ts`.
 
-| Item                                     | Source                                                                     | Notes                                                                                                                |
-| ---------------------------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Repository decision diff — the whole run | `workspacejson/datahub-agent` @ `3607805f`, `evaluation/hac-152/`          | Frozen paired-model run. Digests re-checked locally with `shasum -a 256 -c SHA256SUMS`; all three artifacts matched. |
-| Interlock counterfactual — all figures   | `Marcelle-Labs/interlock` @ `4239474a`, `experiments/hac-330/evidence/`    | Bound, `130`, arms `140`/`120`, `WITHHOLD_SERIALIZE`, `ALLOW_PARALLEL`, coupling support 8/10, both basis revisions. |
-| Interlock evidence rows (4 of 4)         | Same packet, plus `experiments/hac-342/` for the cloud run                 | HAC-330, HAC-340 and HAC-343 are kept as three separate results.                                                     |
-| Vreko evidence rows (4 of 4)             | `vreko-dev/mcp-server` @ `c98e7ae1`, `vreko-dev/vreko-cli` @ `b096ce3b`    | Architecture, command surface and manifest. See the corrections below.                                               |
-| Vreko public/private package split       | npm registry, checked 2026-08-24                                           | Four packages resolve; nine declared dependencies return 404. `npm view` is published as the re-derivation.          |
-| Decision-time information study          | `workspacejson/datahub-agent` @ `3607805f`, `evaluation/hac-152/README.md` | Bound to one run, and labelled as one run rather than promoted to a general finding.                                 |
+| Item                                     | Source                                                                            | Notes                                                                                                                                              |
+| ---------------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Repository decision diff — the whole run | `workspacejson/datahub-agent` @ `3607805f`, `evaluation/hac-152/`                 | Frozen paired-model run. Digests re-checked locally with `shasum -a 256 -c SHA256SUMS`; all three artifacts matched.                               |
+| Interlock counterfactual — all figures   | `Marcelle-Labs/interlock` @ `75253e38`, `experiments/hac-330/evidence/`           | Bound, `130`, arms `140`/`120`, `WITHHOLD_SERIALIZE`, `ALLOW_PARALLEL`, coupling support 8/10, both basis revisions.                               |
+| Interlock interaction data               | Same packet; HAC-343 pinned separately at `4239474a`, where its figures were read | HAC-330, HAC-340 and HAC-343 are kept as three separate results. HAC-343's judge export is not identical across the two pins, so it keeps its own. |
+| Vreko interaction data                   | `vreko-dev/mcp-server` @ `c98e7ae1`, `vreko-dev/vreko-cli` @ `b096ce3b`           | Architecture, command surface and manifest. See the corrections below.                                                                             |
+| Vreko public/private package split       | npm registry, checked 2026-08-24                                                  | Four packages resolve; nine declared dependencies return 404. `npm view` is published as the re-derivation.                                        |
+| Decision-time information study          | `workspacejson/datahub-agent` @ `3607805f`, `evaluation/hac-152/README.md`        | Bound to one run, and labelled as one run rather than promoted to a general finding.                                                               |
+
+### Evidence links corrected during the merge with `main`
+
+Two defects found while reconciling with the concurrent evidence-binding commit. Both
+are the same failure mode: a call to action that resolves, but not to the artifact its
+row names.
+
+| Defect                                                                                                                                          | Correction                                                                                                                                                                                                                                                                                                                                |
+| ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Interlock's "frozen evidence packet" and "independent verifier" rows pointed at `experiments/hac-342/` — the _cloud_ run's packet and verifier. | Repointed at HAC-330's own `evidence/arms.json` and `bin/verify-packet.mjs`. The rows sit directly under "controlled experiment", so opening a different experiment's packet quietly merged HAC-330 and HAC-340 — which the source repository explicitly forbids. The cloud row keeps the cloud artifacts and is labelled a separate run. |
+| Vreko's agent-lifecycle row used the anchor `#the-v2-agentic-workflow`, which is not a heading in that README.                                  | Repointed at `#what-is-vreko-mcp-server`, where the lifecycle is documented. A dead anchor lands the reader at the top of the page, which reads as working evidence and is not.                                                                                                                                                           |
+
+Every outbound link on the built pages was then checked: 22 of 22 return 200, and every
+anchor corresponds to a real heading.
 
 ### Claims corrected because the evidence said less
 
@@ -67,23 +83,12 @@ Each renders `VERIFY BEFORE PUBLISHING` in place of a call to action.
 In the export these pointed either at `#sec-0N` — the section the reader is already in —
 or at the general GitHub profile. Neither is the artifact the row names.
 
-The Vreko (`EV-VRK`) and Interlock (`EV-ILK`) panels are no longer in this section: both
-now report **8 of 8 evidence items resolve to an inspectable artifact**.
+**This section is now empty for the three primary claims.** Every evidence row on Vreko
+(`EV-VRK` 8/8), Repository Intelligence (`EV-WSJ` 12/12), Interlock (`EV-ILK` 8/8) and
+Never Ask Twice (1/1) resolves to an exact artifact.
 
-**Repository Intelligence** (`EV-WSJ`) — 3 of 12 resolved
+**Still unresolved**
 
-Still unresolved. Each names an artifact that exists publicly, but the exact destination
-has not been confirmed to be the thing the row claims, so none of them link.
-
-- Canonical `workspace.json` specification (Apache-2.0)
-- JSON Schema / types
-- CLI / producer tooling
-- `workspace.json` for Codex — agent-side hooks and repository history
-- Integrations
-
-**Supporting**
-
-- Never Ask Twice ablation
 - "Selected Marcelle Labs work" — currently the GitHub profile; should become a specific
   destination.
 

@@ -6,6 +6,18 @@ import type { EvidenceRef, Proof } from '@/lib/types';
  */
 export const TALLY_CASE_URL = 'https://www.workspacejson.dev/showcase/tally';
 
+/**
+ * The canonical workspace.json repositories. Authority is split deliberately:
+ * `standard` owns the specification and depends on nothing else; `cli` is the neutral
+ * producer; `integrations` holds host-side consumers. The Codex adapter still
+ * publishes from the historical `workspace-json` namespace, which is why that one URL
+ * points there rather than at the canonical organization.
+ */
+const WSJ_STANDARD = 'https://github.com/workspacejson/standard';
+const WSJ_CLI = 'https://github.com/workspacejson/cli';
+const WSJ_INTEGRATIONS = 'https://github.com/workspacejson/integrations';
+const WSJ_CODEX = 'https://github.com/workspace-json/codex-mcp';
+
 /** The three layers of the argument, rendered as a vertical chain. */
 export type RepositoryLayer = {
   id: string;
@@ -41,6 +53,16 @@ export const repositoryLayers: readonly RepositoryLayer[] = [
       "Portable repository history that changes Codex's plan before an evidenced risky edit lands.",
     ],
     tags: ['Codex', 'MCP', 'Hooks', 'Co-change / fragility'],
+    link: {
+      label: 'INSPECT THE CODEX ADAPTER',
+      ref: {
+        id: 'codex-adapter',
+        kind: 'source',
+        title: 'workspace.json for Codex',
+        href: WSJ_CODEX,
+        verified: true,
+      },
+    },
   },
   {
     id: 'enterprise',
@@ -121,16 +143,30 @@ export const repositoryIntelligence: Proof = {
     {
       id: 'wsj-spec',
       label: 'Canonical specification',
-      verified: false,
+      href: WSJ_STANDARD,
+      verified: true,
       cta: 'VIEW REPOSITORY',
     },
-    { id: 'wsj-schema', label: 'JSON Schema / types', verified: false, cta: 'INSPECT' },
-    { id: 'wsj-cli', label: 'CLI / producer tooling', verified: false, cta: 'INSPECT' },
+    {
+      id: 'wsj-schema',
+      label: 'JSON Schema / types',
+      href: `${WSJ_STANDARD}/tree/main/packages/spec`,
+      verified: true,
+      cta: 'INSPECT',
+    },
+    {
+      id: 'wsj-cli',
+      label: 'CLI / producer tooling',
+      href: WSJ_CLI,
+      verified: true,
+      cta: 'INSPECT',
+    },
     {
       id: 'wsj-codex',
       label: 'Codex implementation',
       detail: 'agent-side hooks and repository history',
-      verified: false,
+      href: WSJ_CODEX,
+      verified: true,
       cta: 'OPEN GITHUB',
     },
     {
@@ -141,7 +177,13 @@ export const repositoryIntelligence: Proof = {
       verified: true,
       cta: 'READ CASE',
     },
-    { id: 'wsj-integrations', label: 'Integrations', verified: false, cta: 'INSPECT' },
+    {
+      id: 'wsj-integrations',
+      label: 'Integrations',
+      href: WSJ_INTEGRATIONS,
+      verified: true,
+      cta: 'INSPECT',
+    },
   ],
   evidence: [
     {
@@ -150,7 +192,8 @@ export const repositoryIntelligence: Proof = {
       title: 'Canonical specification (Apache-2.0)',
       description:
         'Descriptive standard for committing repository-derived information in a deterministic, tool-consumable form.',
-      verified: false,
+      href: WSJ_STANDARD,
+      verified: true,
     },
     {
       id: 'wsj-ev-schema',
@@ -158,7 +201,8 @@ export const repositoryIntelligence: Proof = {
       title: 'JSON Schema / types',
       description:
         'Machine-checkable contract separating producers of repository intelligence from its consumers.',
-      verified: false,
+      href: `${WSJ_STANDARD}/tree/main/packages/spec`,
+      verified: true,
     },
     {
       id: 'wsj-ev-cli',
@@ -166,7 +210,8 @@ export const repositoryIntelligence: Proof = {
       title: 'CLI / producer tooling',
       description:
         'Reference producer that generates and validates the committed artifact.',
-      verified: false,
+      href: WSJ_CLI,
+      verified: true,
     },
     {
       id: 'wsj-ev-codex',
@@ -174,7 +219,8 @@ export const repositoryIntelligence: Proof = {
       title: 'workspace.json for Codex',
       description:
         'Agent-side implementation: portable repository history surfaced through hooks and MCP before an evidenced risky edit lands.',
-      verified: false,
+      href: WSJ_CODEX,
+      verified: true,
     },
     {
       id: 'wsj-ev-tally',
@@ -186,20 +232,12 @@ export const repositoryIntelligence: Proof = {
       verified: true,
     },
     {
-      /*
-       * Partially answered, and the row now says which part. One frozen paired run
-       * exists: same task, same prompt digest, same model, same temperature-zero
-       * settings, with the context envelope as the only varying input. It shows one
-       * plan changing under one kind of repository evidence. It does not answer the
-       * general question — which signals, how often, at what cost — so the row is
-       * bound to the run rather than promoted to a finding.
-       */
       id: 'wsj-ev-research',
       kind: 'research',
-      title: 'Decision-time information study — one bound run',
+      title: 'Decision-time information study (preregistered)',
       description:
-        'The open question is which repository-derived signals, available at decision time, causally change an agent decision. One paired run is frozen and inspectable (HAC-152): resolving the exact producing source changed the plan from a refusal to a scoped edit. Notably it turned on source resolution, not on co-change — the run records that no co-change evidence was available at all.',
-      href: 'https://github.com/workspacejson/datahub-agent/blob/3607805fe1a00b6c18eac0d50371edad88fd5214/evaluation/hac-152/README.md',
+        'Preregistered characterization of which qualifying historical relationships survive the projection at decision time, frozen before any result was computed. No model was run: it measures what the artifact carries, not whether an agent is helped by it.',
+      href: `${WSJ_CLI}/tree/main/docs/evidence/meta-375`,
       verified: true,
     },
   ],

@@ -200,12 +200,17 @@ describe('vreko public architecture', () => {
     }
   });
 
-  it('states that the implementation is not public in the proof boundary', () => {
+  it('states that the implementation is not inspectable in the proof boundary', () => {
     const vreko = PROOFS.find((p) => p.id === 'vreko');
-    expect(vreko?.boundary).toMatch(/not published/i);
-    // And the withdrawn claim must not come back.
+
+    // Asserted as a property rather than as a phrase, so a rewrite of the boundary does
+    // not fail this while a *withdrawal* of the caveat does.
+    expect(vreko?.boundary).toMatch(/not published|not open to inspection|proprietary/i);
+
+    // The withdrawn claim must not come back: the public repositories are distribution
+    // and documentation surfaces, and none of them carry the implementation.
     expect(JSON.stringify(vreko)).not.toMatch(
-      /Public repository containing the server implementation/,
+      /repository containing the server implementation/i,
     );
   });
 });
