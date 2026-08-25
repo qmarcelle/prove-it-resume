@@ -2,6 +2,7 @@ import { PROFILES, RESUME, SITE } from '@/content/site';
 import { ResumeDownloadLink } from '@/components/resume/ResumeDownloadLink';
 import type { RoleLens } from '@/lib/types';
 import { isResolved } from '@/lib/evidence';
+import { ActionIcon } from '@/components/icon/Icon';
 import styles from './SiteFooter.module.css';
 
 /**
@@ -9,9 +10,17 @@ import styles from './SiteFooter.module.css';
  *
  * In the design export LinkedIn, Email, and Résumé all pointed at `#resume`, and the
  * Marcelle Labs link pointed at `#`. Rendering those as links would promise
- * destinations that do not exist, so unresolved profiles are shown as plain text marked
- * as not yet published. Restoring one is a matter of setting `href` and `verified` on
- * the record in `content/site.ts`.
+ * destinations that do not exist, so an unresolved profile is shown as plain text
+ * marked as not yet published. All of them resolve now, but the branch stays: it is the
+ * mechanism that keeps a future record from shipping as a dead link, and deleting it
+ * because nothing currently needs it is how that guarantee gets lost.
+ *
+ * Email is the one destination that does not open a page, so it renders without the
+ * new-tab affordance — that mark and its screen-reader note both describe navigating to
+ * a site, and neither is true of handing the address to a mail client. It gets an
+ * envelope instead of nothing at all: an absence said the same thing as an unstyled
+ * link, where the point is that this destination behaves differently from its
+ * neighbours.
  */
 export function SiteFooter({ lens }: { lens: RoleLens }) {
   const marcelleLabs = PROFILES.find((profile) => profile.id === 'marcelle-labs');
@@ -24,28 +33,41 @@ export function SiteFooter({ lens }: { lens: RoleLens }) {
 
         <nav className={styles.nav} aria-label="Elsewhere">
           <a href={SITE.github} target="_blank" rel="noreferrer noopener">
-            GitHub ↗<span className="visually-hidden"> — opens in a new tab</span>
+            GitHub
+            <ActionIcon affordance="visit-external-site" size={12} />
+            <span className="visually-hidden"> — opens in a new tab</span>
           </a>
 
-          {links.map((profile) =>
-            isResolved(profile) && profile.href ? (
+          {links.map((profile) => {
+            if (!isResolved(profile) || !profile.href) {
+              return (
+                <span className={styles.pending} key={profile.id}>
+                  {profile.title} — not published
+                </span>
+              );
+            }
+
+            return profile.href.startsWith('mailto:') ? (
+              <a href={profile.href} key={profile.id}>
+                {profile.title}
+                <ActionIcon affordance="compose-mail" size={12} />
+              </a>
+            ) : (
               <a
                 key={profile.id}
                 href={profile.href}
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                {profile.title} ↗
+                {profile.title}
+                <ActionIcon affordance="visit-external-site" size={12} />
+                <span className="visually-hidden"> — opens in a new tab</span>
               </a>
-            ) : (
-              <span className={styles.pending} key={profile.id}>
-                {profile.title} — not published
-              </span>
-            ),
-          )}
+            );
+          })}
 
           {isResolved(RESUME) ? (
-            <ResumeDownloadLink lens={lens}>Résumé ↓</ResumeDownloadLink>
+            <ResumeDownloadLink label="Résumé" lens={lens} />
           ) : (
             <span className={styles.pending}>Résumé — not published</span>
           )}
@@ -58,7 +80,8 @@ export function SiteFooter({ lens }: { lens: RoleLens }) {
             target="_blank"
             rel="noreferrer noopener"
           >
-            {marcelleLabs.title} ↗
+            {marcelleLabs.title}
+            <ActionIcon affordance="visit-external-site" size={12} />
           </a>
         ) : (
           <span className={styles.note}>Professional work: Marcelle Labs</span>

@@ -7,6 +7,20 @@ This complements `docs/design-import.md`, which covers the original visual-langu
 import. That import is preserved in-repository at `design/reference/claude/`. **This one
 is not**, for the reason given below.
 
+## Scope
+
+The motion storyboard recorded here is scoped to three interactions — Repository Decision
+Diff, Interlock Counterfactual, and Vreko Semantic Zoom — and remains unchanged. All three
+are still DOM and SVG driven by CSS transitions, and nothing below has been superseded.
+
+**Hero Concept B is separately scoped.** It arrived later, as its own artifact
+(`design/reference/claude/Prove It Resume - Hero Concept B.dc.html`), and it does not
+alter the implementation decision for those three. Where this storyboard says hero motion
+is out of scope, it is describing its own boundary rather than a standing prohibition on
+the hero ever moving; the decision to let it move is
+`docs/decisions/0009-a-fourth-animated-treatment.md`. Recording that here so no reader has
+to infer it from two documents that appear to disagree.
+
 ---
 
 ## Source artifact

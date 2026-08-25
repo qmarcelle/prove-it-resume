@@ -20,6 +20,18 @@
   min-width: 0;
 }
 
+/*
+ * The right column: Evidence Index, then the hero composition. One measure for both, so
+ * the stage takes the width the index already established rather than spanning the page.
+ */
+.aside {
+  display: flex;
+  flex: 1 1 380px;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
 .eyebrow {
   font-family: var(--font-mono);
   font-size: var(--text-meta);

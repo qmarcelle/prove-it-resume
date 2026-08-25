@@ -8,8 +8,17 @@ The governing idea is one line:
 
 > Complexity should be available, never imposed.
 
-Exactly three interactions get an animated treatment. Nothing else on the page does, and
-adding a fourth is a decision to make deliberately rather than by accretion.
+Exactly four things on this page get an animated treatment: the three progressive
+disclosures documented below, and the hero composition. Nothing else does.
+
+The fourth was added deliberately rather than by accretion, which is what this clause
+asks for — see `docs/decisions/0009-a-fourth-animated-treatment.md`, which names the
+admission category for each of its beats (causality, boundary, state) and records why it
+ships as CSS rather than as an animation runtime. A fifth would need the same treatment.
+
+One number moves with it. The ~900ms choreography cap below was written for disclosures
+the reader operates, where a long sequence means waiting on a control; the hero is a
+single play-once sequence at 3.2 seconds. That exception is named there, not assumed.
 
 ---
 

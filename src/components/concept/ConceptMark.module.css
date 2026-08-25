@@ -1,0 +1,31 @@
+/*
+ * The mark keeps the composition's own weights: 1.25 units of stroke on a 64×40 grid, the
+ * same dashed-to-solid convention, and the one accent. Colours are tokens, never literals,
+ * so a mark inside a dark panel is a token remap rather than a second drawing.
+ */
+.mark {
+  display: inline-block;
+  flex: none;
+  vertical-align: -0.15em;
+}
+
+.mark :global(.cmInk) {
+  fill: var(--color-ink);
+}
+
+.mark :global(.cmAccent) {
+  fill: var(--color-accent);
+}
+
+.mark :global(.cmOutline) {
+  fill: none;
+  stroke: var(--color-ink-tertiary);
+  stroke-width: 1.25;
+}
+
+.mark :global(.cmDashed) {
+  fill: none;
+  stroke: var(--color-border-dashed);
+  stroke-dasharray: 4 4;
+  stroke-width: 1.25;
+}

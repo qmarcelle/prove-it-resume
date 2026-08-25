@@ -1,0 +1,65 @@
+.rail {
+  display: flex;
+  flex: 0 1 280px;
+  flex-direction: column;
+  gap: 0.8125rem;
+  min-width: 240px;
+  border-left: 2px solid var(--color-accent);
+  padding: 0.25rem 0 0.25rem var(--space-4);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--color-accent);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6875rem;
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  line-height: 1.55;
+}
+
+.term {
+  color: var(--color-meta);
+}
+
+.detail {
+  margin: 0;
+  min-width: 0;
+  color: var(--color-ink);
+  word-break: break-word;
+}
+
+.varied {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4375rem;
+  margin-top: 0.25rem;
+  border-top: var(--rule);
+  padding-top: 0.75rem;
+}
+
+.variedBody {
+  font-size: 0.813rem;
+  line-height: 1.55;
+  color: var(--color-ink-secondary);
+}
+
+/* Below the two-column break the rail becomes a header block above the comparison. */
+@media (max-width: 900px) {
+  .rail {
+    flex-basis: 100%;
+  }
+}

@@ -110,12 +110,37 @@
   gap: 24px;
 }
 
+/* Name and place on one baseline, so the pair reads as one identity line. */
+.identity {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  min-width: 0;
+}
+
+/*
+ * 34px, not the export's 38px.
+ *
+ * The export sized this when the name shared its row with nothing but the page meta.
+ * The row now also carries the location, and at 38px the three of them fit on macOS
+ * with 21px to spare and on Linux with 6px — Chromium's font metrics differ between
+ * platforms, so that is a line that renders correctly here and wraps in CI. Four pixels
+ * off the name buys ~31px and puts both platforms comfortably clear, while leaving it
+ * nearly three times the size of anything beside it.
+ */
 .name {
   margin: 0;
-  font-size: 38px;
+  font-size: 34px;
   line-height: 1;
   font-weight: 700;
   letter-spacing: -0.035em;
+}
+
+.location {
+  font-size: 12.5px;
+  color: var(--color-ink-secondary);
+  white-space: nowrap;
 }
 
 .pageMeta {

@@ -10,31 +10,134 @@
   gap: var(--space-5);
 }
 
-.eyebrow {
+/*
+ * The one dark chapter.
+ *
+ * Inset rather than full-bleed: the page measure and gutters are owned by the layout
+ * shell, and reaching past them from inside a section would mean either changing that
+ * shell or overlapping the proof-progress rail that sits beside it. So the ground
+ * changes without the measure moving, which is the point — the chapter is marked by
+ * contrast and density, not by a different width.
+ */
+.dark {
+  border-bottom-color: var(--color-inverse-border);
+  border-radius: var(--radius);
+  background: var(--color-inverse-bg);
+  color: var(--color-inverse-ink);
+  padding: var(--space-8) var(--space-6);
+}
+
+/* ── Masthead: chapter mark and thesis, sharing one row ───────────────────── */
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5) var(--space-7);
+  align-items: flex-end;
+}
+
+/*
+ * Typography only. The masthead is a flex *row*, so the basis that lets the thesis
+ * share that row lives on the row's own rule below — set here it would be a flex-basis
+ * on whatever axis the parent happens to use, and in a column that 420px silently
+ * becomes 420px of height.
+ */
+.thesis {
+  min-width: 0;
+  max-width: 56ch;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--color-ink-strong);
+}
+
+.masthead > .thesis {
+  flex: 1 1 420px;
+}
+
+.dark .thesis {
+  color: var(--color-inverse-ink-quiet);
+  max-width: 66ch;
+}
+
+/* ── Proof layer ──────────────────────────────────────────────────────────── */
+.layer {
+  border-top: var(--rule);
+  background: var(--color-surface-subtle);
+  margin-top: var(--space-3);
+}
+
+.layerInner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6) var(--space-7);
+  padding: var(--space-6) var(--space-5);
+}
+
+.layerDark {
+  border-top-color: var(--color-inverse-border);
+  background: none;
+}
+
+.layerDark .layerInner {
+  padding-inline: 0;
+}
+
+.layerColumn {
+  display: flex;
+  flex: 1 1 320px;
+  flex-direction: column;
+  gap: 0.625rem;
+  min-width: 0;
+}
+
+.layerColumnNarrow {
+  flex: 0 1 260px;
+}
+
+/*
+ * `EvidenceLink` is tuned for its common case: an evidence *row*, where the call to
+ * action sits hard right of the label and must never break across lines. Both of those
+ * rules misfire when the same link is stacked in a column under its own title —
+ * `margin-left: auto` right-aligns each one independently, staircasing them by text
+ * width, and `nowrap` runs a long title straight off the side of a narrow viewport.
+ *
+ * Reset at the call site rather than in the primitive: the row is what `EvidenceLink`
+ * is for, and a variant prop would put the burden on every future caller to know which
+ * one they want.
+ */
+.layerColumn > a {
+  margin-left: 0;
+  align-self: flex-start;
+  white-space: normal;
+}
+
+.layerLabel {
   font-family: var(--font-mono);
-  font-size: var(--text-meta-sm);
+  font-size: var(--text-meta);
   letter-spacing: var(--tracking-meta);
+  color: var(--color-ink-muted);
+}
+
+.layerLabelAccent {
   color: var(--color-accent);
 }
 
-.masthead {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding-bottom: 0.875rem;
-  border-bottom: var(--rule-strong);
+.layerDark .layerLabel {
+  color: var(--color-inverse-ink-quiet);
 }
 
-.title {
-  font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.5rem);
-  letter-spacing: -0.035em;
+.layerDark .layerLabelAccent {
+  color: var(--color-inverse-accent);
 }
 
-.thesis {
-  font-size: 1.0625rem;
-  font-weight: 500;
-  color: var(--color-ink-strong);
-  max-width: 56ch;
+.layerBody {
+  font-size: 0.844rem;
+  line-height: 1.6;
+  color: var(--color-ink-secondary);
+}
+
+.layerDark .layerBody {
+  color: var(--color-inverse-ink-quiet);
+  max-width: 74ch;
 }
 
 /* Two-column body: prose left, evidence panel right, reflowing by basis. */
@@ -106,4 +209,56 @@
   font-size: 0.906rem;
   line-height: 1.6;
   color: var(--color-ink-tertiary);
+}
+
+/*
+ * ── The signature band ───────────────────────────────────────────────────────
+ *
+ * A local palette swap, not a set of dark overrides. Every token the descendants
+ * already use is redefined for this subtree, so components inside invert without
+ * carrying a `tone` prop or a parallel stylesheet.
+ *
+ * The mapping is deliberately lossy where the light palette has more steps than the
+ * dark one: three ink greys and two metadata greys all collapse onto the single quiet
+ * inverse ink. That is what keeps every pairing above AA on graphite — the quiet
+ * inverse ink is 10.1:1 on this ground, and the accent 9.6:1 — where a finer gradient
+ * would put the lightest steps under it.
+ */
+.signature {
+  --color-canvas: var(--color-inverse-bg);
+  --color-surface: var(--color-inverse-surface);
+  --color-surface-subtle: var(--color-inverse-bg);
+  --color-surface-muted: var(--color-inverse-surface);
+  --color-ink: var(--color-inverse-ink);
+  --color-ink-strong: var(--color-inverse-ink);
+  --color-ink-secondary: var(--color-inverse-ink-quiet);
+  --color-ink-tertiary: var(--color-inverse-ink-quiet);
+  --color-ink-muted: var(--color-inverse-ink-quiet);
+  --color-meta: var(--color-inverse-ink-quiet);
+  --color-meta-quiet: var(--color-inverse-ink-quiet);
+  --color-border: var(--color-inverse-border);
+  --color-border-quiet: var(--color-inverse-border);
+  --color-border-dashed: var(--color-inverse-ink-quiet);
+  --color-accent: var(--color-inverse-accent);
+  --color-accent-deep: var(--color-inverse-accent-strong);
+  --color-accent-border: var(--color-inverse-accent);
+  --color-accent-surface: var(--color-inverse-surface);
+  --rule: 1px solid var(--color-inverse-border);
+  --rule-quiet: 1px solid var(--color-inverse-border);
+  --rule-strong: 2px solid var(--color-inverse-accent);
+  --focus-ring: 2px solid var(--color-inverse-accent);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  border-radius: var(--radius);
+  background: var(--color-inverse-bg);
+  color: var(--color-inverse-ink);
+  padding: var(--space-7) var(--space-6);
+}
+
+@media (max-width: 640px) {
+  .signature {
+    padding: var(--space-6) var(--space-4);
+  }
 }

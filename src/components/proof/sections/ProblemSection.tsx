@@ -1,4 +1,5 @@
 import { PROBLEM_SECTION } from '@/content/site';
+import { ActionIcon } from '@/components/icon/Icon';
 import styles from './ProblemSection.module.css';
 
 /**
@@ -28,7 +29,8 @@ export function ProblemSection() {
         <p className={styles.pullquote}>{PROBLEM_SECTION.pullquote}</p>
 
         <a className={styles.cta} href="#sec-02">
-          Show me what you built ↓
+          Show me what you built
+          <ActionIcon affordance="move-down-page" size={14} />
         </a>
       </div>
     </section>

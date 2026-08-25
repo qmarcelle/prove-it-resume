@@ -1,58 +1,101 @@
 import { vreko } from '@/content/proofs';
+import { ChapterMark } from '@/components/proof/ChapterMark';
+import { EvidenceLink } from '@/components/evidence/EvidenceLink';
 import { EvidencePanel } from '@/components/evidence/EvidencePanel';
+import { ProofScan } from '@/components/proof/ProofScan';
 import { VrekoArchitectureTrace } from '@/components/interactions/VrekoArchitectureTrace';
 import { vrekoArchitecture } from '@/content/experiments/vreko-architecture';
 import {
-  ProofAside,
   ProofColumns,
-  ProofField,
-  ProofList,
-  ProofProse,
+  ProofLayer,
+  ProofLayerBody,
+  ProofLayerColumn,
+  ProofMasthead,
   ProofSection,
-  ProofTags,
+  ProofThesis,
 } from '@/components/proof/ProofSection';
 
 /**
- * 02 — Vreko.
+ * 02 — Vreko. Spatial grammar: containment.
  *
- * The architecture was a static five-item list until the public repositories were
- * audited. That audit changed the section's argument: none of the three public
- * repositories contain implementation source, and the honest claim is not "here are the
- * layers" but "here is exactly how much of this you can inspect, and here is the
- * command that proves where the line falls". A list cannot make that argument; the
- * semantic zoom can, because the publication state of every node is part of the
- * diagram rather than a footnote under it.
+ * The argument this section has to make is about a boundary — what is published, what
+ * is declared but not, and where inspection stops. So the layout is nested boxes you
+ * open in place, and the publication state is carried by the stroke of each box rather
+ * than by a badge beside it.
+ *
+ * The scan layer answers the section in four lines before the diagram appears, because
+ * an evaluator skimming for fit should not have to drive an interaction to find out
+ * what is being claimed. `LIMIT` restates the proof's own boundary rather than a
+ * softened version of it — the scan layer is allowed to be shorter than the proof
+ * layer, never kinder than it.
  */
 export function VrekoSection() {
+  /*
+   * PROBLEM and BUILT are the proof's own fields. EVIDENCE is counted from the package
+   * lists rather than written down, so the sentence cannot drift from the split it
+   * describes, and LIMIT restates a recorded contradiction verbatim.
+   */
+  const scan = [
+    ...vreko.fields.map((field) => ({ label: field.label, body: field.body })),
+    {
+      label: 'EVIDENCE',
+      body:
+        `${vrekoArchitecture.publicPackages.length} published packages, ` +
+        `${vrekoArchitecture.privatePackages.length} declared and unpublished. ` +
+        'Checkable in one command.',
+    },
+    { label: 'LIMIT', body: vrekoArchitecture.discrepancies[2].summary },
+  ];
+
   return (
     <ProofSection proof={vreko}>
+      <ProofMasthead>
+        <ChapterMark
+          stage={vreko.stage}
+          label="PROOF ONE"
+          title={vreko.title}
+          titleId={`${vreko.id}-title`}
+          orientation="horizontal"
+        />
+        <ProofThesis>{vreko.thesis}</ProofThesis>
+      </ProofMasthead>
+
+      <ProofScan items={scan} />
+
       <VrekoArchitectureTrace data={vrekoArchitecture} />
 
+      {/* `EvidencePanel` sizes itself as a flex row item; a row of one stretches it. */}
       <ProofColumns>
-        <ProofProse>
-          {vreko.fields.map((field) => (
-            <ProofField label={field.label} key={field.label}>
-              {field.body}
-            </ProofField>
-          ))}
-
-          {vreko.technologies ? (
-            <ProofTags label="ENGINEERING SURFACE" tags={vreko.technologies} />
-          ) : null}
-
-          <ProofList label="WHAT THIS DEMONSTRATES" items={vreko.demonstrates} />
-        </ProofProse>
-
-        <ProofAside>
-          <EvidencePanel
-            status={vreko.status}
-            code={vreko.evidenceCode}
-            rows={vreko.summary}
-            evidence={vreko.evidence}
-            boundary={vreko.boundary}
-          />
-        </ProofAside>
+        <EvidencePanel
+          status={vreko.status}
+          code={vreko.evidenceCode}
+          rows={vreko.summary}
+          evidence={vreko.evidence}
+          boundary={vreko.boundary}
+        />
       </ProofColumns>
+
+      <ProofLayer>
+        <ProofLayerColumn
+          accent
+          label={`RECORDED CONTRADICTIONS · ${vrekoArchitecture.discrepancies.length}`}
+        >
+          {vrekoArchitecture.discrepancies.map((discrepancy) => (
+            <ProofLayerBody key={discrepancy.id}>{discrepancy.summary}</ProofLayerBody>
+          ))}
+          <ProofLayerBody>Kept as recorded, not resolved by guessing.</ProofLayerBody>
+        </ProofLayerColumn>
+
+        <ProofLayerColumn label="WHAT THIS DOES NOT SHOW">
+          <ProofLayerBody>{vreko.boundary}</ProofLayerBody>
+        </ProofLayerColumn>
+
+        <ProofLayerColumn label="INSPECT" narrow>
+          {vrekoArchitecture.sources.map((source) => (
+            <EvidenceLink cta={source.title} key={source.id} reference={source} />
+          ))}
+        </ProofLayerColumn>
+      </ProofLayer>
     </ProofSection>
   );
 }

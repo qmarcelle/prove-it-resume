@@ -142,10 +142,26 @@ describe('evidence integrity', () => {
    */
   const SELF_HOSTED = new Set([RESUME.id]);
 
+  /*
+   * The other exception, enumerated for the same reason: a contact address is a way to
+   * reach the person, not an artifact anyone can inspect, so it is the one record whose
+   * destination is a scheme rather than a page. Naming the id keeps that from becoming
+   * a general licence — a `mailto:` anywhere else still fails the check below.
+   */
+  const CONTACT_SCHEME = new Set(['email']);
+
   it('resolves external evidence only to absolute https URLs', () => {
     for (const ref of allRefs) {
-      if (!isResolved(ref) || SELF_HOSTED.has(ref.id)) continue;
+      if (!isResolved(ref)) continue;
+      if (SELF_HOSTED.has(ref.id) || CONTACT_SCHEME.has(ref.id)) continue;
       expect(ref.href).toMatch(/^https:\/\//);
+    }
+  });
+
+  it('resolves the contact record to a mailto address', () => {
+    for (const ref of allRefs) {
+      if (!isResolved(ref) || !CONTACT_SCHEME.has(ref.id)) continue;
+      expect(ref.href).toMatch(/^mailto:[^@\s]+@[^@\s]+$/);
     }
   });
 

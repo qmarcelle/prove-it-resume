@@ -2,6 +2,7 @@
 
 import { useId, useState } from 'react';
 import { evidenceKindLabel } from '@/lib/evidence';
+import { ActionIcon } from '@/components/icon/Icon';
 import type { EvidenceRef } from '@/lib/types';
 import { ClaimBoundary } from './ClaimBoundary';
 import { EvidenceLink } from './EvidenceLink';
@@ -44,7 +45,11 @@ export function EvidenceDisclosure({
         aria-controls={panelId}
         onClick={() => setOpen((value) => !value)}
       >
-        {open ? 'Close evidence ↑' : 'Inspect evidence ↓'}
+        {open ? 'Close evidence' : 'Inspect evidence'}
+        <ActionIcon
+          affordance={open ? 'collapse-in-place' : 'expand-in-place'}
+          size={12}
+        />
         <span className="visually-hidden"> for {code}</span>
       </button>
 

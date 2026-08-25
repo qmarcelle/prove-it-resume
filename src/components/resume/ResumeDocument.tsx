@@ -28,7 +28,16 @@ export function ResumeDocument({ targetTitle }: { targetTitle: string }) {
       <section className={styles.page} id="resume-page-1">
         <header className={styles.masthead}>
           <div className={styles.mastheadTop}>
-            <h1 className={styles.name}>{d.name}</h1>
+            {/*
+             * Location sits with the name, not in the contact row. It answers "who and
+             * where", which is identity; the row below answers "how to reach me", which
+             * is all digital. Keeping a place name among the URLs made the row read as
+             * a list of addresses with one odd entry in it.
+             */}
+            <div className={styles.identity}>
+              <h1 className={styles.name}>{d.name}</h1>
+              <span className={styles.location}>{d.location}</span>
+            </div>
             <span className={styles.pageMeta}>{d.revision} · PAGE 01 / 02</span>
           </div>
           <div className={styles.targetRow}>
@@ -36,7 +45,6 @@ export function ResumeDocument({ targetTitle }: { targetTitle: string }) {
             <span className={styles.domains}>{d.domains}</span>
           </div>
           <div className={styles.contactRow}>
-            <span>{d.location}</span>
             {d.links.map((link) => (
               <a className={styles.contactLink} href={link.href} key={link.href}>
                 {link.label}

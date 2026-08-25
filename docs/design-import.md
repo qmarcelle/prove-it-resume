@@ -216,6 +216,121 @@ The generated PDFs are checked against their routes by content fingerprint rathe
 byte comparison — Chromium's output is deterministic on one machine but differs across
 platforms, since builds subset embedded fonts differently. ADR 0007.
 
+## Third import — `Prove It Resume - Redesign.dc.html`
+
+Preserved at `design/reference/claude/Prove It Resume - Redesign.dc.html`
+(sha256 `73052f8a…e1b90380`). Its own handoff band states the base it was cut from:
+`qmarcelle/prove-it-resume @ 41defda · tokens.css unchanged`.
+
+That commit matters. `41defda` is one commit _before_ `a1b3605`, which added the résumé
+PDF and moved every evidence call to action onto the published sites. So the export
+predates both, and two of its details are stale rather than intended:
+
+- Its `INSPECT` blocks point at GitHub repositories. The repository's published-first
+  rule — a reader lands on the site or docs a person can actually read, with the
+  revision-pinned repository underneath as a citation — post-dates the cut and is
+  enforced by `content.test.ts`. The redesign's _structure_ for those blocks was taken;
+  their destinations come from the evidence records.
+- Its résumé section defaults to `resumePending` with "ARTIFACT PENDING · NOT WIRED".
+  Its own handoff band lists that copy for removal "once the PDF lands". It has, so the
+  completion state is what was built.
+
+The export is a partial redesign: four sections, not a new page. It states what it
+keeps, changes, creates and removes, and that list was followed.
+
+| Handoff                                                                                  | Outcome                                                                                                                                                                                             |
+| ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| KEEP `tokens.css` unchanged                                                              | Untouched. `--page-max` stays 1280px.                                                                                                                                                               |
+| KEEP hero, evidence index, disclosure/link/boundary/ledger, receipts, server composition | Untouched.                                                                                                                                                                                          |
+| MODIFY `VrekoArchitectureTrace` → containment diagram                                    | Done. Replaced the semantic zoom + hop stepper.                                                                                                                                                     |
+| MODIFY `RepositoryDecisionDiff` → dark signature                                         | Done, via a token remap rather than a parallel stylesheet.                                                                                                                                          |
+| MODIFY `InterlockCounterfactual` → one shared axis                                       | Done. Extracted as `BoundAxis`.                                                                                                                                                                     |
+| MODIFY `ProofSection` → scan / proof layer split                                         | Done. Reduced to a shell; masthead moved into the sections.                                                                                                                                         |
+| MODIFY `ResumeBridge` → completion state                                                 | Done.                                                                                                                                                                                               |
+| CREATE `ChapterMark`, `HeldFixedRail`, `BoundAxis`, `ProofScan`                          | Done.                                                                                                                                                                                               |
+| REMOVE `ArchitectureStrip`                                                               | Deleted.                                                                                                                                                                                            |
+| REMOVE Vreko's downward trace list                                                       | Gone; hops are joined to the layer they cross into.                                                                                                                                                 |
+| REMOVE "Résumé — not yet published" copy                                                 | Gone from the bridge.                                                                                                                                                                               |
+| MODIFY `ProofNavProvider` scroll + focus targets                                         | **Not done.** Section ids and scroll offsets were unchanged by the redesign, and the existing rail tracked every section correctly after the port. Left alone rather than changed without a reason. |
+
+### Deviations from this export
+
+- **Measure held constant.** The export sets sections 02 and 04 at 1440px against the
+  site's 1280px. Divergent width across adjacent sections reads as a seam; divergent
+  _rhythm_ is the goal. Everything stays at `--page-max` and the differentiation is
+  carried by scale, orientation, density and the one dark chapter. The Vreko containment
+  row stacks cleanly at the narrower measure.
+- **The dark chapter is a band, not the section.** The export's 03 contains only the
+  HAC-152 experiment. The three-layer chain and the evidence panel below it carry
+  evidence that cannot be dropped, and the export never showed those on dark, so the
+  signature is inverted and the remainder stays on light ground. This also keeps the
+  contrast budget at the one dark chapter the handoff allows.
+- **The dark chapter is inset, not full-bleed.** The page measure and gutters belong to
+  the layout shell, and reaching past them from inside a section would either change
+  that shell or overlap the proof-progress rail beside it.
+- **Three colours changed.** The export sets the chapter number in the rule colour and
+  the flow arrows in the dashed-stroke colour. Both are stroke tokens; as text they
+  measure 1.31:1 and 2.08:1 against canvas. Moved to the quietest text tokens that clear
+  AA — the number to `--color-meta` (3.5:1, large text) and the arrows to
+  `--color-ink-muted` (4.7:1).
+- **LinkedIn kept in the résumé section.** The export shows one call to action there and
+  is right about the hierarchy, so the PDF is the primary button and LinkedIn renders as
+  the quiet second line rather than being dropped to the footer alone.
+- **Résumé copy unchanged.** The export supplies new body copy for the completion state
+  ("the format your ATS expects"). The existing copy was kept: what an applicant
+  tracking system expects is not something this repository can verify, and an
+  unverifiable claim in the one section about handing over a document would sit badly
+  against the rest of the page.
+- **No scan layer on 03 or 04.** The export has none on either. On 04 it would have been
+  a one-cell grid in any case, because `interlock.fields` is empty.
+
+## Fourth import — `Prove It Resume - Hero Concept B.dc.html`
+
+Preserved at `design/reference/claude/Prove It Resume - Hero Concept B.dc.html`
+(sha256 `edd40d1d…ff83a5a3`). Unlike the first three it was retrieved from the Claude
+Design project rather than a download bundle, so that hash is of the file as committed
+here.
+
+"The Bounded Field": a 108-frame, 30fps hero sequence, authored as a prototype for a
+`.lottie` asset. Three dashed fragments align onto an evidence baseline, a decision
+boundary closes around them, and they consolidate into one solid unit with a terminus
+mark.
+
+Two things were taken from it.
+
+**The sequence**, built as `BoundedField` — in CSS, not as an animation asset, on the
+export's own recommendation that the prototype ships and the runtime decision waits for
+real readers. Its governing rule is _geometry in SVG, labels in DOM_: nothing in the
+drawing is a word, a number, or a claim, and the four station labels plus the per-beat
+caption are DOM text positioned against the stage. It is the fourth animated treatment on
+the page, which the interaction contract requires be decided explicitly —
+`docs/decisions/0009-a-fourth-animated-treatment.md`.
+
+**The concept marks**, in `src/components/concept`. The export's own "marks derived from
+the settled frame" panel supplies four crops of the final composition, drawn at the same
+weight and with the same dashed-to-solid convention. Three are placed: a bounded field on
+`ClaimBoundary`, a solid unit on an evidence baseline on the evidence panel's resolution
+count, and two unaligned dashed fragments on a stated gap. The fourth, SHIPPED, is not —
+see the deviation below.
+
+Deviations from this import specifically:
+
+- **The excluded candidate stays visible.** The export fades the stray fragment to
+  nothing once the boundary closes. It ships held at 0.35 opacity, outside the bound, on
+  the grounds that a hero which erases what it ruled out contradicts a page that types
+  `boundary` as a kind of evidence. Reasoning in ADR 0009; both variants remain behind one
+  constant.
+- **SHIPPED is not vendored.** Its only natural home is `EvidenceStatus`, whose marks are
+  inline-chip scale while these are card scale. Re-cutting that component is new geometry
+  the export does not supply, and a vendored shape nothing uses is dead code. Recorded as
+  an open decision in ADR 0008.
+- **Station labels give way before the type does.** Deviation 8 below set an 11.5px
+  microtype floor and it holds here: where four mono words stop clearing their ticks, a
+  container query switches them to a distributed row and hides the ticks, rather than
+  shrinking the words.
+- **No frame controls.** The export's prototype has a frame scrubber and a replay button
+  for authoring. Its own export constraints say production has neither, and it does not.
+
 ## Content placeholders in the export
 
 - Résumé PDF: **resolved.** The second import supplied the document; `pnpm resume:pdf`
@@ -279,6 +394,16 @@ Each is deliberate; rationale recorded here and, where structural, in `docs/deci
    in-page nav is hidden below `760px`; the Evidence Index and the proof rail are the
    navigation on small screens.
 
+10. **The page has an icon set; no export did.** All four canvases contain zero `<svg>`
+    and no `stroke-width`: their entire mark vocabulary is borders, filled and outlined
+    CSS boxes, and typographic Unicode. That vocabulary had become ambiguous — one `↓`
+    was doing four unrelated jobs and one `↗` three — so fifteen shapes were vendored
+    from Lucide for actions and destinations. They are drawn to this language rather
+    than to Lucide's: square caps and mitre joins instead of round, and a stroke width
+    computed as `24 / size` so every icon renders at exactly the 1px of `--rule`. The
+    concept marks are separate and are crops of the fourth import's settled frame. Full
+    reasoning in `docs/decisions/0008-vendored-icon-set.md`.
+
 ## Ambiguities requiring later review
 
 - Whether `github.com/qmarcelle` should remain the header/hero link once per-repository
@@ -289,3 +414,6 @@ Each is deliberate; rationale recorded here and, where structural, in `docs/deci
   is currently a static content value taken from the export.
 - Whether the Never Ask Twice supporting entry belongs above or below the Claim Ledger.
   The export places it above; that ordering was kept.
+- Whether `EvidenceStatus`'s three tone marks should be re-cut in the concept-mark
+  grammar, so the page carries one abstract vocabulary rather than two. It needs
+  chip-scale geometry the fourth import does not supply. See ADR 0008.

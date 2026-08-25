@@ -5,6 +5,7 @@ import { EvidenceLink } from '@/components/evidence/EvidenceLink';
 import { RECEIPT_SECTIONS } from '@/content/decisions';
 import { evidenceKindLabel } from '@/lib/evidence';
 import type { DecisionReceipt as Receipt } from '@/lib/types';
+import { ActionIcon } from '@/components/icon/Icon';
 import styles from './DecisionReceipt.module.css';
 
 /**
@@ -128,7 +129,11 @@ export function DecisionReceiptItem({ receipt }: { receipt: Receipt }) {
         onClick={() => setOpen((value) => !value)}
       >
         <span className={styles.marker} aria-hidden="true">
-          {open ? '▾' : '▸'}
+          <ActionIcon
+            affordance={open ? 'collapse-in-place' : 'expand-in-place'}
+            placement="alone"
+            size={12}
+          />
         </span>
         <span className={styles.question}>
           {receipt.question}

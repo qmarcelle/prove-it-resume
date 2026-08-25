@@ -1,3 +1,4 @@
+import { CONTACT } from './site';
 import { PUBLISHED_SITES } from './published';
 
 /**
@@ -128,11 +129,33 @@ const RESUME_ROLES: readonly ResumeRole[] = [
 export const RESUME_DOCUMENT = {
   name: 'QWYNN MARCELLE',
   revision: 'REV 2026.08',
+  /**
+   * Sheets in the rendered document. Stated here so the résumé call to action can say
+   * how long it is without a second copy of the number living in the CTA; the document
+   * is two explicit page boxes and `resume.spec.ts` asserts exactly that count, so the
+   * two cannot drift apart silently.
+   */
+  pages: 2,
   domains: 'AI PLATFORM · DEVELOPER SYSTEMS · SOFTWARE ARCHITECTURE',
   location: 'Ooltewah, Tennessee',
+  /*
+   * Ordered by how a reader is most likely to act on them: reply, check the profile,
+   * read the code.
+   *
+   * The personal site is deliberately not here, although it was. Two reasons, and the
+   * second is the real one. It already sits in the page-two footer, so the masthead
+   * copy was a duplicate; and `qwynn.marcellelabs.io` set beside
+   * `qwynn@marcellelabs.io` differs by one character, so a reader scanning the row
+   * reads the same address twice and wonders which is wrong. Three entries plus the
+   * location also fit on one line, which the fixed-height page prefers.
+   *
+   * `resume.spec.ts` holds this row to a single line, so a fourth entry fails as a test
+   * rather than as content clipped off the bottom of the sheet.
+   */
   links: [
+    { label: CONTACT.email, href: `mailto:${CONTACT.email}` },
+    { label: CONTACT.linkedinLabel, href: CONTACT.linkedin },
     { label: 'github.com/qmarcelle', href: 'https://github.com/qmarcelle' },
-    { label: 'qwynn.marcellelabs.io', href: PUBLISHED_SITES.personal },
   ],
 
   profile: {

@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #FAF9F6; color: #1A1A17; font-family: 'Public Sans', system-ui, sans-serif; }
+  a { color: #8A5A12; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid #8A5A12; outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; scroll-behavior: auto !important; } }
+</style>
+</helmet>
+
+<div style="display: flex; flex-direction: column; background: #FAF9F6;">
+
+  <!-- ===================== HANDOFF PLAN BAND ===================== -->
+  <sc-if value="{{ showPlan }}" hint-placeholder-val="{{ true }}">
+  <section style="background: #F6F5F0; border-bottom: 1px solid #DEDBD2;">
+    <div style="max-width: 1440px; margin: 0 auto; padding: 34px 32px 38px; display: flex; flex-direction: column; gap: 26px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 12px 40px; align-items: baseline;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.1em; color: #8A5A12;">DESIGN HANDOFF · NOT A PAGE SECTION</div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.08em; color: #66645D;">qmarcelle/prove-it-resume @ 41defda · tokens.css unchanged</div>
+      </div>
+      <h1 style="margin: 0; font-size: 30px; line-height: 1.2; font-weight: 700; letter-spacing: -0.03em; max-width: 34ch;">Three proofs, three spatial grammars. One visual language.</h1>
+      <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #45443E; max-width: 74ch;">Each proof keeps its evidence and drops the shared template. Vreko becomes containment: nested boundaries you open in place. Repository Intelligence becomes causality: a fixed rail, a justified refusal, and one control that rewrites the decision beside it. Interlock becomes measurement: two arms drawn against one bound. Every figure below is read from the frozen artifacts already in the repository.</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1px; background: #DEDBD2; border: 1px solid #DEDBD2;">
+        <div style="background: #FCFBF8; padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 10px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: #1A1A17;">KEEP</div>
+          <ul style="margin: 0; padding-left: 15px; font-size: 13.5px; line-height: 1.7; color: #45443E;">
+            <li>tokens.css, unchanged</li>
+            <li>Hero thesis + Evidence Index</li>
+            <li>EvidenceDisclosure, EvidenceLink, ClaimBoundary, ClaimLedger</li>
+            <li>DecisionReceipt and its dark treatment</li>
+            <li>Server-component composition; interactive leaves only</li>
+          </ul>
+        </div>
+        <div style="background: #FCFBF8; padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 10px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: #1A1A17;">MODIFY</div>
+          <ul style="margin: 0; padding-left: 15px; font-size: 13.5px; line-height: 1.7; color: #45443E;">
+            <li>VrekoArchitectureTrace → containment diagram, detail beside it</li>
+            <li>RepositoryDecisionDiff → dark signature comparison</li>
+            <li>InterlockCounterfactual → one shared axis, threshold drawn</li>
+            <li>ProofSection → scan layer / proof layer split</li>
+            <li>ProofNavProvider scroll + focus targets</li>
+            <li>ResumeBridge → completion state</li>
+          </ul>
+        </div>
+        <div style="background: #FCFBF8; padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 10px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: #1A1A17;">CREATE</div>
+          <ul style="margin: 0; padding-left: 15px; font-size: 13.5px; line-height: 1.7; color: #45443E;">
+            <li><code style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px;">ChapterMark</code> — number, orientation, measure</li>
+            <li><code style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px;">HeldFixedRail</code> — invariant conditions</li>
+            <li><code style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px;">BoundAxis</code> — one scale, one threshold</li>
+            <li><code style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px;">ProofScan</code> — six-answer scan layer</li>
+          </ul>
+        </div>
+        <div style="background: #FCFBF8; padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 10px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: #1A1A17;">REMOVE</div>
+          <ul style="margin: 0; padding-left: 15px; font-size: 13.5px; line-height: 1.7; color: #45443E;">
+            <li>ArchitectureStrip — the diagram absorbs it</li>
+            <li>Vreko's downward trace list — becomes hop detail in the panel</li>
+            <li>Repeated <em>heading → rule → same-width panel</em> opener</li>
+            <li>“Résumé — not yet published” copy, once the PDF lands</li>
+          </ul>
+        </div>
+      </div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.7; letter-spacing: 0.04em; color: #66645D; border-top: 1px solid #DEDBD2; padding-top: 14px;">EVIDENCE UNCHANGED · no claim, metric, boundary, discrepancy or negative finding is added, softened or removed. Contrast budget: the existing dark decision-defense and closing panels, plus one — Repository Intelligence.</div>
+    </div>
+  </section>
+  </sc-if>
+
+  <!-- ===================== 02 · VREKO ===================== -->
+  <section id="sec-02" style="border-bottom: 1px solid #DEDBD2;">
+    <div style="max-width: 1440px; margin: 0 auto; padding: 66px 32px 20px; display: flex; flex-wrap: wrap; gap: 26px 56px; align-items: flex-end;">
+      <div style="display: flex; align-items: baseline; gap: 20px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 64px; line-height: 0.9; font-weight: 500; color: #DEDBD2;">02</div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em; color: #8A5A12;">PROOF ONE</div>
+          <h2 style="margin: 0; font-size: 44px; line-height: 1; font-weight: 700; letter-spacing: -0.04em;">Vreko</h2>
+        </div>
+      </div>
+      <p style="margin: 0; flex: 1 1 420px; min-width: 0; font-size: 17px; line-height: 1.6; color: #38372F; max-width: 56ch;">MCP and codebase intelligence for agentic development workflows. What follows is the published boundary — what an evaluator can inspect, and where inspection stops.</p>
+    </div>
+
+    <div style="max-width: 1440px; margin: 0 auto; padding: 0 32px 22px;">
+      <div style="border-top: 2px solid #1A1A17; display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1px 28px; padding-top: 16px;">
+        <div style="display: flex; flex-direction: column; gap: 5px;"><div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #6E6C64;">PROBLEM</div><div style="font-size: 14px; line-height: 1.55; color: #38372F;">Agents need repository and session intelligence they cannot hold themselves.</div></div>
+        <div style="display: flex; flex-direction: column; gap: 5px;"><div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #6E6C64;">BUILT</div><div style="font-size: 14px; line-height: 1.55; color: #38372F;">An MCP server with two execution paths and a deliberate publication boundary.</div></div>
+        <div style="display: flex; flex-direction: column; gap: 5px;"><div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #6E6C64;">EVIDENCE</div><div style="font-size: 14px; line-height: 1.55; color: #38372F;">Four published packages, nine declared and unpublished. Checkable in one command.</div></div>
+        <div style="display: flex; flex-direction: column; gap: 5px;"><div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #6E6C64;">LIMIT</div><div style="font-size: 14px; line-height: 1.55; color: #38372F;">No implementation source is published in any of the three repositories.</div></div>
+      </div>
+    </div>
+
+    <!-- containment diagram + adjacent detail -->
+    <div style="max-width: 1440px; margin: 0 auto; padding: 26px 32px 66px; display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start;">
+
+      <div style="flex: 1 1 620px; min-width: 0; display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #66645D;">
+          <span style="color: #1A1A17;">PUBLICATION BOUNDARY MODEL</span>
+          <span style="display: flex; align-items: center; gap: 7px;"><span style="width: 14px; height: 0; border-top: 2px solid #1A1A17;"></span>PUBLISHED</span>
+          <span style="display: flex; align-items: center; gap: 7px;"><span style="width: 14px; height: 0; border-top: 2px dashed #B3AFA4;"></span>DECLARED, NOT PUBLISHED</span>
+          <span style="display: flex; align-items: center; gap: 7px;"><span style="width: 14px; height: 0; border-top: 1px solid #DEDBD2;"></span>OUTSIDE THE SYSTEM</span>
+        </div>
+
+        <!-- outside: assistant -->
+        <button type="button" onClick="{{ sel.assistant }}" style="text-align: left; background: #FAF9F6; border: 1px solid #DEDBD2; border-radius: 2px; padding: 13px 16px; cursor: pointer; display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; transition: background 160ms ease;" style-hover="background: #F6F5F0;">
+          <span style="font-size: 15px; font-weight: 600;">AI coding assistant</span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.06em; color: #6E6C64;">MCP CLIENT · OUTSIDE</span>
+        </button>
+        <div style="display: flex; justify-content: center;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #B3AFA4;">↓ JSON-RPC + workspace path</span></div>
+
+        <!-- vreko boundary -->
+        <div style="border: 2px solid #1A1A17; border-radius: 2px; background: #FFFFFF; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: baseline; border-bottom: 1px solid #EDEAE1; padding-bottom: 12px;">
+            <span style="font-size: 17px; font-weight: 700; letter-spacing: -0.02em;">Vreko</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #66645D;">vreko-mcp-server@3.1.1 · @vreko/cli@3.3.5</span>
+          </div>
+
+          <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+            <!-- hosted edge -->
+            <div style="flex: 1 1 260px; min-width: 0; display: flex;">
+              <span style="width: 3px; border-radius: 2px; background: {{ mark.hosted }}; transition: background 160ms ease;"></span>
+              <div style="flex: 1; min-width: 0; border: 2px solid #1A1A17; border-left: none; border-radius: 0 2px 2px 0; background: #FCFBF8;">
+                <button type="button" onClick="{{ sel.hosted }}" aria-expanded="{{ open.hosted }}" style="width: 100%; text-align: left; background: none; border: none; padding: 13px 14px; cursor: pointer; display: flex; flex-direction: column; gap: 4px;">
+                  <span style="font-size: 15px; font-weight: 600;">Hosted edge</span>
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #6E6C64;">vreko-mcp-server@3.1.1 · HTTPS</span>
+                </button>
+                <sc-if value="{{ open.hosted }}" hint-placeholder-val="{{ true }}">
+                  <div style="padding: 0 14px 13px; display: flex; flex-direction: column; gap: 7px;">
+                    <div style="display: flex; gap: 9px; align-items: baseline;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8A5A12;">▪</span><div style="font-size: 13px; line-height: 1.5; color: #38372F;">HTTP server <span style="color: #66645D;">— Express, GET /health, POST /mcp</span></div></div>
+                    <div style="display: flex; gap: 9px; align-items: baseline;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8A5A12;">▪</span><div style="font-size: 13px; line-height: 1.5; color: #38372F;">API key authentication <span style="color: #66645D;">— x-api-key, CORS, path-traversal</span></div></div>
+                    <div style="display: flex; gap: 9px; align-items: baseline;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8A5A12;">▪</span><div style="font-size: 13px; line-height: 1.5; color: #38372F;">Request validation and resilience <span style="color: #66645D;">— zod · opossum · llm-guard</span></div></div>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+            <!-- local edge -->
+            <div style="flex: 1 1 260px; min-width: 0; display: flex;">
+              <span style="width: 3px; border-radius: 2px; background: {{ mark.local }}; transition: background 160ms ease;"></span>
+              <div style="flex: 1; min-width: 0; border: 2px solid #1A1A17; border-left: none; border-radius: 0 2px 2px 0; background: #FCFBF8;">
+                <button type="button" onClick="{{ sel.local }}" aria-expanded="{{ open.local }}" style="width: 100%; text-align: left; background: none; border: none; padding: 13px 14px; cursor: pointer; display: flex; flex-direction: column; gap: 4px;">
+                  <span style="font-size: 15px; font-weight: 600;">Local edge</span>
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #6E6C64;">@vreko/cli@3.3.5 · STDIO</span>
+                </button>
+                <sc-if value="{{ open.local }}" hint-placeholder-val="{{ true }}">
+                  <div style="padding: 0 14px 13px; display: flex; flex-direction: column; gap: 7px;">
+                    <div style="display: flex; gap: 9px; align-items: baseline;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8A5A12;">▪</span><div style="font-size: 13px; line-height: 1.5; color: #38372F;">Bundled MCP server <span style="color: #66645D;">— vreko mcp --stdio --workspace</span></div></div>
+                    <div style="display: flex; gap: 9px; align-items: baseline;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #B3AFA4;">▫</span><div style="font-size: 13px; line-height: 1.5; color: #38372F;">vrekod daemon <span style="color: #66645D;">— declared, not published</span></div></div>
+                    <div style="display: flex; gap: 9px; align-items: baseline;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8A5A12;">▪</span><div style="font-size: 13px; line-height: 1.5; color: #38372F;">Local service client <span style="color: #66645D;">— @vreko/local-service-client@1.0.1</span></div></div>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: center;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #B3AFA4;">↓ both edges converge</span></div>
+
+          <!-- protocol surface -->
+          <div style="display: flex;">
+            <span style="width: 3px; border-radius: 2px; background: {{ mark.protocol }}; transition: background 160ms ease;"></span>
+            <div style="flex: 1; min-width: 0; border: 2px dashed #B3AFA4; border-left: none; border-radius: 0 2px 2px 0; background: #F6F5F0;">
+              <button type="button" onClick="{{ sel.protocol }}" aria-expanded="{{ open.protocol }}" style="width: 100%; text-align: left; background: none; border: none; padding: 13px 14px; cursor: pointer; display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline;">
+                <span style="font-size: 15px; font-weight: 600;">MCP protocol surface</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #6E6C64;">@vreko/mcp · DECLARED, NOT PUBLISHED</span>
+              </button>
+              <sc-if value="{{ open.protocol }}" hint-placeholder-val="{{ true }}">
+                <div style="padding: 0 14px 13px; display: flex; flex-wrap: wrap; gap: 7px 24px;">
+                  <div style="flex: 1 1 200px; display: flex; gap: 9px; align-items: baseline;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #B3AFA4;">▫</span><div style="font-size: 13px; line-height: 1.5; color: #38372F;">Protocol handler <span style="color: #66645D;">— JSON-RPC, initialize handshake</span></div></div>
+                  <div style="flex: 1 1 200px; display: flex; gap: 9px; align-items: baseline;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #B3AFA4;">▫</span><div style="font-size: 13px; line-height: 1.5; color: #38372F;">Tool registry <span style="color: #66645D;">— vreko, vreko_pulse, vreko_learn, vreko_end</span></div></div>
+                  <div style="flex: 1 1 200px; display: flex; gap: 9px; align-items: baseline;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #B3AFA4;">▫</span><div style="font-size: 13px; line-height: 1.5; color: #38372F;">Session context <span style="color: #66645D;">— per-request workspace identity</span></div></div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+
+          <!-- platform -->
+          <div style="display: flex;">
+            <span style="width: 3px; border-radius: 2px; background: {{ mark.platform }}; transition: background 160ms ease;"></span>
+            <div style="flex: 1; min-width: 0; border: 2px dashed #B3AFA4; border-left: none; border-radius: 0 2px 2px 0; background: #F2F0E9;">
+              <button type="button" onClick="{{ sel.platform }}" aria-expanded="{{ open.platform }}" style="width: 100%; text-align: left; background: none; border: none; padding: 13px 14px; cursor: pointer; display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline;">
+                <span style="font-size: 15px; font-weight: 600;">Vreko platform</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #6E6C64;">PROPRIETARY CORE · PUBLICATION BOUNDARY</span>
+              </button>
+              <sc-if value="{{ open.platform }}" hint-placeholder-val="{{ true }}">
+                <div style="padding: 0 14px 13px; display: flex; flex-wrap: wrap; gap: 7px 24px;">
+                  <div style="flex: 1 1 200px; display: flex; gap: 9px; align-items: baseline;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #B3AFA4;">▫</span><div style="font-size: 13px; line-height: 1.5; color: #38372F;">Pattern memory engine</div></div>
+                  <div style="flex: 1 1 200px; display: flex; gap: 9px; align-items: baseline;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #B3AFA4;">▫</span><div style="font-size: 13px; line-height: 1.5; color: #38372F;">Snapshot engine</div></div>
+                  <div style="flex: 1 1 200px; display: flex; gap: 9px; align-items: baseline;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #B3AFA4;">▫</span><div style="font-size: 13px; line-height: 1.5; color: #38372F;">Intelligence layer</div></div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: center;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #B3AFA4;">↓ reads the repository at the supplied path</span></div>
+        <button type="button" onClick="{{ sel.workspace }}" style="text-align: left; background: #FAF9F6; border: 1px solid #DEDBD2; border-radius: 2px; padding: 13px 16px; cursor: pointer; display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; transition: background 160ms ease;" style-hover="background: #F6F5F0;">
+          <span style="font-size: 15px; font-weight: 600;">Your workspace</span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.06em; color: #6E6C64;">x-workspace-path · OUTSIDE</span>
+        </button>
+      </div>
+
+      <!-- detail panel, adjacent -->
+      <aside aria-live="polite" style="flex: 0 1 390px; min-width: 300px; position: sticky; top: 96px; border: 1px solid #DEDBD2; border-top: 2px solid #1A1A17; background: #FFFFFF; padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; flex-direction: column; gap: 7px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #8A5A12;">SELECTED LAYER</div>
+          <h3 style="margin: 0; font-size: 21px; font-weight: 700; letter-spacing: -0.02em;">{{ layer.name }}</h3>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.05em; color: #66645D;">{{ layer.identifier }}</div>
+        </div>
+        <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #38372F;">{{ layer.summary }}</p>
+        <div style="display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #EDEAE1; padding-top: 14px;">
+          <div style="display: flex; flex-direction: column; gap: 4px;"><div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #6E6C64;">BOUNDARY CROSSED</div><div style="font-size: 13.5px; line-height: 1.55; color: #1A1A17;">{{ layer.boundary }}</div></div>
+          <div style="display: flex; flex-direction: column; gap: 4px;"><div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #6E6C64;">CARRIES</div><div style="font-size: 13.5px; line-height: 1.55; color: #38372F;">{{ layer.carries }}</div></div>
+          <sc-if value="{{ layer.hasWithheld }}" hint-placeholder-val="{{ true }}">
+            <div style="display: flex; flex-direction: column; gap: 4px; border-left: 2px solid #D9C8A8; padding-left: 11px;"><div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #8A5A12;">WITHHELD</div><div style="font-size: 13.5px; line-height: 1.55; color: #45443E;">{{ layer.withheld }}</div></div>
+          </sc-if>
+          <div style="display: flex; flex-direction: column; gap: 4px;"><div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #6E6C64;">PROVENANCE</div><div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.6; color: #45443E;">{{ layer.provenance }}</div></div>
+        </div>
+        <div style="border-top: 1px solid #EDEAE1; padding-top: 14px; display: flex; flex-direction: column; gap: 9px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #6E6C64;">RE-DERIVE THE SPLIT</div>
+          <code style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.6; color: #1A1A17; background: #F6F5F0; border: 1px solid #EDEAE1; padding: 9px 10px; display: block; overflow-x: auto;">npm view @vreko/intelligence version&nbsp;&nbsp;# E404</code>
+          <div style="font-size: 13px; line-height: 1.55; color: #55534C;">Four packages resolve. Nine declared dependencies return 404. That split is the architecture claim.</div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- proof layer -->
+    <div style="background: #FCFBF8; border-top: 1px solid #DEDBD2;">
+      <div style="max-width: 1440px; margin: 0 auto; padding: 34px 32px 46px; display: flex; flex-wrap: wrap; gap: 32px 48px;">
+        <div style="flex: 1 1 340px; display: flex; flex-direction: column; gap: 10px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #8A5A12;">RECORDED CONTRADICTIONS · 3</div>
+          <div style="font-size: 13.5px; line-height: 1.6; color: #45443E;">The CLI repository is behind its published package. The edge is described two ways in the same repository. No implementation source is published in any of the three repositories. Kept as recorded, not resolved by guessing.</div>
+        </div>
+        <div style="flex: 1 1 340px; display: flex; flex-direction: column; gap: 10px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #6E6C64;">WHAT THIS DOES NOT SHOW</div>
+          <div style="font-size: 13.5px; line-height: 1.6; color: #45443E;">This describes what is published, not the whole product. It does not establish the core implementation, adoption, usage volume, or production scale — and no accuracy figure is published for the CLI's AI-attributed change detection, which its README describes as a heuristic.</div>
+        </div>
+        <div style="flex: 0 1 260px; display: flex; flex-direction: column; gap: 8px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #6E6C64;">INSPECT</div>
+          <a href="https://github.com/vreko-dev/mcp-server" style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">Published architecture ↗</a>
+          <a href="https://github.com/vreko-dev/mcp-server" style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">Hosted edge manifest ↗</a>
+          <a href="https://github.com/vreko-dev/vreko-cli" style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">CLI distribution surface ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 03 · REPOSITORY INTELLIGENCE (signature) ===================== -->
+  <section id="sec-03" style="background: #1A1A17; color: #FAF9F6;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 72px 32px 26px; display: flex; flex-direction: column; gap: 22px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 12px 26px; align-items: baseline;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.1em; color: #C9B98F;">03 / PROOF TWO · HAC-152</div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.06em; color: #C9C3B8;">ONE RECORDED RUN · FROZEN ARTIFACT</div>
+      </div>
+      <h2 style="margin: 0; font-size: 46px; line-height: 1.08; font-weight: 700; letter-spacing: -0.04em; max-width: 26ch;">Evidence changed what could responsibly be decided.</h2>
+      <p style="margin: 0; font-size: 17px; line-height: 1.6; color: #C9C3B8; max-width: 66ch;">Does repository evidence available at decision time change the plan a model produces for the same task? One condition received the catalog projection alone. The other received the same projection plus corpus-matched repository evidence. Nothing else moved.</p>
+    </div>
+
+    <div style="max-width: 1280px; margin: 0 auto; padding: 0 32px 30px; display: flex; flex-wrap: wrap; gap: 24px; align-items: stretch;">
+      <!-- held fixed rail -->
+      <div style="flex: 0 1 268px; min-width: 240px; border-left: 2px solid #C9B98F; padding: 4px 0 4px 16px; display: flex; flex-direction: column; gap: 13px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: #C9B98F;">HELD FIXED</div>
+        <div style="display: flex; flex-direction: column; gap: 11px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.55; color: #C9C3B8;">
+          <div>Task <span style="color: #FAF9F6;">add-quality-check</span></div>
+          <div>Prompt digest <span style="color: #FAF9F6;">sha256:d19f4d09…4373e413</span></div>
+          <div>Model <span style="color: #FAF9F6;">qwen-plus</span></div>
+          <div>Decoding <span style="color: #FAF9F6;">sha256:e4ff4911…d9b621e0, temperature zero</span></div>
+          <div>Subject <span style="color: #FAF9F6;">dbt · duck.dev.game_events · PROD</span></div>
+        </div>
+        <div style="margin-top: 4px; border-top: 1px solid #3A3833; padding-top: 12px; display: flex; flex-direction: column; gap: 7px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: #C9B98F;">VARIED · ONE THING</div>
+          <div style="font-size: 13px; line-height: 1.55; color: #C9C3B8;">The context envelope.</div>
+        </div>
+      </div>
+
+      <!-- decision stage -->
+      <div style="flex: 1 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: #C9B98F;">{{ ri.stateLabel }}</div>
+          <button type="button" onClick="{{ ri.toggle }}" aria-pressed="{{ ri.on }}" style="background: #C9B98F; color: #1A1A17; border: none; border-radius: 2px; padding: 11px 17px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.06em; font-weight: 500; cursor: pointer; transition: background 160ms ease;" style-hover="background: #E4D6B8;">{{ ri.buttonLabel }}</button>
+        </div>
+
+        <div aria-live="polite" style="border: 1px solid #3A3833; background: #26241F; border-radius: 2px; padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+
+          <sc-if value="{{ ri.off }}" hint-placeholder-val="{{ true }}">
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <div style="display: flex; gap: 14px; align-items: flex-start;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #C9B98F; width: 16px; flex: none;">◇</span>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; color: #C9B98F;">JUSTIFIED REFUSAL</div>
+                  <div style="font-size: 17px; line-height: 1.5; color: #FAF9F6;">refuse to add the dbt quality check because the repository-relative source location is unknown and cannot be guessed</div>
+                  <div style="font-size: 13.5px; line-height: 1.6; color: #C9C3B8; max-width: 62ch;">Correct under the evidence available. The DataHub projection exposes the dbt model path but not repository, revision, or project prefix, so there is nothing to guess from.</div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ ri.on }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <div style="display: flex; gap: 14px; align-items: flex-start;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #C9C3B8; width: 16px; flex: none;">−</span>
+                <div style="display: flex; flex-direction: column; gap: 7px;">
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; color: #C9C3B8;">REMOVED</div>
+                  <div style="font-size: 16px; line-height: 1.5; color: #C9C3B8; text-decoration: line-through; text-decoration-thickness: 1px;">refuse unknown source location</div>
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.05em; color: #C9B98F;">← EV·ABSENT + EV·SOURCE</div>
+                  <div style="font-size: 13px; line-height: 1.6; color: #C9C3B8; max-width: 60ch;">The DataHub-only projection records that repository-relative source location is not exposed; joined evidence resolves it exactly.</div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 14px; align-items: flex-start; border-left: 2px solid #C9B98F; padding-left: 12px; margin-left: -14px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #E4D6B8; width: 16px; flex: none;">+</span>
+                <div style="display: flex; flex-direction: column; gap: 7px;">
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; color: #E4D6B8;">ADDED</div>
+                  <div style="font-size: 17px; line-height: 1.5; color: #FAF9F6;">use exact source <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px;">dbt/models/curated/game_events.sql</span></div>
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.05em; color: #C9B98F;">← EV·SOURCE</div>
+                  <div style="font-size: 13px; line-height: 1.6; color: #C9C3B8; max-width: 60ch;">Only the joined context contains the corpus-matched repository-relative producing file.</div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 14px; align-items: flex-start; border-left: 2px solid #C9B98F; padding-left: 12px; margin-left: -14px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #E4D6B8; width: 16px; flex: none;">⌖</span>
+                <div style="display: flex; flex-direction: column; gap: 7px;">
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; color: #E4D6B8;">CONSTRAINED</div>
+                  <div style="font-size: 17px; line-height: 1.5; color: #FAF9F6;">constrain work to that file at revision <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px;">59fa295c</span></div>
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.05em; color: #C9B98F;">← EV·SOURCE</div>
+                  <div style="font-size: 13px; line-height: 1.6; color: #C9C3B8; max-width: 60ch;">The exact corpus revision and producing file constrain the joined plan to one checkable source location.</div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <div style="border-top: 1px solid #3A3833; padding-top: 13px; display: flex; flex-wrap: wrap; gap: 10px 26px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #C9C3B8;">
+            <span>UNCHANGED · task, prompt, model, settings, subject</span>
+            <span>{{ ri.deltaCount }}</span>
+          </div>
+        </div>
+
+        <!-- evidence, including the negative one -->
+        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+          <div style="flex: 1 1 220px; border: 1px solid #3A3833; background: #1A1A17; padding: 14px; display: flex; flex-direction: column; gap: 7px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #C9B98F;">EV·SOURCE</div>
+            <div style="font-size: 14px; font-weight: 600; color: #FAF9F6;">Exact producing source</div>
+            <div style="font-size: 12.5px; line-height: 1.55; color: #C9C3B8;">Artifact repository, revision, and repository-relative source path matched exactly. Integrity: exact-match over 131 file-index keys.</div>
+          </div>
+          <div style="flex: 1 1 220px; border: 1px solid #3A3833; background: #1A1A17; padding: 14px; display: flex; flex-direction: column; gap: 7px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #C9B98F;">EV·ABSENT</div>
+            <div style="font-size: 14px; font-weight: 600; color: #FAF9F6;">Source location absent from the catalog</div>
+            <div style="font-size: 12.5px; line-height: 1.55; color: #C9C3B8;">A recorded absence in one projection. Not a claim about what DataHub can expose through other interfaces.</div>
+          </div>
+          <div style="flex: 1 1 220px; border: 1px dashed #3A3833; background: #1A1A17; padding: 14px; display: flex; flex-direction: column; gap: 7px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #C9C3B8;">EV·PARTNERS · INDETERMINATE</div>
+            <div style="font-size: 14px; font-weight: 600; color: #FAF9F6;">No co-change evidence available</div>
+            <div style="font-size: 12.5px; line-height: 1.55; color: #C9C3B8;">Observed count 0; completeness not-established. The plan changed because the source location was resolved, not because a file relationship was observed.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="border-top: 1px solid #3A3833;">
+      <div style="max-width: 1280px; margin: 0 auto; padding: 26px 32px 62px; display: flex; flex-wrap: wrap; gap: 28px 48px;">
+        <div style="flex: 1 1 460px; display: flex; flex-direction: column; gap: 9px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #C9B98F;">WHAT THIS RUN DOES NOT ESTABLISH</div>
+          <div style="font-size: 13.5px; line-height: 1.65; color: #C9C3B8; max-width: 74ch;">One recorded run, on one dataset, with one model, against a local DataHub. It shows that this context changed this plan; it does not measure how often repository evidence changes a plan, by how much, or for which tasks. Lineage completeness is recorded as not-established in both directions, and the package claims no corpus completeness.</div>
+        </div>
+        <div style="flex: 0 1 300px; display: flex; flex-direction: column; gap: 8px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #C9C3B8;">INSPECT THE RUN</div>
+          <a href="https://github.com/workspacejson/datahub-agent" style="color: #E4D6B8; font-family: 'JetBrains Mono', monospace; font-size: 12px;">HAC-152 paired plan run bundle ↗</a>
+          <a href="https://github.com/workspacejson/datahub-agent" style="color: #E4D6B8; font-family: 'JetBrains Mono', monospace; font-size: 12px;">Paired plan runner ↗</a>
+          <a href="https://github.com/workspacejson/datahub-agent" style="color: #E4D6B8; font-family: 'JetBrains Mono', monospace; font-size: 12px;">Live evidence package + limitations ↗</a>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; line-height: 1.6; color: #C9C3B8; margin-top: 4px; word-break: break-all;">sha256 7498f885…cf2ecb1a<br>shasum -a 256 -c SHA256SUMS</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 04 · INTERLOCK ===================== -->
+  <section id="sec-04" style="border-bottom: 1px solid #DEDBD2;">
+    <div style="max-width: 1440px; margin: 0 auto; padding: 66px 32px 62px; display: flex; flex-wrap: wrap; gap: 44px;">
+
+      <!-- vertical chapter rail -->
+      <div style="flex: none; display: flex; flex-direction: column; align-items: center; gap: 18px; padding-top: 6px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 44px; line-height: 0.9; font-weight: 500; color: #DEDBD2;">04</div>
+        <div style="width: 1px; flex: 1; background: #DEDBD2;"></div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; color: #8A5A12; writing-mode: vertical-rl; transform: rotate(180deg);">PROOF THREE · HAC-330</div>
+      </div>
+
+      <div style="flex: 1 1 700px; min-width: 0; display: flex; flex-direction: column; gap: 26px;">
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <h2 style="margin: 0; font-size: 40px; line-height: 1.05; font-weight: 700; letter-spacing: -0.035em; max-width: 22ch;">Interlock</h2>
+          <p style="margin: 0; font-size: 17px; line-height: 1.6; color: #38372F; max-width: 64ch;">Does revision-bound repository evidence change a coordination decision before shared state is mutated? Three services hold reservations against one pool. Two agents each claim +20 against 30 of headroom. Either fits alone; both do not.</p>
+        </div>
+
+        <!-- controls -->
+        <div style="display: flex; flex-wrap: wrap; gap: 18px 32px; align-items: flex-end; border-top: 2px solid #1A1A17; padding-top: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 9px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #6E6C64;">SHARED CLOCK</div>
+            <div role="group" aria-label="Experiment stage" style="display: flex; flex-wrap: wrap; gap: 6px;">
+              <sc-for list="{{ il.stages }}" as="st" hint-placeholder-count="4">
+                <button type="button" onClick="{{ st.select }}" aria-current="{{ st.current }}" style="{{ st.style }}">{{ st.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 9px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #6E6C64;">MINED EVIDENCE · THE ONLY VARIED INPUT</div>
+            <button type="button" onClick="{{ il.togglePerturbed }}" aria-pressed="{{ il.perturbed }}" style="background: #FFFFFF; border: 1px solid #D9C8A8; border-radius: 2px; padding: 9px 14px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.05em; color: #8A5A12; cursor: pointer; text-align: left;" style-hover="background: #F6F1E6;">{{ il.evidenceLabel }}</button>
+          </div>
+        </div>
+
+        <!-- bound axis -->
+        <div aria-live="polite" style="display: flex; flex-direction: column; gap: 4px;">
+          <div style="display: flex; justify-content: flex-end; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.08em; color: #8A5A12;">BOUND 130 · sum(services[].reserved) &lt;= budget.totalReservable</div>
+          <div style="position: relative; display: flex; flex-direction: column; gap: 22px; border-top: 1px solid #DEDBD2; border-bottom: 1px solid #DEDBD2; padding: 22px 0;">
+            <div style="position: absolute; top: 0; bottom: 0; left: 81.25%; width: 0; border-left: 2px solid #8A5A12;"></div>
+
+            <sc-for list="{{ il.arms }}" as="arm" hint-placeholder-count="2">
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: baseline;">
+                  <span style="font-size: 15px; font-weight: 600;">{{ arm.label }}</span>
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #66645D;">TOTAL {{ arm.total }}</span>
+                  <sc-if value="{{ arm.hasDecision }}" hint-placeholder-val="{{ true }}">
+                    <span style="{{ arm.decisionStyle }}">{{ arm.decision }} · {{ arm.reason }}</span>
+                  </sc-if>
+                  <sc-if value="{{ arm.hasVerdict }}" hint-placeholder-val="{{ true }}">
+                    <span style="{{ arm.verdictStyle }}">{{ arm.verdictMark }} {{ arm.verdict }}</span>
+                  </sc-if>
+                </div>
+                <div style="height: 30px; display: flex; align-items: stretch; gap: 2px;">
+                  <sc-for list="{{ arm.segments }}" as="seg" hint-placeholder-count="3">
+                    <div style="{{ seg.style }}"><span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.04em; white-space: nowrap; overflow: hidden;">{{ seg.label }}</span></div>
+                  </sc-for>
+                </div>
+                <div style="font-size: 13px; line-height: 1.55; color: #45443E; max-width: 82ch;">{{ arm.note }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: #6E6C64;"><span>0</span><span>160</span></div>
+        </div>
+
+        <div style="font-size: 14px; line-height: 1.6; color: #38372F; background: #F6F5F0; border-left: 2px solid #1A1A17; padding: 14px 16px; max-width: 88ch;">{{ il.caption }}</div>
+
+        <!-- proof layer -->
+        <div style="display: flex; flex-wrap: wrap; gap: 28px 40px; border-top: 1px solid #DEDBD2; padding-top: 22px;">
+          <div style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 10px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #6E6C64;">HELD FIXED</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.75; color: #45443E;">Decision function — one pure implementation<br>Intents — A alpha 40→60, B beta 40→60<br>Broker and apply path — one protected broker<br>Final tree — fc015c39… in both histories<br>Commit count — 17 in both histories<br>Control pair — support 6 in both</div>
+          </div>
+          <div style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 10px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #8A5A12;">THE PACKET'S OWN NEGATIVE FINDING</div>
+            <div style="font-size: 13.5px; line-height: 1.6; color: #45443E;">Under the perturbed history the mechanism ran and permitted the composition. In that world alpha and beta are still coupled — the history simply never showed it. Co-change evidence is a detector with false negatives, not a proof of independence.</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 1.7; color: #6E6C64;">ALLOW is not VERIFIED · OBSERVED is not SAFE · WITHHOLD_SERIALIZE is not human approval · a bounded experiment is not production readiness</div>
+          </div>
+          <div style="flex: 1 1 240px; display: flex; flex-direction: column; gap: 10px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #6E6C64;">WHAT THIS DOES NOT SHOW</div>
+            <div style="font-size: 13.5px; line-height: 1.6; color: #45443E;">One constraint, one environment, one pair of intents, on synthetic commit histories. It does not establish behaviour at repository scale, a false-positive rate for withholding, or safety outside the stated conditions.</div>
+            <a href="https://github.com/Marcelle-Labs/interlock" style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">Frozen evidence packet ↗</a>
+            <code style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #1A1A17; background: #F6F5F0; border: 1px solid #EDEAE1; padding: 8px 10px;">pnpm check:packet</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== RÉSUMÉ COMPLETION STATE ===================== -->
+  <section id="resume" style="background: #FCFBF8; border-bottom: 1px solid #DEDBD2;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 48px 32px 54px; display: flex; flex-wrap: wrap; gap: 26px 56px; align-items: flex-end;">
+      <div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 11px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #8A5A12;">COMPANION ARTIFACT</div>
+        <h2 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.025em;">Need the conventional version?</h2>
+        <p style="margin: 0; font-size: 15px; line-height: 1.65; color: #55534C; max-width: 64ch;">The evidence above is how I prefer to explain my work. The two-page résumé carries the same claims in the format your ATS expects, and points back here for the receipts.</p>
+      </div>
+      <div style="flex: 0 1 340px; display: flex; flex-direction: column; gap: 10px;">
+        <sc-if value="{{ resumeReady }}" hint-placeholder-val="{{ false }}">
+          <a href="#" style="border: 1px solid #1A1A17; background: #1A1A17; color: #FAF9F6; padding: 13px 18px; border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; letter-spacing: 0.05em; display: flex; justify-content: space-between; gap: 16px;"><span>RÉSUMÉ · PDF ↓</span><span style="color: #C9B98F;">2 PP</span></a>
+        </sc-if>
+        <sc-if value="{{ resumePending }}" hint-placeholder-val="{{ true }}">
+          <div style="border: 1px dashed #B3AFA4; background: #F6F5F0; padding: 13px 16px; border-radius: 2px; display: flex; flex-direction: column; gap: 7px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; letter-spacing: 0.05em; color: #55534C;">RÉSUMÉ · PDF ↓</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.06em; color: #8A5A12;">ARTIFACT PENDING · NOT WIRED</div>
+          </div>
+          <div style="font-size: 12.5px; line-height: 1.6; color: #55534C;">The uploaded draft still carries a placeholder field and omits Vreko, workspace.json and Interlock. Ship the state, not the file.</div>
+        </sc-if>
+      </div>
+    </div>
+  </section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 1440}, &quot;showPlan&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Handoff&quot;}, &quot;resumeReady&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Handoff&quot;}}">
+const VREKO_LAYERS = {
+  assistant: {
+    name: 'AI coding assistant',
+    identifier: 'MCP client · external',
+    summary: 'Claude, Cursor, Windsurf, or any MCP-compatible client. Outside this system and owned by someone else.',
+    boundary: 'Outside the system',
+    carries: 'A JSON-RPC request for one of the session lifecycle tools, plus the workspace path.',
+    provenance: 'vreko-dev/mcp-server README, "What is Vreko MCP Server?" @ c98e7ae',
+  },
+  hosted: {
+    name: 'Hosted edge',
+    identifier: 'vreko-mcp-server@3.1.1 · published',
+    summary: 'An Express HTTP server so a client can connect over HTTPS instead of installing anything locally. Deployed as a Fly.io app.',
+    boundary: 'HTTPS · authentication',
+    carries: 'POST /mcp with an x-api-key header and an x-workspace-path header. The key is validated here.',
+    withheld: 'A request without a valid key does not reach the protocol surface.',
+    provenance: 'vreko-dev/mcp-server README (Architecture) and package.json @ c98e7ae',
+  },
+  local: {
+    name: 'Local edge',
+    identifier: '@vreko/cli@3.3.5 · published',
+    summary: 'The other documented execution path. The CLI bundles the MCP server and runs it over stdio against a local daemon, with no requirement to send repository contents anywhere.',
+    boundary: 'Process boundary · stdio',
+    carries: 'The tool call, started as vreko mcp --stdio --workspace <path> from the assistant\u2019s own config.',
+    withheld: 'The vrekod daemon is declared but not published. Only its TypeScript client is readable — seventeen method groups.',
+    provenance: 'vreko-dev/vreko-cli README (MCP Integration, Design properties) @ b096ce3',
+  },
+  protocol: {
+    name: 'MCP protocol surface',
+    identifier: '@vreko/mcp · declared, not published',
+    summary: 'The MCP protocol handler, tool registry and session context. Both edges converge here.',
+    boundary: 'Process boundary · stdio',
+    carries: 'The JSON-RPC call, dispatched against the registered tool contracts.',
+    withheld: 'The public material names this hop as stdio, while the published package description calls the edge a reverse proxy to an API server. Recorded as a discrepancy, not reconciled.',
+    provenance: 'vreko-dev/mcp-server README (Component Responsibilities) @ c98e7ae',
+  },
+  platform: {
+    name: 'Vreko platform',
+    identifier: '@vreko/intelligence · @vreko/auth · @vreko/claims-ledger',
+    summary: 'The proprietary core. Named by the public architecture diagram and depended on by published manifests, but no implementation is published and these packages do not resolve on the registry.',
+    boundary: 'Publication boundary',
+    carries: 'The tool call, resolved against pattern memory, snapshots and session intelligence.',
+    withheld: 'Everything about how. No implementation of this layer is published, and its packages return 404 on the registry.',
+    provenance: 'mcp-server README (Architecture) + the npm dependency list of @vreko/cli',
+  },
+  workspace: {
+    name: 'Your workspace',
+    identifier: 'x-workspace-path · external',
+    summary: 'The repository the assistant is working in. Supplied per request as a header; never bundled into the server.',
+    boundary: 'Back outside the system',
+    carries: 'The repository at the supplied path. The CLI writes .agents/workspace.json and AGENTS.md there for agent consumption.',
+    provenance: 'vreko-dev/mcp-server README, MCP call example @ c98e7ae',
+  },
+};
+
+const BASE = [
+  { label: 'alpha 40', value: 40 },
+  { label: 'beta 40', value: 40 },
+  { label: 'gamma 20', value: 20 },
+];
+const PENDING = [
+  { label: 'alpha 40', value: 40 },
+  { label: 'beta 40', value: 40 },
+  { label: 'gamma 20', value: 20 },
+  { label: 'A +20', value: 20, pending: true },
+  { label: 'B +20', value: 20, pending: true },
+];
+const APPLIED_BOTH = [
+  { label: 'alpha 60', value: 60 },
+  { label: 'beta 60', value: 60 },
+  { label: 'gamma 20', value: 20 },
+];
+const APPLIED_A = [
+  { label: 'alpha 60', value: 60 },
+  { label: 'beta 40', value: 40 },
+  { label: 'gamma 20', value: 20 },
+];
+
+const STAGES = [
+  {
+    label: 'SHARED STATE',
+    caption: 'Three services hold reservations against one pool. Total 100, bound 130, headroom 30.',
+    unco: { segments: BASE, total: 100, note: 'Starting reservations, before either agent acts.' },
+    inter: { segments: BASE, total: 100, note: 'Identical starting reservations. The arms differ only in what happens next.' },
+  },
+  {
+    label: 'TWO INTENTS',
+    caption: 'Each agent claims +20 against 30 of headroom. Either fits on its own; both do not.',
+    unco: { segments: PENDING, total: 140, note: 'capacity-planner claims alpha 40\u219260. traffic-shaper claims beta 40\u219260. Each precondition is true when it is checked.' },
+    inter: { segments: PENDING, total: 140, note: 'The same two claims arrive, and neither has been written to shared state yet.' },
+  },
+  {
+    label: 'DECISION POINT',
+    caption: 'This is the only place the arms differ: one arm takes a coordination decision before any write lands.',
+    unco: { segments: PENDING, total: 140, note: 'No decision point exists. Both intents proceed because each was individually valid at the moment it was checked.' },
+    inter: {
+      segments: PENDING, total: 140,
+      decision: 'WITHHOLD_SERIALIZE', reason: 'COUPLING_OBSERVED',
+      note: 'Evidence cites services/alpha \u2194 services/beta, support 8 across 10 occurrences, at basis eb67a6f5\u2026. The composition is withheld and the intents are serialized with revalidation.',
+    },
+    interPerturbed: {
+      segments: PENDING, total: 140,
+      decision: 'ALLOW_PARALLEL', reason: 'NO_QUALIFYING_COUPLING',
+      note: 'History at basis db8a63ec\u2026 was mined and shows no pair between the pending intents at support >= 3. Three pairs were considered.',
+    },
+    captionPerturbed: 'Same code, same intents, same tree. Evidence mined from the alternate history — and the opposite decision.',
+  },
+  {
+    label: 'RESULTING STATE',
+    caption: 'The invariant is checked by a separate process. The verdict is an exit code.',
+    unco: { segments: APPLIED_BOTH, total: 140, holds: false, verdict: 'INVALID JOINT STATE', note: 'Both applied. Each precondition was true when checked and false by the time the last write landed. verify.mjs exits 1.' },
+    inter: {
+      segments: APPLIED_A, total: 120, holds: true, verdict: 'CONSTRAINT HELD',
+      decision: 'WITHHOLD_SERIALIZE', reason: 'COUPLING_OBSERVED',
+      note: 'A admitted after revalidation. B rejected, because revalidating against the post-admission state breaches the invariant. verify.mjs exits 0.',
+    },
+    interPerturbed: {
+      segments: APPLIED_BOTH, total: 140, holds: false, verdict: 'INVALID JOINT STATE',
+      note: 'The mechanism ran and permitted the composition. In this world alpha and beta are still coupled — the history simply never showed it.',
+    },
+    captionPerturbed: 'The composition proceeds, and the joint state goes over the bound. Recorded as a finding rather than hidden.',
+  },
+];
+
+class Component extends DCLogic {
+  state = { layer: 'hosted', repo: false, stage: 2, perturbed: false };
+
+  seg(s, applied) {
+    const pct = (s.value / 160) * 100;
+    const base = 'width: ' + pct.toFixed(2) + '%; min-width: 0; display: flex; align-items: center; padding: 0 7px; border-radius: 1px; transition: width 320ms ease, background 240ms ease;';
+    if (s.pending) {
+      return { label: s.label, style: base + ' background: repeating-linear-gradient(135deg, #F2F0E9 0 5px, #FAF9F6 5px 10px); border: 1px dashed #B3AFA4; color: #55534C;' };
+    }
+    if (applied) return { label: s.label, style: base + ' background: #1A1A17; color: #FAF9F6;' };
+    return { label: s.label, style: base + ' background: #DEDBD2; color: #38372F;' };
+  }
+
+  arm(frame, label, applied) {
+    const verdictBase = 'font-family: JetBrains Mono, monospace; font-size: 11px; letter-spacing: 0.07em; padding: 3px 8px; border-radius: 2px;';
+    return {
+      label,
+      total: frame.total,
+      note: frame.note,
+      segments: frame.segments.map((s) => this.seg(s, applied)),
+      hasDecision: !!frame.decision,
+      decision: frame.decision,
+      reason: frame.reason,
+      decisionStyle: verdictBase + ' background: #F6F1E6; border: 1px solid #D9C8A8; color: #7A4F0F;',
+      hasVerdict: frame.verdict !== undefined,
+      verdict: frame.verdict,
+      verdictMark: frame.holds ? '\u2713' : '\u2715',
+      verdictStyle: frame.holds
+        ? verdictBase + ' background: #1A1A17; color: #FAF9F6;'
+        : verdictBase + ' background: #FFFFFF; border: 1px dashed #1A1A17; color: #1A1A17;',
+    };
+  }
+
+  renderVals() {
+    const L = VREKO_LAYERS[this.state.layer] || VREKO_LAYERS.hosted;
+    const accent = '#8A5A12';
+    const quiet = 'transparent';
+    const st = STAGES[this.state.stage];
+    const pert = this.state.perturbed;
+    const interFrame = pert && st.interPerturbed ? st.interPerturbed : st.inter;
+    const applied = this.state.stage === 3;
+
+    return {
+      showPlan: this.props.showPlan ?? true,
+      resumeReady: this.props.resumeReady ?? false,
+      resumePending: !(this.props.resumeReady ?? false),
+
+      sel: {
+        assistant: () => this.setState({ layer: 'assistant' }),
+        hosted: () => this.setState({ layer: 'hosted' }),
+        local: () => this.setState({ layer: 'local' }),
+        protocol: () => this.setState({ layer: 'protocol' }),
+        platform: () => this.setState({ layer: 'platform' }),
+        workspace: () => this.setState({ layer: 'workspace' }),
+      },
+      open: {
+        hosted: this.state.layer === 'hosted',
+        local: this.state.layer === 'local',
+        protocol: this.state.layer === 'protocol',
+        platform: this.state.layer === 'platform',
+      },
+      mark: {
+        hosted: this.state.layer === 'hosted' ? accent : quiet,
+        local: this.state.layer === 'local' ? accent : quiet,
+        protocol: this.state.layer === 'protocol' ? accent : quiet,
+        platform: this.state.layer === 'platform' ? accent : quiet,
+      },
+      layer: {
+        name: L.name,
+        identifier: L.identifier,
+        summary: L.summary,
+        boundary: L.boundary,
+        carries: L.carries,
+        hasWithheld: !!L.withheld,
+        withheld: L.withheld || '',
+        provenance: L.provenance,
+      },
+
+      ri: {
+        on: this.state.repo,
+        off: !this.state.repo,
+        toggle: () => this.setState((s) => ({ repo: !s.repo })),
+        buttonLabel: this.state.repo ? 'REMOVE REPOSITORY EVIDENCE' : 'ADD REPOSITORY EVIDENCE →',
+        stateLabel: this.state.repo ? 'CATALOG PROJECTION + REPOSITORY EVIDENCE' : 'CATALOG PROJECTION ONLY',
+        deltaCount: this.state.repo ? 'CHANGED · 3 RECORDED DELTAS' : 'CHANGED · NOTHING YET',
+      },
+
+      il: {
+        perturbed: pert,
+        togglePerturbed: () => this.setState((s) => ({ perturbed: !s.perturbed })),
+        evidenceLabel: pert
+          ? 'COUPLING ABSENT · basis db8a63ec\u2026 (perturbed control)'
+          : 'COUPLING OBSERVED · basis eb67a6f5\u2026 (support 8 / 10)',
+        caption: pert && st.captionPerturbed ? st.captionPerturbed : st.caption,
+        stages: STAGES.map((s, i) => ({
+          label: s.label,
+          current: i === this.state.stage ? 'step' : 'false',
+          select: () => this.setState({ stage: i }),
+          style:
+            'border-radius: 2px; padding: 8px 12px; font-family: JetBrains Mono, monospace; font-size: 11px; letter-spacing: 0.06em; cursor: pointer; transition: background 160ms ease;' +
+            (i === this.state.stage
+              ? ' background: #1A1A17; color: #FAF9F6; border: 1px solid #1A1A17;'
+              : ' background: #FFFFFF; color: #45443E; border: 1px solid #DEDBD2;'),
+        })),
+        arms: [
+          this.arm(st.unco, 'Without coordination', applied),
+          this.arm(interFrame, 'With Interlock', applied),
+        ],
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

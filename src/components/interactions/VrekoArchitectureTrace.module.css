@@ -1,634 +1,367 @@
+/*
+ * Containment diagram, detail beside it.
+ *
+ * The diagram column takes the larger basis so that at the shared measure the panel
+ * still has a readable column; below the wrap point the panel drops underneath and
+ * stops being sticky, because a sticky element in a single-column flow just occludes
+ * the thing it annotates.
+ */
 .wrap {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  padding: var(--space-5);
-  border: var(--rule);
-  border-top: var(--rule-strong);
-  background: var(--color-surface);
-  /*
-   * These panels quote real identifiers — 40-hex revisions, dataset URNs, digests,
-   * repository-relative paths. Those are single unbreakable tokens, and one of them is
-   * enough to set the width of the whole page on a 320px screen. `anywhere` (rather
-   * than `break-word`) is deliberate: it is the value that also affects min-content
-   * sizing, which is what flex and grid children actually measure against.
-   */
-  overflow-wrap: anywhere;
-}
-
-.header {
-  display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-2) var(--space-4);
-  padding-bottom: var(--space-3);
-  border-bottom: var(--rule-quiet);
+  gap: var(--space-6);
+  align-items: flex-start;
 }
-
-.title {
-  font-size: 1.0625rem;
-  font-weight: 600;
-  letter-spacing: -0.005em;
-  color: var(--color-ink);
-}
-
-.headerCode {
-  font-family: var(--font-mono);
-  font-size: var(--text-meta-sm);
-  letter-spacing: var(--tracking-meta);
-  color: var(--color-meta);
-}
-
-.question {
-  max-width: 62ch;
-  font-size: 0.9375rem;
-  line-height: 1.65;
-  color: var(--color-ink-tertiary);
-}
-
-/* ---- Diagram ---- */
 
 .diagram {
   display: flex;
+  flex: 1 1 520px;
   flex-direction: column;
+  gap: 0.625rem;
+  min-width: 0;
 }
 
-.connector {
+/* ── Legend ───────────────────────────────────────────────────────────────── */
+.legend {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 0.5rem var(--space-5);
   align-items: center;
-  gap: 0.125rem;
-  padding: var(--space-2) 0;
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  color: var(--color-meta-quiet);
-}
-
-.connectorRule {
-  width: 1px;
-  height: var(--space-4);
-  background: var(--color-border);
-}
-
-.node {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  padding: var(--space-4);
-  border: 1px dashed var(--color-border-dashed);
-  background: var(--color-surface-subtle);
-}
-
-.external {
-  background: var(--color-surface-subtle);
-}
-
-.nodeActive,
-.containerActive,
-.systemActive {
-  border-color: var(--color-accent);
-  box-shadow: inset 3px 0 0 var(--color-accent);
-}
-
-.nodeKind,
-.publication {
   font-family: var(--font-mono);
   font-size: var(--text-meta-sm);
   letter-spacing: var(--tracking-meta);
   color: var(--color-meta);
 }
 
-.publicationQuiet {
-  font-family: var(--font-mono);
-  font-size: var(--text-meta-sm);
-  letter-spacing: var(--tracking-meta-tight);
-  color: var(--color-meta-quiet);
-}
-
-.nodeName {
-  font-size: 0.9375rem;
-  font-weight: 600;
+.legendTitle {
   color: var(--color-ink);
 }
 
-.nodeSummary {
-  max-width: 68ch;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: var(--color-ink-tertiary);
+.legendItem {
+  display: flex;
+  gap: 0.4375rem;
+  align-items: center;
 }
 
-.identifier {
+.swatch {
+  width: 14px;
+  height: 0;
+}
+
+.swatchPublic {
+  border-top: var(--rule-strong);
+}
+
+.swatchDeclared {
+  border-top: 2px dashed var(--color-border-dashed);
+}
+
+.swatchExternal {
+  border-top: var(--rule);
+}
+
+/*
+ * Flow arrows. These name what crosses each gap, so they are text and take a text
+ * colour — `--color-border-dashed` is the declared-but-unpublished *stroke*, and at
+ * 12px it reads at 2.08:1.
+ */
+.flow {
+  display: flex;
+  justify-content: center;
   font-family: var(--font-mono);
-  font-size: var(--text-meta-sm);
-  letter-spacing: var(--tracking-meta-tight);
-  color: var(--color-accent-deep);
-  overflow-wrap: anywhere;
+  font-size: var(--text-meta);
+  color: var(--color-ink-muted);
 }
 
-/* ---- The system box, at both levels ---- */
+/* ── Nodes outside the system ─────────────────────────────────────────────── */
+.outside {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.875rem;
+  align-items: baseline;
+  border: var(--rule);
+  border-radius: var(--radius);
+  background: var(--color-canvas);
+  padding: 0.8125rem 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
 
+.outside:hover,
+.outsideSelected {
+  background: var(--color-surface-muted);
+}
+
+.nodeName {
+  font-size: 0.938rem;
+  font-weight: 600;
+}
+
+.nodeMeta {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.06em;
+  color: var(--color-ink-muted);
+}
+
+/* ── The system boundary ──────────────────────────────────────────────────── */
 .system {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  padding: var(--space-4);
-  border: var(--rule);
-  border-left: 3px solid var(--color-ink);
+  border: var(--rule-strong);
+  border-radius: var(--radius);
   background: var(--color-surface);
-  /*
-   * The interior appears inside this same box, so only the box's own height changes.
-   * That is the whole illusion: neighbours move, identity does not.
-   */
-  transition: background-color 200ms ease;
-}
-
-.systemExpanded {
-  background: var(--color-surface-muted);
+  padding: var(--space-4);
 }
 
 .systemHead {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-
-.systemIdentity {
-  display: flex;
-  flex: 1 1 18rem;
-  min-width: 0;
-  flex-direction: column;
-  gap: var(--space-1);
+  gap: 0.375rem var(--space-4);
+  align-items: baseline;
+  border-bottom: var(--rule-quiet);
+  padding-bottom: var(--space-3);
 }
 
 .systemName {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--color-ink);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
-.systemSummary {
-  max-width: 68ch;
-  font-size: 0.9375rem;
-  line-height: 1.65;
-  color: var(--color-ink-tertiary);
-}
-
-.zoom,
-.disclose {
-  flex: none;
-  min-height: 44px;
-  padding: 0.5625rem 0.8125rem;
-  border: var(--rule);
-  background: var(--color-surface);
+.systemId {
   font-family: var(--font-mono);
   font-size: var(--text-meta);
-  letter-spacing: var(--tracking-meta-tight);
-  color: var(--color-ink-secondary);
-  cursor: pointer;
+  color: var(--color-meta);
 }
 
-.zoom[aria-expanded='true'] {
-  background: var(--color-ink);
-  border-color: var(--color-ink);
-  color: var(--color-canvas);
-}
-
-.interior {
+.edges {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: var(--space-3);
-  padding-top: var(--space-3);
-  border-top: var(--rule);
-  animation: open 200ms ease-out both;
 }
 
-@keyframes open {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* ---- Containers ---- */
-
-.container {
+/* ── Layers inside it ─────────────────────────────────────────────────────── */
+.layer {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-4);
-  border: var(--rule);
-  background: var(--color-surface);
+  flex: 1 1 240px;
+  min-width: 0;
 }
 
-/*
- * "Not published" is marked with a dashed edge as well as a word, so the boundary is
- * visible at a glance and still survives greyscale.
- */
-.containerSealed {
-  border-style: dashed;
+.layerWide {
+  flex-basis: 100%;
+}
+
+.marker {
+  width: 3px;
+  border-radius: var(--radius);
+  background: transparent;
+  transition: background 160ms ease;
+}
+
+.markerOn {
+  background: var(--color-accent);
+}
+
+.layerBox {
+  flex: 1;
+  min-width: 0;
+  border: var(--rule-strong);
+  border-left: none;
+  border-radius: 0 var(--radius) var(--radius) 0;
   background: var(--color-surface-subtle);
 }
 
-.containerHead {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-2) var(--space-3);
+.layerDeclared {
+  border: 2px dashed var(--color-border-dashed);
+  border-left: none;
+  background: var(--color-surface-muted);
 }
 
-.containerIdentity {
+.layerButton {
   display: flex;
-  flex: 1 1 16rem;
-  min-width: 0;
   flex-direction: column;
-  gap: var(--space-1);
-}
-
-.containerName {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--color-ink);
-}
-
-.containerSummary {
-  max-width: 68ch;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: var(--color-ink-tertiary);
+  gap: 0.25rem;
+  width: 100%;
+  border: none;
+  background: none;
+  padding: 0.8125rem 0.875rem;
+  text-align: left;
+  cursor: pointer;
 }
 
 .components {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  margin-top: var(--space-2);
-  padding-top: var(--space-3);
-  border-top: var(--rule-quiet);
-  animation: open 180ms ease-out both;
-}
-
-.componentList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
+  gap: 0.4375rem;
+  margin: 0;
+  padding: 0 0.875rem 0.8125rem;
   list-style: none;
 }
 
-/*
- * Containment at this depth is a left rule and an indent rather than another nested
- * border. Three rings of borders stop being readable at 360px.
- */
 .component {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  padding-left: var(--space-4);
-  border-left: var(--rule);
-}
-
-.componentHead {
-  display: flex;
-  flex-wrap: wrap;
+  gap: 0.5625rem;
   align-items: baseline;
-  gap: var(--space-1) var(--space-3);
 }
 
-.componentName {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--color-ink-secondary);
+.bullet {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  color: var(--color-accent);
+}
+
+.bulletQuiet {
+  color: var(--color-ink-muted);
 }
 
 .componentBody {
-  max-width: 68ch;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: var(--color-ink-tertiary);
+  font-size: 0.813rem;
+  line-height: 1.5;
+  color: var(--color-ink-strong);
 }
 
-.containerProvenance {
-  font-family: var(--font-mono);
-  font-size: var(--text-meta-sm);
-  letter-spacing: var(--tracking-meta-tight);
-  color: var(--color-meta);
-  overflow-wrap: anywhere;
-}
-
-/* ---- Trace ---- */
-
-.sectionLabel {
-  font-family: var(--font-mono);
-  font-size: var(--text-meta-sm);
-  letter-spacing: var(--tracking-meta);
-  color: var(--color-meta);
-}
-
-.traceBlock {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-4);
-  border: var(--rule);
-  background: var(--color-surface-subtle);
-}
-
-.traceHead {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-
-.traceControls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.traceButton,
-.traceReset {
-  min-height: 44px;
-  padding: 0.5rem 0.75rem;
-  border: var(--rule);
-  background: var(--color-surface);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta-sm);
-  letter-spacing: var(--tracking-meta-tight);
-  color: var(--color-ink-secondary);
-  cursor: pointer;
-}
-
-.traceButton:disabled {
-  color: var(--color-meta-quiet);
-  cursor: default;
-}
-
-.traceReset {
-  border-style: dashed;
-}
-
-.tracePosition {
-  font-family: var(--font-mono);
-  font-size: var(--text-meta-sm);
-  letter-spacing: var(--tracking-meta-tight);
-  color: var(--color-meta);
-  min-width: 3rem;
-  text-align: center;
-}
-
-.traceHint {
-  max-width: 68ch;
-  font-size: 0.875rem;
-  line-height: 1.6;
+.componentId {
   color: var(--color-ink-muted);
 }
 
-.hop {
+/* ── Detail panel ─────────────────────────────────────────────────────────── */
+.panel {
   display: flex;
+  flex: 0 1 360px;
   flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-4);
-  border: var(--rule);
-  border-left: 3px solid var(--color-accent);
-  background: var(--color-surface);
-}
-
-.hopLabel {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--color-ink);
-}
-
-.hopDetail {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.hopRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1) var(--space-3);
-}
-
-.hopRow dt {
-  flex: none;
-  min-width: 6rem;
-  font-family: var(--font-mono);
-  font-size: var(--text-meta-sm);
-  letter-spacing: var(--tracking-meta-tight);
-  color: var(--color-meta);
-}
-
-.hopRow dd {
-  flex: 1 1 18rem;
-  min-width: 0;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: var(--color-ink-tertiary);
-}
-
-/* ---- Public boundary ---- */
-
-.boundaryBlock {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-4);
-  border: var(--rule);
-  background: var(--color-surface-subtle);
-}
-
-.packages {
-  display: flex;
-  flex-wrap: wrap;
   gap: var(--space-4);
+  position: sticky;
+  top: var(--scroll-offset);
+  min-width: 280px;
+  border: var(--rule);
+  border-top: var(--rule-strong);
+  background: var(--color-surface);
+  padding: var(--space-5);
 }
 
-.packageColumn {
+.panelHead {
   display: flex;
-  flex: 1 1 18rem;
-  min-width: 0;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 0.4375rem;
 }
 
-.packageHeading {
+.panelEyebrow {
   font-family: var(--font-mono);
   font-size: var(--text-meta-sm);
   letter-spacing: var(--tracking-meta);
+  color: var(--color-accent);
+}
+
+.panelTitle {
+  font-size: 1.313rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.panelId {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.05em;
+  color: var(--color-meta);
+}
+
+.panelSummary {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-ink-strong);
+}
+
+.panelFields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  border-top: var(--rule-quiet);
+  padding-top: 0.875rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.fieldLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-ink-muted);
+}
+
+.fieldBody {
+  font-size: 0.844rem;
+  line-height: 1.55;
   color: var(--color-ink-secondary);
 }
 
-.packageList {
+.fieldStrong {
+  color: var(--color-ink);
+}
+
+.fieldMono {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.withheld {
   display: flex;
   flex-direction: column;
-  gap: 0.3125rem;
-  list-style: none;
+  gap: 0.25rem;
+  border-left: 2px solid var(--color-accent-border);
+  padding-left: 0.6875rem;
 }
 
-.packageList li {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-2);
-}
-
-.packageName {
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  color: var(--color-ink);
-  overflow-wrap: anywhere;
-}
-
-.packageNameQuiet {
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  color: var(--color-ink-muted);
-  text-decoration: line-through;
-  text-decoration-color: var(--color-border-dashed);
-  overflow-wrap: anywhere;
-}
-
-.packageVersion {
+.withheldLabel {
   font-family: var(--font-mono);
   font-size: var(--text-meta-sm);
-  color: var(--color-accent-deep);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-accent);
 }
 
-.verifyMethod {
-  max-width: 68ch;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: var(--color-ink-tertiary);
+.withheldBody {
+  font-size: 0.844rem;
+  line-height: 1.55;
+  color: var(--color-ink-secondary);
+}
+
+.rederive {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5625rem;
+  border-top: var(--rule-quiet);
+  padding-top: 0.875rem;
 }
 
 .command {
-  align-self: flex-start;
-  max-width: 100%;
-  padding: 0.4375rem 0.625rem;
-  border: var(--rule);
+  display: block;
+  overflow-x: auto;
+  border: var(--rule-quiet);
   background: var(--color-surface-muted);
+  padding: 0.5625rem 0.625rem;
   font-family: var(--font-mono);
   font-size: var(--text-meta);
-  color: var(--color-ink);
-  overflow-wrap: anywhere;
-}
-
-/* ---- Discrepancies ---- */
-
-.discrepancies {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.discrepancyList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  list-style: none;
-}
-
-.discrepancy {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  padding: var(--space-3) var(--space-4);
-  border: 1px dashed var(--color-border-dashed);
-  background: var(--color-surface-subtle);
-}
-
-.discrepancySummary {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--color-ink-secondary);
-}
-
-.discrepancyDetail {
-  max-width: 68ch;
-  font-size: 0.875rem;
   line-height: 1.6;
+  color: var(--color-ink);
+}
+
+.rederiveBody {
+  font-size: 0.813rem;
+  line-height: 1.55;
   color: var(--color-ink-tertiary);
 }
 
-/* ---- Footer ---- */
-
-.footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-3) var(--space-4);
-  padding-top: var(--space-4);
-  border-top: var(--rule);
-}
-
-.boundary {
-  display: flex;
-  flex: 1 1 26rem;
-  min-width: 0;
-  flex-direction: column;
-  gap: var(--space-1);
-  font-size: 0.875rem;
-  line-height: 1.65;
-  color: var(--color-ink-muted);
-}
-
-.boundaryLabel {
-  font-family: var(--font-mono);
-  font-size: var(--text-meta-sm);
-  letter-spacing: var(--tracking-meta);
-  color: var(--color-meta);
-}
-
-.sources {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  gap: var(--space-2);
-  align-items: flex-start;
-}
-
-@media (max-width: 640px) {
-  .wrap {
-    padding: var(--space-4);
-  }
-
-  .traceBlock,
-  .boundaryBlock {
-    padding: var(--space-3);
-  }
-
-  .zoom,
-  .disclose {
-    width: 100%;
-  }
-}
-
-/*
- * Reduced motion: expansion still happens in place, just instantly. The box grows, the
- * neighbours shift, and nothing fades. The trace is user-stepped at every setting, so
- * only the hop highlight changes without a transition.
- */
-@media (prefers-reduced-motion: reduce) {
-  .interior,
-  .components {
-    animation: none;
-  }
-
-  .system {
-    transition: none;
+@media (max-width: 900px) {
+  .panel {
+    position: static;
+    flex-basis: 100%;
   }
 }

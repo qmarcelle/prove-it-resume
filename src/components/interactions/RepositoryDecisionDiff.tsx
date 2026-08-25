@@ -5,6 +5,7 @@ import type { PlanStepChange, RepositoryDecisionDiffData } from '@/lib/interacti
 import { EvidenceLink } from '@/components/evidence/EvidenceLink';
 import { StepControl, type Step } from './StepControl';
 import { useDeepLinkedState } from './useDeepLinkedState';
+import { CopyableCommand } from './CopyableCommand';
 import styles from './RepositoryDecisionDiff.module.css';
 
 /**
@@ -66,9 +67,26 @@ const CHANGE_LABEL: Record<PlanStepChange, string> = {
 export function RepositoryDecisionDiff({
   data,
   code = 'EV-WSJ',
+  showControls = true,
+  showFooter = true,
 }: {
   data?: RepositoryDecisionDiffData;
   code?: string;
+  /**
+   * Whether to render the varied/held-fixed block inline. Off when the section puts
+   * the same conditions in a `HeldFixedRail` beside the comparison, so the reader is
+   * not told twice — the rail is strictly better placement, but this stays the default
+   * so the interaction is still self-contained wherever it is dropped.
+   */
+  showControls?: boolean;
+  /**
+   * Whether to render the boundary and the artifact link in a footer. Off for the same
+   * reason and under the same rule: the section states the boundary once, in its proof
+   * layer. Defaults on, so dropping this component anywhere still carries what the run
+   * does not establish — a boundary that can be switched off by accident would be the
+   * one piece of this interaction that must never go missing.
+   */
+  showFooter?: boolean;
 }) {
   const panelId = useId();
   const [stage, setStage] = useDeepLinkedState('decision', 'baseline', (raw) =>
@@ -112,20 +130,22 @@ export function RepositoryDecisionDiff({
        * "What was held fixed" is not a reward for stepping forward; it is the reason
        * the comparison is worth looking at.
        */}
-      <div className={styles.controls}>
-        <div className={styles.controlBlock}>
-          <span className={styles.controlLabel}>VARIED</span>
-          <p className={styles.controlBody}>{data.controls.varied}</p>
+      {showControls ? (
+        <div className={styles.controls}>
+          <div className={styles.controlBlock}>
+            <span className={styles.controlLabel}>VARIED</span>
+            <p className={styles.controlBody}>{data.controls.varied}</p>
+          </div>
+          <div className={styles.controlBlock}>
+            <span className={styles.controlLabel}>HELD FIXED</span>
+            <ul className={styles.fixedList}>
+              {data.controls.heldFixed.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
         </div>
-        <div className={styles.controlBlock}>
-          <span className={styles.controlLabel}>HELD FIXED</span>
-          <ul className={styles.fixedList}>
-            {data.controls.heldFixed.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
+      ) : null}
 
       <StepControl
         label="Comparison stage"
@@ -256,7 +276,10 @@ export function RepositoryDecisionDiff({
               <span className={styles.sectionLabel}>Re-check this run</span>
               <p className={styles.verifyMethod}>{data.verification.method}</p>
               {data.verification.command ? (
-                <code className={styles.command}>{data.verification.command}</code>
+                <CopyableCommand
+                  className={styles.command}
+                  command={data.verification.command}
+                />
               ) : null}
               {data.artifactDigest ? (
                 <span className={styles.digest}>{data.artifactDigest}</span>
@@ -266,13 +289,15 @@ export function RepositoryDecisionDiff({
         ) : null}
       </div>
 
-      <div className={styles.footer}>
-        <p className={styles.boundary}>
-          <span className={styles.boundaryLabel}>WHAT THIS DOES NOT SHOW</span>
-          {data.boundary}
-        </p>
-        <EvidenceLink reference={data.artifact} cta="INSPECT FROZEN RUN" />
-      </div>
+      {showFooter ? (
+        <div className={styles.footer}>
+          <p className={styles.boundary}>
+            <span className={styles.boundaryLabel}>WHAT THIS DOES NOT SHOW</span>
+            {data.boundary}
+          </p>
+          <EvidenceLink reference={data.artifact} cta="INSPECT FROZEN RUN" />
+        </div>
+      ) : null}
     </section>
   );
 }

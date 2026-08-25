@@ -15,12 +15,13 @@ describe('InterlockCounterfactual', () => {
   it('maps the frozen bound and base state', () => {
     render330();
 
-    expect(screen.getByText(/JOINT SHARED STATE · BOUND 130/)).toBeVisible();
+    expect(screen.getByText(/BOUND 130/)).toBeVisible();
+    // The bound and the invariant it expresses now read as one line above the axis.
     expect(
-      screen.getByText('sum(services[].reserved) <= budget.totalReservable'),
+      screen.getByText(/sum\(services\[\]\.reserved\) <= budget\.totalReservable/),
     ).toBeVisible();
     // Both arms rest on the same base total.
-    expect(screen.getAllByText('100')).toHaveLength(2);
+    expect(screen.getAllByText(/TOTAL 100/)).toHaveLength(2);
   });
 
   it('draws both arms against one scale with one shared constraint marker', () => {
@@ -46,8 +47,8 @@ describe('InterlockCounterfactual', () => {
     await user.click(screen.getByRole('button', { name: /Resulting state/ }));
 
     // The two figures the packet records: 140 breaches, 120 holds.
-    expect(screen.getByText('140')).toBeVisible();
-    expect(screen.getByText('120')).toBeVisible();
+    expect(screen.getByText(/TOTAL 140/)).toBeVisible();
+    expect(screen.getByText(/TOTAL 120/)).toBeVisible();
     expect(screen.getByText('INVALID JOINT STATE')).toBeVisible();
     expect(screen.getByText('CONSTRAINT HELD')).toBeVisible();
   });
@@ -59,8 +60,14 @@ describe('InterlockCounterfactual', () => {
     expect(screen.queryByText('WITHHOLD_SERIALIZE')).toBeNull();
 
     await user.click(screen.getByRole('button', { name: /Decision point/ }));
-    expect(screen.getByText(/WITHHOLD_SERIALIZE/)).toBeVisible();
-    expect(screen.getByText(/COUPLING_OBSERVED/)).toBeVisible();
+    /*
+     * Matched as a set, not a single node: the decision now reads as one badge on the
+     * arm ("WITHHOLD_SERIALIZE · COUPLING_OBSERVED") and again in the decision trace
+     * below. The guarantee is that it is absent before this stage and present after,
+     * not that exactly one element carries it.
+     */
+    expect(screen.getAllByText(/WITHHOLD_SERIALIZE/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/COUPLING_OBSERVED/).length).toBeGreaterThan(0);
   });
 
   it('flips the decision and the outcome when the evidence is perturbed', async () => {

@@ -31,3 +31,42 @@
   font-weight: 700;
   color: var(--color-ink);
 }
+
+/*
+ * The chapter rail runs alongside the whole section body rather than sitting above it,
+ * so the vertical number and the horizontal measurement axis occupy different
+ * directions instead of stacking into the same one.
+ */
+.chapterRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5) var(--space-7);
+  align-items: stretch;
+}
+
+.chapterBody {
+  display: flex;
+  flex: 1 1 620px;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.title {
+  font-size: clamp(1.75rem, 1.1rem + 2.6vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  max-width: 22ch;
+}
+
+.command {
+  display: block;
+  overflow-x: auto;
+  border: var(--rule-quiet);
+  background: var(--color-surface-muted);
+  padding: 0.5rem 0.625rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  color: var(--color-ink);
+}

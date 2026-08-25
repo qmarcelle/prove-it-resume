@@ -1,14 +1,12 @@
 'use client';
 
 import { useId, useMemo, useState } from 'react';
-import type {
-  ArmFrame,
-  InterlockCounterfactualData,
-  InterlockStage,
-} from '@/lib/interactions';
+import type { InterlockCounterfactualData, InterlockStage } from '@/lib/interactions';
 import { EvidenceLink } from '@/components/evidence/EvidenceLink';
 import { StepControl, type Step } from './StepControl';
+import { BoundAxis } from '@/components/proof/BoundAxis';
 import { useDeepLinkedState } from './useDeepLinkedState';
+import { CopyableCommand } from './CopyableCommand';
 import styles from './InterlockCounterfactual.module.css';
 
 /**
@@ -34,7 +32,25 @@ import styles from './InterlockCounterfactual.module.css';
  * uncoordinated arm is a legitimate recorded finding. The numbers carry the argument.
  */
 
-export function InterlockCounterfactual({ data }: { data: InterlockCounterfactualData }) {
+export function InterlockCounterfactual({
+  data,
+  showControls = true,
+  showFooter = true,
+}: {
+  data: InterlockCounterfactualData;
+  /**
+   * Whether to render the varied/held-fixed block inline. Off when the section states
+   * the same conditions once in its proof layer. Defaults on so the interaction stays
+   * self-contained wherever it is dropped.
+   */
+  showControls?: boolean;
+  /**
+   * Whether to render the boundary footer. Off when the section states the boundary
+   * once in its proof layer. Defaults on so the interaction still carries what the
+   * experiment does not establish wherever it is dropped.
+   */
+  showFooter?: boolean;
+}) {
   const panelId = useId();
   const [perturbed, setPerturbed] = useState(false);
 
@@ -67,8 +83,6 @@ export function InterlockCounterfactual({ data }: { data: InterlockCounterfactua
     ? data.evidenceConditions.perturbed
     : data.evidenceConditions.baseline;
 
-  const markerPercent = (data.bound / data.scaleMax) * 100;
-
   return (
     <section className={styles.wrap} aria-labelledby={`${panelId}-title`}>
       <div className={styles.header}>
@@ -80,20 +94,22 @@ export function InterlockCounterfactual({ data }: { data: InterlockCounterfactua
 
       <p className={styles.question}>{data.question}</p>
 
-      <div className={styles.controls}>
-        <div className={styles.controlBlock}>
-          <span className={styles.controlLabel}>VARIED</span>
-          <p className={styles.controlBody}>{data.controls.varied}</p>
+      {showControls ? (
+        <div className={styles.controls}>
+          <div className={styles.controlBlock}>
+            <span className={styles.controlLabel}>VARIED</span>
+            <p className={styles.controlBody}>{data.controls.varied}</p>
+          </div>
+          <div className={styles.controlBlock}>
+            <span className={styles.controlLabel}>HELD FIXED</span>
+            <ul className={styles.fixedList}>
+              {data.controls.heldFixed.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
         </div>
-        <div className={styles.controlBlock}>
-          <span className={styles.controlLabel}>HELD FIXED</span>
-          <ul className={styles.fixedList}>
-            {data.controls.heldFixed.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
+      ) : null}
 
       <StepControl
         label="Experiment stage"
@@ -111,44 +127,18 @@ export function InterlockCounterfactual({ data }: { data: InterlockCounterfactua
       </p>
 
       <div className={styles.panel} id={panelId}>
-        <div className={styles.scaleHead}>
-          <span className={styles.scaleTitle}>
-            JOINT SHARED STATE · BOUND {data.bound}
-          </span>
-          <span className={styles.invariant}>{data.invariant}</span>
-        </div>
-
         <p className={styles.caption}>{stage.caption}</p>
 
-        {/*
-         * One track, one marker, two arms. The marker is a single element positioned
-         * across the full height of the track, so the constraint is literally the same
-         * line for both arms rather than two lines a reader has to trust are aligned.
-         */}
-        <div className={styles.track}>
-          <div
-            className={styles.marker}
-            style={{ left: `${markerPercent}%` }}
-            aria-hidden="true"
-          >
-            <span className={styles.markerLabel}>{data.bound}</span>
-          </div>
-
-          {(['uncoordinated', 'interlocked'] as const).map((armId) => (
-            <Arm
-              key={armId}
-              label={data.armLabels[armId]}
-              frame={stage.frames[armId]}
-              scaleMax={data.scaleMax}
-              bound={data.bound}
-            />
-          ))}
-
-          <div className={styles.axis} aria-hidden="true">
-            <span>0</span>
-            <span>{data.scaleMax}</span>
-          </div>
-        </div>
+        <BoundAxis
+          arms={(['uncoordinated', 'interlocked'] as const).map((armId) => ({
+            id: armId,
+            label: data.armLabels[armId],
+            frame: stage.frames[armId],
+          }))}
+          bound={data.bound}
+          boundLabel={data.invariant}
+          scaleMax={data.scaleMax}
+        />
 
         {/* ---- The evidence condition, and the control that changes it ---- */}
         <div className={styles.evidenceBar}>
@@ -227,7 +217,10 @@ export function InterlockCounterfactual({ data }: { data: InterlockCounterfactua
               <>
                 <p className={styles.verifyMethod}>{data.verification.method}</p>
                 {data.verification.command ? (
-                  <code className={styles.command}>{data.verification.command}</code>
+                  <CopyableCommand
+                    className={styles.command}
+                    command={data.verification.command}
+                  />
                 ) : null}
               </>
             ) : null}
@@ -235,66 +228,17 @@ export function InterlockCounterfactual({ data }: { data: InterlockCounterfactua
         ) : null}
       </div>
 
-      <div className={styles.footer}>
-        <p className={styles.boundary}>
-          <span className={styles.boundaryLabel}>WHAT THIS DOES NOT SHOW</span>
-          {data.boundary}
-        </p>
-        <EvidenceLink reference={data.artifact} cta="INSPECT FROZEN EXPERIMENT" />
-      </div>
+      {showFooter ? (
+        <div className={styles.footer}>
+          <p className={styles.boundary}>
+            <span className={styles.boundaryLabel}>WHAT THIS DOES NOT SHOW</span>
+            {data.boundary}
+          </p>
+          <EvidenceLink reference={data.artifact} cta="INSPECT FROZEN EXPERIMENT" />
+        </div>
+      ) : null}
     </section>
   );
 }
 
 /** One arm: a stacked bar on the shared scale, plus the numbers in text. */
-function Arm({
-  label,
-  frame,
-  scaleMax,
-  bound,
-}: {
-  label: string;
-  frame: ArmFrame;
-  scaleMax: number;
-  bound: number;
-}) {
-  const description = `${label}: ${frame.segments
-    .map((s) => `${s.label} ${s.value}${s.pending ? ' pending' : ''}`)
-    .join(', ')}. Joint total ${frame.total} against a bound of ${bound}.`;
-
-  return (
-    <div className={styles.arm}>
-      <div className={styles.armHead}>
-        <span className={styles.armLabel}>{label}</span>
-        <span className={styles.armTotals}>
-          <span className={styles.armTotal}>{frame.total}</span>
-          {frame.verdict ? (
-            <span className={frame.holds ? styles.verdictHolds : styles.verdictBreached}>
-              {frame.verdict}
-            </span>
-          ) : null}
-        </span>
-      </div>
-
-      <div className={styles.bar} role="img" aria-label={description}>
-        {frame.segments.map((segment) => (
-          <span
-            key={segment.id}
-            className={segment.pending ? styles.segmentPending : styles.segment}
-            style={{ width: `${(segment.value / scaleMax) * 100}%` }}
-          />
-        ))}
-      </div>
-
-      <p className={styles.segmentLine}>
-        {frame.segments.map((segment, segmentIndex) => (
-          <span key={segment.id}>
-            {segmentIndex > 0 ? ' · ' : ''}
-            {segment.label} {segment.value}
-            {segment.pending ? ' (pending)' : ''}
-          </span>
-        ))}
-      </p>
-    </div>
-  );
-}

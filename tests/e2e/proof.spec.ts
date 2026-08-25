@@ -40,19 +40,19 @@ test.describe('durable evidence surface', () => {
   }) => {
     await page.goto('/');
 
-    await page.getByRole('button', { name: 'Walk the proof →' }).click();
+    await page.getByRole('button', { name: 'Walk the proof', exact: true }).click();
 
     const dock = page.getByRole('group', { name: 'Guided proof navigation' });
     await expect(dock).toBeVisible();
     await expect(dock).toContainText('01 / 06');
 
-    await dock.getByRole('button', { name: 'NEXT →' }).click();
+    await dock.getByRole('button', { name: 'NEXT' }).click();
     await expect(dock).toContainText('02 / 06');
 
-    await dock.getByRole('button', { name: 'NEXT →' }).click();
+    await dock.getByRole('button', { name: 'NEXT' }).click();
     await expect(dock).toContainText('03 / 06');
 
-    await dock.getByRole('button', { name: '← PREV' }).click();
+    await dock.getByRole('button', { name: 'PREV' }).click();
     await expect(dock).toContainText('02 / 06');
 
     await dock.getByRole('button', { name: 'Exit guided mode' }).click();
@@ -193,9 +193,19 @@ test.describe('evidence disclosures', () => {
     const bridge = page.locator('#resume');
     await expect(bridge.getByText('RÉSUMÉ PDF — NOT YET PUBLISHED')).toBeHidden();
 
-    const download = bridge.getByRole('link', { name: /Download résumé PDF/ });
+    const download = bridge.getByRole('link', { name: /RÉSUMÉ · PDF/ });
     await expect(download).toHaveAttribute('href', '/qwynn-marcelle-resume.pdf');
     await expect(download).toHaveAttribute('download', /\.pdf$/);
+
+    // The completion state says how long the artifact is, from the document's own page
+    // count rather than a number typed into the call to action.
+    await expect(download).toContainText('2 PP');
+
+    // LinkedIn is reachable here as the quiet second line, not only from the footer.
+    await expect(bridge.getByRole('link', { name: /View LinkedIn/ })).toHaveAttribute(
+      'href',
+      'https://www.linkedin.com/in/qmarcelle',
+    );
   });
 });
 

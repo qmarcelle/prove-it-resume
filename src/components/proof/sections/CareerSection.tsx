@@ -1,5 +1,6 @@
 import { CAREER, SITE } from '@/content/site';
 import type { Proof } from '@/lib/types';
+import { ActionIcon } from '@/components/icon/Icon';
 import styles from './CareerSection.module.css';
 
 /**
@@ -50,7 +51,8 @@ export function CareerSection({ proofs }: { proofs: readonly Proof[] }) {
                     target="_blank"
                     rel="noreferrer noopener"
                   >
-                    Selected Marcelle Labs work ↗
+                    Selected Marcelle Labs work
+                    <ActionIcon affordance="visit-external-site" size={12} />
                     <span className="visually-hidden"> — opens in a new tab</span>
                   </a>
                 ) : null}
@@ -77,7 +79,8 @@ export function CareerSection({ proofs }: { proofs: readonly Proof[] }) {
                       {proof.listing.shortName ?? proof.title}
                     </span>
                     <span className={styles.currentStatus}>
-                      {proof.listing.shortStatus ?? proof.status.label} ↑
+                      {proof.listing.shortStatus ?? proof.status.label}
+                      <ActionIcon affordance="move-up-page" size={12} />
                     </span>
                   </a>
                 </li>

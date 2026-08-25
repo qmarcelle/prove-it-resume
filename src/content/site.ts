@@ -59,13 +59,42 @@ export const RESUME: EvidenceRef = {
  * Contact and profile destinations.
  *
  * The export pointed LinkedIn and Email at `#resume` and the Marcelle Labs link at
- * `#`. Marcelle Labs now resolves to the live site. LinkedIn and Email stay
- * unresolved on purpose: no profile URL was supplied, and publishing a contact
- * address is the owner's decision, not something to infer.
+ * `#`. All three now resolve: Marcelle Labs to the live site, and LinkedIn and Email
+ * to destinations the owner supplied directly. Publishing a contact address was the
+ * owner's decision to make, and it has been made — these were never inferred.
+ *
+ * Email is the one record here that is not a web page. It keeps `verified: true`
+ * because the rule that flag encodes is "this destination is the thing the row claims",
+ * and a `mailto:` reaches the stated address. What it is *not* is external evidence, so
+ * `content.test.ts` enumerates it out of the absolute-https check rather than loosening
+ * that check for everything.
+ *
+ * The raw values sit in `CONTACT` rather than inline because the résumé's masthead
+ * prints the same address and profile, and a contact detail that exists twice is a
+ * contact detail that will eventually be updated once. `PROFILES` is the evidence-model
+ * view of them; `CONTACT` is the values themselves.
  */
+export const CONTACT = {
+  email: 'qwynn@marcellelabs.io',
+  linkedin: 'https://www.linkedin.com/in/qmarcelle',
+  linkedinLabel: 'linkedin.com/in/qmarcelle',
+} as const;
+
 export const PROFILES: readonly EvidenceRef[] = [
-  { id: 'linkedin', kind: 'source', title: 'LinkedIn', verified: false },
-  { id: 'email', kind: 'source', title: 'Email', verified: false },
+  {
+    id: 'linkedin',
+    kind: 'source',
+    title: 'LinkedIn',
+    href: CONTACT.linkedin,
+    verified: true,
+  },
+  {
+    id: 'email',
+    kind: 'source',
+    title: 'Email',
+    href: `mailto:${CONTACT.email}`,
+    verified: true,
+  },
   {
     id: 'marcelle-labs',
     kind: 'source',

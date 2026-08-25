@@ -84,7 +84,7 @@ projections of one work, and indexing them would advertise every open applicatio
 
 ## Client/server boundary
 
-Server Components by default. `"use client"` appears in twelve files:
+Server Components by default. `"use client"` appears in fourteen files:
 
 | File                      | Why it needs the client                                            |
 | ------------------------- | ------------------------------------------------------------------ |
@@ -100,6 +100,8 @@ Server Components by default. `"use client"` appears in twelve files:
 | `VrekoArchitectureTrace`  | Zoom level, per-container disclosure, trace position               |
 | `StepControl`             | Roving tabindex and arrow-key handling                             |
 | `useDeepLinkedState`      | Reads and writes the query string                                  |
+| `BoundedField`            | Rewinds the hero composition and plays its beats                   |
+| `CopyableCommand`         | Writes a re-check command to the clipboard, and reports the result |
 
 The pattern that makes this work is `ProofNavProvider` rendering `children` untouched:
 server-rendered sections pass _through_ the client provider without crossing the
@@ -138,6 +140,32 @@ would have to be fought rather than used.
 The token file has a rule: a value belongs there when it carries meaning that repeats. A
 one-off measurement stays in the component's module. Otherwise a token file becomes a
 second, worse copy of the stylesheet.
+
+## Two mark vocabularies
+
+A pictogram is something you can **do**; an abstract mark is something you should
+**understand**. Nothing appears in both sets, and a reader infers the split without being
+told.
+
+**Actions** — `src/components/icon`. Fifteen shapes vendored from `lucide-react@0.575.0`
+(ISC), extracted programmatically rather than transcribed. Drawn to this page's language
+rather than to Lucide's: square caps, mitre joins, and a stroke width of `24 / size` so
+every icon renders at exactly the 1px of `--rule` at any of its three sizes. Call sites
+name an `Affordance`, never a shape, and `semantics.test.ts` fails if one icon ever
+carries two meanings. ADR 0008.
+
+**Concepts** — `src/components/concept`. Three crops of the hero composition's settled
+frame, at the weights the export drew them. The reader meets that geometry once, moving,
+before meeting pieces of it beside the claims it describes.
+
+Both are `aria-hidden` with `focusable="false"`, and neither ever replaces a word. "Change
+is never colour alone" generalises: it is never _mark_ alone either.
+
+`EvidenceStatus` still carries its own three chip-scale marks and was deliberately not
+folded into either set — see the open question at the end of `docs/design-import.md`.
+
+No new colour tokens. Everything inherits `currentColor` or an existing token, so a mark
+inside a dark panel inverts with the text around it.
 
 **One deliberate change to the design's colours.** `#83817A` and `#A5A29A` are the
 export's metadata greys, and both fail WCAG AA on this canvas (3.90:1 and 2.55:1 against
@@ -225,15 +253,26 @@ populating one had to be a conscious change rather than something that slid in. 
 inverted when the receipts were answered from the decision record (ADR 0006). A receipt
 that states a decision without its cost now fails the suite.
 
-## The three interactions
+## The animated surfaces
 
-`docs/interaction-contract.md` holds the durable rules; three notes belong here because
+`docs/interaction-contract.md` holds the durable rules; these notes belong here because
 they are architectural rather than behavioural.
+
+There are four: the three progressive disclosures, and the hero composition. The fourth
+was admitted deliberately, with a motion category named per beat, in ADR 0009.
 
 **No animation dependency was added.** Every transition is a CSS transition or keyframe.
 `motion` was considered and rejected: nothing here needs layout animation or
-interruptible physics, and the page budget is better spent elsewhere. `dependencies` is
-still exactly `next`, `react`, `react-dom`.
+interruptible physics, and the page budget is better spent elsewhere. The hero arrived as
+a prototype for a `.lottie` asset and ships as CSS for the same reason — the runtime buys
+easing curves the sequence does not need yet. `dependencies` is still exactly `next`,
+`react`, `react-dom`.
+
+**The hero's prerendered HTML is its settled frame.** `BoundedField` renders the finished
+composition as its initial state and the sequence is a rewind: an effect drops back to the
+first beat and plays forward, across two animation frames so the jump back happens with
+transitions unattached. No JavaScript, reduced motion, and the end of the sequence are
+therefore the same picture rather than three different ones.
 
 **Animation is not the state model.** Each interaction is a state machine with named,
 addressable states; animation interpolates between them. Every state renders correctly

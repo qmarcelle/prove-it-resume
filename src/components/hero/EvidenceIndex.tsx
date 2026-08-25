@@ -1,5 +1,6 @@
 import { SITE } from '@/content/site';
 import { EvidenceStatus } from '@/components/evidence/EvidenceStatus';
+import { ActionIcon } from '@/components/icon/Icon';
 import type { Proof } from '@/lib/types';
 import styles from './EvidenceIndex.module.css';
 
@@ -48,7 +49,8 @@ export function EvidenceIndex({ proofs }: { proofs: readonly Proof[] }) {
           ·
         </span>
         <a href={SITE.github} target="_blank" rel="noreferrer noopener">
-          {SITE.githubLabel} ↗
+          {SITE.githubLabel}
+          <ActionIcon affordance="visit-external-site" size={12} />
           <span className="visually-hidden"> — opens in a new tab</span>
         </a>
       </p>

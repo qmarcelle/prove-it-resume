@@ -62,9 +62,15 @@ lens exists _verbatim_ in the durable mapping, so a lens cannot author copy for 
 audience — `/role/end-to-end-delivery` reorders the durable rows into delivery sequence
 rather than writing its own.
 
-**Server Components by default.** `"use client"` appears in twelve files, all genuinely
-interactive. The page works before hydration: anchors, the evidence index, and every link
-are ordinary HTML.
+**Server Components by default.** `"use client"` appears in fourteen files, all genuinely
+interactive. The page works before hydration: anchors, the evidence index, every link,
+and the hero composition's settled frame are ordinary HTML.
+
+**One meaning, one icon.** Affordances name what they promise — inspect an artifact, read
+a document, save a file, expand in place — and the shape follows from the promise rather
+than the other way round. A test fails if any icon ever carries two meanings. Icon
+geometry is vendored rather than installed: `dependencies` is exactly `next`, `react`,
+`react-dom`.
 
 The reasoning is in [`docs/decisions/`](docs/decisions/); the defensible detail is in
 [`docs/implementation-notes.md`](docs/implementation-notes.md).
@@ -88,6 +94,12 @@ interactions. It was consumed as an interaction specification and **not** commit
 its hash, treatment, and every deviation are recorded in
 [`docs/design-provenance.md`](docs/design-provenance.md), and the durable rules it
 produced are in [`docs/interaction-contract.md`](docs/interaction-contract.md).
+
+A fourth import, "Hero Concept B — The Bounded Field", supplied the hero composition and
+the abstract marks cropped from its settled frame. It is committed with the others. It
+was authored as a prototype for a `.lottie` asset and ships as CSS, on its own
+recommendation that the prototype deploy first and the runtime decision wait for real
+readers.
 
 ## Local development
 

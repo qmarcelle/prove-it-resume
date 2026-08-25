@@ -76,6 +76,54 @@ for (const { route, title } of ROUTES) {
     expect(slack, 'masthead must not sit within a hair of wrapping').toBeGreaterThan(12);
   });
 
+  /*
+   * The contact row holds the location and three links, and they fit on one line at
+   * this measure. Wrapping is not a layout failure here — the row is authored with
+   * `flex-wrap: wrap` and a row gap, so a second line costs ~19px on a page that cannot
+   * reflow — but it is a legibility one, because the row is scanned rather than read
+   * and a wrapped entry reads as belonging to whatever sits above it.
+   *
+   * One line is also what keeps a fourth entry from being added without anyone
+   * noticing. That is how `qwynn.marcellelabs.io` ended up in this row beside
+   * `qwynn@marcellelabs.io`, one character apart, and read as a duplicate address.
+   */
+  /*
+   * The identity line carries the name, the place, and the page meta on one row. It has
+   * the same failure mode the target row does — font metrics differ between Chromium
+   * builds, so a line that fits on macOS can wrap on Linux — and the same consequence:
+   * a wrap here shifts the whole fixed-height document down. Asserted as headroom
+   * rather than line count so a longer name fails here rather than on someone else's
+   * machine.
+   */
+  test(`${route} keeps the identity line on one line, with room to spare`, async ({
+    page,
+  }) => {
+    await printPage(page, route);
+
+    const slack = await page.evaluate(() => {
+      const el = document.querySelectorAll('#resume-page-1 header > div')[0];
+      if (!el) return -1;
+      const used = [...el.children].reduce(
+        (total, child) => total + child.getBoundingClientRect().width,
+        0,
+      );
+      const GAP = 24;
+      return el.clientWidth - used - GAP;
+    });
+
+    expect(slack, 'identity line must not sit within a hair of wrapping').toBeGreaterThan(
+      12,
+    );
+  });
+
+  test(`${route} keeps the contact row on one line`, async ({ page }) => {
+    await printPage(page, route);
+
+    // One line is ~23px here; two would be ~42px.
+    const row = await page.locator('#resume-page-1 header > div').nth(2).boundingBox();
+    expect(row?.height, 'contact row must not wrap').toBeLessThan(32);
+  });
+
   test(`${route} keeps bottom-anchored content inside the page`, async ({ page }) => {
     await printPage(page, route);
 

@@ -1,0 +1,166 @@
+.axis {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.head {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.boundName {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-accent);
+}
+
+/*
+ * The track holds both arms and the single bound marker. The marker is absolutely
+ * positioned across the full height so it is literally one line through both arms —
+ * see the component comment; this is the geometry the claim rests on.
+ */
+.track {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  border-top: var(--rule);
+  border-bottom: var(--rule);
+  padding: var(--space-5) 0;
+}
+
+.marker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 2px solid var(--color-accent);
+}
+
+.scale {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  color: var(--color-ink-muted);
+}
+
+/* ── One arm ──────────────────────────────────────────────────────────────── */
+.arm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.armHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem var(--space-4);
+  align-items: baseline;
+}
+
+.armLabel {
+  font-size: 0.938rem;
+  font-weight: 600;
+}
+
+.armTotal {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  color: var(--color-meta);
+}
+
+.decision,
+.verdictHolds,
+.verdictBreached {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: 0.07em;
+  border-radius: var(--radius);
+  padding: 0.1875rem var(--space-2);
+}
+
+.decision {
+  border: 1px solid var(--color-accent-border);
+  background: var(--color-accent-surface);
+  color: var(--color-accent-deep);
+}
+
+/*
+ * Verdicts are distinguished by fill and by glyph, never by hue alone: "held" is the
+ * solid graphite chip, "breached" is the outlined one, and each carries ✓ or ✕.
+ */
+.verdictHolds {
+  background: var(--color-ink);
+  color: var(--color-inverse-ink);
+}
+
+.verdictBreached {
+  border: 1px dashed var(--color-ink);
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+/* ── The bar ──────────────────────────────────────────────────────────────── */
+.bar {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  height: 30px;
+}
+
+.segment,
+.segmentPending {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  min-width: 0;
+  border-radius: 1px;
+  padding: 0 0.4375rem;
+  transition:
+    width 320ms ease,
+    background 240ms ease;
+}
+
+.segment {
+  background: var(--color-border);
+  color: var(--color-ink-strong);
+}
+
+/*
+ * A pending claim is hatched and dashed rather than filled: it has been made but not
+ * written to shared state, and a solid block would draw it as though it had.
+ */
+.segmentPending {
+  border: 1px dashed var(--color-border-dashed);
+  background: repeating-linear-gradient(
+    135deg,
+    var(--color-surface-raised) 0 5px,
+    var(--color-canvas) 5px 10px
+  );
+  color: var(--color-ink-tertiary);
+}
+
+.segmentLabel {
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.note {
+  font-size: 0.813rem;
+  line-height: 1.55;
+  max-width: 82ch;
+  color: var(--color-ink-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .segment,
+  .segmentPending {
+    transition: none;
+  }
+}
