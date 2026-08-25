@@ -9,9 +9,14 @@ import styles from './SiteFooter.module.css';
  *
  * In the design export LinkedIn, Email, and Résumé all pointed at `#resume`, and the
  * Marcelle Labs link pointed at `#`. Rendering those as links would promise
- * destinations that do not exist, so unresolved profiles are shown as plain text marked
- * as not yet published. Restoring one is a matter of setting `href` and `verified` on
- * the record in `content/site.ts`.
+ * destinations that do not exist, so an unresolved profile is shown as plain text
+ * marked as not yet published. All of them resolve now, but the branch stays: it is the
+ * mechanism that keeps a future record from shipping as a dead link, and deleting it
+ * because nothing currently needs it is how that guarantee gets lost.
+ *
+ * Email is the one destination that does not open a page, so it renders without the
+ * new-tab affordance — the `↗` and its screen-reader note both describe navigating to a
+ * site, and neither is true of handing the address to a mail client.
  */
 export function SiteFooter({ lens }: { lens: RoleLens }) {
   const marcelleLabs = PROFILES.find((profile) => profile.id === 'marcelle-labs');
@@ -27,8 +32,20 @@ export function SiteFooter({ lens }: { lens: RoleLens }) {
             GitHub ↗<span className="visually-hidden"> — opens in a new tab</span>
           </a>
 
-          {links.map((profile) =>
-            isResolved(profile) && profile.href ? (
+          {links.map((profile) => {
+            if (!isResolved(profile) || !profile.href) {
+              return (
+                <span className={styles.pending} key={profile.id}>
+                  {profile.title} — not published
+                </span>
+              );
+            }
+
+            return profile.href.startsWith('mailto:') ? (
+              <a href={profile.href} key={profile.id}>
+                {profile.title}
+              </a>
+            ) : (
               <a
                 key={profile.id}
                 href={profile.href}
@@ -36,13 +53,10 @@ export function SiteFooter({ lens }: { lens: RoleLens }) {
                 rel="noreferrer noopener"
               >
                 {profile.title} ↗
+                <span className="visually-hidden"> — opens in a new tab</span>
               </a>
-            ) : (
-              <span className={styles.pending} key={profile.id}>
-                {profile.title} — not published
-              </span>
-            ),
-          )}
+            );
+          })}
 
           {isResolved(RESUME) ? (
             <ResumeDownloadLink lens={lens}>Résumé ↓</ResumeDownloadLink>

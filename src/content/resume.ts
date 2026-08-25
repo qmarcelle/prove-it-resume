@@ -1,3 +1,4 @@
+import { CONTACT } from './site';
 import { PUBLISHED_SITES } from './published';
 
 /**
@@ -130,7 +131,16 @@ export const RESUME_DOCUMENT = {
   revision: 'REV 2026.08',
   domains: 'AI PLATFORM · DEVELOPER SYSTEMS · SOFTWARE ARCHITECTURE',
   location: 'Ooltewah, Tennessee',
+  /*
+   * Ordered by how a reader is most likely to act on them: reply, check the profile,
+   * read the code, read the site. Four entries plus the location no longer fit on one
+   * line, so the row wraps once — which the design allows, and which costs ~21px on a
+   * page that has no room to reflow. `resume.spec.ts` holds it to two lines, so a fifth
+   * entry fails as a test rather than as a footer clipped off the bottom of the sheet.
+   */
   links: [
+    { label: CONTACT.email, href: `mailto:${CONTACT.email}` },
+    { label: CONTACT.linkedinLabel, href: CONTACT.linkedin },
     { label: 'github.com/qmarcelle', href: 'https://github.com/qmarcelle' },
     { label: 'qwynn.marcellelabs.io', href: PUBLISHED_SITES.personal },
   ],

@@ -9,8 +9,12 @@ import styles from './ResumeBridge.module.css';
  *
  * Kept in the architecture and in the page, because plenty of hiring processes require
  * one and removing it would make the artifact harder to act on, not purer. What is
- * removed is the pretence: no file was supplied, so there is no download button that
- * would 404, and the gap is stated where the button would have been.
+ * removed is the pretence: a button appears only once the thing behind it exists, and
+ * until then the gap is stated where the button would have been.
+ *
+ * Both destinations resolve now — the generated PDF and the LinkedIn profile — so the
+ * explanatory note below renders for neither. The unresolved branches stay anyway; they
+ * are what stops a future edit that clears an `href` from silently shipping a 404.
  */
 export function ResumeBridge({ lens }: { lens: RoleLens }) {
   const resumeAvailable = isResolved(RESUME);

@@ -76,6 +76,22 @@ for (const { route, title } of ROUTES) {
     expect(slack, 'masthead must not sit within a hair of wrapping').toBeGreaterThan(12);
   });
 
+  /*
+   * The contact row is the one masthead line the design lets wrap — it is authored with
+   * `flex-wrap: wrap` and a row gap, and four links plus a location do not fit on one
+   * line at this measure. So the assertion is not "never wraps" but "wraps at most
+   * once": a third line costs another ~21px on a page that has ~43px of slack left, and
+   * the block above the boundary note would start losing its last row. Pinning the line
+   * count here means a fifth contact link fails as a test, not as a clipped PDF nobody
+   * opens until it is in front of a recruiter.
+   */
+  test(`${route} keeps the contact row to at most two lines`, async ({ page }) => {
+    await printPage(page, route);
+
+    const row = await page.locator('#resume-page-1 header > div').nth(2).boundingBox();
+    expect(row?.height, 'contact row must not reach a third line').toBeLessThan(50);
+  });
+
   test(`${route} keeps bottom-anchored content inside the page`, async ({ page }) => {
     await printPage(page, route);
 
