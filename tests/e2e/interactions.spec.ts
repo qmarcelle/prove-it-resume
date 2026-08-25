@@ -64,9 +64,17 @@ test.describe('repository decision diff', () => {
     await page.goto('/');
     const panel = diff(page);
 
-    // The controls are never hidden behind a stage — they are why the run is credible.
-    await expect(panel.getByText('HELD FIXED')).toBeVisible();
-    await expect(panel.getByText(/Model — qwen-plus/)).toBeVisible();
+    /*
+     * The conditions are never hidden behind a stage — they are why the run is
+     * credible. They now sit in the rail beside the comparison rather than inside it,
+     * so this asserts against the section: the guarantee is that a reader sees them
+     * without stepping, not which element holds them.
+     */
+    const rail = page.locator('#sec-03').getByRole('complementary', {
+      name: 'HELD FIXED',
+    });
+    await expect(rail).toBeVisible();
+    await expect(rail.getByText('qwen-plus')).toBeVisible();
 
     // But the comparison itself is not imposed.
     await expect(panel.getByText('ADDED')).toHaveCount(0);
@@ -91,7 +99,11 @@ test.describe('repository decision diff', () => {
 
   test('links the frozen run at an immutable revision', async ({ page }) => {
     await page.goto('/');
-    const link = diff(page).getByRole('link', { name: /INSPECT FROZEN RUN/ });
+    // The artifact link moved to the section's proof layer, where the boundary is also
+    // stated once. The revision pin is the part that must not slip.
+    const link = page
+      .locator('#sec-03')
+      .getByRole('link', { name: /paired plan run bundle/ });
     await expect(link).toHaveAttribute(
       'href',
       /github\.com\/workspacejson\/datahub-agent\/blob\/[0-9a-f]{40}\//,

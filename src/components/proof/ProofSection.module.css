@@ -201,3 +201,55 @@
   line-height: 1.6;
   color: var(--color-ink-tertiary);
 }
+
+/*
+ * ── The signature band ───────────────────────────────────────────────────────
+ *
+ * A local palette swap, not a set of dark overrides. Every token the descendants
+ * already use is redefined for this subtree, so components inside invert without
+ * carrying a `tone` prop or a parallel stylesheet.
+ *
+ * The mapping is deliberately lossy where the light palette has more steps than the
+ * dark one: three ink greys and two metadata greys all collapse onto the single quiet
+ * inverse ink. That is what keeps every pairing above AA on graphite — the quiet
+ * inverse ink is 10.1:1 on this ground, and the accent 9.6:1 — where a finer gradient
+ * would put the lightest steps under it.
+ */
+.signature {
+  --color-canvas: var(--color-inverse-bg);
+  --color-surface: var(--color-inverse-surface);
+  --color-surface-subtle: var(--color-inverse-bg);
+  --color-surface-muted: var(--color-inverse-surface);
+  --color-ink: var(--color-inverse-ink);
+  --color-ink-strong: var(--color-inverse-ink);
+  --color-ink-secondary: var(--color-inverse-ink-quiet);
+  --color-ink-tertiary: var(--color-inverse-ink-quiet);
+  --color-ink-muted: var(--color-inverse-ink-quiet);
+  --color-meta: var(--color-inverse-ink-quiet);
+  --color-meta-quiet: var(--color-inverse-ink-quiet);
+  --color-border: var(--color-inverse-border);
+  --color-border-quiet: var(--color-inverse-border);
+  --color-border-dashed: var(--color-inverse-ink-quiet);
+  --color-accent: var(--color-inverse-accent);
+  --color-accent-deep: var(--color-inverse-accent-strong);
+  --color-accent-border: var(--color-inverse-accent);
+  --color-accent-surface: var(--color-inverse-surface);
+  --rule: 1px solid var(--color-inverse-border);
+  --rule-quiet: 1px solid var(--color-inverse-border);
+  --rule-strong: 2px solid var(--color-inverse-accent);
+  --focus-ring: 2px solid var(--color-inverse-accent);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  border-radius: var(--radius);
+  background: var(--color-inverse-bg);
+  color: var(--color-inverse-ink);
+  padding: var(--space-7) var(--space-6);
+}
+
+@media (max-width: 640px) {
+  .signature {
+    padding: var(--space-6) var(--space-4);
+  }
+}

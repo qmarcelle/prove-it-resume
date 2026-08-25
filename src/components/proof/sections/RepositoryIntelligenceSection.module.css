@@ -176,3 +176,23 @@
   letter-spacing: -0.015em;
   color: var(--color-ink);
 }
+
+/*
+ * The signature row: conditions on the left, the decision they license on the right.
+ *
+ * The rail is allowed to shrink but not to vanish; the stage takes the remaining
+ * measure and carries the interaction. Below the two-column break the rail lays down
+ * above the comparison rather than beside it, which keeps the reading order — what was
+ * held fixed, then what changed — intact in one column.
+ */
+.signatureRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5) var(--space-6);
+  align-items: flex-start;
+}
+
+.signatureStage {
+  flex: 1 1 520px;
+  min-width: 0;
+}

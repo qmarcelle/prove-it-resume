@@ -41,6 +41,27 @@ export function ProofSection({
   );
 }
 
+/**
+ * The signature block: one proof's argument, inverted.
+ *
+ * The redesign gives Repository Intelligence a dark treatment because its argument is
+ * a single recorded run and it should read as the page's one held note. It does *not*
+ * darken the whole section — the three-layer chain and the evidence panel below carry
+ * evidence the redesign never showed on dark, and inventing dark variants for six
+ * unrelated components to satisfy a band would be a lot of surface area for no
+ * argument. So the band covers the signature and the remainder stays on light ground.
+ *
+ * Implemented by remapping the colour tokens for the subtree rather than by writing a
+ * dark rule for every descendant. `RepositoryDecisionDiff` alone is ~480 lines of CSS
+ * built from these tokens; duplicating it under a `.dark` selector would double it and
+ * guarantee the two copies drift. Redefining the tokens here means anything rendered
+ * inside inverts correctly without knowing it is on dark, including components added
+ * later.
+ */
+export function ProofSignature({ children }: { children: React.ReactNode }) {
+  return <div className={styles.signature}>{children}</div>;
+}
+
 /** The section's opening: chapter mark on one side, thesis on the other. */
 export function ProofMasthead({ children }: { children: React.ReactNode }) {
   return <div className={styles.masthead}>{children}</div>;

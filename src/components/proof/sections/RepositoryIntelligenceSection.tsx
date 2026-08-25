@@ -7,40 +7,91 @@ import { repositoryIntelligence } from '@/content/proofs';
 import { ClaimBoundary } from '@/components/evidence/ClaimBoundary';
 import { EvidenceLink } from '@/components/evidence/EvidenceLink';
 import { EvidencePanel } from '@/components/evidence/EvidencePanel';
-import { ArchitectureStrip } from '@/components/proof/ArchitectureStrip';
 import { RepositoryDecisionDiff } from '@/components/interactions/RepositoryDecisionDiff';
 import { repositoryDecision } from '@/content/experiments/repository-decision';
+import { ChapterMark } from '@/components/proof/ChapterMark';
+import { HeldFixedRail } from '@/components/proof/HeldFixedRail';
 import {
   ProofAside,
   ProofColumns,
   ProofField,
+  ProofLayer,
+  ProofLayerBody,
+  ProofLayerColumn,
   ProofList,
+  ProofMasthead,
   ProofProse,
   ProofSection,
+  ProofSignature,
+  ProofThesis,
 } from '@/components/proof/ProofSection';
 import styles from './RepositoryIntelligenceSection.module.css';
 
 /**
- * 03 — Repository Intelligence.
+ * 03 — Repository Intelligence. Spatial grammar: causality.
  *
  * This is the section most at risk of collapsing into a project gallery, because it
- * names three artifacts. The layout resists that: one vertical chain, read top to
- * bottom, where each layer is the previous layer's consequence — a contract, then an
- * implementation of that contract, then an enterprise integration of that
- * implementation. Three receipts for one argument, not three projects.
+ * names three artifacts. The layout resists that in two moves.
+ *
+ * First, the recorded run leads, in the page's one inverted band: a rail of the
+ * conditions that were held fixed, and beside it the single control that rewrites the
+ * decision. Cause on the left, consequence on the right, and the reason the comparison
+ * is worth trusting stays on screen while the consequence is read.
+ *
+ * Second, the three layers follow on light ground as one vertical chain where each is
+ * the previous one's consequence — a contract, an implementation of that contract, an
+ * enterprise integration of that implementation. Three receipts for one argument.
+ *
+ * The `ArchitectureStrip` that used to open the section is gone: it restated the chain
+ * immediately below it as a single line of boxes, which is the "repeated heading →
+ * rule → same-width opener" rhythm the redesign set out to remove.
  */
-const PIPELINE = [
-  'REPOSITORY',
-  { label: '.agents/workspace.json', accent: true },
-  'AGENTS / TOOLS / INTEGRATIONS',
-] as const;
-
 export function RepositoryIntelligenceSection() {
   const proof = repositoryIntelligence;
 
   return (
     <ProofSection proof={proof}>
-      <ArchitectureStrip nodes={PIPELINE} />
+      <ProofSignature>
+        <ProofMasthead>
+          <ChapterMark
+            stage={proof.stage}
+            label={`PROOF TWO · ${repositoryDecision.experiment}`}
+            meta="ONE RECORDED RUN · FROZEN ARTIFACT"
+            title={proof.title}
+            titleId={`${proof.id}-title`}
+            orientation="inline"
+            tone="dark"
+          />
+          <ProofThesis>{proof.thesis}</ProofThesis>
+        </ProofMasthead>
+
+        <div className={styles.signatureRow}>
+          <HeldFixedRail
+            heldFixed={repositoryDecision.controls.heldFixed}
+            varied={repositoryDecision.controls.varied}
+          />
+          <div className={styles.signatureStage}>
+            <RepositoryDecisionDiff
+              code={proof.evidenceCode}
+              data={repositoryDecision}
+              showControls={false}
+              showFooter={false}
+            />
+          </div>
+        </div>
+
+        <ProofLayer tone="dark">
+          <ProofLayerColumn accent label="WHAT THIS RUN DOES NOT ESTABLISH">
+            <ProofLayerBody>{repositoryDecision.boundary}</ProofLayerBody>
+          </ProofLayerColumn>
+          <ProofLayerColumn label="INSPECT THE RUN" narrow>
+            <EvidenceLink
+              cta={repositoryDecision.artifact.title}
+              reference={repositoryDecision.artifact}
+            />
+          </ProofLayerColumn>
+        </ProofLayer>
+      </ProofSignature>
 
       <div className={styles.layers}>
         <span className={styles.layersLabel}>THREE LAYERS · ONE PROOF</span>
@@ -102,8 +153,6 @@ export function RepositoryIntelligenceSection() {
         <span className={styles.argumentLabel}>THE ARGUMENT IN ONE LINE</span>
         <p className={styles.argumentBody}>{ARGUMENT_IN_ONE_LINE}</p>
       </div>
-
-      <RepositoryDecisionDiff code={proof.evidenceCode} data={repositoryDecision} />
 
       <ProofColumns>
         <ProofProse>
