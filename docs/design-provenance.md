@@ -9,8 +9,8 @@ is not**, for the reason given below.
 
 ## Scope
 
-The motion storyboard recorded here is scoped to three interactions — Repository Decision
-Diff, Interlock Counterfactual, and Vreko Semantic Zoom — and remains unchanged. All three
+The motion storyboard recorded here is scoped to three interactions (Repository Decision
+Diff, Interlock Counterfactual, and Vreko Semantic Zoom) and remains unchanged. All three
 are still DOM and SVG driven by CSS transitions, and nothing below has been superseded.
 
 **Hero Concept B is separately scoped.** It arrived later, as its own artifact
@@ -38,11 +38,11 @@ Three storyboard files were present in the supplied directory. The motion storyb
 selected by inspecting content rather than filenames, and confirmed as the corrected
 revision by three markers it carries:
 
-- `BEAT IDS ARE NOT UI LABELS` — one occurrence, stating that `B0–B4`, `t0–t4` and
+- `BEAT IDS ARE NOT UI LABELS`; one occurrence, stating that `B0–B4`, `t0–t4` and
   `L0–L2` are document and code identifiers that never reach the interface.
-- `[BIND: VERIFIED EVIDENCE]` — eighteen occurrences, marking every score, count, path,
+- `[BIND: VERIFIED EVIDENCE]`; eighteen occurrences, marking every score, count, path,
   sha, version and timestamp in the frames as an unbound placeholder.
-- `COLOR TOKENS · PRODUCTION OVERRIDES THIS ARTIFACT` — stating that the production
+- `COLOR TOKENS · PRODUCTION OVERRIDES THIS ARTIFACT`: stating that the production
   codebase's accessible colour tokens are authoritative and that "where a token and a
   swatch disagree, the token wins and the storyboard is wrong".
 
@@ -52,14 +52,14 @@ revision by three markers it carries:
 progressive-disclosure behaviour, the state transitions, the information-revelation
 model, and the relative weight of the three interactions. It determined nothing factual.
 
-No code, markup, styling or copy was copied from it. Every example value it contained —
-paths, counts, shas, versions, metrics, architecture labels — was treated as untrusted
+No code, markup, styling or copy was copied from it. Every example value it contained
+(paths, counts, shas, versions, metrics, architecture labels) was treated as untrusted
 and either replaced with a value read from a public artifact or left unbound.
 
 **It was deliberately not committed.** The supplied directory sits outside this
 repository's working tree, so it could not appear in `git status`, and nothing in
 `src/`, `tests/` or `docs/` imports or references it. It was removed after the pass
-completed. `design/reference/claude/` — the previously committed visual-language export —
+completed. `design/reference/claude/` (the previously committed visual-language export)
 was left untouched.
 
 ## Production implementation
@@ -69,9 +69,9 @@ was left untouched.
 | Repository Decision Diff | `src/components/interactions/RepositoryDecisionDiff.tsx`  | `content/experiments/repository-decision.ts` |
 | Interlock counterfactual | `src/components/interactions/InterlockCounterfactual.tsx` | `content/experiments/interlock-hac330.ts`    |
 | Vreko architecture trace | `src/components/interactions/VrekoArchitectureTrace.tsx`  | `content/experiments/vreko-architecture.ts`  |
-| Shared stage selector    | `src/components/interactions/StepControl.tsx`             | —                                            |
-| Deep-linked state        | `src/components/interactions/useDeepLinkedState.ts`       | —                                            |
-| Types                    | `src/lib/interactions.ts`                                 | —                                            |
+| Shared stage selector    | `src/components/interactions/StepControl.tsx`             | :                                            |
+| Deep-linked state        | `src/components/interactions/useDeepLinkedState.ts`       | :                                            |
+| Types                    | `src/lib/interactions.ts`                                 | :                                            |
 
 Durable principles are recorded in `docs/interaction-contract.md`.
 
@@ -85,7 +85,7 @@ actually say.
    `EV-2 · FRAGILITY`, with every value marked `[BIND: VERIFIED EVIDENCE]`. The frozen
    run this is now bound to contains neither. Its evidence is an exact source-path
    resolution, and the run's own artifact records the `partners` field as indeterminate
-   with an observed count of zero — no co-change evidence was available. The data model
+   with an observed count of zero: no co-change evidence was available. The data model
    was written after reading the artifact, with an open `kind` string, precisely so the
    real result would fit. Had the storyboard's taxonomy been typed in, the honest result would have
    had to be distorted to display it.
@@ -95,7 +95,7 @@ actually say.
    evidence resolver and auth context. An audit of the current public
    repositories supports a different split, with authentication at the HTTP edge rather
    than inside the intelligence layer. More importantly, the audit found that **none of
-   the three public repositories contain implementation source** — they are distribution
+   the three public repositories contain implementation source**; they are distribution
    and documentation surfaces. So the interaction argues about the publication boundary,
    which is mechanically checkable, rather than illustrating internals a reader cannot
    inspect.
@@ -103,7 +103,7 @@ actually say.
 3. **The Interlock counterfactual is one shared scale with a time axis, not an OFF/ON
    switch.** This follows the storyboard's strongest decision rather than the previous
    implementation. The storyboard's own numbers (`140 > 130`, `WITHHOLD_SERIALIZE`,
-   `120 ≤ 130`) turned out to match the frozen packet exactly — but they are used
+   `120 ≤ 130`) turned out to match the frozen packet exactly, but they are used
    because `experiments/hac-330/evidence/arms.json` says so, and would have been
    replaced if it had said otherwise.
 
@@ -133,6 +133,6 @@ actually say.
    the interface, in the DOM, or in the deep-link query values, as the storyboard itself
    required. A test asserts this against rendered text.
 
-9. **Storyboard colour swatches were ignored.** The production token layer — including
-   the retuned quiet ladder and the 11.5px microtype floor from the original import — is
+9. **Storyboard colour swatches were ignored.** The production token layer (including
+   the retuned quiet ladder and the 11.5px microtype floor from the original import) is
    authoritative, as the storyboard itself states.

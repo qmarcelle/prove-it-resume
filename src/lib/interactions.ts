@@ -47,13 +47,13 @@ export type Verification = {
 };
 
 /* ------------------------------------------------------------------ *
- * Interaction 1 — Repository Decision Diff
+ * Interaction 1: Repository Decision Diff
  * ------------------------------------------------------------------ */
 
 /**
  * One piece of evidence that was available at decision time.
  *
- * `kind` is an open string on purpose — see the module comment. `observation` is what
+ * `kind` is an open string on purpose; see the module comment. `observation` is what
  * the artifact recorded, quoted rather than paraphrased wherever practical.
  */
 export type DecisionEvidence = {
@@ -135,7 +135,7 @@ export type RepositoryDecisionDiffData = {
 };
 
 /* ------------------------------------------------------------------ *
- * Interaction 2 — Interlock counterfactual
+ * Interaction 2: Interlock counterfactual
  * ------------------------------------------------------------------ */
 
 /** A named quantity contributing to the joint shared state. */
@@ -219,7 +219,7 @@ export type InterlockCounterfactualData = {
 };
 
 /* ------------------------------------------------------------------ *
- * Interaction 3 — Vreko architecture trace
+ * Interaction 3: Vreko architecture trace
  * ------------------------------------------------------------------ */
 
 /** Whether an evaluator can read the implementation of a node. */

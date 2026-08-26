@@ -1,9 +1,10 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { publishDeepLinkState } from './deep-link';
 
 /**
- * One interaction state, reflected in the query string.
+ * One interaction state, which *can* be represented in the query string.
  *
  * Three constraints shape this, and they rule out `useSearchParams`:
  *
@@ -15,8 +16,24 @@ import { useCallback, useEffect, useRef, useState } from 'react';
  * - **The page must be correct with no query state at all**, which falls out of the
  *   same design: no parameter simply means the effect finds nothing to apply.
  *
- * State is written with `replaceState` rather than `pushState`: stepping through a
- * disclosure should not fill the back button with intermediate stages.
+ * ## What changed, and why
+ *
+ * This used to write every state change into the URL with `replaceState`. The capability
+ * was right; the default was wrong. Three sections read normally turned the address into
+ * `?interlock=evidence&layer=workspace&decision=comparison#vreko`, which is a debug
+ * harness rather than a finished page, and the reader carried it into their history and
+ * anything they pasted without ever asking for it.
+ *
+ * Now the state is published to a registry instead, and `COPY THIS VIEW` builds the
+ * address on demand. Incoming deep links are honoured exactly as before: that half was
+ * never the problem.
+ *
+ * ## The one write that remains
+ *
+ * A reader who *arrives* at `?interlock=evidence` and then steps to another stage is
+ * looking at a page the URL no longer describes. So the first divergence strips that one
+ * parameter, with `replaceState`, and nothing is ever added back. The URL only moves
+ * toward the clean one, and it never asserts a stage the page is not in.
  */
 export function useDeepLinkedState(
   key: string,
@@ -35,21 +52,30 @@ export function useDeepLinkedState(
     const raw = new URLSearchParams(window.location.search).get(key);
     if (raw !== null && validate.current(raw)) {
       setValue(raw);
+      publishDeepLinkState(key, raw === initial ? null : raw);
     }
-  }, [key]);
+
+    /*
+     * Published on unmount as absent. A section removed from a surface must not leave
+     * its stage in a link copied from the section beside it.
+     */
+    return () => publishDeepLinkState(key, null);
+  }, [key, initial]);
 
   const update = useCallback(
     (next: string) => {
       setValue(next);
+      publishDeepLinkState(key, next === initial ? null : next);
 
+      /*
+       * The reader has moved off whatever the address claimed, so the claim goes. Only
+       * ever a deletion: this is the one place the URL is touched during browsing, and
+       * it is what keeps `/linear` clean rather than making it stateful again.
+       */
       const url = new URL(window.location.href);
-      if (next === initial) {
-        // The default state is the one with no parameter, so a reader who steps back to
-        // it gets a clean URL rather than one asserting a redundant stage.
-        url.searchParams.delete(key);
-      } else {
-        url.searchParams.set(key, next);
-      }
+      if (!url.searchParams.has(key)) return;
+
+      url.searchParams.delete(key);
       window.history.replaceState(null, '', url);
     },
     [key, initial],

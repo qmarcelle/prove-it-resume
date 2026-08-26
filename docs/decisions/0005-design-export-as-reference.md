@@ -1,12 +1,12 @@
-# 0005 — The Claude Design export is preserved as reference, not used as source
+# 0005: The Claude Design export is preserved as reference, not used as source
 
 **Status:** accepted
 
 ## Problem
 
-The design arrived as `.dc.html` files containing Claude Design runtime constructs —
-`<x-dc>`, `<sc-if>`, `<sc-for>`, `{{ binding }}`, `style-hover`, and a `DCLogic`
-component class — plus a `support.js` viewer runtime. These express the design's
+The design arrived as `.dc.html` files containing Claude Design runtime constructs
+(`<x-dc>`, `<sc-if>`, `<sc-for>`, `{{ binding }}`, `style-hover`, and a `DCLogic`
+component class) plus a `support.js` viewer runtime. These express the design's
 behaviour precisely and are not a production dependency.
 
 ## Alternatives
@@ -30,7 +30,7 @@ where it landed, and every deliberate deviation.
   files have changed since import.
 - The translation is auditable: the export's `IntersectionObserver` parameters and
   scroll offset are ported verbatim and annotated as such in the code.
-- The reference will go stale as the site evolves. That is correct — it is a record of a
+- The reference will go stale as the site evolves. That is correct; it is a record of a
   moment, not a specification to keep in sync.
 - Inline styles became a token layer plus CSS Modules. The export's inline styling is a
   Claude Design authoring affordance, not a styling strategy, and carrying it forward

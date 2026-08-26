@@ -7,7 +7,7 @@ import styles from './EvidenceStatus.module.css';
  * Three tones, three glyph shapes, three colours. The shape carries the distinction on
  * its own, so status is never encoded by colour alone.
  *
- * `tone` and `label` are separate props because they vary independently — an evidence
+ * `tone` and `label` are separate props because they vary independently: an evidence
  * panel header reuses a proof's tone under the text "VERIFY THIS".
  */
 export function EvidenceStatus({

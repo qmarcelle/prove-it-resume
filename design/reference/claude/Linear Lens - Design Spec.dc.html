@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #121110; color: #F0EDE6; font-family: 'Public Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #D9A84E; text-decoration: none; }
+  a:hover { color: #EFC97E; text-decoration: underline; text-underline-offset: 3px; }
+  :focus-visible { outline: 2px solid #D9A84E; outline-offset: 3px; }
+</style>
+</helmet>
+
+<div style="background: #121110; display: flex; flex-direction: column; align-items: center;">
+
+  <div style="width: 100%; max-width: 1180px; padding: 0 40px 110px; box-sizing: border-box; display: flex; flex-direction: column; gap: 64px;">
+
+    <!-- masthead -->
+    <header style="padding: 66px 0 0; display: flex; flex-direction: column; gap: 22px; border-bottom: 1px solid #2B2926; padding-bottom: 30px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 10px 22px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.09em; color: #8B867D;">
+        <span style="color: #EFC97E;">APPLICATION-LENS SPECIFICATION</span>
+        <span>PROVE IT RESUME · /LINEAR</span>
+        <span>REV 2026.08</span>
+        <span style="margin-left: auto;"><a href="Prove It Resume - Linear Lens.dc.html">← the frames</a></span>
+      </div>
+      <h1 style="margin: 0; font-size: 42px; line-height: 1.08; letter-spacing: -0.035em; font-weight: 700; max-width: 30ch; text-wrap: pretty;">A dark evidence instrument, not a themed portfolio.</h1>
+      <p style="margin: 0; font-size: 17px; line-height: 1.62; color: #B5AFA4; max-width: 78ch; text-wrap: pretty;">This is the specification behind the four desktop frames and three mobile frames. It states which principles from the target company's published design writing changed decisions here, what design problem the lens actually solves, the direction chosen and the two that lost, then the tokens, components, interactions, responsive and accessibility rules an implementation agent can map onto the existing Next.js application.</p>
+    </header>
+
+    <!-- problem statement -->
+    <section style="display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 40px; align-items: start;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #EFC97E;">01 · PROBLEM</span>
+        <span style="font-size: 13px; line-height: 1.55; color: #8B867D;">What this lens is for.</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <p style="margin: 0; font-size: 21px; line-height: 1.45; letter-spacing: -0.02em; color: #F0EDE6; max-width: 52ch; text-wrap: pretty;">The general surface proves platform depth so well that it hides a product engineer with a decade of customer-facing production history.</p>
+        <p style="margin: 0; font-size: 15.5px; line-height: 1.65; color: #B5AFA4; max-width: 76ch; text-wrap: pretty;">An evaluator hiring a product engineer reads the current page and sees infrastructure. That reading is accurate and incomplete: it drops years of shipping software that members, brokers and employers used, and it drops the leadership step that followed. The lens does not add claims. It reorders the same evidence so the first minute answers <em style="color: #E4E0D8; font-style: normal;">product engineer, senior, AI-native, and already reasoning about agent platforms</em>, then lets architecture depth arrive as depth rather than as the headline. Second problem, smaller and real: the evidence grammar has to survive a dark environment without turning into a terminal.</p>
+      </div>
+    </section>
+
+    <!-- research synthesis -->
+    <section style="display: flex; flex-direction: column; gap: 22px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 14px 34px; align-items: baseline; border-bottom: 1px solid #2B2926; padding-bottom: 16px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #EFC97E;">02 · RESEARCH SYNTHESIS</span>
+        <span style="font-size: 20px; font-weight: 600; letter-spacing: -0.02em;">Ten source ideas that changed a decision here.</span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.08em; color: #8B867D; margin-left: auto;">SOURCE IDEA → DESIGN CONSEQUENCE</span>
+      </div>
+      <div style="display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 0 36px;">
+        <sc-for list="{{ principles }}" as="p" hint-placeholder-count="10">
+          <div style="border-top: 1px solid #232120; padding: 16px 0; display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.015em; line-height: 1.35;">{{ p.idea }}</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.08em; color: #8B867D;">{{ p.src }}</span>
+          </div>
+          <div style="border-top: 1px solid #232120; padding: 16px 0;">
+            <span style="font-size: 14.5px; line-height: 1.65; color: #B5AFA4;">{{ p.consequence }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- direction -->
+    <section style="display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 40px; align-items: start;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #EFC97E;">03 · SELECTED DIRECTION</span>
+        <span style="font-size: 13px; line-height: 1.55; color: #8B867D;">One direction, developed.</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        <div style="border: 1px solid #8A6A28; border-radius: 6px; background: #1C1913; padding: 22px 24px; display: flex; flex-direction: column; gap: 10px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #EFC97E;">THESIS · THE LIT WORK SURFACE</span>
+          <p style="margin: 0; font-size: 19px; line-height: 1.5; letter-spacing: -0.015em; color: #F0EDE6; max-width: 60ch; text-wrap: pretty;">A warm charcoal field where nothing is boxed by default, structure comes from alignment and tonal steps, and the only saturated mark on the page is the one place evidence has been verified. Depth is a control you press, never a hover you discover.</p>
+          <span style="font-size: 14.5px; line-height: 1.65; color: #B5AFA4; max-width: 76ch;">Four tonal steps do the work borders used to do. Amber appears eight times on a full page read and each appearance means the same thing. Every proof is one shape: a question, a controlled comparison, recorded deltas, and a limit — so a new proof can be added without inventing a new layout.</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+          <sc-for list="{{ discarded }}" as="x" hint-placeholder-count="2">
+            <div style="border: 1px dashed #3C3934; border-radius: 6px; background: #191816; padding: 17px 18px; display: flex; flex-direction: column; gap: 8px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #C4864F;">DISCARDED</span>
+              <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.015em;">{{ x.name }}</span>
+              <span style="font-size: 13.5px; line-height: 1.6; color: #B5AFA4;">{{ x.what }}</span>
+              <span style="font-size: 13.5px; line-height: 1.6; color: #8B867D; border-top: 1px solid #232120; padding-top: 9px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; color: #C4864F;">LOST BECAUSE </span>{{ x.why }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- tokens -->
+    <section style="display: flex; flex-direction: column; gap: 22px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 14px 34px; align-items: baseline; border-bottom: 1px solid #2B2926; padding-bottom: 16px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #EFC97E;">04 · TOKENS</span>
+        <span style="font-size: 20px; font-weight: 600; letter-spacing: -0.02em;">Dark-first values, original to this product.</span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.08em; color: #8B867D; margin-left: auto;">SUFFIX THE EXISTING tokens.css SCALE · --lens-*</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1px; background: #232120; border: 1px solid #2B2926; border-radius: 5px; overflow: hidden;">
+        <sc-for list="{{ colors }}" as="c" hint-placeholder-count="14">
+          <div style="background: #191816; padding: 13px 15px; display: flex; gap: 13px; align-items: flex-start;">
+            <span style="{{ c.swatch }}"></span>
+            <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #F0EDE6;">{{ c.name }}</span>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8B867D;">{{ c.hex }}</span>
+              <span style="font-size: 12.5px; line-height: 1.5; color: #B5AFA4;">{{ c.use }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 26px 40px;">
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #8B867D;">TYPOGRAPHY</span>
+          <sc-for list="{{ type }}" as="t" hint-placeholder-count="6">
+            <div style="border-top: 1px solid #232120; padding-top: 9px; display: flex; flex-direction: column; gap: 3px;">
+              <span style="{{ t.sample }}">{{ t.label }}</span>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8B867D;">{{ t.spec }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #8B867D;">SPACING · CORNERS · BORDERS · ELEVATION · ICONS · MOTION</span>
+          <sc-for list="{{ rules }}" as="r" hint-placeholder-count="6">
+            <div style="border-top: 1px solid #232120; padding-top: 9px; display: flex; flex-direction: column; gap: 3px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.07em; color: #E4E0D8;">{{ r.name }}</span>
+              <span style="font-size: 13.5px; line-height: 1.6; color: #B5AFA4;">{{ r.body }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- component disposition -->
+    <section style="display: flex; flex-direction: column; gap: 20px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 14px 34px; align-items: baseline; border-bottom: 1px solid #2B2926; padding-bottom: 16px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #EFC97E;">05 · COMPONENT DISPOSITION</span>
+        <span style="font-size: 20px; font-weight: 600; letter-spacing: -0.02em;">What happens to every existing part.</span>
+      </div>
+      <div style="display: grid; grid-template-columns: 190px minmax(0, 1fr) 132px minmax(0, 1.25fr); gap: 0 24px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #8B867D; padding-bottom: 9px;">COMPONENT</span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #8B867D; padding-bottom: 9px;">CURRENT PURPOSE</span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #8B867D; padding-bottom: 9px;">TREATMENT</span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #8B867D; padding-bottom: 9px;">RATIONALE</span>
+        <sc-for list="{{ components }}" as="c" hint-placeholder-count="16">
+          <span style="border-top: 1px solid #232120; padding: 12px 0; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #F0EDE6;">{{ c.name }}</span>
+          <span style="border-top: 1px solid #232120; padding: 12px 0; font-size: 13.5px; line-height: 1.55; color: #B5AFA4;">{{ c.purpose }}</span>
+          <span style="border-top: 1px solid #232120; padding: 12px 0;"><span style="{{ c.tagStyle }}">{{ c.treatment }}</span></span>
+          <span style="border-top: 1px solid #232120; padding: 12px 0; font-size: 13.5px; line-height: 1.55; color: #8B867D;">{{ c.why }}</span>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- interaction spec -->
+    <section style="display: flex; flex-direction: column; gap: 20px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 14px 34px; align-items: baseline; border-bottom: 1px solid #2B2926; padding-bottom: 16px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #EFC97E;">06 · INTERACTION SPEC</span>
+        <span style="font-size: 20px; font-weight: 600; letter-spacing: -0.02em;">Four interactions, each explaining a state change.</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px;">
+        <sc-for list="{{ interactions }}" as="i" hint-placeholder-count="4">
+          <div style="border: 1px solid #2B2926; border-radius: 6px; background: #191816; padding: 18px 19px; display: flex; flex-direction: column; gap: 11px;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #8B867D;">{{ i.where }}</span>
+            <span style="font-size: 16.5px; font-weight: 600; letter-spacing: -0.015em; line-height: 1.3;">{{ i.name }}</span>
+            <sc-for list="{{ i.lines }}" as="l" hint-placeholder-count="4">
+              <span style="font-size: 13.5px; line-height: 1.6; color: #B5AFA4; border-top: 1px solid #232120; padding-top: 9px;">{{ l }}</span>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- responsive + a11y -->
+    <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 34px 44px;">
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="border-bottom: 1px solid #2B2926; padding-bottom: 12px; display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: baseline;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #EFC97E;">07 · RESPONSIVE</span>
+          <span style="font-size: 17px; font-weight: 600; letter-spacing: -0.02em;">1440 and 390 are both first-class.</span>
+        </div>
+        <sc-for list="{{ responsive }}" as="r" hint-placeholder-count="7">
+          <div style="display: flex; gap: 11px; align-items: baseline; border-top: 1px solid #232120; padding-top: 9px;">
+            <span style="width: 5px; height: 5px; border-radius: 1px; background: #6E6A62; flex: none; margin-top: 7px;"></span>
+            <span style="font-size: 13.5px; line-height: 1.6; color: #B5AFA4;">{{ r }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="border-bottom: 1px solid #2B2926; padding-bottom: 12px; display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: baseline;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #EFC97E;">08 · ACCESSIBILITY</span>
+          <span style="font-size: 17px; font-weight: 600; letter-spacing: -0.02em;">Part of the visual quality, not a pass at the end.</span>
+        </div>
+        <sc-for list="{{ a11y }}" as="a" hint-placeholder-count="8">
+          <div style="display: flex; gap: 11px; align-items: baseline; border-top: 1px solid #232120; padding-top: 9px;">
+            <span style="width: 5px; height: 5px; border-radius: 1px; background: #6E6A62; flex: none; margin-top: 7px;"></span>
+            <span style="font-size: 13.5px; line-height: 1.6; color: #B5AFA4;">{{ a }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- handoff -->
+    <section style="display: flex; flex-direction: column; gap: 18px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 14px 34px; align-items: baseline; border-bottom: 1px solid #2B2926; padding-bottom: 16px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.09em; color: #EFC97E;">09 · IMPLEMENTATION HANDOFF</span>
+        <span style="font-size: 20px; font-weight: 600; letter-spacing: -0.02em;">How this maps onto the existing application.</span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.08em; color: #8B867D; margin-left: auto;">DESIGN INTENT · NOT PRODUCTION CODE</span>
+      </div>
+      <div style="display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 0 30px;">
+        <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="8">
+          <span style="border-top: 1px solid #232120; padding: 13px 0; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.6; color: #E4E0D8;">{{ h.key }}</span>
+          <span style="border-top: 1px solid #232120; padding: 13px 0; font-size: 14px; line-height: 1.65; color: #B5AFA4;">{{ h.body }}</span>
+        </sc-for>
+      </div>
+      <div style="border: 1px dashed #3C3934; border-radius: 6px; background: #171615; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.09em; color: #C4864F;">OUT OF SCOPE IN THIS RUN</span>
+        <span style="font-size: 13.5px; line-height: 1.65; color: #B5AFA4;">The generic <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px;">/</span> surface is unchanged. The PDF resume is not redesigned here and stays a light paper document. No career fact was invented: the frontend stack of the healthcare product work is carried as <span style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #C4864F;">[VERIFY FRONTEND STACK]</span> and is styled as an unresolved item, not as evidence.</span>
+      </div>
+    </section>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  renderVals() {
+    const tag = (color, border, bg) => 'font-family: JetBrains Mono, monospace; font-size: 10.5px; letter-spacing: 0.08em; color: ' + color +
+      '; border: 1px solid ' + border + '; background: ' + bg + '; border-radius: 3px; padding: 3px 7px; display: inline-block;';
+    const neutral = tag('#B5AFA4', '#3C3934', 'transparent');
+    const amber = tag('#EFC97E', '#8A6A28', 'rgba(217,168,78,0.10)');
+    const warn = tag('#C4864F', '#5C4A32', 'transparent');
+    const sw = (hex, border) => 'width: 34px; height: 34px; flex: none; border-radius: 4px; background: ' + hex + '; border: 1px solid ' + (border || '#3C3934') + ';';
+
+    return {
+      principles: [
+        { idea: 'Don\u2019t compete for attention you haven\u2019t earned.', src: 'CURRENT DESIGN PRINCIPLES', consequence: 'Amber is spent, not sprinkled: verified state, the decision result, the active receipt, one primary CTA, the final mark of the hero chain. Everything else — labels, chips, rules, icons — is neutral. Section numbers, previously ornamental, drop to the darkest legible tone.' },
+        { idea: 'Structure should be felt, not seen.', src: 'CURRENT DESIGN PRINCIPLES', consequence: 'Four tonal steps and one shared 40px gutter replace most borders. A border now appears only where two things would otherwise touch, or to mark a boundary that carries meaning: the verified arm, the unresolved item, the receipt panel.' },
+        { idea: 'A calmer interface for a product in motion.', src: 'CALMER INTERFACE', consequence: 'Motion happens once, on the hero chain, and lands in a frame that reads as a diagram in a screenshot. Nothing on the page loops, pulses or drifts. Disclosure transitions are 140ms tonal shifts, not slides.' },
+        { idea: 'Warmer, less saturated neutrals with crisp contrast.', src: 'MARCH 2026 UI REFRESH', consequence: 'The canvas is warm charcoal (#121110), not blue-black, so the existing amber stays in-family instead of clashing. Primary text is #F0EDE6 rather than white, which removes the hard glare a pure-white body creates on large dark surfaces.' },
+        { idea: 'Reduce icon dependence.', src: 'UI REFRESH · ICONOGRAPHY', consequence: 'The whole lens uses one graphic primitive: a 10–13px square mark, outlined for ordinary state and amber-filled for verified. No icon containers, no colored badges, no illustration. Arrows are typographic characters where a direction must be stated.' },
+        { idea: 'Distinguish the work surface from supporting chrome.', src: 'REDESIGN · HIERARCHY', consequence: 'Header and footer sit a step below the canvas and use metadata type only. The evidence under inspection sits a step above it. The section a reader is reading is the brightest thing on screen at any moment.' },
+        { idea: 'Verify the problem before designing the solution.', src: 'LINEAR METHOD', consequence: 'Section 02 exists because the diagnosis was hierarchy, not content. No new claim was written for this lens; the fix is ordering, weight and one new section built from work already logged.' },
+        { idea: 'Purpose-built beats infinitely configurable.', src: 'LINEAR METHOD', consequence: 'Each proof gets the one spatial grammar its argument needs — comparison for repository intelligence, a single bound axis for Interlock, a session pair for memory — instead of one card template stretched over all of them.' },
+        { idea: 'Form gives AI capabilities structure and context.', src: 'DESIGN FOR THE AI AGE', consequence: 'The agent sections are drawn as responsibility, not as chat. Lanes state who owns what; the lifecycle is three named states; the delegation boundary is a table of dimensions with two candidate owners and one row honestly marked unresolved.' },
+        { idea: 'Quality lives in details users barely notice.', src: 'OUTPUT ISN\u2019T DESIGN', consequence: 'Unverified content is visually distinct from evidence everywhere it appears — dashed border, burnt-orange label, never amber — so the page cannot accidentally promote a placeholder into a proof.' }
+      ],
+
+      discarded: [
+        { name: 'The instrument panel', what: 'A dense two-column console: fixed evidence rail on the left, proof detail on the right, everything in one viewport with internal scrolling.', why: 'it read as a product someone would have to learn, and it fought the page\u2019s real job — being scanned once, top to bottom, by a stranger in ten seconds.' },
+        { name: 'The lit paper', what: 'Keeping the editorial light field and inverting only the proof sections, so the dark surfaces became punctuation.', why: 'the brief asked for dark-first, and the hybrid made every proof look like a callout. It also split the amber into two different-feeling accents across the two fields.' }
+      ],
+
+      colors: [
+        { name: '--lens-canvas', hex: '#121110', use: 'The field. Everything else is measured from it.', swatch: sw('#121110') },
+        { name: '--lens-surface', hex: '#191816', use: 'Default panel. One step up, no border needed.', swatch: sw('#191816') },
+        { name: '--lens-surface-elevated', hex: '#1F1E1B', use: 'Receipts, disclosure controls, progression end state.', swatch: sw('#1F1E1B') },
+        { name: '--lens-surface-active', hex: '#272521', use: 'Pressed and hovered controls only.', swatch: sw('#272521') },
+        { name: '--lens-band', hex: '#161514', use: 'Full-width section bands that group without boxing.', swatch: sw('#161514') },
+        { name: '--lens-text', hex: '#F0EDE6', use: 'Headlines and the evidence under inspection. 14.4:1.', swatch: sw('#F0EDE6', '#3C3934') },
+        { name: '--lens-text-secondary', hex: '#B5AFA4', use: 'Body prose. 8.4:1.', swatch: sw('#B5AFA4', '#3C3934') },
+        { name: '--lens-text-tertiary', hex: '#8B867D', use: 'Metadata and labels. 5.2:1 — the floor.', swatch: sw('#8B867D', '#3C3934') },
+        { name: '--lens-border-subtle', hex: '#2B2926', use: 'Panel edges and grid hairlines (#232120 for internal).', swatch: sw('#2B2926') },
+        { name: '--lens-border-active', hex: '#3C3934', use: 'Secondary buttons, dashed unresolved outlines.', swatch: sw('#3C3934') },
+        { name: '--lens-accent', hex: '#D9A84E', use: 'Primary CTA fill and verified marks. Sparingly.', swatch: sw('#D9A84E') },
+        { name: '--lens-accent-text', hex: '#EFC97E', use: 'Amber on dark, for type. 9.1:1.', swatch: sw('#EFC97E', '#8A6A28') },
+        { name: '--lens-accent-edge', hex: '#8A6A28', use: 'Border of a verified surface.', swatch: sw('#8A6A28') },
+        { name: '--lens-accent-field', hex: '#1C1913', use: 'The one tinted surface: verified arm, resume bridge.', swatch: sw('#1C1913') },
+        { name: '--lens-unresolved', hex: '#C4864F', use: 'Open questions, refusals, placeholders. Always paired with a dashed border and a word.', swatch: sw('#C4864F') },
+        { name: '--lens-focus', hex: '#D9A84E', use: '2px ring, 3px offset, on every interactive element.', swatch: sw('#D9A84E') }
+      ],
+
+      type: [
+        { label: 'Display · 52 / 1.06', spec: 'Public Sans 700 · -0.038em · max 21ch · hero only', sample: 'font-size: 24px; font-weight: 700; letter-spacing: -0.03em;' },
+        { label: 'Section title · 34 / 1.08', spec: 'Public Sans 700 · -0.03em · one per section', sample: 'font-size: 20px; font-weight: 700; letter-spacing: -0.03em;' },
+        { label: 'Statement · 19–21 / 1.4', spec: 'Public Sans 400–600 · the claim inside a proof', sample: 'font-size: 17px; font-weight: 500; letter-spacing: -0.015em;' },
+        { label: 'Body · 15–16 / 1.6', spec: 'Public Sans 400 · max 56ch · text-wrap: pretty', sample: 'font-size: 15px; color: #B5AFA4;' },
+        { label: 'Caption · 13–14 / 1.55', spec: 'Public Sans 400 · reasons, notes, limits', sample: 'font-size: 13.5px; color: #B5AFA4;' },
+        { label: 'METADATA · 10.5–11.5 / 0.09em', spec: 'JetBrains Mono 400 uppercase · labels, IDs, states', sample: 'font-family: JetBrains Mono, monospace; font-size: 11px; letter-spacing: 0.09em; color: #8B867D;' },
+        { label: 'code / evidence · 12–13', spec: 'JetBrains Mono · paths, digests, decisions, figures only', sample: 'font-family: JetBrains Mono, monospace; font-size: 12.5px; color: #E4E0D8;' }
+      ],
+
+      rules: [
+        { name: 'SPACING', body: '4 · 8 · 12 · 18 · 26 · 40 · 56 · 84. Inside a panel: 12–26. Between panels: 16. Section to section: 84 (56 when the next block continues the same argument). One 40px page gutter, 16px at mobile.' },
+        { name: 'CORNERS', body: 'Interactive and self-contained surfaces round: 4px controls, 5–6px panels, 8px the resume bridge, 10px a device frame. Structural things never round: bands, rules, grid cells, table rows, the marks in a diagram.' },
+        { name: 'BORDERS', body: 'Justified in four cases only: the edge of a panel that holds evidence, a hairline separating two data cells, a dashed outline marking something unresolved, and an amber edge marking something verified. Decorative borders are removed in favour of a tonal step.' },
+        { name: 'ELEVATION', body: 'No shadows. Elevation is tone: canvas → surface → elevated → active, roughly +6 lightness per step. Beyond three steps, use space instead. Sticky header darkens rather than lifts.' },
+        { name: 'ICONS', body: 'One primitive: the square mark (10px outline, 12–13px amber-filled for verified). Typographic arrows (→ ↓ ↗) where direction is the message. No icon system, no icon containers, nothing decorative.' },
+        { name: 'MOTION', body: 'Reveal 460–520ms cubic-bezier(0.22,0,0.18,1), staggered 380ms per station, total 3.0s, once on mount, no loop. State change 140ms ease on colour and border only. prefers-reduced-motion: all animation removed and the final frame is the authored static state — the design never depends on having seen it.' }
+      ],
+
+      components: [
+        { name: 'SiteHeader', purpose: 'Wordmark, section nav, resume link', treatment: 'MODIFY', why: 'Dark chrome one step below canvas; adds a lens chip; nav drops to tertiary weight.', tagStyle: neutral },
+        { name: 'Hero shell', purpose: 'Eyebrow, headline, supporting, CTAs', treatment: 'MODIFY', why: 'Headline and role framing replaced with the product-first positioning; three domain chips; CTA order Walk the proof → resume → GitHub.', tagStyle: neutral },
+        { name: 'Hero animation', purpose: 'Bounded-path composition', treatment: 'MODIFY', why: 'Same one-pass motion contract, new semantic model: product → context → agent → decision → verified. Settles into a namable diagram.', tagStyle: neutral },
+        { name: 'EvidenceIndex', purpose: 'Jump list with resolution counts', treatment: 'REUSE', why: 'Works as-is; recoloured and compacted into the hero column.', tagStyle: neutral },
+        { name: 'ProblemSection', purpose: 'Operating thesis, three facets', treatment: 'COPY-REPLACE', why: 'The infrastructure thesis is what mis-frames this candidate for this audience. Its slot becomes product engineering history.', tagStyle: warn },
+        { name: 'CareerSection', purpose: 'Themes, tags, ~10 years', treatment: 'CREATE', why: 'Becomes a four-stage progression plus audience and discipline grid. Product experience, not a timeline.', tagStyle: amber },
+        { name: 'LinearInPractice', purpose: '—', treatment: 'CREATE', why: 'Three receipts behind a tab control: dimension table, responsibility lanes, lifecycle sequence.', tagStyle: amber },
+        { name: 'NeverAskTwice', purpose: 'Supporting-work card', treatment: 'REORDER', why: 'Promoted to first product proof and given a session-pair figure. Same content object, new weight.', tagStyle: amber },
+        { name: 'RepositoryDecisionDiff', purpose: 'Without/with evidence comparison', treatment: 'MODIFY', why: 'Held-fixed rail above, two arms, deltas and evidence behind explicit depth controls.', tagStyle: neutral },
+        { name: 'InterlockCounterfactual', purpose: 'Two arms against one bound', treatment: 'MODIFY', why: 'Kept, compacted to a half-width figure so it stops outweighing the product story above it.', tagStyle: neutral },
+        { name: 'VrekoArchitectureTrace', purpose: 'Containment diagram', treatment: 'REMOVE', why: 'Diagram dropped from this lens; Vreko becomes one row of platform depth with its limit and link.', tagStyle: warn },
+        { name: 'DecisionReceipt', purpose: 'Decision, reason, provenance', treatment: 'REUSE', why: 'Native to dark already; becomes the shape every receipt on the page borrows.', tagStyle: neutral },
+        { name: 'EvidenceDisclosure', purpose: 'Progressive depth', treatment: 'MODIFY', why: 'Cumulative depth 1–4 with named controls and a visible depth readout instead of independent toggles.', tagStyle: neutral },
+        { name: 'ClaimLedger', purpose: 'Claim / evidence / boundary audit', treatment: 'MODIFY', why: 'Expanded by default at the exit and set in mono, so presentation ends before the raw material starts.', tagStyle: neutral },
+        { name: 'ProductJudgment', purpose: '—', treatment: 'CREATE', why: 'Six rules, each pointing at the section where it is applied or where it cost something.', tagStyle: amber },
+        { name: 'ResumeBridge', purpose: 'PDF handoff', treatment: 'MODIFY', why: 'Becomes a completion state: full evidence → conventional resume, with a light-paper thumbnail so the medium change is visible.', tagStyle: neutral },
+        { name: 'Footer', purpose: 'Contact and provenance', treatment: 'REUSE', why: 'Folded into the ledger exit as one mono line.', tagStyle: neutral }
+      ],
+
+      interactions: [
+        { where: 'HERO', name: 'The chain settles', lines: ['On mount: five stations rise in sequence, 380ms apart, connectors drawing between them.', 'At 2.34s the fifth mark fills amber. Total 3.0s, then still — forever.', 'No replay control: the settled frame is the content, and a replay button would advertise motion the page does not need.', 'Reduced motion, or no JS: the settled frame renders directly.'] },
+        { where: 'LINEAR IN PRACTICE', name: 'Receipt selection', lines: ['Three tab-role buttons, each carrying ID, name and state (open evaluation / position taken / implemented).', 'Selection is marked three ways: amber edge, tinted field, brighter label — never colour alone.', 'Panels swap instantly; only border and background transition, 140ms.', 'Arrow keys move between tabs; the panel is the tabpanel and receives focus on activation.'] },
+        { where: 'NEVER ASK TWICE', name: 'Session pair', lines: ['Static by default: session 01 writes context, session 04 retrieves it, and the forgetting policy sits underneath as the third fact.', 'The evaluation panel is the only amber-labelled element, because it is what makes the claim inspectable.', 'The boundary is visible without interaction — a limit behind a click is a limit hidden.', 'Deeper: the ablation document opens in a new tab. This page does not paraphrase it.'] },
+        { where: 'REPOSITORY INTELLIGENCE', name: 'Depth 1 → 4', lines: ['Depth 1: held-fixed rail plus the two arms. Refuse versus act-constrained is legible with no interaction.', 'Compare decisions (2) adds the recorded deltas — removed, added, constrained — with the artifact\u2019s own reasons.', 'Inspect receipt (3) adds the three evidence cards, including the indeterminate row that found nothing.', 'View evidence (4) strips presentation: repository, path, digest, verify command, in mono on the darkest surface.', 'Controls are cumulative and reversible: pressing a lower level collapses everything above it.'] }
+      ],
+
+      responsive: [
+        'Desktop is authored at a 1440-class viewport with a 1360 max content width and a 40px gutter; the grid degrades at 1180 by collapsing the hero to one column, figure first.',
+        'The hero chain rotates from five columns to five rows at 1100px, keeping the same marks and labels — it recomposes, it does not shrink.',
+        'The 03 dimension table becomes one card per dimension at 1000px, with native and external stated as labelled lines rather than columns; the responsibility lanes and the lifecycle sequence stack at the same breakpoint.',
+        'The Interlock axis puts each arm\u2019s label and value above its own full-width track, so the two bars stay directly comparable at every width and the bound marker is labelled once.',
+        'Comparisons stack in causal order — without, then a labelled arrow, then with — so the direction of the change survives losing side-by-side.',
+        'Depth controls become full-width 44px+ rows at mobile, in the same cumulative order.',
+        'Section rhythm drops from 84 to 56, gutters to 16, display type to 29px; metadata never goes below 10.5px and body never below 14px.',
+        'Mobile keeps every boundary and every limit. Nothing is dropped for space — only reordered.'
+      ],
+
+      a11y: [
+        'Contrast: primary text 14.4:1, secondary 8.4:1, tertiary 5.2:1, amber-on-dark 9.1:1. Nothing quieter than 4.5:1 carries information.',
+        'No colour-only meaning: verified is amber plus a filled mark plus the word; unresolved is burnt-orange plus a dashed border plus the word.',
+        'Focus is a 2px amber ring at 3px offset on every control, never removed, visible against every surface in the palette.',
+        'All disclosure is button-driven with aria-expanded; the tab strip uses role tablist/tab with arrow-key movement. Hover is decoration only.',
+        'Touch targets: 44px minimum for every control at mobile, including tabs and depth buttons.',
+        'prefers-reduced-motion removes all animation and transition; the authored static state is the reduced state.',
+        'The page is fully understandable with JavaScript off: depth panels render expanded server-side and the tab set degrades to three stacked receipts.',
+        'Headings are a real h1 → h2 → h3 outline; the hero figure carries a text alternative that names the five stations in order.'
+      ],
+
+      handoff: [
+        { key: 'route', body: 'A new role lens at /linear, built the same way as the existing lenses: a RoleLens projection over the current content model, not a second site.' },
+        { key: 'RoleLens fields', body: 'roleTitle "Staff AI Product & Platform Engineer", proofOrder [never-ask-twice, repository-intelligence, interlock, vreko], roleFitHeading replaced by the judgment section, showAvailability false.' },
+        { key: 'new content modules', body: 'content/history/product-engineering.ts (four stages, three audiences, six disciplines, one unverified field) and content/practice/linear.ts (three receipts, each with id, question, status, dimensions or lanes or lifecycle, and a boundary).' },
+        { key: 'unverified fields', body: 'Give the content model an explicit verified:false state so [VERIFY FRONTEND STACK] renders through the unresolved treatment rather than as prose. A placeholder must never inherit evidence styling.' },
+        { key: 'tokens', body: 'Add the --lens-* dark scale alongside the existing light tokens in tokens.css and scope it to the lens layout. Do not fork tokens.css, and do not repurpose the existing --color-inverse-* pair, which is tuned for small inverted panels.' },
+        { key: 'components', body: 'Interactive leaves stay leaves: ReceiptTabs, DepthDisclosure, HeroChain. Everything else remains a server component, as now.' },
+        { key: 'hero motion', body: 'CSS keyframes with staggered delays and fill-mode both, so the settled frame is the authored DOM state. The dotLottie port from the storyboard is optional and must produce the same final frame.' },
+        { key: 'resume', body: 'The lens links to a Linear-titled two-page PDF generated by the existing resume pipeline with a different resumeTitle. The print document stays light; no dark styling crosses into it.' },
+        { key: 'evidence integrity', body: 'Every figure on the page already exists in the repository content model. No metric, decision string, digest or boundary was authored for this design — including the deltas, which are the artifact\u2019s own comparison in its own order.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

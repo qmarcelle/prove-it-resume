@@ -1,6 +1,6 @@
 # unrs-resolver ships a native binding used by eslint-import-resolver-typescript, which
 # eslint-config-next depends on. Allowing this one build script keeps the default posture
-# — nothing else runs install scripts — and pnpm treats an undeclared build script as a
+# (nothing else runs install scripts) and pnpm treats an undeclared build script as a
 # hard error on CI, so the decision has to be explicit either way.
 allowBuilds:
   unrs-resolver: true

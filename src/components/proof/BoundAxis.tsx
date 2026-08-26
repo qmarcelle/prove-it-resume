@@ -11,7 +11,7 @@ import styles from './BoundAxis.module.css';
  * not have to trust.
  *
  * Everything shown is stated by the artifact, not computed here. Totals in particular
- * are read from the frame rather than summed from the segments — if the two ever
+ * are read from the frame rather than summed from the segments: if the two ever
  * disagree, that is a finding about the evidence and it should surface as a visibly
  * wrong bar, not be smoothed over by a component that recomputes what it draws.
  *
@@ -108,7 +108,7 @@ function Arm({
             style={{ width: `${(segment.value / scaleMax) * 100}%` }}
           >
             {/*
-             * Name and value together. The value is the whole point of the segment —
+             * Name and value together. The value is the whole point of the segment:
              * a bar labelled only "alpha" makes the reader measure it off the axis by
              * eye, which is exactly the estimation this section exists to remove.
              */}
@@ -119,6 +119,29 @@ function Arm({
           </span>
         ))}
       </div>
+
+      {/*
+       * The same values, out from under the bar.
+       *
+       * A segment worth 20 against a scale of 160 is an eighth of the axis, and an
+       * eighth of a phone is not eight characters of mono. Left inside, `gamma 20`
+       * rendered as `gamm`: the reader lost the number the whole comparison turns on,
+       * and lost it silently, because the bar clips rather than overflows.
+       *
+       * So below the width where every label fits, the labels come out and the bar goes
+       * back to being pure proportion. Both are `aria-hidden`: the bar is one `role=img`
+       * carrying every name and value in its description, so this is the same fact drawn
+       * a second way rather than a second announcement of it.
+       */}
+      <ul aria-hidden="true" className={styles.legend}>
+        {frame.segments.map((segment) => (
+          <li className={styles.legendItem} key={segment.id}>
+            <span className={segment.pending ? styles.swatchPending : styles.swatch} />
+            {segment.label} {segment.value}
+            {segment.pending ? ' pending' : ''}
+          </li>
+        ))}
+      </ul>
 
       <p className={styles.note}>{frame.note}</p>
     </div>

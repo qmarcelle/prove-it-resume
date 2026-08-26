@@ -5,7 +5,7 @@
  * 8.5in × 11in artifact: nothing reflows, there is no viewport to respond to, and the
  * design's exact values are the specification. The *colours* are the shared tokens,
  * because the palette is identical to the export apart from the quietest greys, which
- * this project darkened for legibility (see docs/design-import.md, deviation 8) —
+ * this project darkened for legibility (see docs/design-import.md, deviation 8):
  * a decision that applies at least as strongly to 9.5px metadata on paper.
  */
 
@@ -31,7 +31,7 @@
   width: var(--page-w);
   height: var(--page-h);
   box-sizing: border-box;
-  padding: 0.55in 0.6in 0.45in;
+  padding: 0.55in 0.6in 0.42in;
   background: var(--color-canvas);
   color: var(--color-ink);
   font-family: var(--font-sans);
@@ -45,7 +45,7 @@
   line-height: normal;
   display: flex;
   flex-direction: column;
-  gap: 17px;
+  gap: 15px;
   overflow: hidden;
 
   /* Screen-only card chrome; removed at print. */
@@ -53,9 +53,15 @@
   box-shadow: 0 2px 10px rgb(0 0 0 / 25%);
 }
 
+/*
+ * The second page carries the densest block on either sheet: the durable projection
+ * prints the stack, education, certifications and nonprofit leadership below a full
+ * experience list, so its frame is a little tighter than the first's. See the reserve
+ * note beside `.foundation`.
+ */
 .page:last-child {
-  padding: 0.5in 0.6in 0.4in;
-  gap: 12px;
+  padding: 0.5in 0.6in 0.36in;
+  gap: 10px;
 }
 
 /*
@@ -124,7 +130,7 @@
  *
  * The export sized this when the name shared its row with nothing but the page meta.
  * The row now also carries the location, and at 38px the three of them fit on macOS
- * with 21px to spare and on Linux with 6px — Chromium's font metrics differ between
+ * with 21px to spare and on Linux with 6px: Chromium's font metrics differ between
  * platforms, so that is a line that renders correctly here and wraps in CI. Four pixels
  * off the name buys ~31px and puts both platforms comfortably clear, while leaving it
  * nearly three times the size of anything beside it.
@@ -170,13 +176,13 @@
 
 /*
  * The domains line shares one fixed 7.3in measure with the target title, and the export
- * tunes that pair to fit with about 1.3px to spare — 0.2% of the line. That survives on
+ * tunes that pair to fit with about 1.3px to spare: 0.2% of the line. That survives on
  * the machine the design was drawn on and nowhere else: on CI's Linux Chromium the same
  * markup wrapped to two lines, which on a fixed page box pushes the whole document down
  * ~21px.
  *
  * So this metadata line drops one notch, to sizes the document already uses elsewhere
- * (10.5px matches the block-number rails), which buys ~31px of headroom — 4.4%. The
+ * (10.5px matches the block-number rails), which buys ~31px of headroom: 4.4%. The
  * reduced tracking follows the same reasoning as deviation 8 in docs/design-import.md.
  * `tests/e2e/resume.spec.ts` asserts the headroom, not just the line count, so a future
  * title that eats it fails here rather than on someone else's platform.
@@ -279,7 +285,7 @@
 
 /*
  * 01 / Profile and 04 / Foundation. The export sets a different gap on each block's
- * body — 9px, 12px, 8px — rather than one shared rhythm. On a fixed page box those
+ * body (9px, 12px, 8px) rather than one shared rhythm. On a fixed page box those
  * 3px differences accumulate into a visibly different bottom edge, so they are kept
  * distinct rather than harmonised.
  */
@@ -404,8 +410,15 @@
   font-weight: 600;
 }
 
+/* The compact form of a file-shaped name, matching `.systemNameCode` at footnote size. */
+.alsoNameCode {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
 /*
- * `margin-top: auto` pins this to the foot of the page box — the reason the pages are
+ * `margin-top: auto` pins this to the foot of the page box; the reason the pages are
  * explicitly sized rather than left to the print engine.
  */
 .boundary {
@@ -415,6 +428,20 @@
   display: flex;
   gap: 10px;
   align-items: baseline;
+}
+
+/*
+ * The same boundary where another block follows it.
+ *
+ * A projection that closes its sheet on a stated limit anchors it; one that states a
+ * limit mid-page must not, or `margin-top: auto` pushes the blocks below it off the
+ * bottom of a page box that cannot reflow. Two classes rather than one with a modifier
+ * because the difference is a single declaration and this is where a clipped sheet
+ * comes from.
+ */
+.boundaryInline {
+  composes: boundary;
+  margin-top: 0;
 }
 
 .boundaryLabel {
@@ -506,10 +533,89 @@
   white-space: nowrap;
 }
 
+/* ── Agent-platform receipts ──────────────────────────────────────────────────
+ * A denser relative of `.system`: an identifier, a title, a status, and one paragraph.
+ * No VERIFY link, because there is no public artifact to point at: the block's own
+ * boundary says so rather than the row implying otherwise with a dead affordance.
+ */
+.receipt {
+  border-top: 1px solid var(--color-border);
+  padding-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.receiptLead {
+  composes: receipt;
+  border-top: 2px solid var(--color-ink);
+}
+
+.receiptHead {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+/*
+ * The identifier is set in the mono face and in the accent, like the VERIFY links it
+ * sits where. It is the checkable part of the row: an interviewer can ask about
+ * META-268 by name, so it reads as the row's handle rather than as metadata.
+ */
+.receiptId {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--color-accent);
+  flex: 0 0 auto;
+}
+
+.receiptTitle {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: normal;
+  flex: 1 1 auto;
+}
+
+.receiptStatus {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  color: var(--color-meta-quiet);
+  white-space: nowrap;
+}
+
+.receiptBody {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--color-ink-secondary);
+  text-wrap: pretty;
+}
+
 /* ── 04 Foundation ────────────────────────────────────────────────────────── */
+
+/*
+ * 5px above the rule, not 7.
+ *
+ * The durable sheet's second page used to sum to exactly its own height: 1056px of
+ * content in a 1056px box, with `overflow: hidden` underneath it. That is not a layout,
+ * it is a coincidence, and it held only for as long as every glyph rasterised the way it
+ * did on the machine it was tuned on. A CI runner whose metrics moved by a few pixels
+ * clipped the last block, and the page reported no overflow while doing it.
+ *
+ * These five rows are where most of the reserve comes from: one value, changed once,
+ * rather than a pixel taken from each of five different rhythms. The block-body gaps above are left
+ * alone deliberately: the export sets 9px, 12px and 8px on the three bodies and that
+ * distinction is load-bearing for the bottom edge.
+ *
+ * `resume.spec.ts` now requires a minimum reserve on every page, so "it fits exactly"
+ * fails there rather than in a print dialog.
+ */
 .foundation {
   border-top: 1px solid var(--color-border);
-  padding-top: 7px;
+  padding-top: 4px;
   display: flex;
   gap: 18px;
 }
@@ -527,11 +633,17 @@
   color: var(--color-meta-quiet);
 }
 
+/*
+ * The technical stack is a single wrapped run of five or six lines, and it is a
+ * reference list rather than prose: nobody reads it left to right. 1.42 is tight for a
+ * paragraph and correct for this, and on the page with the least room it is worth ~8px
+ * of the reserve described beside `.foundation`.
+ */
 .foundationStack {
   flex: 1 1 auto;
   margin: 0;
   font-size: 12.5px;
-  line-height: 1.55;
+  line-height: 1.42;
   color: var(--color-ink-secondary);
   text-wrap: pretty;
 }
@@ -553,6 +665,54 @@
   display: flex;
   align-items: baseline;
   gap: 10px;
+}
+
+/* ── Grouped capabilities ─────────────────────────────────────────────────────
+ * Heading above the rows, not beside them: the block's own 140px rail plus a nested
+ * label column left each run ~200px to wrap in, which cost two lines a row.
+ */
+.capabilityBlock {
+  border-top: 2px solid var(--color-ink);
+  padding-top: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.capabilityBlockLabel {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.09em;
+  color: var(--color-meta-quiet);
+}
+
+.capabilityRows {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* A grouped capability row: a fixed mono label, then the run. */
+.capabilityRow {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.capabilityLabel {
+  flex: 0 0 118px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.07em;
+  color: var(--color-meta);
+}
+
+.capabilityItems {
+  flex: 1 1 auto;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--color-ink-secondary);
+  text-wrap: pretty;
 }
 
 .degree {

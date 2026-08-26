@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 test.describe('durable evidence surface', () => {
   test('loads with the candidate-first hero and the evidence index', async ({ page }) => {
@@ -23,7 +23,14 @@ test.describe('durable evidence surface', () => {
   test('renders all six proof stages', async ({ page }) => {
     await page.goto('/');
 
-    for (const id of ['sec-01', 'sec-02', 'sec-03', 'sec-04', 'sec-05', 'sec-06']) {
+    for (const id of [
+      'operating-thesis',
+      'vreko',
+      'repository-intelligence',
+      'interlock',
+      'role-fit',
+      'career',
+    ]) {
       await expect(page.locator(`#${id}`)).toBeAttached();
     }
   });
@@ -65,7 +72,7 @@ test.describe('durable evidence surface', () => {
     const rail = page.getByRole('navigation', { name: 'Proof progress' });
     await expect(rail).toBeVisible();
 
-    await page.locator('#sec-04').scrollIntoViewIfNeeded();
+    await page.locator('#interlock').scrollIntoViewIfNeeded();
     await expect(rail.getByRole('button', { name: /Interlock/ })).toHaveAttribute(
       'aria-current',
       'step',
@@ -76,7 +83,7 @@ test.describe('durable evidence surface', () => {
     await page.goto('/');
 
     await page.getByRole('link', { name: /Show me what you built/ }).click();
-    await expect(page).toHaveURL(/#sec-02$/);
+    await expect(page).toHaveURL(/#vreko$/);
     await expect(
       page.getByRole('group', { name: 'Guided proof navigation' }),
     ).toBeHidden();
@@ -117,7 +124,7 @@ test.describe('evidence disclosures', () => {
     }
 
     const links = page
-      .locator('[id^="sec-"]')
+      .locator('main section[id]')
       .getByRole('link', { name: /INSPECT|OPEN GITHUB|VIEW REPOSITORY|READ CASE/ });
     const count = await links.count();
     expect(count).toBeGreaterThan(0);
@@ -140,8 +147,8 @@ test.describe('evidence disclosures', () => {
    * publishes HAC-330, HAC-340 and HAC-343 as three separate results and says so
    * explicitly, so a row drifting to the cloud packet would quietly merge two of them.
    *
-   * The row now has two destinations — the published cockpit as the call to action and
-   * the commit-pinned packet as the citation — so both are checked. Either one drifting
+   * The row now has two destinations: the published cockpit as the call to action and
+   * the commit-pinned packet as the citation, so both are checked. Either one drifting
    * to the cloud run is the failure this guards against.
    */
   test('the Interlock counterfactual row points at HAC-330, not the cloud run', async ({
@@ -150,7 +157,7 @@ test.describe('evidence disclosures', () => {
     await page.goto('/');
     await page.getByRole('button', { name: /Inspect evidence.*EV-ILK/ }).click();
 
-    const section = page.locator('#sec-04');
+    const section = page.locator('#interlock');
 
     const packet = section.getByRole('link', { name: /INSPECT PACKET/ }).first();
     await expect(packet).toHaveAttribute(
@@ -171,7 +178,7 @@ test.describe('evidence disclosures', () => {
     await page.goto('/');
 
     const tally = page
-      .locator('#sec-03')
+      .locator('#repository-intelligence')
       .getByRole('link', { name: /READ THE TALLY CASE/ });
     await expect(tally).toHaveAttribute(
       'href',
@@ -182,7 +189,7 @@ test.describe('evidence disclosures', () => {
   /*
    * This test used to assert the opposite: no résumé file had been supplied, so the
    * bridge stated the gap where a download button would be. A résumé is now generated
-   * from `/resume/print`, so the assertion is inverted rather than deleted — the
+   * from `/resume/print`, so the assertion is inverted rather than deleted: the
    * property worth holding was never "there is no résumé", it was "the bridge tells the
    * truth about whether there is one". `ResumeBridge` still renders the gap when the
    * `RESUME` record is unresolved, which `EvidenceLink.test.tsx` covers directly.
@@ -191,7 +198,7 @@ test.describe('evidence disclosures', () => {
     await page.goto('/');
 
     const bridge = page.locator('#resume');
-    await expect(bridge.getByText('RÉSUMÉ PDF — NOT YET PUBLISHED')).toBeHidden();
+    await expect(bridge.getByText('RÉSUMÉ PDF, NOT YET PUBLISHED')).toBeHidden();
 
     const download = bridge.getByRole('link', { name: /RÉSUMÉ · PDF/ });
     await expect(download).toHaveAttribute('href', '/qwynn-marcelle-resume.pdf');
@@ -231,7 +238,7 @@ test.describe('decision receipts', () => {
 
     await page.getByRole('button', { name: /Why MCP instead of another/ }).click();
 
-    const receipt = page.locator('#sec-05');
+    const receipt = page.locator('#role-fit');
     await expect(receipt.getByText('CONSTRAINT', { exact: true })).toBeVisible();
     await expect(
       receipt.getByText('ALTERNATIVES CONSIDERED', { exact: true }),
@@ -256,7 +263,7 @@ test.describe('decision receipts', () => {
     // The receipt's whole argument is that the negative result is inspectable. If the
     // evidence row degraded to the unresolved state, this receipt would be an assertion.
     const link = page
-      .locator('#sec-05')
+      .locator('#role-fit')
       .getByRole('link', { name: /INSPECT/ })
       .first();
     await expect(link).toBeVisible();
@@ -272,8 +279,8 @@ test.describe('role lens', () => {
     await expect(page.getByText('ATHENAHEALTH / YOH')).toBeVisible();
 
     // The proofs themselves are unchanged.
-    await expect(page.locator('#sec-02')).toContainText('Vreko');
-    await expect(page.locator('#sec-04')).toContainText('Interlock');
+    await expect(page.locator('#vreko')).toContainText('Vreko');
+    await expect(page.locator('#interlock')).toContainText('Interlock');
   });
 
   test('an unknown lens 404s rather than serving a different projection', async ({
@@ -281,5 +288,125 @@ test.describe('role lens', () => {
   }) => {
     const response = await page.goto('/role/not-a-real-role');
     expect(response?.status()).toBe(404);
+  });
+});
+
+/**
+ * ── Guided navigation: who owns the active stage ─────────────────────────────
+ *
+ * `goTo` used to set the index optimistically and then let the IntersectionObserver
+ * overwrite it with every section the page glided past on the way to the target. Since
+ * NEXT and PREV are `goTo(activeIndex ± 1)`, the second click in a sequence computed its
+ * target from a section the reader was only travelling through: NEXT, NEXT, PREV landed
+ * on stage one instead of stage two: 10 times out of 10 under default smooth scrolling,
+ * and 0 times out of 10 under reduced motion, which is what identified the cause.
+ *
+ * The suite caught it only intermittently because it asserted immediately after the
+ * click, while the optimistic value was still standing. So these assert *after the
+ * scroll settles*, which is the window the defect lived in.
+ *
+ * Settling is waited on as a condition (the position stops changing) never as a sleep.
+ * A duration here would be a guess about animation length and would rot the moment the
+ * page got taller.
+ */
+const scrollSettled = (page: Page) =>
+  page.waitForFunction(
+    () =>
+      new Promise<boolean>((resolve) => {
+        const before = window.scrollY;
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => resolve(window.scrollY === before)),
+        );
+      }),
+    undefined,
+    { timeout: 5000 },
+  );
+
+const walkTo = async (page: Page) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Walk the proof', exact: true }).click();
+  const dock = page.getByRole('group', { name: 'Guided proof navigation' });
+  await expect(dock).toContainText('01 / 06');
+  return dock;
+};
+
+test.describe('guided navigation ownership', () => {
+  test('NEXT, NEXT, PREV lands on the previous stage under smooth scrolling', async ({
+    page,
+  }) => {
+    const dock = await walkTo(page);
+
+    await dock.getByRole('button', { name: 'NEXT' }).click();
+    await dock.getByRole('button', { name: 'NEXT' }).click();
+    await dock.getByRole('button', { name: 'PREV' }).click();
+
+    // The assertion that matters: it is still 02 once the page has stopped moving.
+    // Before the ownership rule this read 01, because the sections crossed on the way
+    // back were recorded as arrivals.
+    await scrollSettled(page);
+    await expect(dock).toContainText('02 / 06');
+  });
+
+  test('the same sequence behaves identically under reduced motion', async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ reducedMotion: 'reduce' });
+    const page = await context.newPage();
+    const dock = await walkTo(page);
+
+    await dock.getByRole('button', { name: 'NEXT' }).click();
+    await dock.getByRole('button', { name: 'NEXT' }).click();
+    await dock.getByRole('button', { name: 'PREV' }).click();
+
+    await scrollSettled(page);
+    await expect(dock).toContainText('02 / 06');
+    await context.close();
+  });
+
+  /*
+   * Ownership is held for one scroll, not for the session. A reader who scrolls the page
+   * themselves after using the dock must still see the rail follow them, or the fix has
+   * traded a wrong stage for a frozen one.
+   */
+  test('ordinary scrolling still moves the active stage after a guided jump', async ({
+    page,
+  }) => {
+    const dock = await walkTo(page);
+    await dock.getByRole('button', { name: 'NEXT' }).click();
+    await scrollSettled(page);
+
+    // No guided control involved: the reader scrolls to a different section.
+    await page.evaluate(() => {
+      const target = document.getElementById('interlock')!;
+      window.scrollTo({
+        top: target.getBoundingClientRect().top + window.scrollY - 92,
+        behavior: 'auto',
+      });
+    });
+    await scrollSettled(page);
+
+    await expect(dock).toContainText('04 / 06');
+    await expect(
+      page
+        .getByRole('navigation', { name: 'Proof progress' })
+        .getByRole('button', { name: /Interlock/ }),
+    ).toHaveAttribute('aria-current', 'step');
+  });
+
+  /*
+   * Two clicks inside one glide. The second has to chain from the stage the first one
+   * claimed, not from whatever is passing through the reading band at that instant,
+   * which is also why the arithmetic reads a ref rather than rendered state.
+   */
+  test('rapid guided navigation chains from the logical stage', async ({ page }) => {
+    const dock = await walkTo(page);
+
+    const nextButton = dock.getByRole('button', { name: 'NEXT' });
+    await nextButton.click();
+    await nextButton.click();
+    await nextButton.click();
+
+    await scrollSettled(page);
+    await expect(dock).toContainText('04 / 06');
   });
 });

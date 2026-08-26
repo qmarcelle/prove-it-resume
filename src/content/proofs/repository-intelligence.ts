@@ -18,7 +18,7 @@ export const TALLY_CASE_URL = `${PUBLISHED_SITES.workspaceJson}/showcase/tally`;
  * carries the calls to action: `/spec/` is the specification, `/schema/v1.json` the
  * machine-checkable contract, `/getting-started/` the producer path, `/governance/` the
  * stewardship model, and `/implementations/codex/` the agent adapter. The repositories
- * stay as the pinned sources — a specification is only as good as the tree it is
+ * stay as the pinned sources: a specification is only as good as the tree it is
  * committed in, and that is what a reader checking the claim wants.
  */
 const WSJ_SITE = PUBLISHED_SITES.workspaceJson;
@@ -113,7 +113,7 @@ export const ACTIVE_RESEARCH_QUESTION =
 
 export const repositoryIntelligence: Proof = {
   id: 'repository-intelligence',
-  sectionId: 'sec-03',
+  sectionId: 'repository-intelligence',
   stage: '03',
   eyebrow: '03 / PROOF TWO',
   railLabel: 'Repository Intelligence',
@@ -126,7 +126,7 @@ export const repositoryIntelligence: Proof = {
   },
   title: 'Repository Intelligence',
   thesis:
-    'Making repository evidence useful to an agent at decision time — contract, agent implementation, enterprise integration.',
+    'Making repository evidence useful to an agent at decision time: contract, agent implementation, enterprise integration.',
   status: { label: 'STANDARD · IMPLEMENTED · INTEGRATED', tone: 'implemented' },
   evidenceCode: 'EV-WSJ',
   fields: [

@@ -1,0 +1,234 @@
+/*
+ * The one section frame.
+ *
+ * Two custom properties carry the whole geometry: `--section-index` is the width of the
+ * index rail, `--section-index-gap` the distance from it to the content origin. Every
+ * frame below sets its ground, its rhythm and its type scale, and none of them may
+ * touch those two, which is what makes "one horizontal anchor" a property of the
+ * stylesheet rather than a thing to check by eye on each new section.
+ */
+.frame {
+  --section-index: 3.25rem;
+  --section-index-gap: 1.125rem;
+  --section-number-size: 2.875rem;
+  --section-title-size: clamp(1.75rem, 1.2rem + 2.1vw, 2.125rem);
+  /*
+   * The two reading measures, stated in characters rather than in pixels.
+   *
+   * A `ch` measure is the one that survives the type scale: the title shrinks from
+   * 34px to 28px between the widest and narrowest regimes, and a pixel cap tuned for
+   * one of those is the wrong line length at the other. Stated in characters, the
+   * heading wraps after roughly the same number of words wherever it is set.
+   *
+   * 36ch is the width at which the longest heading on this page settles into balanced
+   * lines instead of a stack, and it stays inside the column rather than against it at
+   * every audited width, so the break is the sentence's and not the viewport's. The
+   * lead keeps the 56ch it already had, now actually resolved rather than squeezed.
+   */
+  --section-title-measure: 36ch;
+  --section-lead-measure: 56ch;
+  /*
+   * The distance from the head to whatever the section opens with.
+   *
+   * Stated here because it was previously stated nowhere, and the page got away with it
+   * for the wrong reason. Sections compose the head two different ways: the proof
+   * sections render it *inside* their body's flex column, where it picked up that
+   * column's 22px gap by accident, and the editorial sections render it as a sibling of
+   * the body, where it got nothing at all. Six of the nine heads had a zero gap.
+   *
+   * That was invisible while every title fit on one line, because a single line of
+   * display type leaves slack under it. Stacking the head made the long titles wrap,
+   * the slack went, and the claim ledger's second line came to rest on the top border
+   * of the control below it. The gap was never really there; the titles were just short
+   * enough not to need it.
+   *
+   * So the head carries its own separation, like it already carries its own rail and
+   * its own origin, and no section has to bring spacing on the head's behalf.
+   */
+  --section-head-gap: var(--space-5);
+
+  scroll-margin-top: var(--scroll-offset);
+}
+
+/* ── Frames ───────────────────────────────────────────────────────────────── */
+
+.standard {
+  composes: frame;
+  padding: var(--space-8) 0 var(--space-7);
+}
+
+/*
+ * A block that groups without boxing. One tonal step and two hairlines, no border on
+ * the sides and no radius: the band is a change of ground, not a card.
+ *
+ * The negative inline margin is what keeps the promise this file makes. A padded band
+ * would move its own content origin inward and put its index rail, and therefore its
+ * heading: 28px right of every unbanded section on the page, which is precisely the
+ * misalignment the frame exists to remove. So the ground bleeds outward by exactly the
+ * padding that pulls the content back, and the origin does not move. The bleed is
+ * always smaller than the layout's page gutter, so nothing reaches the viewport edge.
+ */
+.band {
+  composes: frame;
+  margin-top: var(--space-7);
+  margin-inline: calc(var(--space-6) * -1);
+  padding: var(--space-7) var(--space-6) var(--space-8);
+  background: var(--color-surface-muted);
+  border-top: var(--rule);
+  border-bottom: var(--rule);
+}
+
+/* The section's own figure is carrying the emphasis; the head steps back for it. */
+.compact {
+  composes: frame;
+  --section-title-size: clamp(1.5rem, 1.1rem + 1.6vw, 1.875rem);
+
+  padding: var(--space-8) 0 var(--space-7);
+}
+
+/* Deliberately demoted: the index drops to metadata scale and the title follows it. */
+.inline {
+  composes: frame;
+  --section-number-size: var(--text-meta-lg);
+  --section-title-size: 1.3125rem;
+
+  padding: var(--space-7) 0 var(--space-6);
+}
+
+/* ── Head ─────────────────────────────────────────────────────────────────── */
+
+.head {
+  display: grid;
+  grid-template-columns: var(--section-index) minmax(0, 1fr);
+  column-gap: var(--section-index-gap);
+  align-items: baseline;
+  margin-bottom: var(--section-head-gap);
+}
+
+/*
+ * The rule closes the head; the margin below it is what keeps it from reading as an
+ * underline on the first line of the body instead.
+ */
+.headRuled {
+  padding-bottom: var(--space-5);
+  border-bottom: var(--rule);
+}
+
+/*
+ * The index rail. Tabular figures because the column is fixed and the numbers are not:
+ * proportional digits would let `01` and `11` sit at different optical origins inside a
+ * rail whose whole job is that they do not.
+ */
+.index {
+  font-family: var(--font-mono);
+  font-size: var(--section-number-size);
+  font-weight: 500;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  /*
+   * The fallback lives in the `var()` rather than as a declaration on `.frame`, because
+   * `.frame` is on the section itself: a default declared there would sit closer to
+   * this rule than anything a surface could set on an ancestor, and would silently win.
+   */
+  color: var(--section-index-color, var(--color-border));
+  user-select: none;
+}
+
+.inline .index {
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-meta-quiet);
+}
+
+/*
+ * The head reads downward, at every width.
+ *
+ * It used to be a wrapping flex *row*: title and lead sharing one line, each with a
+ * basis, both stretching to fill whatever the row had left. That row is where this
+ * page's reading problem lived. Above ~1100px both children fit, so the title was
+ * handed ~460px of a ~930px column and the section's longest heading broke into three
+ * or four lines of twenty-odd characters, while the lead beside it became a nine-line
+ * ribbon whose first line sat *above* the heading it belongs to. The reader entered
+ * every section by looking right and up, then back left and down.
+ *
+ * Worse, the width the title got was a residue of the row rather than a decision: it
+ * moved with the viewport, so the same sentence broke differently at 1180 and 1280 and
+ * neither break had anything to do with the sentence.
+ *
+ * Stacking removes the negotiation. The title takes a stated character measure, the
+ * lead takes its own beneath it, and the eye enters at the number and goes down. The
+ * page is taller and reads in one direction, which is the trade this pass is for.
+ */
+.headBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.origin {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4375rem;
+  min-width: 0;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-accent);
+}
+
+/*
+ * `balance` is for headings and headings only: it is capped at a handful of lines by
+ * every engine that implements it, and it is the difference between "…was called an
+ * agent." arriving as a stranded two-word line and arriving as half of a measured
+ * pair. The measure above decides how many lines there are; this decides where they
+ * break.
+ */
+.title {
+  max-width: var(--section-title-measure);
+  font-size: var(--section-title-size);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.lead {
+  min-width: 0;
+  max-width: var(--section-lead-measure);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-ink-tertiary);
+  text-wrap: pretty;
+}
+
+/*
+ * Below the two-column break the index rail lies down.
+ *
+ * An oversized number costs a column that a narrow viewport does not have, and the rail
+ * is a device for aligning headings across sections: a job that does not exist once
+ * there is only one column. Number and eyebrow share a metadata line instead, which is
+ * the same demotion the `inline` frame makes at every width.
+ */
+@media (max-width: 700px) {
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4375rem;
+    align-items: stretch;
+  }
+
+  .index {
+    font-size: var(--text-meta-lg);
+    letter-spacing: var(--tracking-meta);
+    line-height: 1.4;
+    color: var(--color-meta-quiet);
+  }
+
+  .band {
+    margin-inline: calc(var(--space-4) * -1);
+    padding-inline: var(--space-4);
+  }
+}

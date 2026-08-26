@@ -28,7 +28,7 @@
   display: flex;
   flex: 1 1 380px;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-4);
   min-width: 0;
 }
 
@@ -39,11 +39,20 @@
   color: var(--color-accent);
 }
 
+/*
+ * `balance` on the one display line of the page.
+ *
+ * At its own measure this headline is four lines, and unbalanced the fourth was the
+ * single word "production.": a display setting whose last line is one word reads as a
+ * mistake at the size the rest of the page is asking to be trusted at. Balancing spends
+ * the same four lines evenly instead.
+ */
 .headline {
   font-size: clamp(2rem, 1.25rem + 3.2vw, 3.25rem);
   line-height: 1.08;
   letter-spacing: -0.035em;
   max-width: 17ch;
+  text-wrap: balance;
 }
 
 .thesis {
@@ -52,6 +61,7 @@
   font-weight: 500;
   color: var(--color-ink-strong);
   max-width: 44ch;
+  text-wrap: balance;
 }
 
 .supporting {
@@ -59,11 +69,12 @@
   line-height: 1.6;
   color: var(--color-ink-secondary);
   max-width: 62ch;
+  text-wrap: pretty;
 }
 
 /*
  * Action hierarchy. One primary action, then quiet secondary links. The design gave the
- * résumé a bordered button of nearly equal weight; demoting it is deliberate — the
+ * résumé a bordered button of nearly equal weight; demoting it is deliberate: the
  * proof is the argument, and the résumé is the fallback for processes that require one.
  */
 .actions {
@@ -76,9 +87,9 @@
 
 .primary {
   padding: 0.8125rem 1.25rem;
-  background: var(--color-ink);
-  color: var(--color-canvas);
-  border: 1px solid var(--color-ink);
+  background: var(--color-action-fill);
+  color: var(--color-action-ink);
+  border: 1px solid var(--color-action-fill);
   border-radius: var(--radius);
   font-size: 0.938rem;
   font-weight: 600;
@@ -115,7 +126,21 @@
 }
 
 .divider {
-  color: var(--color-border);
+  color: var(--color-separator);
+}
+
+/*
+ * The secondary row is two standalone controls, not links inside a sentence, so at
+ * mobile they take the surface's 44px control floor. The row is already wrapping by
+ * this width, so the extra height costs a reader nothing.
+ */
+@media (max-width: 700px) {
+  .secondary a,
+  .pending {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
 }
 
 .pending {
@@ -124,23 +149,45 @@
   color: var(--color-ink-muted);
 }
 
+/*
+ * Six capabilities, as one line of metadata rather than six boxes.
+ *
+ * They were bordered chips, which put six outlined objects directly under the primary
+ * action, so the first screen offered a filled button, two underlined links and six
+ * rectangles at roughly equal visual weight, and a reader had to work out which of the
+ * nine was the thing to do next. Nothing is removed: the same six terms, in the same
+ * order, set as the metadata they are and separated by the mark this surface already
+ * uses between metadata items.
+ *
+ * This is also the surface's own rule applied to its own hero. Nothing is boxed by
+ * default here; a border means an object you can inspect or operate, and a capability
+ * is neither.
+ */
 .capabilities {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2) 0.625rem;
-  margin: 0;
+  gap: var(--space-1) 0.625rem;
+  margin: 1.125rem 0 0;
   padding: 0;
   list-style: none;
-  margin-top: 1.125rem;
   font-family: var(--font-mono);
   font-size: var(--text-meta-sm);
   letter-spacing: var(--tracking-meta-tight);
   color: var(--color-ink-secondary);
 }
 
-.capability {
-  padding: 0.3125rem 0.5625rem;
-  border: var(--rule);
+/*
+ * The separator belongs to the term before it, not the term after it.
+ *
+ * As a `::before` on the following item, a wrap put the mark at the start of the second
+ * line: a row of capabilities that opens with a floating dot. Carried as an `::after`
+ * it travels with the word it follows, so a wrap leaves it at the end of a line where
+ * it reads as "continues" rather than as a bullet.
+ */
+.capability:not(:last-child)::after {
+  content: '·';
+  margin-left: 0.625rem;
+  color: var(--color-separator);
 }
 
 @media (max-width: 640px) {

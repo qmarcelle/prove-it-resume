@@ -9,7 +9,9 @@ import type { RoleLens } from '@/lib/types';
  * closes. Organisation-specific framing lives at `/role/<slug>`.
  */
 export const defaultRole: RoleLens = {
+  kind: 'role',
   slug: 'default',
+  resumeProjection: 'default',
   roleTitle: 'Staff / Principal · AI Platform & Developer Systems',
   // The design export's own default masthead title. The chip's wording carries the
   // middot and the second noun phrase, which overflow the résumé's single mono line.
@@ -61,7 +63,7 @@ export const defaultRole: RoleLens = {
     },
   ],
   showAvailability: true,
-  metaTitle: 'Qwynn Marcelle — Prove It Resume',
+  metaTitle: 'Qwynn Marcelle · Prove It Resume',
   metaDescription:
     'A technical evidence surface for hiring decisions. Three engineering claims about AI platform and developer systems work, with inspectable evidence and stated boundaries.',
   isDefault: true,

@@ -1,24 +1,23 @@
 import { vreko } from '@/content/proofs';
-import { ChapterMark } from '@/components/proof/ChapterMark';
 import { EvidenceLink } from '@/components/evidence/EvidenceLink';
 import { EvidencePanel } from '@/components/evidence/EvidencePanel';
 import { ProofScan } from '@/components/proof/ProofScan';
 import { VrekoArchitectureTrace } from '@/components/interactions/VrekoArchitectureTrace';
 import { vrekoArchitecture } from '@/content/experiments/vreko-architecture';
 import {
+  ProofChapter,
   ProofColumns,
   ProofLayer,
   ProofLayerBody,
   ProofLayerColumn,
-  ProofMasthead,
   ProofSection,
-  ProofThesis,
 } from '@/components/proof/ProofSection';
+import type { SurfaceStep } from '@/lib/types';
 
 /**
- * 02 — Vreko. Spatial grammar: containment.
+ * 02: Vreko. Spatial grammar: containment.
  *
- * The argument this section has to make is about a boundary — what is published, what
+ * The argument this section has to make is about a boundary: what is published, what
  * is declared but not, and where inspection stops. So the layout is nested boxes you
  * open in place, and the publication state is carried by the stroke of each box rather
  * than by a badge beside it.
@@ -26,10 +25,10 @@ import {
  * The scan layer answers the section in four lines before the diagram appears, because
  * an evaluator skimming for fit should not have to drive an interaction to find out
  * what is being claimed. `LIMIT` restates the proof's own boundary rather than a
- * softened version of it — the scan layer is allowed to be shorter than the proof
+ * softened version of it: the scan layer is allowed to be shorter than the proof
  * layer, never kinder than it.
  */
-export function VrekoSection() {
+export function VrekoSection({ step }: { step?: SurfaceStep } = {}) {
   /*
    * PROBLEM and BUILT are the proof's own fields. EVIDENCE is counted from the package
    * lists rather than written down, so the sentence cannot drift from the split it
@@ -48,21 +47,17 @@ export function VrekoSection() {
   ];
 
   return (
-    <ProofSection proof={vreko}>
-      <ProofMasthead>
-        <ChapterMark
-          stage={vreko.stage}
-          label="PROOF ONE"
-          title={vreko.title}
-          titleId={`${vreko.id}-title`}
-          orientation="horizontal"
-        />
-        <ProofThesis>{vreko.thesis}</ProofThesis>
-      </ProofMasthead>
+    <ProofSection proof={vreko} step={step}>
+      <ProofChapter
+        proof={vreko}
+        step={step}
+        label="PROOF ONE"
+        orientation="horizontal"
+      />
 
       <ProofScan items={scan} />
 
-      <VrekoArchitectureTrace data={vrekoArchitecture} />
+      <VrekoArchitectureTrace data={vrekoArchitecture} shareAnchor={vreko.sectionId} />
 
       {/* `EvidencePanel` sizes itself as a flex row item; a row of one stretches it. */}
       <ProofColumns>

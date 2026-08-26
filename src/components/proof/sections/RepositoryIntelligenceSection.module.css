@@ -72,9 +72,11 @@
 }
 
 .layerText {
+  max-width: 68ch;
   font-size: 0.938rem;
   line-height: 1.6;
   color: var(--color-ink-secondary);
+  text-wrap: pretty;
 }
 
 .tags {
@@ -182,8 +184,8 @@
  *
  * The rail is allowed to shrink but not to vanish; the stage takes the remaining
  * measure and carries the interaction. Below the two-column break the rail lays down
- * above the comparison rather than beside it, which keeps the reading order — what was
- * held fixed, then what changed — intact in one column.
+ * above the comparison rather than beside it, which keeps the reading order: what was
+ * held fixed, then what changed: intact in one column.
  */
 .signatureRow {
   display: flex;

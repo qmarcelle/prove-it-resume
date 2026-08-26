@@ -13,13 +13,13 @@ import styles from './DecisionReceipt.module.css';
  *
  * The design prototype made these selectable checkboxes with a "3 selected · bring these
  * to the conversation" counter. That asks the evaluator to do work and gives nothing
- * back — the interaction ends where the interesting part starts. Here each question
+ * back: the interaction ends where the interesting part starts. Here each question
  * opens into the receipt itself: constraint, alternatives, decision, tradeoff, evidence,
  * and what would change the decision now.
  *
  * The awaiting branch below is not dead code kept for symmetry. Receipts are populated
  * from recorded reasoning, and a question that has been asked but not yet answered from
- * a real decision record renders its own shape with each section marked as awaiting —
+ * a real decision record renders its own shape with each section marked as awaiting,
  * which is true and useful, where a fabricated rationale would be neither.
  *
  * `EVIDENCE` renders only when a receipt carries rows. The site's evidence-integrity
@@ -32,7 +32,7 @@ function ReceiptBody({ receipt }: { receipt: Receipt }) {
       <div className={styles.pending}>
         <p className={styles.pendingLead}>
           This receipt has not been written yet. It will answer the question in the
-          structure below — nothing is drafted here, because a decision rationale that was
+          structure below; nothing is drafted here, because a decision rationale that was
           invented to fill a layout would be worth less than an empty one.
         </p>
         <ul className={styles.shape}>
@@ -114,6 +114,17 @@ function ReceiptBody({ receipt }: { receipt: Receipt }) {
   );
 }
 
+/**
+ * One receipt, and it rests closed.
+ *
+ * There was an `initiallyOpen` prop here, and a surface used it to serve one receipt
+ * already expanded. It is gone rather than merely unused: a receipt that opens itself is
+ * a decision about the *page*, and leaving the lever in place means the resting state of
+ * this section is one attribute away from changing without anybody re-reading why it is
+ * what it is. Every receipt now rests collapsed on every surface, and the section makes
+ * its case above the list instead: the shape of a receipt is stated there, in the open,
+ * without a reader having to spend an interaction to see it.
+ */
 export function DecisionReceiptItem({ receipt }: { receipt: Receipt }) {
   const [open, setOpen] = useState(false);
   const panelId = useId();
@@ -138,7 +149,7 @@ export function DecisionReceiptItem({ receipt }: { receipt: Receipt }) {
         <span className={styles.question}>
           {receipt.question}
           {!answered ? (
-            <span className="visually-hidden"> — receipt not yet written</span>
+            <span className="visually-hidden">, receipt not yet written</span>
           ) : null}
         </span>
       </button>

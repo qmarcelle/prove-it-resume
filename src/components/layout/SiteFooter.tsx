@@ -1,6 +1,6 @@
 import { PROFILES, RESUME, SITE } from '@/content/site';
 import { ResumeDownloadLink } from '@/components/resume/ResumeDownloadLink';
-import type { RoleLens } from '@/lib/types';
+import type { AnyLens } from '@/lib/types';
 import { isResolved } from '@/lib/evidence';
 import { ActionIcon } from '@/components/icon/Icon';
 import styles from './SiteFooter.module.css';
@@ -16,13 +16,13 @@ import styles from './SiteFooter.module.css';
  * because nothing currently needs it is how that guarantee gets lost.
  *
  * Email is the one destination that does not open a page, so it renders without the
- * new-tab affordance — that mark and its screen-reader note both describe navigating to
+ * new-tab affordance; that mark and its screen-reader note both describe navigating to
  * a site, and neither is true of handing the address to a mail client. It gets an
  * envelope instead of nothing at all: an absence said the same thing as an unstyled
  * link, where the point is that this destination behaves differently from its
  * neighbours.
  */
-export function SiteFooter({ lens }: { lens: RoleLens }) {
+export function SiteFooter({ lens }: { lens: AnyLens }) {
   const marcelleLabs = PROFILES.find((profile) => profile.id === 'marcelle-labs');
   const links = PROFILES.filter((profile) => profile.id !== 'marcelle-labs');
 
@@ -35,14 +35,14 @@ export function SiteFooter({ lens }: { lens: RoleLens }) {
           <a href={SITE.github} target="_blank" rel="noreferrer noopener">
             GitHub
             <ActionIcon affordance="visit-external-site" size={12} />
-            <span className="visually-hidden"> — opens in a new tab</span>
+            <span className="visually-hidden">, opens in a new tab</span>
           </a>
 
           {links.map((profile) => {
             if (!isResolved(profile) || !profile.href) {
               return (
                 <span className={styles.pending} key={profile.id}>
-                  {profile.title} — not published
+                  {profile.title}, not published
                 </span>
               );
             }
@@ -61,7 +61,7 @@ export function SiteFooter({ lens }: { lens: RoleLens }) {
               >
                 {profile.title}
                 <ActionIcon affordance="visit-external-site" size={12} />
-                <span className="visually-hidden"> — opens in a new tab</span>
+                <span className="visually-hidden">, opens in a new tab</span>
               </a>
             );
           })}
@@ -69,7 +69,7 @@ export function SiteFooter({ lens }: { lens: RoleLens }) {
           {isResolved(RESUME) ? (
             <ResumeDownloadLink label="Résumé" lens={lens} />
           ) : (
-            <span className={styles.pending}>Résumé — not published</span>
+            <span className={styles.pending}>Résumé, not published</span>
           )}
         </nav>
 

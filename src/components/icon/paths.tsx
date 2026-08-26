@@ -1,5 +1,5 @@
 /**
- * Vendored icon geometry — Lucide, adapted.
+ * Vendored icon geometry: Lucide, adapted.
  *
  * Copied from `lucide-react@0.575.0` (ISC; portions derived from Feather, MIT) by
  * extracting each icon's published node array, rather than by hand-transcribing path
@@ -12,7 +12,7 @@
  * Why vendored rather than installed: `dependencies` is exactly `next`, `react`, and
  * `react-dom`, and fifteen shapes do not justify making that four. See
  * `docs/decisions/0008-vendored-icon-set.md`. If this set ever passes roughly thirty
- * icons, install the package instead — at that size the maintenance argument flips.
+ * icons, install the package instead: at that size the maintenance argument flips.
  *
  * The geometry is upstream's, unmodified. The *rendering* is not: `Icon` draws these
  * with square caps and mitre joins instead of Lucide's round ones, because this page has

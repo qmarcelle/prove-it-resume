@@ -11,7 +11,7 @@ export type ScanItem = { label: string; body: string };
  * needs the diagram, the run and the artifacts. Making one of them scroll past the
  * other's material is what the old shared template did.
  *
- * So this is deliberately terse — a fixed set of short answers on one strong rule, in a
+ * So this is deliberately terse: a fixed set of short answers on one strong rule, in a
  * grid that reflows by count rather than a fixed column tally. Nothing here is unique
  * evidence: every item restates something the proof layer below states in full, which
  * is what makes it safe to skim and safe to skip.

@@ -4,7 +4,7 @@
       "slug": "default",
       "route": "/resume/print",
       "pdfPath": "/qwynn-marcelle-resume.pdf",
-      "fingerprint": "539ddaa56752726e60b9b63ff54aeb9686a9b4fb4537297a0526e2199d9e902c",
+      "fingerprint": "aae5cd39c77ec0ce69e596e1e7283a56a79094332314996c591a02d5b90f58ab",
       "links": [
         "mailto:qwynn@marcellelabs.io",
         "https://www.linkedin.com/in/qmarcelle",
@@ -20,7 +20,7 @@
       "slug": "athenahealth-yoh",
       "route": "/resume/print/athenahealth-yoh",
       "pdfPath": "/qwynn-marcelle-resume-athenahealth-yoh.pdf",
-      "fingerprint": "6ed40381fbed1dcf6647470ff2a39c75eb0b0ae5ae82d8ef3729e21325c63129",
+      "fingerprint": "c9b4c47c2c15472b52f6a7d07af2dacc900efab899562b6e34e5d28302e8d3e6",
       "links": [
         "mailto:qwynn@marcellelabs.io",
         "https://www.linkedin.com/in/qmarcelle",
@@ -36,7 +36,7 @@
       "slug": "end-to-end-delivery",
       "route": "/resume/print/end-to-end-delivery",
       "pdfPath": "/qwynn-marcelle-resume-end-to-end-delivery.pdf",
-      "fingerprint": "e91cab9bcf607e5889d2f0d65040a56f537a70c4b169ee43297ed2059bb0f7de",
+      "fingerprint": "eb6985778ef8cc496fa1798d2281a5e0cb373ded6c97795ca6497960fd7a6178",
       "links": [
         "mailto:qwynn@marcellelabs.io",
         "https://www.linkedin.com/in/qmarcelle",
@@ -45,6 +45,22 @@
         "https://www.workspacejson.dev/",
         "https://interlock.marcellelabs.io/",
         "https://qwynn.marcellelabs.io/"
+      ],
+      "pages": 2
+    },
+    {
+      "slug": "linear",
+      "route": "/resume/print/linear",
+      "pdfPath": "/qwynn-marcelle-resume-linear.pdf",
+      "fingerprint": "2ee24eed6147c0f44923b8cc5b39f94f63b6edcc5a9ac107e61fa7e0f741b0df",
+      "links": [
+        "mailto:qwynn@marcellelabs.io",
+        "https://www.linkedin.com/in/qmarcelle",
+        "https://github.com/qmarcelle",
+        "https://github.com/Marcelle-Labs/never-ask-twice/blob/main/docs/evaluation.md",
+        "https://interlock.marcellelabs.io/",
+        "https://www.workspacejson.dev/",
+        "https://qwynn.marcellelabs.io/linear"
       ],
       "pages": 2
     }

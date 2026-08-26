@@ -1,5 +1,5 @@
 /*
- * Design tokens — Prove It Resume
+ * Design tokens: Prove It Resume
  *
  * Direction C·1, "Technical Review, hybridized" (locked visual language v0.1).
  * Every value here is traceable to design/reference/claude/Prove It Resume.dc.html;
@@ -29,12 +29,22 @@
    * cannot be read is a contradiction, not a style. Each step below clears 4.5:1 against
    * every light surface it is used on, and the four-step hierarchy is preserved.
    */
-  --color-ink-muted: #5e5c55; /* 5.87:1 — boundary labels */
-  --color-meta: #66645d; /* 5.19:1 — metadata */
-  --color-meta-quiet: #6e6c64; /* 4.61:1 — field labels */
+  --color-ink-muted: #5e5c55; /* 5.87:1; boundary labels */
+  --color-meta: #66645d; /* 5.19:1; metadata */
+  --color-meta-quiet: #6e6c64; /* 4.61:1; field labels */
 
   /* ---- Structure ---- */
+  /*
+   * `--color-separator` is the inline `·` between two metadata items, and it is its own
+   * token because it is the one "border" that has to be *seen* rather than merely
+   * bound something. On this canvas the border grey does that at 1.9:1, which is what a
+   * hairline wants. Inverted it does not: on the Lit Work Surface the same token is
+   * #2b2926 on #121110: 1.26:1, a separator nobody can see, so two metadata items ran
+   * together with a gap where a mark was supposed to be. Border tokens describe edges;
+   * a visible mark needs a tone chosen against the ground it sits on.
+   */
   --color-border: #dedbd2;
+  --color-separator: var(--color-border);
   --color-border-quiet: #edeae1;
   --color-border-dashed: #b3afa4;
 
@@ -43,6 +53,69 @@
   --color-accent-deep: #7a4f0f;
   --color-accent-border: #d9c8a8;
   --color-accent-surface: #f6f1e6;
+
+  /*
+   * ---- The one primary action ----
+   *
+   * Named for what it is rather than for the colour it happens to be. A filled button
+   * that reached for `--color-ink` was making an assumption (that ink is dark) which
+   * held on every light surface and broke the moment a surface inverted: cream type on
+   * a cream fill. Stating the fill and its ink as a pair lets a surface answer with
+   * whatever its strongest mark is, and keeps the two from being chosen separately.
+   */
+  --color-action-fill: var(--color-ink);
+  --color-action-ink: var(--color-inverse-ink);
+  --color-action-ink-quiet: var(--color-inverse-accent);
+
+  /*
+   * ---- Verdict chips ----
+   *
+   * The same lesson as the action pair above, learned a second time. `.verdictHolds`
+   * filled itself with `--color-ink` and set its label in `--color-inverse-ink`, which
+   * is two independent guesses about polarity: that ink is dark, and that inverse ink
+   * is light. Both hold on a light surface. On the Lit Work Surface, where ink *is* the
+   * light step, the two resolve to the same value and the chip renders as a blank
+   * rectangle: the word is still in the DOM, painted on itself.
+   *
+   * So a verdict states its ground and its ink together, and a surface answers with a
+   * pair it has actually looked at. The rule this encodes, for anything added later:
+   * a token naming text is not a background. Fills pair with a *ground* token
+   * (`--color-canvas`, `--color-inverse-bg`) or with a purpose-named pair like this
+   * one: never with a second ink token.
+   *
+   * `bound-axis.test.tsx` asserts the pair resolves to two different colours in both
+   * palettes, so a future surface cannot reintroduce the collision silently.
+   */
+  --color-verdict-held-bg: var(--color-ink);
+  --color-verdict-held-fg: var(--color-canvas);
+  --color-verdict-breached-bg: var(--color-surface);
+  --color-verdict-breached-fg: var(--color-ink);
+  --color-verdict-breached-border: var(--color-ink);
+
+  /*
+   * ---- The selected stage in a step control ----
+   *
+   * The verdict-chip lesson, learned a third time and in a form the structural guard
+   * could not see. `.step[aria-pressed='true']` filled itself with `--color-ink` and
+   * set its label from `--color-canvas`: a sound pairing, fill against ground. The
+   * ordinal beside the label was coloured in a *separate* rule, from
+   * `--color-inverse-accent`, and nothing anywhere related the two.
+   *
+   * On the light page that resolves to a warm sand on near-black: 8.99:1, exactly the
+   * quiet-but-legible index the design intends. On the Lit Work Surface the fill is
+   * cream and `--color-inverse-accent` is the bright amber, so the numeral resolved to
+   * #efc97e on #f0ede6, **1.35:1**. Not a contrast failure to argue about: a number
+   * that was not there. `token-polarity.test.ts` reads background and colour within one
+   * block and had no way to see a pairing split across two.
+   *
+   * So the selected state states all three of its colours together, and a surface
+   * answers with a triple it has actually looked at. The index is deliberately the
+   * quietest of the three (it is a position, not the label) but it is a *dark* quiet
+   * on a light fill rather than the same amber at every polarity.
+   */
+  --color-step-active-bg: var(--color-ink);
+  --color-step-active-fg: var(--color-canvas);
+  --color-step-active-index: var(--color-inverse-accent);
 
   /* ---- Inverse scale: dark CTA and the decision panel ---- */
   --color-inverse-bg: #1a1a17;
@@ -59,7 +132,7 @@
 
   /*
    * Metadata sizes. The export used 10.5–11px here; raised so metadata reads as
-   * information rather than texture. Tracking eases off as size drops — wide tracking
+   * information rather than texture. Tracking eases off as size drops: wide tracking
    * on small uppercase type is precisely what makes it hard to read.
    */
   --text-meta-sm: 0.719rem; /* 11.5px */
@@ -78,6 +151,21 @@
   --space-6: 1.75rem;
   --space-7: 2.5rem;
   --space-8: 3.5rem;
+  /*
+   * The chapter step, and the reason it is not just another rung.
+   *
+   * `--space-8` is the largest *intra*-argument gap: the distance between one numbered
+   * section and the next. A chapter boundary: the end of the numbered argument and the
+   * start of the close: has to read as a different kind of gap, not as a slightly
+   * bigger one, or a reader arrives at the closing headline believing it is section ten.
+   *
+   * On the Lit Work Surface that job cannot be given to the ground. The body sits on
+   * `--lens-canvas` and the close on `--lens-surface-elevated`: one tonal step apart, by
+   * design, because elevation on this surface *is* tone. One step is enough to say "a
+   * different kind of block" and nowhere near enough to say "the argument ended here".
+   * So the boundary is carried by distance and a hairline, which work at any polarity.
+   */
+  --space-chapter: 6rem;
 
   --page-max: 1280px;
   --page-gutter: 2rem;
@@ -92,6 +180,69 @@
   --rule-strong: 2px solid var(--color-ink);
 
   --focus-ring: 2px solid var(--color-accent);
+  --focus-offset: 2px;
+}
+
+/*
+ * ── The Lit Work Surface ─────────────────────────────────────────────────────
+ *
+ * The dark scale the Linear application lens is set in. Original to that surface, and
+ * declared here rather than in a second token file because the two palettes are one
+ * system: the lens layout remaps the `--color-*` names above onto these, so every
+ * component keeps reading the tokens it already reads and inverts without knowing it.
+ *
+ * The thesis the values encode: nothing is boxed by default, structure comes from
+ * alignment and four tonal steps, and the only saturated mark on the page is the one
+ * place evidence has been verified. Amber is spent, not sprinkled.
+ *
+ * Two values are retuned from the supplied direction rather than copied. The direction
+ * sets metadata at #8B867D (5.2:1 on the canvas, which it calls the floor) and that
+ * floor is measured against `--lens-canvas` alone; the same grey sits at 4.3:1 on
+ * `--lens-surface-active`, under AA on the surface where controls live. So the metadata
+ * step is lifted to #968f86 and the border steps left where they are, since a hairline
+ * carries no text. The four-step tonal ladder and the amber budget are unchanged.
+ */
+:root {
+  --lens-canvas: #121110;
+  --lens-surface: #191816;
+  --lens-surface-elevated: #1f1e1b;
+  --lens-surface-active: #272521;
+  --lens-band: #161514;
+
+  --lens-text: #f0ede6;
+  --lens-text-secondary: #b5afa4;
+  --lens-text-tertiary: #968f86;
+
+  --lens-border-subtle: #2b2926;
+  --lens-border-internal: #232120;
+  --lens-border-active: #3c3934;
+
+  --lens-accent: #d9a84e;
+  --lens-accent-text: #efc97e;
+  --lens-accent-edge: #8a6a28;
+  --lens-accent-field: #1c1913;
+
+  --lens-unresolved: #c4864f;
+
+  /*
+   * The ink a filled amber action carries. Two steps, both measured against the fill:
+   * the canvas at 8.7:1 for the label, and a deep amber-brown at 5.1:1 for the metadata
+   * beside it: quieter than the label without dropping under the floor.
+   */
+  --lens-accent-ink: #121110;
+  --lens-accent-ink-quiet: #4b3a10;
+
+  /*
+   * The index rail's tone. Retuned from the supplied direction, which sets the section
+   * number at #2F2D29: 1.37:1 on this canvas, an ornament rather than a number.
+   *
+   * On this page it has to be countable: the defect being fixed is a surface whose
+   * visible sequence disagreed with itself, and a sequence a reader cannot read is not
+   * a fix. This is the quietest tone that still clears 3:1 on both the canvas and the
+   * band, which keeps it below the eyebrow beside it: the one element in that head
+   * allowed to be amber: without dropping out of the page.
+   */
+  --lens-index: #6b665e;
 }
 
 @media (max-width: 640px) {
@@ -99,5 +250,10 @@
     --page-gutter: 1.25rem;
     --space-7: 2rem;
     --space-8: 2.5rem;
+    /*
+     * Still comfortably the largest gap on the page, and still roughly twice the
+     * intra-argument step: the ratio is what does the work, not the absolute figure.
+     */
+    --space-chapter: 4rem;
   }
 }

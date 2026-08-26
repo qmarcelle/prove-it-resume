@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ProveItResume } from '@/components/ProveItResume';
+import { surfaceMetadata } from '@/lib/metadata';
 import { getRoleLens, listRoleSlugs } from '@/lib/role-lens';
 
 /**
@@ -16,7 +17,7 @@ export function generateStaticParams() {
   return listRoleSlugs().map((slug) => ({ slug }));
 }
 
-// `params` is a Promise in Next 16 — request APIs are async across the board.
+// `params` is a Promise in Next 16: request APIs are async across the board.
 export async function generateMetadata({
   params,
 }: {
@@ -28,8 +29,7 @@ export async function generateMetadata({
   if (!lens) return {};
 
   return {
-    title: { absolute: lens.metaTitle },
-    description: lens.metaDescription,
+    ...surfaceMetadata(lens, `/role/${slug}`),
     // A lens is a projection of the durable page, not a separate work. Pointing the
     // canonical at `/` keeps role routes out of the index as duplicates.
     alternates: { canonical: '/' },

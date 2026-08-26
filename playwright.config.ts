@@ -5,7 +5,7 @@ const baseURL = `http://127.0.0.1:${PORT}`;
 
 /**
  * Browser suite. Runs against a real production build, because the things being checked
- * — static output, hydration, scroll behaviour, layout at 320px — differ between `next
+ * (static output, hydration, scroll behaviour, layout at 320px) differ between `next
  * dev` and `next build`, and it is the built artifact that ships.
  */
 export default defineConfig({

@@ -1,13 +1,13 @@
 import type { RepositoryDecisionDiffData } from '@/lib/interactions';
 
 /**
- * HAC-152 — the paired plan run behind the Repository Decision Diff.
+ * HAC-152: the paired plan run behind the Repository Decision Diff.
  *
  * Every value below is read from a frozen artifact committed in a public repository,
  * not from the design storyboard. The storyboard's version of this frame showed two
  * evidence cards labelled `CO-CHANGE` and `FRAGILITY`; this run contains neither, and
  * one of its recorded fields says so explicitly (see `rdd-ev-partners`). That mismatch
- * is why `DecisionEvidence.kind` is an open string — the model follows the evidence.
+ * is why `DecisionEvidence.kind` is an open string: the model follows the evidence.
  *
  * Source of every figure:
  *   workspacejson/datahub-agent @ 3607805f
@@ -33,18 +33,18 @@ export const repositoryDecision: RepositoryDecisionDiffData = {
   /*
    * Quoted from the run bundle's two `run` records, which are byte-identical across
    * both conditions apart from `mode`. This is the one place the interaction is
-   * allowed to say "same model" — the artifact records the model name, the prompt
+   * allowed to say "same model": the artifact records the model name, the prompt
    * digest and the settings digest, and they match.
    */
   controls: {
     varied:
       'The context envelope. One condition received the catalog projection alone; the other received the same projection plus the corpus-matched repository evidence.',
     heldFixed: [
-      'Task — add-quality-check',
-      'Prompt digest — sha256:d19f4d09…4373e413, identical in both conditions',
-      'Model — qwen-plus',
-      'Decoding settings — sha256:e4ff4911…d9b621e0, temperature zero',
-      'Subject — urn:li:dataset:(urn:li:dataPlatform:dbt,duck.dev.game_events,PROD)',
+      'Task: add-quality-check',
+      'Prompt digest: sha256:d19f4d09…4373e413, identical in both conditions',
+      'Model: qwen-plus',
+      'Decoding settings: sha256:e4ff4911…d9b621e0, temperature zero',
+      'Subject: urn:li:dataset:(urn:li:dataPlatform:dbt,duck.dev.game_events,PROD)',
     ],
   },
 

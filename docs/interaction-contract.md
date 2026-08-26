@@ -12,7 +12,7 @@ Exactly four things on this page get an animated treatment: the three progressiv
 disclosures documented below, and the hero composition. Nothing else does.
 
 The fourth was added deliberately rather than by accretion, which is what this clause
-asks for — see `docs/decisions/0009-a-fourth-animated-treatment.md`, which names the
+asks for; see `docs/decisions/0009-a-fourth-animated-treatment.md`, which names the
 admission category for each of its beats (causality, boundary, state) and records why it
 ships as CSS rather than as an animation runtime. A fifth would need the same treatment.
 
@@ -23,7 +23,7 @@ there, not assumed.
 
 The cap's premise is what makes the exception safe. Nobody is waiting on this one: it is
 not a control, it plays once on the stage's first meaningful entry into the viewport, and
-it has no replay. A reader who wants the finished picture already has it — that is the
+it has no replay. A reader who wants the finished picture already has it; that is the
 frame the server sent.
 
 ---
@@ -75,7 +75,7 @@ would be this codebase deciding what changed.
 
 **The data model follows the evidence.** `DecisionEvidence.kind` is an open string, not
 a union. The run this is bound to contains no co-change evidence at all, and one of its
-evidence rows records that absence — a model typed around co-change and fragility could
+evidence rows records that absence: a model typed around co-change and fragility could
 not have displayed its own source truthfully.
 
 With no bound run, the component renders a stated gap. It never fabricates a plan pair.
@@ -90,8 +90,8 @@ bounded scenario → treatment → resulting state → perturbation → frozen e
 spanning the whole track, so "the same constraint" is a visual fact rather than a claim
 about two aligned charts. The reader never has to hold one arm in memory.
 
-The arms advance together through named stages, because _when_ the decision happens —
-before shared state is mutated — is the finding.
+The arms advance together through named stages, because _when_ the decision happens
+(before shared state is mutated) is the finding.
 
 Perturbation is a control the reader operates, never autoplay. Removing the coupling
 evidence flips the decision and the outcome using the same decision function, which is
@@ -122,7 +122,7 @@ package state, the contradiction is displayed rather than reconciled.
 
 ## Accessibility contract
 
-Semantic DOM first. These are lists, buttons, and disclosures — not a canvas, not an
+Semantic DOM first. These are lists, buttons, and disclosures, not a canvas, not an
 illustration with text baked into it. Text stays selectable, translatable, and reflowable.
 
 - **Keyboard reaches every state.** Stage selectors are one tab stop with roving
@@ -163,13 +163,13 @@ and the design source is wrong.
   result. The one supporting-work link deliberately tracks `main`, because it names a
   living evaluation document rather than a frozen artifact.
 - Anchored links must point at a heading that exists. A dead `#anchor` lands the reader
-  at the top of the page, which looks like working evidence and is not — one was found
+  at the top of the page, which looks like working evidence and is not; one was found
   and corrected during this pass.
 - No two links in one panel share a call-to-action label. "INSPECT SOURCE" three times
   leaves the reader guessing which is which.
 - Claim boundaries are rendered, never collapsed to make an interaction tidier.
-  Distinctions the source repositories insist on — `ALLOW` is not `VERIFIED`, `OBSERVED`
-  is not `SAFE` — are carried through verbatim.
+  Distinctions the source repositories insist on (`ALLOW` is not `VERIFIED`, `OBSERVED`
+  is not `SAFE`) are carried through verbatim.
 - Separate experiments stay separate. A controlled local causal experiment, a recorded
   cloud traversal, and a broader operational comparison are three results, and merging
   them would misrepresent all three.
@@ -179,13 +179,69 @@ and the design source is wrong.
 
 ## Deep-linkable state
 
-Meaningful states are reflected in the query string with human-readable values:
-`?decision=…`, `?interlock=…`, `?architecture=…`. No internal beat identifiers appear.
+Meaningful states _can be_ represented in the query string with human-readable values:
+`?decision=…`, `?interlock=…`, `?layer=…`. No internal beat identifiers appear.
 
-The first render is always the default, matching the prerendered HTML; the URL is applied
-in an effect afterwards. That keeps the route statically rendered and hydration-safe, and
-means the page is correct with no query state at all. State is written with
-`replaceState`, so stepping a disclosure does not fill the back button.
+The distinction is load-bearing, and it is the one thing to preserve here. Ordinary
+interaction does not touch the address. Reading three sections of `/linear` used to
+produce `?interlock=evidence&layer=workspace&decision=comparison#vreko`, which nobody
+asked for and which reads as a debug harness rather than a finished page. One explicit
+control (`COPY THIS VIEW`, on each interaction's ordinal row) builds the address, and
+it carries the whole surface's state rather than that one panel's, because a reader
+shares the page they are looking at. See
+[ADR 0012](decisions/0012-state-can-be-a-link-not-is-one.md).
+
+Arriving through such a link is honoured exactly as before. The first render is always
+the default, matching the prerendered HTML; the URL is applied in an effect afterwards.
+That keeps the route statically rendered and hydration-safe, and means the page is
+correct with no query state at all.
+
+One write to the URL remains, and it only ever deletes: a reader who arrives at
+`?interlock=evidence` and then steps elsewhere has their address corrected rather than
+left asserting a stage the page is not in. The URL only moves toward the clean one.
+
+---
+
+## Guided navigation: who owns the active stage
+
+Two things move the active proof stage, and the rule for which one wins is part of this
+contract rather than an implementation detail.
+
+- **The IntersectionObserver** sets it from whatever section is at reading position: the
+  slice between 45% and 50% of the viewport height. This is the steady state, and it is a
+  progressive enhancement: without JavaScript the sections are ordinary anchor targets.
+- **A programmatic navigation** (`goTo`, and therefore the rail, `Walk the proof`, NEXT
+  and PREV) commits its target immediately and **owns the index until its scroll settles**.
+  Observer callbacks are dropped for the duration. A section crossed in transit is not a
+  destination.
+
+Ownership ends on position, never on a timer, and never permanently:
+
+| Ending                                                                                                          | Who is right                                                                                                                                        |
+| --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Arrived at the target                                                                                           | The target. Nothing is recomputed.                                                                                                                  |
+| Stopped short: clamped at the foot of the document, overtaken by a wheel or a touch, or moved by another script | The reading position. A page that has stopped moving will not emit another intersection event to correct itself with, so it is recomputed directly. |
+| Superseded by a newer navigation                                                                                | Neither. The outgoing watcher is torn down without recomputing, because the incoming one has already committed its own target.                      |
+
+`next` and `previous` derive their target from the logical index, not from rendered
+state, so two clicks landing in one render chain correctly.
+
+### Why this is written down
+
+It is a correction, not a preference. `goTo` used to set the index optimistically and
+leave the observer running, so every section the page glided past overwrote it. Because
+NEXT and PREV are `goTo(index ± 1)`, the second click in a sequence computed from a
+section the reader was merely travelling through: **NEXT, NEXT, PREV landed on stage one
+instead of stage two; 10 runs out of 10 under default smooth scrolling, and 0 out of 10
+under `prefers-reduced-motion: reduce`**, which is what identified the cause.
+
+Smooth scrolling was never the fault and is unchanged. The fault was reading state from a
+page that had not arrived yet. Reduced motion takes the identical path; its scroll simply
+settles on the first frame.
+
+`tests/e2e/proof.spec.ts` holds all four properties (the sequence under both motion
+settings, ordinary scrolling after a guided jump, and rapid navigation) by waiting on
+the scroll to stop rather than on a duration.
 
 ---
 

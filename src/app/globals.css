@@ -27,8 +27,8 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   /*
-   * Nothing may push the page sideways. The design has several wide rows — evidence
-   * tables, architecture strips — and each scrolls inside its own container instead.
+   * Nothing may push the page sideways. The design has several wide rows: evidence
+   * tables, architecture strips, and each scrolls inside its own container instead.
    */
   overflow-x: hidden;
 }
@@ -66,10 +66,16 @@ button {
   color: inherit;
 }
 
-/* Every interactive element gets the same visible ring, in the one signal accent. */
+/*
+ * Every interactive element gets the same visible ring, in the one signal accent.
+ *
+ * The offset is a token because it is not a constant: the Lit Work Surface sets the
+ * ring further out, where a tight ring on a dark ground reads as a thickened border
+ * rather than as focus.
+ */
 :focus-visible {
   outline: var(--focus-ring);
-  outline-offset: 2px;
+  outline-offset: var(--focus-offset);
 }
 
 /*

@@ -8,7 +8,7 @@ import { EvidenceStatus } from './EvidenceStatus';
 import styles from './EvidencePanel.module.css';
 
 /**
- * The "VERIFY THIS" panel beside each proof — the scannable evidence list, with the
+ * The "VERIFY THIS" panel beside each proof: the scannable evidence list, with the
  * fuller typed drawer underneath.
  *
  * A Server Component wrapping one client leaf. Only the disclosure needs interactivity;
@@ -62,7 +62,7 @@ export function EvidencePanel({
       <div className={styles.footer}>
         {/*
          * The composition's settled state, cropped: one node feeding another. It marks
-         * the one line on the panel that says how much of this actually resolves — the
+         * the one line on the panel that says how much of this actually resolves: the
          * count of evidence rows that reach an artifact rather than stopping at a claim.
          */}
         <ConceptMark className={styles.footerMark} name="one-edge" />

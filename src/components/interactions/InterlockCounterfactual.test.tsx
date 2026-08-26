@@ -32,7 +32,7 @@ describe('InterlockCounterfactual', () => {
     const markers = container.querySelectorAll('[class^="_marker_"]');
     expect(markers).toHaveLength(1);
 
-    // And it is positioned by the bound over the shared scale — 130 of 160.
+    // And it is positioned by the bound over the shared scale: 130 of 160.
     expect((markers[0] as HTMLElement).style.left).toBe('81.25%');
 
     // Two arms, both bars, both on that one track.
@@ -44,7 +44,7 @@ describe('InterlockCounterfactual', () => {
     const user = userEvent.setup();
     render330();
 
-    await user.click(screen.getByRole('button', { name: /Resulting state/ }));
+    await user.click(screen.getByRole('button', { name: /Result$/ }));
 
     // The two figures the packet records: 140 breaches, 120 holds.
     expect(screen.getByText(/TOTAL 140/)).toBeVisible();
@@ -59,7 +59,7 @@ describe('InterlockCounterfactual', () => {
 
     expect(screen.queryByText('WITHHOLD_SERIALIZE')).toBeNull();
 
-    await user.click(screen.getByRole('button', { name: /Decision point/ }));
+    await user.click(screen.getByRole('button', { name: /Decision$/ }));
     /*
      * Matched as a set, not a single node: the decision now reads as one badge on the
      * arm ("WITHHOLD_SERIALIZE · COUPLING_OBSERVED") and again in the decision trace
@@ -74,7 +74,7 @@ describe('InterlockCounterfactual', () => {
     const user = userEvent.setup();
     render330();
 
-    await user.click(screen.getByRole('button', { name: /Resulting state/ }));
+    await user.click(screen.getByRole('button', { name: /Result$/ }));
     expect(screen.getByText('CONSTRAINT HELD')).toBeVisible();
 
     await user.click(screen.getByRole('button', { name: /Perturb the evidence/ }));
@@ -95,7 +95,7 @@ describe('InterlockCounterfactual', () => {
     expect(perturb).toHaveAttribute('aria-pressed', 'true');
 
     await user.click(screen.getByRole('button', { name: /Restore evidence/ }));
-    await user.click(screen.getByRole('button', { name: /Resulting state/ }));
+    await user.click(screen.getByRole('button', { name: /Result$/ }));
     expect(screen.getByText('CONSTRAINT HELD')).toBeVisible();
   });
 
@@ -123,7 +123,7 @@ describe('InterlockCounterfactual', () => {
 
     expect(screen.getByText(/not establish behaviour at repository scale/)).toBeVisible();
 
-    await user.click(screen.getByRole('button', { name: /Frozen evidence/ }));
+    await user.click(screen.getByRole('button', { name: /Evidence$/ }));
     expect(screen.getByText('ALLOW is not VERIFIED')).toBeVisible();
     expect(screen.getByText('OBSERVED is not SAFE')).toBeVisible();
   });
@@ -138,9 +138,17 @@ describe('InterlockCounterfactual', () => {
   it('describes each bar in text for readers who cannot see it', () => {
     render330();
     const bars = screen.getAllByRole('img');
-    expect(
-      within(bars[0].parentElement as HTMLElement).getByText(/alpha 40/),
-    ).toBeVisible();
+    const arm = within(bars[0].parentElement as HTMLElement);
+
+    /*
+     * Two visible copies of the value, by design: the label inside the segment, and the
+     * legend entry beneath the bar. Only one is ever shown: a container query picks
+     * whichever fits the axis's width, and neither is announced, because the bar is a
+     * single `role="img"` whose description carries every name and value once.
+     */
+    expect(arm.getAllByText(/alpha 40/)).toHaveLength(2);
+    for (const copy of arm.getAllByText(/alpha 40/)) expect(copy).toBeVisible();
+
     expect(bars[0]).toHaveAttribute(
       'aria-label',
       expect.stringContaining('Joint total 100 against a bound of 130'),

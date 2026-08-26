@@ -1,0 +1,214 @@
+/*
+ * Sections that exist only on an application surface.
+ *
+ * The outer frame is no longer here. Section ground, rhythm, scroll offset, the index
+ * rail and the head all come from `SectionFrame`, which is the one geometry every
+ * section on a lens surface is drawn from: editorial, receipts, proof, compact and
+ * banded alike. Before that existed these sections carried a shell of their own and the
+ * proof sections carried another, which is how the page ended up with its numbers at
+ * four different horizontal positions.
+ *
+ * What is left here is what these sections actually own: the section's own body, its
+ * call to action, and the product-history registers.
+ *
+ * The receipt list lives in `ReceiptTabs.module.css` instead: the tab strip owns it
+ * outright, and that file is a client component's. The note is in the other file.
+ */
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.body {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--color-ink-strong);
+  max-width: 68ch;
+  text-wrap: pretty;
+}
+
+.cta {
+  align-self: flex-start;
+  margin-top: 0.625rem;
+  padding: 0.625rem 0.9375rem;
+  min-height: 44px;
+  background: transparent;
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-lg);
+  color: var(--color-accent);
+  transition: background-color 120ms ease;
+}
+
+.cta:hover {
+  background: var(--color-accent-surface);
+  text-decoration: none;
+}
+
+/* ── Product history registers ────────────────────────────────────────────── */
+
+/*
+ * The progression: four stages in one row wherever four fit.
+ *
+ * Explicit track counts rather than `auto-fit`, because the number is meaningful. Four
+ * columns say "this is one progression"; three columns with a fourth stranded on a
+ * second row says the fourth stage is a different kind of thing, which is exactly the
+ * reading the section is trying to avoid.
+ *
+ * Each card is separated by a rule at its top rather than by a box, which is the
+ * surface's own grammar: structure comes from alignment and tone, not from outlines.
+ */
+.stages {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-5) var(--space-6);
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding-top: 0.75rem;
+  border-top: var(--rule);
+}
+
+.stageOrdinal {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-accent);
+}
+
+.stageTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.stageSpan {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-meta);
+}
+
+/*
+ * The two flat registers. Same shape, different question, who the work was for, and
+ * what it spanned, so they share every rule and differ only in their content.
+ */
+.register {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin-top: var(--space-3);
+}
+
+.registerHeading {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  font-weight: 400;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--color-meta-quiet);
+}
+
+/*
+ * Three tracks, filled left to right. Fixed rather than `auto-fit` so a register with
+ * two entries lays them out at the same width as a register with six: under `auto-fit`
+ * the empty tracks collapse and two entries stretch to half the page each, which reads
+ * as two headline claims rather than as two items in a list.
+ */
+.registerList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4) var(--space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.registerItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3125rem;
+  padding-top: 0.625rem;
+  border-top: var(--rule-quiet);
+}
+
+.registerLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-ink);
+  text-transform: uppercase;
+}
+
+.entryText {
+  font-size: 0.938rem;
+  line-height: 1.6;
+  color: var(--color-ink-secondary);
+  max-width: 58ch;
+}
+
+/*
+ * An entry the corpus cannot support.
+ *
+ * Deliberately the same dashed burnt-orange region the receipts use for a row with no
+ * artifact behind it: this site has exactly one visual answer for "not verified", and a
+ * second one would let a reader assume the two mean different things. The mark and the
+ * question sit inside one region so the boundary of what is unproven is unambiguous.
+ */
+.entryUnresolved {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  align-self: flex-start;
+  margin-top: 0.125rem;
+  padding: 0.5rem 0.625rem;
+  border: 1px dashed var(--unresolved-mark, var(--color-border-dashed));
+  border-radius: var(--radius);
+  max-width: 58ch;
+}
+
+.entryUnresolvedMark {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--unresolved-mark, var(--color-ink-muted));
+}
+
+.entryUnresolvedNote {
+  font-size: 0.938rem;
+  line-height: 1.6;
+  color: var(--color-ink-secondary);
+}
+
+/*
+ * Two steps down, not one.
+ *
+ * At tablet widths four stage columns are ~150px each, which turns every title into a
+ * three-line stack: the sequence is still one row but nothing in it is readable. Two
+ * columns keeps the pairing legible while the section still has two dimensions.
+ *
+ * Below 700px the index rail has already lain down, so the whole section is a single
+ * reading column and any remaining track minimums would only force a horizontal scroll.
+ */
+@media (max-width: 1080px) {
+  .stages,
+  .registerList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .stages,
+  .registerList {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+}

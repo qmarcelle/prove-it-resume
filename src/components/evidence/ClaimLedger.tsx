@@ -3,6 +3,8 @@
 import { useId, useState } from 'react';
 import { CLAIMS } from '@/content/claims';
 import { ActionIcon } from '@/components/icon/Icon';
+import { SectionHead, sectionFrameClass } from '@/components/section/SectionFrame';
+import type { SurfaceStep } from '@/lib/types';
 import styles from './ClaimLedger.module.css';
 
 /**
@@ -15,12 +17,35 @@ import styles from './ClaimLedger.module.css';
  * A real `<table>`, because this is genuinely tabular: three related values per row,
  * with headers that a screen reader should associate with each cell.
  */
-export function ClaimLedger() {
+export function ClaimLedger({
+  step,
+}: {
+  /**
+   * The plan step this section was placed as, on a surface that has one.
+   *
+   * A plain object crossing to a Client Component, which is fine; it is data, and it
+   * is the same object the rail and the header nav read. The alternative, letting this
+   * section print a number of its own, is the thing the plan exists to prevent.
+   */
+  step?: SurfaceStep;
+} = {}) {
   const [open, setOpen] = useState(false);
   const panelId = useId();
 
   return (
-    <section className={styles.section} id="ledger" aria-labelledby={`${panelId}-label`}>
+    <section
+      className={`${styles.section} ${sectionFrameClass(step)}`.trim()}
+      id={step ? step.id : 'claim-ledger'}
+      aria-labelledby={step ? `${panelId}-title` : `${panelId}-label`}
+    >
+      {step ? (
+        <SectionHead
+          step={step}
+          title="Every claim, its evidence, and what it does not prove."
+          titleId={`${panelId}-title`}
+        />
+      ) : null}
+
       <button
         type="button"
         className={styles.toggle}
@@ -38,7 +63,7 @@ export function ClaimLedger() {
       </button>
 
       {/*
-        The wrapper scrolls horizontally on narrow viewports, so it must be focusable —
+        The wrapper scrolls horizontally on narrow viewports, so it must be focusable:
         otherwise its content is unreachable without a pointer. `role="region"` plus a
         name is what turns that focus stop into something meaningful to announce.
       */}

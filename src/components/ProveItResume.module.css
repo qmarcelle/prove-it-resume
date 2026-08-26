@@ -1,3 +1,11 @@
+/*
+ * The numbered argument, and where it stops.
+ *
+ * The bottom padding is a chapter gap rather than a section gap. Section 09 closes on a
+ * dense bordered control, and with only the claim ledger's own section padding beneath
+ * it the closing headline began roughly one paragraph later on a ground one tonal step
+ * away, which on this surface reads as the next block, not as the end of the argument.
+ */
 .body {
   display: flex;
   flex-wrap: wrap;
@@ -6,7 +14,7 @@
   width: 100%;
   max-width: var(--page-max);
   margin: 0 auto;
-  padding: 0 var(--page-gutter);
+  padding: 0 var(--page-gutter) var(--space-chapter);
 }
 
 .main {

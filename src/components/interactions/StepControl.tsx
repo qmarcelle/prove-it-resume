@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { ActionIcon } from '@/components/icon/Icon';
+import { CopyViewLink } from './CopyViewLink';
 import styles from './StepControl.module.css';
 
 export type Step = {
@@ -29,6 +30,11 @@ export type Step = {
  * **`aria-pressed`, not tabs.** These stages are cumulative disclosure over one
  * subject, not alternative panels. Tab semantics would promise a panel swap that does
  * not happen, and `role="radiogroup"` would imply a form value.
+ *
+ * `shareAnchor` puts the "copy this view" control on the ordinal row. It belongs beside
+ * the stage counter because that is where the state a reader might want to hand on is
+ * displayed, and because the alternative (a floating page-level share control) would
+ * be a general affordance for something that only means anything in three places.
  */
 export function StepControl({
   label,
@@ -36,6 +42,7 @@ export function StepControl({
   activeId,
   onChange,
   controls,
+  shareAnchor,
 }: {
   /** Accessible name for the group, e.g. "Comparison stage". */
   label: string;
@@ -44,6 +51,12 @@ export function StepControl({
   onChange: (id: string) => void;
   /** id of the region this control drives. */
   controls?: string;
+  /**
+   * Section anchor for the shareable address, e.g. `interlock`. Absent means this
+   * control is somewhere a link back to it would not land, so no control is offered
+   * rather than one producing an address that misses.
+   */
+  shareAnchor?: string;
 }) {
   const groupRef = useRef<HTMLDivElement>(null);
   const index = steps.findIndex((step) => step.id === activeId);
@@ -139,6 +152,12 @@ export function StepControl({
           Next
           <ActionIcon affordance="advance-sequence" size={12} />
         </button>
+
+        {shareAnchor ? (
+          <span className={styles.share}>
+            <CopyViewLink anchor={shareAnchor} />
+          </span>
+        ) : null}
       </div>
     </div>
   );

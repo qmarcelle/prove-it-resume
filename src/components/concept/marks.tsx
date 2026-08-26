@@ -1,5 +1,5 @@
 /**
- * Concept marks — crops of the hero's settled frame.
+ * Concept marks: crops of the hero's settled frame.
  *
  * Every shape here is lifted from `design/reference/claude/Prove It Resume - Hero Concept
  * B.dc.html`, whose "marks derived from the settled frame" panel states the rule these
@@ -7,8 +7,8 @@
  * same dashed-to-solid convention, and the same single accent.
  *
  * That derivation is the point, and it is why these are not icons. A reader meets this
- * geometry once, moving, at the top of the page — four nodes resolving onto one axis, the
- * middle two enclosed by a bracket — and then meets pieces of it again, still, beside the
+ * geometry once, moving, at the top of the page: four nodes resolving onto one axis, the
+ * middle two enclosed by a bracket, and then meets pieces of it again, still, beside the
  * claims it was describing. The vocabulary is learned before it is used.
  *
  * The division of labour with `components/icon`: a pictogram is something you can do, a
@@ -22,7 +22,7 @@
  *
  * Deliberately absent: the export's fourth mark, DECISION (a node, an accent edge, and a
  * filled accent square). Its only natural home is `EvidenceStatus`, whose three tones are
- * drawn at inline-chip scale — 4×9 and 6×6 — while these are card-scale at 64×40.
+ * drawn at inline-chip scale (4×9 and 6×6) while these are card-scale at 64×40.
  * Re-cutting that component means drawing three new chip-scale marks in this grammar,
  * which the export does not supply and which is a design decision rather than a port. See
  * `docs/decisions/0008-vendored-icon-set.md`.

@@ -1,9 +1,9 @@
 /*
- * Hero composition — "The Bounded Path".
+ * Hero composition: "The Bounded Path".
  *
  * Every colour here is an existing token. The export names four values and all four were
  * already in `tokens.css`: ink, ink-tertiary, border-dashed, accent. No hue is introduced,
- * which is the standing rule — "one restrained signal accent, no second hue anywhere".
+ * which is the standing rule; "one restrained signal accent, no second hue anywhere".
  *
  * Transitions attach only under `.playing`, so the rewind from the settled frame back to
  * the start is instant and only the forward sequence animates.
@@ -11,8 +11,8 @@
 
 /*
  * A query container, because what the station labels have to fit inside is the stage's
- * own width, not the viewport's. The stage sits in a flexible column, so the two diverge
- * — at a 1024px viewport this figure is 390px wide and at 900px it is 836px, and a
+ * own width, not the viewport's. The stage sits in a flexible column, so the two diverge:
+ * at a 1024px viewport this figure is 390px wide and at 900px it is 836px, and a
  * viewport media query would get both cases wrong.
  */
 .figure {
@@ -37,7 +37,7 @@
 }
 
 /*
- * The beat-0 scatter stays inside this box — the widest excursion puts a node at y=21 and
+ * The beat-0 scatter stays inside this box: the widest excursion puts a node at y=21 and
  * the lowest at y=133, against a 14–140 view. `overflow: visible` covers stroke width at
  * the extremes only, so the reserved height is honest.
  */
@@ -97,7 +97,7 @@
 }
 
 /*
- * The bracket. It encloses evidence and agent — the surface the decision is made inside —
+ * The bracket. It encloses evidence and agent (the surface the decision is made inside)
  * and it is the boundary this page will not collapse: it survives to the settled frame,
  * named, while the unlabelled node beyond it does not.
  */
@@ -118,7 +118,7 @@
 /* ── Motion ─────────────────────────────────────────────────────────────────── */
 
 /*
- * Opacity plus one of transform or fill, per element — which is why the node's position
+ * Opacity plus one of transform or fill, per element, which is why the node's position
  * and the node's resolution are two layers. Nothing overshoots, springs, or runs longer
  * than the beat it belongs to.
  */
@@ -149,7 +149,7 @@
 
 /*
  * DOM text, positioned against the stage rather than drawn into it. The row reserves its
- * own height — two lines, stations then BOUND — so nothing below it moves as labels change
+ * own height (two lines, stations then BOUND) so nothing below it moves as labels change
  * weight or as the bracket's name arrives.
  */
 /*
@@ -157,7 +157,7 @@
  *
  * The stations cannot shrink to fit. `docs/design-import.md` raised this page's microtype
  * to an 11.5px floor on the grounds that metadata below it "reads as texture rather than
- * information", and that floor is authoritative — so where four mono words stop fitting
+ * information", and that floor is authoritative, so where four mono words stop fitting
  * against their columns, the layout gives way rather than the type. Distributed, they
  * still read left to right in sequence order, which is the fact they carry.
  */
@@ -192,7 +192,7 @@
 
 /*
  * `visibility`, not opacity alone. A transparent word is still a word to a contrast
- * checker, which reads it blended against the stage and fails it — and it is still a word
+ * checker, which reads it blended against the stage and fails it, and it is still a word
  * to a screen reader, announcing a bracket that has not been drawn yet. Hidden until the
  * bracket arrives, it is neither. Visibility is deliberately not transitioned: it snaps
  * on at the start of the fade in, and snaps off instantly on the rewind, which is what
@@ -242,7 +242,7 @@
 
 /*
  * Wide enough for the words to sit on the marks they name. Below this, REPOSITORY and
- * EVIDENCE overlap — their columns are 180 units apart, which stops being enough room
+ * EVIDENCE overlap; their columns are 180 units apart, which stops being enough room
  * somewhere around a 480px stage.
  */
 @container bounded-field (min-width: 480px) {
@@ -269,7 +269,7 @@
 
 /*
  * Below a 640px viewport the bracket and the excluded node are dropped, per the export. At
- * that width they are a hairline enclosure and a 40-unit rectangle beyond the answer —
+ * that width they are a hairline enclosure and a 40-unit rectangle beyond the answer:
  * detail that reads as noise. The four nodes and three edges carry the sequence alone.
  *
  * This is a viewport rule and the station layout above is a stage-width rule, deliberately:

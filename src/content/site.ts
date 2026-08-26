@@ -4,7 +4,7 @@ import type { EvidenceRef } from '@/lib/types';
  * Site-level copy and the small set of links that were actually supplied.
  *
  * `github` is the only external destination confirmed by the design export besides the
- * Tally case study. It is used as a *profile* link — header, hero, career, footer — and
+ * Tally case study. It is used as a *profile* link (header, hero, career, footer) and
  * deliberately not as a per-artifact evidence target, because a profile page is not the
  * repository an evidence row names.
  */
@@ -31,6 +31,24 @@ export const SITE = {
   ],
   github: 'https://github.com/qmarcelle',
   githubLabel: 'github.com/qmarcelle',
+  /*
+   * The canonical origin this artifact is published at.
+   *
+   * Absent for most of this project's life, and the absence was honest at the time: no
+   * verified domain had been supplied, so `layout.tsx` set no `metadataBase`, the
+   * sitemap emitted root-relative `<loc>` values, and every route's Open Graph card fell
+   * back to the durable page's.
+   *
+   * It is no longer absent. The résumé PDFs print `qwynn.marcellelabs.io/linear` in
+   * their footer and the repository publishes the same host, so a shared link resolving
+   * to a generic card was a stale comment rather than a missing fact. Stated once here
+   * because three separate things need it: `metadataBase`, the sitemap, and the
+   * per-route social cards.
+   *
+   * `content.test.ts` asserts it is an absolute https origin with no trailing slash,
+   * which is what `new URL()` in the layout requires.
+   */
+  origin: 'https://qwynn.marcellelabs.io',
 } as const;
 
 /**
@@ -42,9 +60,11 @@ export const SITE = {
  * engine into `public/`.
  *
  * `href` is the neutral lens's file and is what this record *means*: a résumé exists and
- * can be downloaded. Which of the three generated files a given page serves is decided
- * by `resumePdfPath`, because a role lens changes the masthead title and therefore the
- * artifact, while the fact of having a résumé is the same fact everywhere.
+ * can be downloaded. Which generated file a given page serves is decided by
+ * `resumePdfPath`; one per lens in `ALL_RESUME_LENSES`, so the count follows the
+ * registry rather than being stated here and going stale, because a lens changes the
+ * masthead title and therefore the artifact, while the fact of having a résumé is the
+ * same fact everywhere.
  */
 export const RESUME: EvidenceRef = {
   id: 'resume',
@@ -61,7 +81,7 @@ export const RESUME: EvidenceRef = {
  * The export pointed LinkedIn and Email at `#resume` and the Marcelle Labs link at
  * `#`. All three now resolve: Marcelle Labs to the live site, and LinkedIn and Email
  * to destinations the owner supplied directly. Publishing a contact address was the
- * owner's decision to make, and it has been made — these were never inferred.
+ * owner's decision to make, and it has been made: these were never inferred.
  *
  * Email is the one record here that is not a web page. It keeps `verified: true`
  * because the rule that flag encodes is "this destination is the thing the row claims",

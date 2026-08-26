@@ -1,11 +1,11 @@
 import type { InterlockCounterfactualData } from '@/lib/interactions';
 
 /**
- * HAC-330 — the frozen controlled counterfactual behind the Interlock interaction.
+ * HAC-330: the frozen controlled counterfactual behind the Interlock interaction.
  *
  * Every number is read from the committed packet, not from the design draft. The draft
  * happened to carry `140 > 130`, `WITHHOLD_SERIALIZE` and `120 <= 130`, and those three
- * do match the frozen evidence — but they are used here because `evidence/arms.json`
+ * do match the frozen evidence, but they are used here because `evidence/arms.json`
  * says so, and they would have been replaced if it had said otherwise.
  *
  * Source:
@@ -19,7 +19,7 @@ import type { InterlockCounterfactualData } from '@/lib/interactions';
  * so presenting them as one result would misrepresent all three.
  *
  * Note on language: no model participates in HAC-330 at all. The decision function is
- * pure and deterministic. So the controlled variable is the mined evidence — never
+ * pure and deterministic. So the controlled variable is the mined evidence: never
  * "same prompt" or "same model", which would be borrowed from a different experiment.
  */
 
@@ -79,12 +79,12 @@ export const interlockHac330: InterlockCounterfactualData = {
     varied:
       'The mined co-change evidence, and only that. Two synthetic histories land on a byte-identical tree, so the difference cannot be the target state.',
     heldFixed: [
-      'Decision function — one pure implementation, unchanged between arms',
-      'Intents — A raises alpha 40→60, B raises beta 40→60, in both arms',
-      'Broker and apply path — one protected mutation broker',
-      'Final tree — fc015c39… in both histories',
-      'Commit count — 17 in both histories',
-      'Control pair — docs/runbook.md ↔ tests/smoke.test.mjs, support 6 in both',
+      'Decision function: one pure implementation, unchanged between arms',
+      'Intents: A raises alpha 40→60, B raises beta 40→60, in both arms',
+      'Broker and apply path: one protected mutation broker',
+      'Final tree: fc015c39… in both histories',
+      'Commit count: 17 in both histories',
+      'Control pair: docs/runbook.md ↔ tests/smoke.test.mjs, support 6 in both',
     ],
   },
 
@@ -100,7 +100,7 @@ export const interlockHac330: InterlockCounterfactualData = {
   stages: [
     {
       id: 'resting',
-      label: 'Shared state',
+      label: 'State',
       caption:
         'Three services hold reservations against one pool. Total 100, bound 130, headroom 30.',
       frames: {
@@ -118,7 +118,7 @@ export const interlockHac330: InterlockCounterfactualData = {
     },
     {
       id: 'intent',
-      label: 'Two intents',
+      label: 'Intents',
       caption:
         'Each agent claims +20 against 30 of headroom. Either fits on its own; both do not.',
       frames: {
@@ -136,7 +136,7 @@ export const interlockHac330: InterlockCounterfactualData = {
     },
     {
       id: 'decision',
-      label: 'Decision point',
+      label: 'Decision',
       caption:
         'This is the only place the arms differ: one arm takes a coordination decision before any write lands.',
       frames: {
@@ -156,7 +156,7 @@ export const interlockHac330: InterlockCounterfactualData = {
     },
     {
       id: 'outcome',
-      label: 'Resulting state',
+      label: 'Result',
       caption:
         'The invariant is checked by a separate process. The verdict is an exit code.',
       frames: {
@@ -180,7 +180,7 @@ export const interlockHac330: InterlockCounterfactualData = {
     },
     {
       id: 'evidence',
-      label: 'Frozen evidence',
+      label: 'Evidence',
       caption:
         'The packet is committed, digest-bound, and re-checkable without the sibling checkout.',
       frames: {
@@ -216,7 +216,7 @@ export const interlockHac330: InterlockCounterfactualData = {
     perturbed: {
       present: false,
       summary:
-        'An alternate synthetic history in which alpha and beta are never edited in the same commit. Same tree, same commit count, same control pair — the coupling simply never appears.',
+        'An alternate synthetic history in which alpha and beta are never edited in the same commit. Same tree, same commit count, same control pair. The coupling simply never appears.',
       basisRevision: PERTURBED_BASIS,
       digest: 'sha256 ec9bd673…4bdc48120d08d5',
     },
@@ -224,13 +224,13 @@ export const interlockHac330: InterlockCounterfactualData = {
 
   /*
    * The perturbed control arm. Same decision function, same intents, same policy,
-   * identical tree — and the opposite decision, because the evidence changed. Only the
+   * identical tree, and the opposite decision, because the evidence changed. Only the
    * interlocked arm is affected; the uncoordinated arm has no decision point to flip.
    */
   perturbedStages: [
     {
       id: 'decision',
-      label: 'Decision point',
+      label: 'Decision',
       caption: 'Same code, same intents, evidence mined from the alternate history.',
       frames: {
         uncoordinated: {
@@ -249,7 +249,7 @@ export const interlockHac330: InterlockCounterfactualData = {
     },
     {
       id: 'outcome',
-      label: 'Resulting state',
+      label: 'Result',
       caption: 'The composition proceeds, and the joint state goes over the bound.',
       frames: {
         uncoordinated: {
@@ -264,13 +264,13 @@ export const interlockHac330: InterlockCounterfactualData = {
           total: 140,
           holds: false,
           verdict: 'INVALID JOINT STATE',
-          note: 'The mechanism ran and permitted the composition. In this world alpha and beta are still coupled — the history simply never showed it.',
+          note: 'The mechanism ran and permitted the composition. In this world alpha and beta are still coupled. The history simply never showed it.',
         },
       },
     },
     {
       id: 'evidence',
-      label: 'Frozen evidence',
+      label: 'Evidence',
       caption:
         'The control arm is part of the packet, recorded as a finding rather than hidden.',
       frames: {
@@ -319,7 +319,7 @@ export const interlockHac330: InterlockCounterfactualData = {
   },
 };
 
-/** The decision function itself — the code whose behaviour the arms compare. */
+/** The decision function itself: the code whose behaviour the arms compare. */
 export const INTERLOCK_DECISION_SOURCE = {
   id: 'ilk-decide',
   kind: 'source' as const,

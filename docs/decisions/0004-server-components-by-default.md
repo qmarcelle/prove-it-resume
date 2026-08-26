@@ -1,4 +1,4 @@
-# 0004 — Most of the application stays Server Components
+# 0004: Most of the application stays Server Components
 
 **Status:** accepted
 
@@ -20,10 +20,15 @@ state, which ships the entire page's markup, copy, and evidence data as JavaScri
 
 ## Decision
 
-Server Components by default. `"use client"` appears in exactly seven files:
-`ProofNavProvider`, `ProofProgress`, `GuidedProofNav`, `WalkProofButton`,
-`EvidenceDisclosure`, `ClaimLedger`, `DecisionReceipt`, and the two interaction
-components.
+Server Components by default. `"use client"` appears only where a file genuinely holds
+state: `ProofNavProvider`, `ProofProgress`, `GuidedProofNav`, `WalkProofButton`,
+`EvidenceDisclosure`, `ClaimLedger`, `DecisionReceipt`, `ReceiptTabs`, and the
+interaction components.
+
+`EvidenceChain`, the application surface's hero figure, is a Server Component despite
+being an animation. Its keyframes carry `fill-mode: both` and the stylesheet describes
+the settled frame, so the finished figure is the authored DOM state and there is nothing
+for JavaScript to sequence.
 
 ## Consequences
 

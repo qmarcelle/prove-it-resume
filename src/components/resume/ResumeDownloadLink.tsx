@@ -3,7 +3,7 @@ import { ActionIcon } from '@/components/icon/Icon';
 import type { IconSize } from '@/components/icon/Icon';
 import { isResolved } from '@/lib/evidence';
 import { resumeDownloadName, resumePdfPath } from '@/lib/resume';
-import type { RoleLens } from '@/lib/types';
+import type { AnyLens } from '@/lib/types';
 
 /**
  * The one place a résumé download can be rendered.
@@ -14,7 +14,7 @@ import type { RoleLens } from '@/lib/types';
  * the record, because there is one record and three artifacts.
  *
  * Returns `null` when unresolved. Callers render their own stated gap, because the
- * wording differs by placement — the header says nothing, the bridge explains.
+ * wording differs by placement: the header says nothing, the bridge explains.
  *
  * The label and its download mark are bound together here rather than assembled by each
  * caller. Five placements spelling their own `Résumé ↓` is five chances for one of them
@@ -22,7 +22,7 @@ import type { RoleLens } from '@/lib/types';
  * puts a file on the reader's disk, and it used to share `↓` with scrolling down the
  * page and with opening a disclosure.
  *
- * `children` is anything that should sit *after* the label as a sibling — the bridge's
+ * `children` is anything that should sit *after* the label as a sibling: the bridge's
  * page count, which its own layout spaces apart.
  */
 export function ResumeDownloadLink({
@@ -32,7 +32,7 @@ export function ResumeDownloadLink({
   iconSize = 12,
   children,
 }: {
-  lens: RoleLens;
+  lens: AnyLens;
   className?: string;
   label: string;
   iconSize?: IconSize;

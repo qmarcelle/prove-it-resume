@@ -23,7 +23,7 @@ describe('Icon', () => {
 
   /*
    * The layout contract. `docs/performance.md` records CLS 0.0000 and the rule behind
-   * it — "decorative content cannot shift layout" — which holds only while the box is
+   * it ("decorative content cannot shift layout") which holds only while the box is
    * declared on the element rather than applied by a stylesheet that resolves later.
    */
   it.each(SIZES)('reserves its box on the element at %ipx', (size) => {
@@ -37,7 +37,7 @@ describe('Icon', () => {
    * The weight contract. Every rule on this page is 1px; an icon drawn at any other
    * weight introduces a second one. Because the view box is 24 units and the rendered
    * box is `size` pixels, a stroke renders at exactly one pixel when its width in units
-   * times the scale factor equals one — which is what this asserts, at every size.
+   * times the scale factor equals one, which is what this asserts, at every size.
    */
   it.each(SIZES)('draws a one-pixel stroke at %ipx', (size) => {
     const svg = draw(<Icon name="arrow-right" size={size} />);

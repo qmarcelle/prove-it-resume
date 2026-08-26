@@ -15,7 +15,7 @@ import styles from './BoundedField.module.css';
  *
  * The settled frame is the artifact, and it has to survive being screenshotted. The
  * export's second pass exists because the first one did not: it resolved into two rules,
- * a black bar, and an amber square — geometry that communicated craft and nothing
+ * a black bar, and an amber square: geometry that communicated craft and nothing
  * specific, and that lost its meaning the moment the motion stopped. Naming the nodes
  * costs one line of the composition's purity and buys a resting state a cold reader can
  * describe in five seconds: repository, evidence, agent, decision, with the middle two
@@ -29,9 +29,9 @@ import styles from './BoundedField.module.css';
  * says on arrival, not a thing the reader operates.
  *
  * Motion admission (`docs/interaction-contract.md`), one category per beat:
- *   B1 — **Causality.** The nodes settle onto one axis and repository feeds evidence.
- *   B2 — **Boundary.** A bracket encloses evidence and agent, and one node falls outside.
- *   B3 — **State.** The decision is the output, and the only saturated thing on the stage.
+ *   B1: **Causality.** The nodes settle onto one axis and repository feeds evidence.
+ *   B2: **Boundary.** A bracket encloses evidence and agent, and one node falls outside.
+ *   B3: **State.** The decision is the output, and the only saturated thing on the stage.
  *
  * No animation library. Every transition below is a CSS transition keyed off `data-beat`.
  */
@@ -46,7 +46,7 @@ const AXIS_Y = 86;
 const SETTLED = 3;
 
 /**
- * Beat length. Four beats — a hold, then three — so the last one is triggered at
+ * Beat length. Four beats (a hold, then three) so the last one is triggered at
  * `BEAT_MS * 3` and its own 340ms transform settles a third of a second after that: 2.7s
  * to the final beat, ~3.0s to rest. The export's prototype ships 800ms, which lands at
  * 2.4s and 2.7s; this is one notch slower so the whole thing sits inside the 2.5–4s
@@ -57,7 +57,7 @@ const BEAT_MS = 900;
 /**
  * How much of the stage has to be in the viewport before the sequence counts as seen.
  * Half: enough that a reader has actually arrived at the figure rather than caught its
- * top edge on the way past, and low enough that it can never be unreachable — the stage
+ * top edge on the way past, and low enough that it can never be unreachable: the stage
  * is a 640×126 box and is not capable of being taller than the window.
  */
 const VISIBLE_FRACTION = 0.5;
@@ -78,8 +78,8 @@ const VISIBLE_FRACTION = 0.5;
  * bracket and outside the vocabulary, so at rest it is an unlabelled dashed box after the
  * answer. That costs exactly the legibility the second pass was drawn to buy.
  *
- * The boundary itself is still rendered and still named — the bracket and its BOUND label
- * are what survive to B3 — so the principle the ADR was protecting is intact. What is
+ * The boundary itself is still rendered and still named: the bracket and its BOUND label
+ * are what survive to B3, so the principle the ADR was protecting is intact. What is
  * dropped is an anonymous mark, not a claim boundary.
  *
  * Kept as a flag so the comparison can be made again rather than taken on trust.
@@ -146,7 +146,7 @@ export function BoundedField() {
    * Starts settled, which is what the server renders and what hydration must match. The
    * sequence is a rewind: the effect drops back to B0 with transitions suppressed, then
    * plays forward once the stage is actually on screen. A reader who never gets that far
-   * — no JavaScript, reduced motion — keeps the finished composition, which is the whole
+   * (no JavaScript, reduced motion) keeps the finished composition, which is the whole
    * point of it being the fallback.
    */
   const [beat, setBeat] = useState(SETTLED);
@@ -180,7 +180,7 @@ export function BoundedField() {
      *
      * The rewind happens on mount and the play waits for the viewport, which is the
      * right way round. Rewinding on entry instead would mean a reader scrolling down met
-     * the finished diagram and then watched it snap back to scattered — the sequence
+     * the finished diagram and then watched it snap back to scattered: the sequence
      * running backwards in front of them, which is the one thing the double frame exists
      * to prevent. Rewound early and off screen, it is simply waiting at its first frame.
      */

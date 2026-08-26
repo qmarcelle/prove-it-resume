@@ -1,9 +1,13 @@
 /**
  * The six proof stages, in narrative order.
  *
- * These are the sections the rail tracks and guided mode walks. Ids match the design
- * export (`sec-01`…`sec-06`) so anchors from the preserved mockup still resolve, and so
- * the ported IntersectionObserver observes exactly the elements it did in the original.
+ * These are the sections the rail tracks and guided mode walks.
+ *
+ * `n` and `id` are separate fields, and that separation is the point. `n` is the visible
+ * position; `id` is the section's permanent identity and the anchor a shared link
+ * carries. The export numbered both at once (`sec-01`…`sec-06`) which held here only
+ * because position and identity happened to agree, and broke on `/linear`, where the
+ * same ids were reordered and `#sec-02` began arriving from a section printed as `06`.
  */
 export type ProofStep = {
   n: string;
@@ -12,12 +16,12 @@ export type ProofStep = {
 };
 
 export const PROOF_STEPS: readonly ProofStep[] = [
-  { n: '01', id: 'sec-01', label: 'Problem' },
-  { n: '02', id: 'sec-02', label: 'Vreko' },
-  { n: '03', id: 'sec-03', label: 'Repository Intelligence' },
-  { n: '04', id: 'sec-04', label: 'Interlock' },
-  { n: '05', id: 'sec-05', label: 'Role Fit' },
-  { n: '06', id: 'sec-06', label: 'Career' },
+  { n: '01', id: 'operating-thesis', label: 'Problem' },
+  { n: '02', id: 'vreko', label: 'Vreko' },
+  { n: '03', id: 'repository-intelligence', label: 'Repository Intelligence' },
+  { n: '04', id: 'interlock', label: 'Interlock' },
+  { n: '05', id: 'role-fit', label: 'Role Fit' },
+  { n: '06', id: 'career', label: 'Career' },
 ] as const;
 
 /** Offset applied when scrolling to a section, matching the export's `- 92`. */

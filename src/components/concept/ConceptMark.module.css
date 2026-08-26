@@ -21,7 +21,7 @@
 
 /*
  * Unresolved: hollow and dashed, at the composition's own beat-zero setting. The dash is
- * 2 units here rather than the stage's 4 — a node is 7 units across at this scale, and a
+ * 2 units here rather than the stage's 4: a node is 7 units across at this scale, and a
  * 4-unit dash would draw one segment and read as solid.
  */
 .mark :global(.cmDashed) {
