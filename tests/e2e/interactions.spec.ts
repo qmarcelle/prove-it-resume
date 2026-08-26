@@ -473,3 +473,81 @@ test.describe('accessibility of interacting states', () => {
     expect(checked).toBeGreaterThan(5);
   });
 });
+
+/**
+ * The verdict chip, in both palettes.
+ *
+ * This exists because of a real defect rather than a hypothetical one. `.verdictHolds`
+ * filled itself with `--color-ink` and set its label in `--color-inverse-ink` — two
+ * separate assumptions about which end of the scale is dark. On the light page both
+ * hold. On the Lit Work Surface, where ink *is* the light step, the two resolved to the
+ * same value and the chip rendered as a blank rectangle with the word painted on
+ * itself. Nothing caught it: the text was in the DOM, axe reads declared colours on the
+ * element and the collision only appears once the custom properties are resolved.
+ *
+ * So this reads the computed colours off the served page and does the contrast
+ * arithmetic. It runs on both routes, because the whole point is that one palette
+ * passing says nothing about the other.
+ */
+const CONTRAST_FLOOR = 4.5;
+
+/** WCAG relative luminance, from a computed `rgb(...)` / `rgba(...)` string. */
+function luminance(colour: string): number {
+  const [r, g, b] = colour
+    .match(/[\d.]+/g)!
+    .slice(0, 3)
+    .map(Number);
+  const channel = (v: number) => {
+    const c = v / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+}
+
+function contrast(fg: string, bg: string): number {
+  const [a, b] = [luminance(fg), luminance(bg)].sort((x, y) => y - x);
+  return (a + 0.05) / (b + 0.05);
+}
+
+for (const route of ['/', '/linear']) {
+  test.describe(`verdict chips on ${route}`, () => {
+    test('are legible against their own fill', async ({ page }) => {
+      await page.goto(route);
+      const panel = interlock(page);
+      await panel.getByRole('button', { name: /Resulting state/ }).click();
+
+      for (const word of ['CONSTRAINT HELD', 'INVALID JOINT STATE']) {
+        const chip = panel.getByText(word).first();
+        await expect(chip, `${word} is not rendered`).toBeVisible();
+
+        /*
+         * The chip's own background is transparent in neither palette today, but a
+         * future one could set it so. Walking up to the first painted ancestor is what
+         * a reader's eye does, and it keeps this test measuring the real pairing rather
+         * than a declared one.
+         */
+        const pair = await chip.evaluate((el) => {
+          const fg = getComputedStyle(el).color;
+          let node: HTMLElement | null = el as HTMLElement;
+          while (node) {
+            const bg = getComputedStyle(node).backgroundColor;
+            const alpha = Number(bg.match(/[\d.]+/g)?.[3] ?? 1);
+            if (alpha > 0) return { fg, bg };
+            node = node.parentElement;
+          }
+          return { fg, bg: 'rgb(255, 255, 255)' };
+        });
+
+        expect(
+          pair.fg,
+          `${word} is painted on itself: ${pair.fg} on ${pair.bg}`,
+        ).not.toBe(pair.bg);
+
+        expect(
+          contrast(pair.fg, pair.bg),
+          `${word} is ${pair.fg} on ${pair.bg}`,
+        ).toBeGreaterThanOrEqual(CONTRAST_FLOOR);
+      }
+    });
+  });
+}

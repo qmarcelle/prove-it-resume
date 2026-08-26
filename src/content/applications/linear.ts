@@ -26,12 +26,19 @@ import { defaultRole } from '../roles/default';
  * already carry. `receipts` is the single place this lens introduces material, and that
  * material is typed, boundary-bearing, unlinked, and tested.
  *
- * ## Why the proof order demotes Vreko
+ * ## Why the proofs run in this order
+ *
+ * The order is the design direction's: Never Ask Twice, Repository Intelligence,
+ * Interlock, Vreko. It runs from the reader's own product problem outward — agent
+ * memory is the nearest thing in the corpus to what they build, repository context is
+ * the surface underneath it, and coordination under concurrent agents is the hardest
+ * claim and the one carrying a frozen packet and an independent verifier, so it lands
+ * last of the three rather than first.
  *
  * Vreko is the strongest MCP artifact in the corpus and the least differentiating for
- * a reader who already operates an agent platform. Interlock leads because coordination
- * failure under concurrent agents is this reader's actual production problem, and it is
- * the only claim here carrying a frozen packet and an independent verifier.
+ * a reader who already operates an agent platform, so it is demoted to the close. The
+ * direction removes it from the sequence entirely; this surface may reorder evidence
+ * and may not remove it, so the demotion is carried by the `inline` frame instead.
  */
 export const linearApplication: ApplicationLens = {
   kind: 'application',
@@ -42,7 +49,7 @@ export const linearApplication: ApplicationLens = {
   resumeTitle: 'Staff AI Product & Platform Engineer',
   resumeProjection: 'linear',
   roleFitHeading: 'Where this work already touches yours.',
-  proofOrder: ['interlock', 'repository-intelligence', 'vreko'],
+  proofOrder: ['repository-intelligence', 'interlock', 'vreko'],
   mapping: prioritiseMapping(defaultRole.mapping, [
     'Build production-grade agent systems',
     'Persist agent state across sessions',
@@ -109,18 +116,18 @@ export const linearApplication: ApplicationLens = {
       frame: 'standard',
     },
     {
-      id: 'sec-04',
-      label: 'Interlock',
-      eyebrow: 'AI PRODUCT PROOF · 02',
-      frame: 'standard',
-      proof: 'interlock',
-    },
-    {
       id: 'sec-03',
       label: 'Repository Intelligence',
-      eyebrow: 'AI PRODUCT PROOF · 03',
+      eyebrow: 'AI PRODUCT PROOF · 02',
       frame: 'band',
       proof: 'repository-intelligence',
+    },
+    {
+      id: 'sec-04',
+      label: 'Interlock',
+      eyebrow: 'AI PRODUCT PROOF · 03',
+      frame: 'standard',
+      proof: 'interlock',
     },
     /*
      * Vreko, demoted rather than dropped.

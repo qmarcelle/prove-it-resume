@@ -1,4 +1,5 @@
 import { Hero } from '@/components/hero/Hero';
+import { EvidenceChain } from '@/components/hero/EvidenceChain';
 import { EvidenceIndex } from '@/components/hero/EvidenceIndex';
 import { ClaimLedger } from '@/components/evidence/ClaimLedger';
 import { FinalCta } from '@/components/layout/FinalCta';
@@ -97,7 +98,12 @@ export function ApplicationSurface({ lens }: { lens: ApplicationLens }) {
           nav={nav}
         />
 
-        <Hero lens={lens} framing={lens.hero}>
+        {/*
+         * The chain replaces the durable page's bounded path here. Both are one-shot
+         * compositions that settle and stay; they argue different things, and this
+         * reader already operates the pipeline the chain draws.
+         */}
+        <Hero figure={<EvidenceChain />} framing={lens.hero} lens={lens}>
           <EvidenceIndex proofs={proofs} />
         </Hero>
 

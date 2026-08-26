@@ -78,6 +78,25 @@
   --color-action-ink-quiet: var(--lens-accent-ink-quiet);
 
   /*
+   * The verdict chips, answered rather than inherited.
+   *
+   * The default pair is graphite-on-cream: a solid dark chip punched into a light page.
+   * Inherited here it would have been a near-white chip carrying near-white type — the
+   * collision the pair exists to make impossible.
+   *
+   * "Held" is the one place on this page a measured constraint is reported as having
+   * survived, which is the surface's own definition of verified, so it takes the solid
+   * amber chip at 8.7:1. "Breached" stays neutral and outlined: it is a real recorded
+   * result, not an unresolved row, and giving it the burnt orange reserved for
+   * unverified material would say the measurement itself is in doubt.
+   */
+  --color-verdict-held-bg: var(--lens-accent);
+  --color-verdict-held-fg: var(--lens-accent-ink);
+  --color-verdict-breached-bg: var(--lens-surface);
+  --color-verdict-breached-fg: var(--lens-text);
+  --color-verdict-breached-border: var(--lens-border-active);
+
+  /*
    * The inverse pair, remapped rather than left alone.
    *
    * On the durable page this is graphite-on-cream: a small inverted panel punched into
@@ -105,8 +124,14 @@
    */
   --rule-strong: 2px solid var(--lens-border-active);
 
-  /* The ring is the fill amber, not the type amber: it is a mark, not a word. */
+  /*
+   * The ring is the fill amber, not the type amber: it is a mark, not a word. It also
+   * stands one pixel further off than on the light page — at 2px on this ground the
+   * ring touches the control's own border and reads as a thickened edge instead of as
+   * focus. 3px is the direction's own figure.
+   */
   --focus-ring: 2px solid var(--lens-accent);
+  --focus-offset: 3px;
 
   /*
    * No shadows anywhere on this surface. Elevation is tone.

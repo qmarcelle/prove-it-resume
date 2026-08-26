@@ -5,8 +5,18 @@ import { expect, test } from '@playwright/test';
  * Automated accessibility checks. These catch the mechanical failures — contrast,
  * names, roles, landmarks — and are run with drawers both closed and open, because
  * revealed content is exactly where these regressions hide.
+ *
+ * Every run settles the page's animations first. Axe samples computed styles, so an
+ * element caught mid-fade reports a blended foreground colour and a contrast failure no
+ * reader ever sees — which showed up here as an intermittent failure that tracked how
+ * busy the machine was rather than anything about the page. The settled state is the
+ * state a reader is left with, and it is the one that has to pass.
  */
 async function analyse(page: import('@playwright/test').Page) {
+  await page.evaluate(() =>
+    Promise.all(document.getAnimations().map((a) => a.finished.catch(() => {}))),
+  );
+
   return new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
     .analyze();

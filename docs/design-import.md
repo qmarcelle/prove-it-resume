@@ -490,17 +490,70 @@ markup at all.
    and may not remove it, so the section keeps its diagram, its recorded contradictions
    and its boundary; the demotion is carried by the `inline` frame.
 
-6. **The section content is the current content.** The frames also propose new material
-   — a four-stage progression with an audience and discipline grid, three receipts
-   redrawn as a dimension table, responsibility lanes and a lifecycle sequence, a
-   session-pair figure, cumulative depth 1–4 controls, six product-judgment rules. None
-   of that is implemented here. This pass reconciles the existing surface's structure
-   and treatment against the direction; the content model those figures would need is
-   not built, and inventing it to fill a frame is the move this site argues against.
+6. **Proposed material is built where a source exists, and refused where none does.**
+   The frames propose the four-stage progression, the audience and discipline grids, the
+   receipt tab strip, the hero chain, a session-pair figure, cumulative depth 1–4
+   controls, and six product-judgment rules.
 
-7. **`showAvailability` stays true.** The spec's handoff sets it false. The banner is a
+   The first four are implemented — see "The second pass" below. The remaining three are
+   not, for the same reason as before: the content model they would need does not exist,
+   and inventing it to fill a frame is the move this site argues against. The
+   product-judgment rules in particular are the direction's own reasoning about work it
+   was shown, not the owner's, and the durable approach block already occupies that
+   position with material the corpus supports.
+
+   Where a built figure asked for a fact the corpus does not hold, the fact is _not_
+   supplied. It renders as a stated gap instead — see deviation 8.
+
+7. **The frontend question is answered by refusing it.** The direction's product-history
+   frame names a browser stack, per-audience product surfaces, and what was built in the
+   2016–2019 period. No source supplied to this repository establishes any of the three,
+   and all three are already recorded in `UNVERIFIED` in `content/resume/facts.ts`.
+
+   The registers are built anyway, and those three entries render the recorded gap —
+   dashed, burnt orange, marked `NOT YET EVIDENCE` — rather than the direction's copy.
+   Dropping them was the obvious alternative and the worse one: a page that silently
+   omits what it cannot prove reads as complete, and the reader never learns a question
+   was asked. `product-history.test.ts` fails if an entry's gap stops resolving against
+   `UNVERIFIED`, and `application.spec.ts` fails if the page stops showing all three.
+
+8. **The receipt tabs degrade to the stacked list rather than the reverse.** The strip is
+   what the direction specifies and what a reader with JavaScript gets. The server
+   renders the three receipts stacked, the first client render reproduces that, and the
+   strip takes over on the render after hydration — so with scripting off every receipt
+   stays open with its own boundary and its own unresolved mark. Server-rendering
+   `role="tab"` buttons that do nothing until hydration was rejected: a control announced
+   to assistive technology as a tab that switches nothing is a worse failure than a
+   longer page.
+
+   Arrow keys move between tabs and select as they go. The direction also asks for the
+   panel to take focus on activation; that is deliberately not done on arrow keys,
+   because moving focus into the panel is what would stop the next arrow press working.
+
+9. **`showAvailability` stays true.** The spec's handoff sets it false. The banner is a
    per-lens flag and the lens is addressed to a reader for whom availability is
    material, so the existing value is kept.
+
+### The second pass
+
+A later pass closed four gaps against the same two files, and found one defect in doing
+it.
+
+| Gap                       | Closed by                                                                                       |
+| ------------------------- | ----------------------------------------------------------------------------------------------- |
+| The hero chain            | `EvidenceChain` — the five stations, in CSS, with the settled frame as the authored DOM state   |
+| The product-history frame | `content/history/product-engineering.ts` plus the three registers in `ProductHistorySection`    |
+| The receipt tab strip     | `ReceiptTabs`, a client leaf that starts as the stacked list                                    |
+| Proof order               | `proofOrder` is now the direction's: Never Ask Twice, Repository Intelligence, Interlock, Vreko |
+| Focus offset              | `--focus-offset`, 2px on the light page and 3px on the lens, which is the direction's figure    |
+
+The hero chain is worth one note. The direction's handoff asks for "CSS keyframes with
+staggered delays and fill-mode both, so the settled frame is the authored DOM state",
+and taking that literally is what makes it a Server Component with no JavaScript at all.
+Reduced motion sets `animation: none` and gets the finished figure, because the finished
+figure is what every rule in the file describes. The global reduced-motion block was not
+enough on its own — it clamps duration and says nothing about delay, and a 1.5s delay in
+front of a 0.01ms animation is still a staged reveal.
 
 ### One shared primitive changed
 
@@ -511,6 +564,33 @@ surface and produced cream type on a cream fill the moment one inverted. Naming 
 and its ink as a pair lets a surface answer with whatever its strongest mark is: ink on
 the light page, amber on the lens. The light values resolve to exactly what those rules
 resolved to before, which is what the screenshot comparison above verifies.
+
+### The same lesson, learned a second time
+
+`--color-verdict-held-{bg,fg}` and `--color-verdict-breached-{bg,fg,border}`.
+
+The Interlock verdict chip filled itself with `--color-ink` and set its label in
+`--color-inverse-ink` — two independent assumptions about which end of the scale is dark.
+Both hold on a light page. On this surface, where ink _is_ the light step, the two
+resolved to the same value and the chip rendered as a blank rectangle with `✓ CONSTRAINT
+HELD` painted on itself. Nothing caught it: the text was in the DOM, and axe reads
+declared colours on the element rather than the resolved pairing.
+
+The fix is the same pair-naming as the action tokens, and the rule it encodes is now
+enforced rather than remembered:
+
+> A token that names text is not a background. A fill pairs with a _ground_ token, which
+> inverts alongside it, or with a purpose-named `{bg,fg}` pair a surface has to answer
+> deliberately. It never pairs with a second ink token.
+
+`src/styles/token-polarity.test.ts` scans every CSS module for that pairing and fails the
+build on it. `interactions.spec.ts` covers the other half — the resolved colours on the
+served page, in both palettes, with the contrast arithmetic done — because a structural
+rule cannot prove legibility.
+
+The audit that produced the rule found exactly one offender. Every other ink-as-fill in
+the codebase pairs against `--color-canvas` or `--color-inverse-bg`, which is why they
+survive inversion and this one did not.
 
 ## Ambiguities requiring later review
 

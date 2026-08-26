@@ -1,0 +1,228 @@
+/*
+ * How work becomes evidence — the application surface's hero figure.
+ *
+ * ## Read this file as the settled frame
+ *
+ * Every rule outside the two keyframe blocks describes the chain *after* it has run.
+ * The keyframes animate in from a hidden start and carry `both`, so the authored state
+ * is the finished one. That is not a stylistic preference: it is what makes the
+ * reduced-motion case a single `animation: none` and the no-JavaScript case free.
+ *
+ * ## A container query, not a media query
+ *
+ * The figure sits in the hero's flexible right column, so its own width and the
+ * viewport's diverge sharply — the same 1024px viewport gives this figure roughly 390px
+ * of room, and a 900px viewport gives it the full measure once the hero has stacked. A
+ * viewport query would get both cases backwards, so the row/column decision is made
+ * against the figure's own inline size.
+ */
+.figure {
+  container: evidence-chain / inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: var(--space-4);
+  border: var(--rule);
+  border-radius: var(--radius);
+}
+
+.caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.375rem var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+}
+
+.captionTitle {
+  color: var(--color-meta);
+}
+
+.captionMeta {
+  color: var(--color-meta-quiet);
+}
+
+/*
+ * Five rows by default, five columns once the figure is wide enough to give each
+ * station a readable measure. The direction rotates rather than shrinks — the same
+ * marks and the same labels, turned — because five columns of two-word wraps would be
+ * a diagram of the layout rather than of the argument.
+ */
+.chain {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@container evidence-chain (min-width: 34rem) {
+  .chain {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+}
+
+.station,
+.stationVerified {
+  --duration: 520ms;
+  --stagger: 380ms;
+
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.25rem 0.5rem;
+  animation: chain-rise var(--duration) ease-out both;
+  animation-delay: calc(var(--step) * var(--stagger));
+}
+
+/*
+ * The connector. A pseudo-element on the station it arrives at, so a station and the
+ * line reaching it are one object and cannot be reordered apart.
+ *
+ * It grows from the origin the reading direction starts at — downward in the stacked
+ * layout, rightward once the chain is a row — and lands halfway between one station's
+ * delay and the next, so the line is drawing while the mark it points at is still
+ * arriving.
+ */
+.station:not(:first-child)::before,
+.stationVerified:not(:first-child)::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: -1.05rem;
+  width: 1px;
+  height: 1.05rem;
+  background: var(--color-border-dashed);
+  transform-origin: top;
+  animation: chain-draw-down var(--stagger) linear both;
+  animation-delay: calc((var(--step) - 0.5) * var(--stagger));
+}
+
+@container evidence-chain (min-width: 34rem) {
+  .station:not(:first-child)::before,
+  .stationVerified:not(:first-child)::before {
+    left: auto;
+    top: 4px;
+    right: calc(100% + 2px);
+    width: calc(var(--space-3) - 4px);
+    height: 1px;
+    transform-origin: left;
+    animation-name: chain-draw-across;
+  }
+}
+
+/*
+ * The mark. Every station is an outline; the last is a filled amber square, and it is
+ * the only saturated fill in the figure.
+ */
+.mark {
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid var(--color-meta-quiet);
+  border-radius: 1px;
+  align-self: center;
+}
+
+.stationVerified .mark {
+  width: 11px;
+  height: 11px;
+  border-color: var(--color-accent-border);
+  background: var(--color-accent-surface);
+  /*
+   * The one moment of the sequence that is not a rise. It lands after every station has
+   * arrived, so the reader sees the chain complete and *then* sees which end of it was
+   * earned — which is the order the argument is made in.
+   */
+  animation: chain-verify 660ms ease-out both;
+  animation-delay: 2340ms;
+}
+
+.stationName {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-meta);
+  white-space: nowrap;
+}
+
+.stationVerified .stationName {
+  color: var(--color-accent);
+}
+
+.stationBody {
+  grid-column: 2;
+  font-size: 0.813rem;
+  line-height: 1.5;
+  color: var(--color-ink-muted);
+}
+
+.thesis {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem var(--space-3);
+  padding-top: var(--space-3);
+  border-top: var(--rule-quiet);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-ink-secondary);
+}
+
+.legend {
+  font-family: var(--font-sans);
+  font-size: 0.813rem;
+  letter-spacing: normal;
+  color: var(--color-meta-quiet);
+}
+
+@keyframes chain-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes chain-draw-down {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes chain-draw-across {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes chain-verify {
+  from {
+    border-color: var(--color-meta-quiet);
+    background: transparent;
+  }
+}
+
+/*
+ * Reduced motion removes the sequence rather than compressing it.
+ *
+ * The global rule clamps `animation-duration` but says nothing about delay, and a 1.5s
+ * delay in front of a 0.01ms animation is still a staged reveal — the exact experience
+ * the preference asks not to have. Dropping the animations entirely leaves the settled
+ * frame, which every rule above already describes.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .station,
+  .stationVerified,
+  .station::before,
+  .stationVerified::before,
+  .stationVerified .mark {
+    animation: none;
+  }
+}

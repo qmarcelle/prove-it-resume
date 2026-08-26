@@ -1,5 +1,18 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+
+/**
+ * Let every running animation finish before anything is measured.
+ *
+ * The hero chain arrives over three seconds with staggered delays. Axe samples computed
+ * styles, so a station caught mid-rise reports a blended foreground colour and a
+ * contrast failure no reader ever sees. Asserting the settled state is the honest
+ * check — it is the state a reader is left with, and the one that has to pass.
+ */
+const settle = (page: Page) =>
+  page.evaluate(() =>
+    Promise.all(document.getAnimations().map((a) => a.finished.catch(() => {}))),
+  );
 
 /**
  * The Linear application surface.
@@ -33,8 +46,8 @@ test('/linear renders the application surface', async ({ page }) => {
     'lin-history',
     'lin-practice',
     'more-evidence',
-    'sec-04',
     'sec-03',
+    'sec-04',
     'sec-02',
     'lin-judgement',
     'sec-06',
@@ -95,22 +108,39 @@ test('receipts state their limits and claim no verified evidence', async ({ page
   await page.goto('/linear');
 
   const section = page.locator('#lin-practice');
-  // One stated-gap marker per receipt, in the place a call to action would sit.
-  await expect(section.getByText('[VERIFY BEFORE PUBLISHING]')).toHaveCount(3);
+
+  /*
+   * One stated-gap marker per receipt, in the place a call to action would sit — but
+   * the receipts are a tab strip once the page has hydrated, so only the open one is on
+   * screen. Walking the strip is the assertion that matters: no receipt may be reachable
+   * without its marker, because a receipt without one reads as verified evidence.
+   */
+  const tabs = section.getByRole('tab');
+  await expect(tabs).toHaveCount(3);
+
+  for (const identifier of ['META-268', 'META-331', 'INFRA-11']) {
+    await tabs.filter({ hasText: identifier }).click();
+    const panel = section.getByRole('tabpanel');
+    await expect(panel.getByText('[VERIFY BEFORE PUBLISHING]')).toHaveCount(1);
+    // Every receipt states what it does not establish, in the same panel as the finding.
+    await expect(panel.getByText(/It does not establish|Establishes/)).toHaveCount(1);
+  }
+
   await expect(section.getByText(/stated claims, not verified evidence/)).toBeVisible();
 });
 
 test('/linear projects the durable proofs rather than forking them', async ({ page }) => {
   await page.goto('/linear');
 
-  // Interlock leads on this surface; Vreko is demoted. The sections are the same
-  // modules the durable page renders, so their boundaries come along unchanged.
+  // Repository Intelligence then Interlock on this surface; Vreko is demoted to the
+  // close. The sections are the same modules the durable page renders, so their
+  // boundaries come along unchanged.
   const order = await page
     .locator('section[id^="sec-0"]')
     .evaluateAll((sections) => sections.map((section) => section.id));
   expect(order.filter((id) => ['sec-02', 'sec-03', 'sec-04'].includes(id))).toEqual([
-    'sec-04',
     'sec-03',
+    'sec-04',
     'sec-02',
   ]);
 
@@ -252,6 +282,7 @@ test('/linear has no automatically detectable accessibility violations', async (
   page,
 }) => {
   await page.goto('/linear');
+  await settle(page);
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
     .analyze();
@@ -265,6 +296,7 @@ test('/linear is clean with its disclosures open', async ({ page }) => {
   await page.getByRole('button', { name: /Inspect evidence.*EV-WSJ/ }).click();
   await page.getByRole('button', { name: /Inspect evidence.*EV-VRK/ }).click();
   await page.getByRole('button', { name: /SHOW CLAIM LEDGER/ }).click();
+  await settle(page);
 
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
@@ -280,4 +312,114 @@ test('/linear does not scroll horizontally at 320px', async ({ page }) => {
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
   );
   expect(overflow).toBeLessThanOrEqual(1);
+});
+
+/**
+ * The hero chain.
+ *
+ * Two properties, and the second is the one that decays quietly: the figure has to be
+ * readable as text, and it has to be complete without motion. The direction's own
+ * handoff makes the second a structural claim — "CSS keyframes with staggered delays
+ * and fill-mode both, so the settled frame is the authored DOM state" — which is only
+ * true for as long as nobody reaches for JavaScript to sequence it.
+ */
+test('the hero chain names its five stations in order', async ({ page }) => {
+  await page.goto('/linear');
+  // Scoped to the figure by its caption: the hero also carries the capabilities list,
+  // and "the first list in the hero" is a locator that breaks on any reordering.
+  const chain = page.getByRole('figure').filter({ hasText: 'HOW WORK BECOMES EVIDENCE' });
+
+  const stations = await chain.getByRole('listitem').allInnerTexts();
+  expect(stations).toHaveLength(5);
+  for (const [index, name] of [
+    'PRODUCT',
+    'CONTEXT',
+    'AGENT',
+    'DECISION',
+    'VERIFIED',
+  ].entries()) {
+    expect(stations[index]).toContain(name);
+  }
+});
+
+test('the hero chain is complete with motion disabled', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/linear');
+
+  /*
+   * No settling, deliberately. Under reduced motion the figure must be finished on the
+   * first frame — the global rule clamps duration but not delay, so a chain that leaned
+   * on staggered delays would still stage itself into view here.
+   */
+  const stations = page
+    .getByRole('figure')
+    .filter({ hasText: 'HOW WORK BECOMES EVIDENCE' })
+    .getByRole('listitem');
+  for (let index = 0; index < 5; index += 1) {
+    const opacity = await stations.nth(index).evaluate((el) => {
+      const style = getComputedStyle(el);
+      return { opacity: Number(style.opacity), animation: style.animationName };
+    });
+    expect(opacity.animation, `station ${index} still animates`).toBe('none');
+    expect(opacity.opacity, `station ${index} is not fully drawn`).toBe(1);
+  }
+});
+
+/**
+ * The product-history registers.
+ *
+ * The section's whole argument is that it says what it cannot prove. Three questions
+ * the design direction answered with invented copy are open on the page, and each one
+ * is marked as not evidence rather than dropped — a page that silently omits what it
+ * cannot support reads as complete, which is the failure mode being guarded against.
+ */
+test('product history states its gaps instead of filling them', async ({ page }) => {
+  await page.goto('/linear');
+  const section = page.locator('#lin-history');
+
+  await expect(section.getByText('NOT YET EVIDENCE')).toHaveCount(3);
+  await expect(section.getByText(/Which frontend framework/)).toBeVisible();
+  await expect(
+    section.getByText(/member, broker and employer product surfaces/),
+  ).toBeVisible();
+
+  // Four stages, covering the chronology the résumé prints.
+  await expect(section.getByText(/^STAGE 0[1-4]$/)).toHaveCount(4);
+
+  // And it must not answer the question it just refused.
+  const prose = (await section.innerText()).toLowerCase();
+  for (const framework of ['react', 'angular', 'vue']) {
+    expect(prose, `${framework} is not supported by the fact corpus`).not.toContain(
+      framework,
+    );
+  }
+});
+
+/**
+ * The receipt tab strip.
+ *
+ * Keyboard behaviour is the part most likely to be lost in a refactor, because a mouse
+ * user never notices it is gone. Selection is also checked for a non-chromatic signal:
+ * `aria-selected` is what assistive technology reads, and a strip that carried its
+ * state only in an amber edge would pass a visual review and fail a real one.
+ */
+test('receipt tabs move under the arrow keys', async ({ page }) => {
+  await page.goto('/linear');
+  const section = page.locator('#lin-practice');
+  const tabs = section.getByRole('tab');
+
+  await tabs.first().click();
+  await expect(tabs.first()).toHaveAttribute('aria-selected', 'true');
+  await expect(section.getByRole('tabpanel')).toContainText(/Codex through Linear/);
+
+  await page.keyboard.press('ArrowDown');
+  await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'true');
+  await expect(tabs.nth(1)).toBeFocused();
+  await expect(section.getByRole('tabpanel')).toContainText(/execution surfaces/);
+
+  // End and Home reach the ends, and the strip wraps rather than dead-ending.
+  await page.keyboard.press('End');
+  await expect(tabs.nth(2)).toHaveAttribute('aria-selected', 'true');
+  await page.keyboard.press('ArrowRight');
+  await expect(tabs.first()).toHaveAttribute('aria-selected', 'true');
 });

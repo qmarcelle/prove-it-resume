@@ -90,9 +90,24 @@ every printed bullet exists verbatim in the corpus, that no projection states a 
 the corpus has not established, and that none of them claims one of the facts recorded as
 unverified.
 
-**Server Components by default.** `"use client"` appears in fourteen files, all genuinely
+**Server Components by default.** `"use client"` appears in fifteen files, all genuinely
 interactive. The page works before hydration: anchors, the evidence index, every link,
 and the hero composition's settled frame are ordinary HTML.
+
+**Tokens that name text are never backgrounds.** A filled control pairs its fill with a
+_ground_ token, or with a purpose-named `{bg,fg}` pair a surface has to answer. Pairing
+two ink tokens is what made the Interlock verdict chip render as a blank rectangle on the
+dark surface — the word was in the DOM, painted on itself, and every automated check
+passed. A test now scans every stylesheet for the pattern, and a browser test reads the
+resolved colours back off both palettes. See
+[ADR 0011](docs/decisions/0011-tokens-that-name-text-are-not-backgrounds.md).
+
+**A page states what it cannot prove.** The design direction supplied the product-history
+section with a frontend stack, per-audience product surfaces, and a description of the
+2016–2019 period. No source in this repository establishes any of them, so the section is
+built and those three entries render the recorded gap instead — dashed, marked `NOT YET
+EVIDENCE`, never linked. Deleting them would have left a page that reads as complete and
+a reader who never learns a question was asked.
 
 **One meaning, one icon.** Affordances name what they promise — inspect an artifact, read
 a document, save a file, expand in place — and the shape follows from the promise rather

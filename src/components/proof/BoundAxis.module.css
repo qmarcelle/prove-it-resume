@@ -90,17 +90,21 @@
 
 /*
  * Verdicts are distinguished by fill and by glyph, never by hue alone: "held" is the
- * solid graphite chip, "breached" is the outlined one, and each carries ✓ or ✕.
+ * solid chip, "breached" is the outlined one, and each carries ✓ or ✕.
+ *
+ * Both chips read a purpose-named ground/ink pair rather than picking a fill and a
+ * label separately. See the note beside `--color-verdict-*` in `tokens.css` for what
+ * went wrong when they were picked separately.
  */
 .verdictHolds {
-  background: var(--color-ink);
-  color: var(--color-inverse-ink);
+  background: var(--color-verdict-held-bg);
+  color: var(--color-verdict-held-fg);
 }
 
 .verdictBreached {
-  border: 1px dashed var(--color-ink);
-  background: var(--color-surface);
-  color: var(--color-ink);
+  border: 1px dashed var(--color-verdict-breached-border);
+  background: var(--color-verdict-breached-bg);
+  color: var(--color-verdict-breached-fg);
 }
 
 /* ── The bar ──────────────────────────────────────────────────────────────── */

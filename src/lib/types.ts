@@ -315,6 +315,73 @@ export type LinearReceipt = {
 };
 
 /**
+ * What an entry on the product-history section would say if it were verified.
+ *
+ * The site's rule is that a claim without a checkable basis is not evidence. Applied to
+ * a *page section* rather than to an evidence row, that rule has two possible readings:
+ * drop the unsupported entry, or state the gap. This type is the second reading, and it
+ * is the one the surface takes — a dropped entry leaves a page that looks complete and
+ * a reader who never learns a question was asked.
+ *
+ * `unverifiedId` points at a record in `UNVERIFIED` in `content/resume/facts.ts` rather
+ * than restating it, so the page and the fact corpus cannot disagree about what is
+ * unknown. `product-history.test.ts` fails if the id does not resolve.
+ */
+export type HistoryGap = {
+  /** The fact this entry would carry, phrased as the thing still to be established. */
+  wants: string;
+  /** Id of the matching record in `UNVERIFIED`. */
+  unverifiedId: string;
+};
+
+/**
+ * The substance of a product-history record, whichever register it appears in.
+ *
+ * Exactly one of `body` and `unresolved` is present: a record either states something
+ * traceable to the fact corpus or states that it cannot. There is deliberately no third
+ * state, because "present but hedged" is how unverified material gets read as evidence.
+ *
+ * Split out from the two shapes below so `product-history.test.ts` can hold stages and
+ * flat entries to the same rule in one pass — the rule is about what a record may
+ * claim, and that does not change with how the record is captioned.
+ */
+export type HistoryRecord = {
+  id: string;
+  body?: string;
+  unresolved?: HistoryGap;
+};
+
+/** One labelled entry in a flat register: an audience, or a discipline. */
+export type HistoryEntry = HistoryRecord & {
+  label: string;
+};
+
+/** A period of the production record, pinned to a role id in `RESUME_ROLES`. */
+export type HistoryStage = HistoryRecord & {
+  /** The durable role this stage is drawn from. Keeps it from becoming a second CV. */
+  roleId: string;
+  /** Sequence marker, e.g. `STAGE 01`. This register really is a sequence. */
+  ordinal: string;
+  title: string;
+  span: string;
+};
+
+/**
+ * The structured production record beneath the recent systems.
+ *
+ * Three registers a product-engineering reader reads together: how the work progressed,
+ * who it was for, and what it spanned. Content rather than copy, so each line is a
+ * record a reader can check and a test can hold to the fact corpus.
+ */
+export type ProductHistory = {
+  stages: readonly HistoryStage[];
+  audiencesHeading: string;
+  audiences: readonly HistoryEntry[];
+  disciplinesHeading: string;
+  disciplines: readonly HistoryEntry[];
+};
+
+/**
  * An application lens: a first-class hiring surface for one organisation, at its own
  * route, composed from the same durable evidence as `/`.
  *
