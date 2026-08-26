@@ -167,12 +167,22 @@ describe('application lenses', () => {
   });
 
   it('carries receipts that hold no proof content of their own', () => {
-    // A receipt is a stated claim with a boundary, not a Proof: it has no evidence rows,
-    // no summary rows, and no call to action. That is what keeps it outside the evidence
-    // model rather than a weaker member of it.
+    /*
+     * A receipt is a stated claim with a boundary, not a Proof. It has no evidence rows,
+     * no summary rows and no claims, which is what keeps it outside the evidence model
+     * rather than a weaker member of it.
+     *
+     * The check used to be `not.toHaveProperty('evidence')`, which stopped meaning that
+     * when receipts gained an `evidence` field of their own. The two are different
+     * things sharing a word: a Proof's `evidence` is an array of rows a reader can open,
+     * a receipt's is a single state saying how far this row can be checked at all. So
+     * the assertion is now about shape rather than about the absence of a name.
+     */
     for (const receipt of linearApplication.receipts) {
-      expect(receipt).not.toHaveProperty('evidence');
+      expect(Array.isArray(receipt.evidence)).toBe(false);
+      expect(typeof receipt.evidence.state).toBe('string');
       expect(receipt).not.toHaveProperty('summary');
+      expect(receipt).not.toHaveProperty('claims');
       expect(receipt.boundary.length).toBeGreaterThan(0);
     }
   });

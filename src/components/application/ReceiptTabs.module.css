@@ -115,6 +115,63 @@
   letter-spacing: normal;
 }
 
+/*
+ * The middle evidence state: checked by the author against a source the reader cannot
+ * open.
+ *
+ * Solid hairline, not dashed. On this site a dashed edge means *absence*, and these rows
+ * are not absent of checking, they are absent of a destination. Reusing the dashed mark
+ * for both is what made a finished section read as unfinished.
+ *
+ * What it must never become is the verified treatment. No accent fill, no border colour
+ * borrowed from the evidence rows, and no hover state, because there is nothing to
+ * press. The quiet meta ink is deliberate: this is a footnote about provenance, not a
+ * badge, and a badge is exactly how an attestation starts being read as a guarantee.
+ */
+.receiptAttested {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+  align-self: flex-start;
+  padding: 0.375rem 0.625rem;
+  border: var(--rule-quiet);
+  border-radius: var(--radius);
+  background: var(--color-surface-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-meta);
+}
+
+.receiptAttestedNote {
+  color: var(--color-meta-quiet);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/*
+ * The only state with somewhere to send a reader. Styled as the site's evidence calls to
+ * action are, because unlike the two above it, it has earned that treatment.
+ */
+.receiptEvidence {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+  align-self: flex-start;
+  padding: 0.375rem 0.625rem;
+  border: var(--rule);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-ink);
+}
+
+.receiptEvidence:hover {
+  border-color: var(--color-ink);
+}
+
 /* ── Receipt tab strip ────────────────────────────────────────────────────── */
 
 /*

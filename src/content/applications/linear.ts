@@ -1,6 +1,6 @@
 import type { ApplicationLens } from '@/lib/types';
 import { prioritiseMapping } from '@/lib/mapping';
-import { LINEAR_RECEIPTS } from '../linear/receipts';
+import { LINEAR_RECEIPTS, LINEAR_RECEIPTS_BOUNDARY } from '../linear/receipts';
 import { defaultRole } from '../roles/default';
 
 /**
@@ -203,7 +203,13 @@ export const linearApplication: ApplicationLens = {
       heading: 'I already run agent execution with Linear as the control plane.',
       body: 'Not an opinion formed from the documentation. These are decisions taken while wiring agent work through Linear in a private workspace: what to delegate natively, where the orchestration boundary belongs, and what an agent has to emit for the issue to still make sense to a human a month later.',
       boundary:
-        'Curated summaries of private workspace decisions, written for publication rather than exported from it. No public artifact stands behind them, so under this site’s own rule they are stated claims, not verified evidence. Everything below this section is the part you can open and check.',
+        /*
+         * Composed from the durable constant rather than restated. These two strings were
+         * near-identical copies of one claim, one printed on the page and one on the
+         * résumé, which is precisely the drift this content model exists to prevent: a
+         * correction to the evidence rule would have landed in one and not the other.
+         */
+        `${LINEAR_RECEIPTS_BOUNDARY} Everything below this section is the part you can open and check.`,
     },
     judgement: {
       heading: 'Ask me to defend a decision.',

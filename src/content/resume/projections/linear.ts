@@ -58,7 +58,13 @@ export const linearResumeProjection: ResumeProjection = {
       // adopt) and the integration story is carried by the proof section on the site.
       { id: 'workspace-json', bulletIds: ['workspace-json:standard'] },
     ],
-    compact: { label: 'ALSO', systemId: 'vreko' },
+    /*
+     * No ALSO footnote on this sheet. Vreko was demoted to one line here because it is
+     * the least differentiating of the four for a reader already operating an agent
+     * platform, and the page-two budget then ran out entirely: keeping the line would
+     * have meant compressing a boundary, which is the last thing on this document that
+     * should lose words. It is carried in full on `/linear` and on the durable résumé.
+     */
     boundaryLabel: 'BOUNDARY',
     /*
      * No per-system tool chain on this sheet. Block 05 groups the same technologies by

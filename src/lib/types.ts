@@ -328,13 +328,46 @@ export type SurfaceStep = SurfaceSection & {
  *
  * The public bundle carries only these fields, and each one is written for publication
  * rather than extracted: no issue description, no comment thread, no customer name, no
- * workspace URL. `publicEvidenceHref` exists for the day a receipt has a *public*
- * artifact behind it; a private Linear URL is not one, and `linear.test.ts` fails the
- * build if one appears.
+ * workspace URL. `evidence` says how far a reader can check the row; a private Linear
+ * URL is never a destination, and `linear.test.ts` fails the build if one appears.
  *
  * The intended future seam is private Linear API → hard-coded allowlist → build-time
  * sanitiser → this type → page. Never browser → private workspace.
  */
+/**
+ * How much a reader can check a receipt for themselves.
+ *
+ * The model used to have two states and needed three, and the missing one was doing
+ * real damage. `publicEvidenceHref` was optional and its absence meant "unverified", so
+ * a receipt whose claim had been checked line by line against a private issue rendered
+ * identically to one nobody had checked at all. Both got `[VERIFY BEFORE PUBLISHING]`.
+ *
+ * Those are different facts. "Nobody has confirmed this" and "the author confirmed this
+ * against a source you cannot open" deserve different marks, and collapsing them
+ * punishes the honest case: a finished application surface covered in
+ * `[VERIFY BEFORE PUBLISHING]` reads as unfinished rather than as careful.
+ *
+ * What the split must not do is let the middle state borrow the top one's authority.
+ * `private-verified` is an *attestation by the author*, not evidence, and it is rendered
+ * as such: no link, no call to action, and wording that names who did the checking and
+ * against what. Only `public-verified` gets a destination, because only it has one a
+ * reader can open.
+ */
+export type ReceiptEvidence =
+  /** Nothing has been checked. The default, and the only state that claims nothing. */
+  | { state: 'unresolved' }
+  /**
+   * Checked by the author against a source the reader cannot reach. An attestation.
+   * Carries no href, because there is nothing honest to point at.
+   */
+  | { state: 'private-verified'; checkedAt: string }
+  /**
+   * Backed by an artifact anyone can open. `href` must resolve for a reader who is not
+   * signed in to anything, which is a stricter test than "the URL works for me" and is
+   * the one that has actually failed here before. See `receipts.ts`.
+   */
+  | { state: 'public-verified'; checkedAt: string; href: string; label: string };
+
 export type LinearReceipt = {
   /** The workspace identifier, e.g. `META-268`. An identifier, not a link. */
   identifier: string;
@@ -344,12 +377,20 @@ export type LinearReceipt = {
   /** What was decided or found, written for a public reader. */
   finding: string;
   status: string;
+  /**
+   * The same finding in one sentence, for the sheet that cannot afford the full one.
+   *
+   * Durable copy rather than a truncation, so the short form cannot drift from the long
+   * one and cannot quietly claim more than it. The page prints `finding`; the résumé
+   * prints this where it exists, because a two-page sheet has room for the claim and not
+   * for its qualifications, and the qualifications are the part that must not be lost.
+   * `linear.test.ts` holds the two to the same status and the same hedges.
+   */
+  compact?: string;
   /** What this receipt does not establish. Required, like every boundary here. */
   boundary: string;
-  /** A *public* artifact, when one exists. Never a private workspace URL. */
-  publicEvidenceHref?: string;
-  /** ISO date on which the curated text above was checked against the source. */
-  verifiedAt: string;
+  /** How far a reader can check this row. Required: there is no unstated default. */
+  evidence: ReceiptEvidence;
 };
 
 /**

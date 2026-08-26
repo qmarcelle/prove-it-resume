@@ -13,10 +13,19 @@ import styles from './ApplicationSection.module.css';
  * confident link (to the workspace, to a profile, to anything) and let the affordance
  * imply verification the row does not have.
  *
- * It does not. Each row carries the same `[VERIFY BEFORE PUBLISHING]` marker every
- * other unresolved row on this site carries, in the place a call to action would sit,
- * and the section's boundary says in as many words that these are stated claims. A
- * reader who wants something they can open is told, here, to look below.
+ * It does not. Each row carries an evidence mark in the place a call to action would
+ * sit, and the mark says how far that row can be checked rather than asserting one
+ * answer for all of them. All three are currently `private-verified`: the claims were
+ * checked against the underlying issues, the issues are not public, and so there is
+ * nothing to link. A reader who wants something they can open is told, here, to look
+ * below.
+ *
+ * The three states replaced a single unverified mark, and the reason is worth keeping.
+ * Treating "nobody checked this" and "the author checked this against a source you
+ * cannot open" as the same fact punished the honest case, and covered a finished
+ * application surface in `[VERIFY BEFORE PUBLISHING]`. What the split must never do is
+ * let the middle state borrow the authority of a public artifact, which is why it
+ * carries no destination and names itself as an attestation.
  *
  * The data path matters as much as the rendering. `receipts` is a fixed array in
  * `content/linear/receipts.ts`: no fetch, no credential, and no private workspace URL
