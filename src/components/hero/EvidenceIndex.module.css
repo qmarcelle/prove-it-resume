@@ -97,3 +97,12 @@
 .footerDivider {
   color: var(--color-border);
 }
+
+/* The profile link is the index's one control, and takes the mobile control floor. */
+@media (max-width: 700px) {
+  .footer a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}

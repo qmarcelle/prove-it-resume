@@ -84,6 +84,7 @@ export function RepositoryIntelligenceSection({ step }: { step?: SurfaceStep } =
             <RepositoryDecisionDiff
               code={proof.evidenceCode}
               data={repositoryDecision}
+              shareAnchor={proof.sectionId}
               showControls={false}
               showFooter={false}
             />

@@ -365,3 +365,14 @@
     flex-basis: 100%;
   }
 }
+
+/*
+ * The share control, pushed to the far end of the legend row.
+ *
+ * `margin-left: auto` on a wrapping flex row: at full width it sits opposite the
+ * publication key, and once the row wraps it simply starts its own line rather than
+ * being stranded against a swatch.
+ */
+.legendShare {
+  margin-left: auto;
+}

@@ -138,9 +138,17 @@ describe('InterlockCounterfactual', () => {
   it('describes each bar in text for readers who cannot see it', () => {
     render330();
     const bars = screen.getAllByRole('img');
-    expect(
-      within(bars[0].parentElement as HTMLElement).getByText(/alpha 40/),
-    ).toBeVisible();
+    const arm = within(bars[0].parentElement as HTMLElement);
+
+    /*
+     * Two visible copies of the value, by design: the label inside the segment, and the
+     * legend entry beneath the bar. Only one is ever shown — a container query picks
+     * whichever fits the axis's width — and neither is announced, because the bar is a
+     * single `role="img"` whose description carries every name and value once.
+     */
+    expect(arm.getAllByText(/alpha 40/)).toHaveLength(2);
+    for (const copy of arm.getAllByText(/alpha 40/)) expect(copy).toBeVisible();
+
     expect(bars[0]).toHaveAttribute(
       'aria-label',
       expect.stringContaining('Joint total 100 against a bound of 130'),

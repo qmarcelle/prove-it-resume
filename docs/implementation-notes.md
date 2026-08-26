@@ -194,7 +194,7 @@ Server Components by default. `"use client"` appears in fourteen files:
 | `RepositoryDecisionDiff`  | Disclosure stage                                                   |
 | `VrekoArchitectureTrace`  | Zoom level, per-container disclosure, trace position               |
 | `StepControl`             | Roving tabindex and arrow-key handling                             |
-| `useDeepLinkedState`      | Reads and writes the query string                                  |
+| `useDeepLinkedState`      | Reads the query string on mount; publishes state to the registry   |
 | `BoundedField`            | Rewinds the hero composition and plays its beats                   |
 | `CopyableCommand`         | Writes a re-check command to the clipboard, and reports the result |
 

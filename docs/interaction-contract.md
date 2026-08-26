@@ -179,13 +179,26 @@ and the design source is wrong.
 
 ## Deep-linkable state
 
-Meaningful states are reflected in the query string with human-readable values:
-`?decision=…`, `?interlock=…`, `?architecture=…`. No internal beat identifiers appear.
+Meaningful states _can be_ represented in the query string with human-readable values:
+`?decision=…`, `?interlock=…`, `?layer=…`. No internal beat identifiers appear.
 
-The first render is always the default, matching the prerendered HTML; the URL is applied
-in an effect afterwards. That keeps the route statically rendered and hydration-safe, and
-means the page is correct with no query state at all. State is written with
-`replaceState`, so stepping a disclosure does not fill the back button.
+The distinction is load-bearing, and it is the one thing to preserve here. Ordinary
+interaction does not touch the address. Reading three sections of `/linear` used to
+produce `?interlock=evidence&layer=workspace&decision=comparison#sec-02`, which nobody
+asked for and which reads as a debug harness rather than a finished page. One explicit
+control — `COPY THIS VIEW`, on each interaction's ordinal row — builds the address, and
+it carries the whole surface's state rather than that one panel's, because a reader
+shares the page they are looking at. See
+[ADR 0012](decisions/0012-state-can-be-a-link-not-is-one.md).
+
+Arriving through such a link is honoured exactly as before. The first render is always
+the default, matching the prerendered HTML; the URL is applied in an effect afterwards.
+That keeps the route statically rendered and hydration-safe, and means the page is
+correct with no query state at all.
+
+One write to the URL remains, and it only ever deletes: a reader who arrives at
+`?interlock=evidence` and then steps elsewhere has their address corrected rather than
+left asserting a stage the page is not in. The URL only moves toward the clean one.
 
 ---
 

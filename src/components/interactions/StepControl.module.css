@@ -57,6 +57,7 @@
 
 .ordinalControls {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
 }
@@ -64,6 +65,8 @@
 .nudge {
   padding: 0.5rem 0.6875rem;
   min-height: 44px;
+  /* The label is two words at most and must never break: "Previo / us" is not a word. */
+  white-space: nowrap;
   border: var(--rule);
   background: var(--color-surface);
   font-family: var(--font-mono);
@@ -76,6 +79,11 @@
 .nudge:disabled {
   color: var(--color-meta-quiet);
   cursor: default;
+}
+
+.share {
+  display: inline-flex;
+  margin-left: var(--space-2);
 }
 
 .position {
@@ -122,7 +130,20 @@
     border-top: var(--rule);
   }
 
+  /*
+   * Previous, the counter and Next hold one row; the share control takes the next.
+   *
+   * Three controls plus a counter do not fit across a phone, and letting them share a
+   * row squeezes each into a two-line box — "← Previo / us" beside "Nex / t →", which
+   * reads as a broken layout rather than a compact one. The stepping controls belong
+   * together, and the share control is a different kind of act, so that is where the
+   * row breaks.
+   */
   .ordinalControls {
     justify-content: space-between;
+  }
+
+  .share {
+    flex-basis: 100%;
   }
 }

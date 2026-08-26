@@ -42,11 +42,40 @@
   white-space: nowrap;
 }
 
-@media (max-width: 520px) {
+/*
+ * At mobile these stop being a trailing note on a row and become the row's control.
+ *
+ * They are standalone calls to action rather than links inside a sentence, so the
+ * inline-link exemption in WCAG 2.5.8 does not apply to them — and this page's own
+ * direction is stricter anyway: 44px minimum for every control at mobile. At 15px tall
+ * these were the primary interaction of the whole surface rendered as a thumb-sized
+ * miss.
+ *
+ * Vertical padding rather than a fixed height, so a call to action that wraps to two
+ * lines grows instead of clipping. The unresolved marker takes the same treatment: it
+ * is not a control, but it sits in the same column and a reader will try it.
+ */
+@media (max-width: 700px) {
   .link,
   .unresolved,
   .unresolvedBlock {
     margin-left: 0;
     white-space: normal;
+  }
+
+  .link,
+  .unresolvedBlock {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .unresolved {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    border-bottom: 0;
+    text-decoration: underline dashed var(--color-border-dashed);
+    text-underline-offset: 4px;
   }
 }

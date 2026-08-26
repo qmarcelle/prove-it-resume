@@ -1,4 +1,11 @@
+/*
+ * A query container. The rules that decide whether the segment labels fit inside the
+ * bar are measured against this element's own width, not the viewport's — the axis
+ * appears both full-measure and inside a narrow proof column, and at 1440px the framed
+ * variant is narrower than the same axis at 900px unframed.
+ */
 .axis {
+  container: bound-axis / inline-size;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -115,6 +122,16 @@
   height: 30px;
 }
 
+/*
+ * Below the width where labels fit inside the bar they sit under it instead, and the
+ * gap that separated the bar from the note has to make room for them.
+ */
+@container bound-axis (max-width: 32rem) {
+  .bar {
+    margin-bottom: var(--space-2);
+  }
+}
+
 .segment,
 .segmentPending {
   display: flex;
@@ -153,6 +170,77 @@
   font-size: var(--text-meta-sm);
   letter-spacing: 0.04em;
   white-space: nowrap;
+}
+
+/* ── Where the labels go when they do not fit ─────────────────────────────── */
+
+/*
+ * Mobile-first, and this is the honest default rather than the fallback.
+ *
+ * The narrowest segment in the bound experiment is an eighth of the axis. Eight
+ * characters of mono need about 59px, so the in-bar labels only fit once the axis is
+ * roughly 500px wide — and below that the bar clips them, which loses the number
+ * without saying it has. So the labels start outside the bar and move in only where
+ * there is room, rather than starting inside and being cut.
+ *
+ * A container query rather than a media query: the axis sits in a proof column whose
+ * width and the viewport's diverge, and at 1440px the framed variant of this section is
+ * narrower than the same axis at 900px unframed.
+ */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3125rem var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: 0.04em;
+  color: var(--color-ink-secondary);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.4375rem;
+}
+
+/*
+ * The swatches repeat the bar's own two fills, so a reader matching a label to a block
+ * is matching on the thing that actually distinguishes them rather than on order.
+ */
+.swatch,
+.swatchPending {
+  width: 10px;
+  height: 10px;
+  border-radius: 1px;
+  flex: none;
+}
+
+.swatch {
+  background: var(--color-border);
+}
+
+.swatchPending {
+  border: 1px dashed var(--color-border-dashed);
+  background: repeating-linear-gradient(
+    135deg,
+    var(--color-surface-raised) 0 3px,
+    var(--color-canvas) 3px 6px
+  );
+}
+
+@container bound-axis (min-width: 32rem) {
+  .legend {
+    display: none;
+  }
+}
+
+@container bound-axis (max-width: 32rem) {
+  .segmentLabel {
+    display: none;
+  }
 }
 
 .note {
