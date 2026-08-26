@@ -113,3 +113,19 @@
   line-height: 1.6;
   color: var(--color-ink-muted);
 }
+
+/*
+ * The mobile control floor.
+ *
+ * 44px minimum for every control at mobile is the design direction's own figure, and it
+ * does not have an exception for controls that are used less often. Minimum height
+ * rather than fixed, so a label that wraps grows instead of clipping.
+ */
+@media (max-width: 700px) {
+  .secondary,
+  .pending {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}

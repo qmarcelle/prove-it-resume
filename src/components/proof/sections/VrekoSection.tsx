@@ -57,7 +57,7 @@ export function VrekoSection({ step }: { step?: SurfaceStep } = {}) {
 
       <ProofScan items={scan} />
 
-      <VrekoArchitectureTrace data={vrekoArchitecture} />
+      <VrekoArchitectureTrace data={vrekoArchitecture} shareAnchor={vreko.sectionId} />
 
       {/* `EvidencePanel` sizes itself as a flex row item; a row of one stretches it. */}
       <ProofColumns>

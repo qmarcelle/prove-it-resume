@@ -37,6 +37,7 @@ export function InterlockSection({ step }: { step?: SurfaceStep } = {}) {
   const figure = (
     <InterlockCounterfactual
       data={interlockHac330}
+      shareAnchor={interlock.sectionId}
       showControls={false}
       showFooter={false}
     />

@@ -69,6 +69,7 @@ export function RepositoryDecisionDiff({
   code = 'EV-WSJ',
   showControls = true,
   showFooter = true,
+  shareAnchor,
 }: {
   data?: RepositoryDecisionDiffData;
   code?: string;
@@ -78,6 +79,11 @@ export function RepositoryDecisionDiff({
    * not told twice — the rail is strictly better placement, but this stays the default
    * so the interaction is still self-contained wherever it is dropped.
    */
+  /**
+   * Section anchor for the shareable address. Passed through to `StepControl`, which
+   * is where the control sits; absent means this panel offers no share control.
+   */
+  shareAnchor?: string;
   showControls?: boolean;
   /**
    * Whether to render the boundary and the artifact link in a footer. Off for the same
@@ -153,6 +159,7 @@ export function RepositoryDecisionDiff({
         activeId={activeStage.id}
         onChange={setStage}
         controls={panelId}
+        shareAnchor={shareAnchor}
       />
 
       {/*

@@ -36,6 +36,7 @@ export function InterlockCounterfactual({
   data,
   showControls = true,
   showFooter = true,
+  shareAnchor,
 }: {
   data: InterlockCounterfactualData;
   /**
@@ -43,6 +44,11 @@ export function InterlockCounterfactual({
    * the same conditions once in its proof layer. Defaults on so the interaction stays
    * self-contained wherever it is dropped.
    */
+  /**
+   * Section anchor for the shareable address. Passed through to `StepControl`, which
+   * is where the control sits; absent means this panel offers no share control.
+   */
+  shareAnchor?: string;
   showControls?: boolean;
   /**
    * Whether to render the boundary footer. Off when the section states the boundary
@@ -117,6 +123,7 @@ export function InterlockCounterfactual({
         activeId={stage.id}
         onChange={setStageId}
         controls={panelId}
+        shareAnchor={shareAnchor}
       />
 
       <p className="visually-hidden" role="status">

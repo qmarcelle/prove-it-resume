@@ -90,9 +90,23 @@ every printed bullet exists verbatim in the corpus, that no projection states a 
 the corpus has not established, and that none of them claims one of the facts recorded as
 unverified.
 
-**Server Components by default.** `"use client"` appears in fifteen files, all genuinely
+**Server Components by default.** `"use client"` appears in seventeen files, all genuinely
 interactive. The page works before hydration: anchors, the evidence index, every link,
 and the hero composition's settled frame are ordinary HTML.
+
+**Interaction state can be a link; it is not one by default.** Browsing `/linear` leaves
+the address alone. `COPY THIS VIEW` builds the shareable one, carrying the whole page's
+state and the section the reader is in, and a link arrived at is honoured exactly as
+before. Reading three sections used to rewrite the URL into
+`?interlock=…&layer=…&decision=…`, which nobody asked for and which reads as a debug
+harness. See [ADR 0012](docs/decisions/0012-state-can-be-a-link-not-is-one.md).
+
+**Mobile recomposes; it does not stack.** A recruiter opens this from a phone, so 390,
+320, 768 and 1440 are gated with every disclosure open: no horizontal scroll, no clipped
+evidence, no control under 44px below 700px. Two further tests check the half a
+prohibition list cannot — that the Interlock axis still shows every value against one
+shared bound at 390px, and that the hero chain turns rather than shrinks. See
+[ADR 0013](docs/decisions/0013-mobile-recomposes-rather-than-stacks.md).
 
 **Tokens that name text are never backgrounds.** A filled control pairs its fill with a
 _ground_ token, or with a purpose-named `{bg,fg}` pair a surface has to answer. Pairing

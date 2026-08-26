@@ -551,3 +551,148 @@ for (const route of ['/', '/linear']) {
     });
   });
 }
+
+/**
+ * The URL, and the two modes it has.
+ *
+ * Interaction state used to be written into the query string as the reader stepped
+ * through it, so reading three sections of the page turned the address into
+ * `?interlock=evidence&layer=workspace&decision=comparison#sec-02`. The capability is
+ * worth keeping; the default was wrong. Browsing now leaves `/linear` alone, and one
+ * explicit control builds the shareable address.
+ *
+ * Four things have to hold together, and losing any one of them silently reintroduces
+ * the old behaviour or drops the capability: browsing stays clean, an incoming link is
+ * still honoured, the control still produces a link that carries the whole page's state,
+ * and a URL never asserts a stage the page is not in.
+ */
+test.describe('shareable state', () => {
+  test('ordinary interaction leaves the address alone', async ({ page }) => {
+    await page.goto('/linear');
+    const panel = interlock(page);
+
+    await panel.getByRole('button', { name: /Resulting state/ }).click();
+    await panel.getByRole('button', { name: /Perturb the evidence/ }).click();
+    await diff(page)
+      .getByRole('button', { name: /Attribute the change/ })
+      .click();
+
+    const url = new URL(page.url());
+    expect(url.search, 'browsing wrote state into the URL').toBe('');
+    expect(url.hash).toBe('');
+  });
+
+  test('an incoming deep link is still honoured', async ({ page }) => {
+    await page.goto('/linear?interlock=evidence&decision=comparison');
+
+    await expect(
+      interlock(page)
+        .getByText(/frozen/i)
+        .first(),
+    ).toBeVisible();
+    await expect(
+      diff(page).getByRole('button', { name: /Compare plans/ }),
+    ).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  test('a stale parameter is dropped when the reader moves off it', async ({ page }) => {
+    await page.goto('/linear?interlock=evidence&decision=comparison');
+
+    // Step the counterfactual somewhere else. Its parameter no longer describes the
+    // page, so it goes — and the one that is still accurate stays.
+    await interlock(page)
+      .getByRole('button', { name: /Two intents/ })
+      .click();
+
+    const url = new URL(page.url());
+    expect(url.searchParams.has('interlock')).toBe(false);
+    expect(url.searchParams.get('decision')).toBe('comparison');
+  });
+
+  test('copy this view carries the whole page, not one panel', async ({
+    page,
+    context,
+  }) => {
+    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+    await page.goto('/linear');
+
+    // Two different panels moved off their defaults, then shared from the second.
+    await diff(page)
+      .getByRole('button', { name: /Compare plans/ })
+      .click();
+    await interlock(page)
+      .getByRole('button', { name: /Resulting state/ })
+      .click();
+    await interlock(page)
+      .getByRole('button', { name: /COPY THIS VIEW/ })
+      .click();
+
+    await expect(
+      interlock(page).getByRole('button', { name: /LINK COPIED/ }),
+    ).toBeVisible();
+
+    const copied = new URL(await page.evaluate(() => navigator.clipboard.readText()));
+    expect(copied.pathname).toBe('/linear');
+    expect(copied.searchParams.get('decision')).toBe('comparison');
+    expect(copied.searchParams.get('interlock')).toBe('outcome');
+    expect(copied.hash).toBe('#sec-04');
+
+    // The page the reader is on is still clean. Sharing is not browsing.
+    expect(new URL(page.url()).search).toBe('');
+  });
+
+  test('a copied link reopens the page in the state it described', async ({
+    page,
+    context,
+  }) => {
+    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+    await page.goto('/linear');
+
+    await interlock(page)
+      .getByRole('button', { name: /Frozen evidence/ })
+      .click();
+    await interlock(page)
+      .getByRole('button', { name: /COPY THIS VIEW/ })
+      .click();
+
+    const copied = await page.evaluate(() => navigator.clipboard.readText());
+    await page.goto(copied);
+
+    await expect(
+      interlock(page).getByRole('button', { name: /Frozen evidence/ }),
+    ).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  test('reload returns the page to its resting state', async ({ page }) => {
+    await page.goto('/linear');
+    await interlock(page)
+      .getByRole('button', { name: /Resulting state/ })
+      .click();
+
+    await page.reload();
+
+    /*
+     * The first stage, because nothing was ever written to the address. That is the
+     * point: a reader who steps through a disclosure has not changed where they are,
+     * and a reload should not hand them back a page mid-argument.
+     */
+    await expect(
+      interlock(page).getByRole('button', { name: /Shared state/ }),
+    ).toHaveAttribute('aria-pressed', 'true');
+    expect(new URL(page.url()).search).toBe('');
+  });
+
+  test('stepping never fills the back button', async ({ page }) => {
+    await page.goto('/');
+    await page.goto('/linear');
+
+    const panel = interlock(page);
+    for (const stage of [/Two intents/, /Decision point/, /Resulting state/]) {
+      await panel.getByRole('button', { name: stage }).click();
+    }
+
+    // One press goes back to the previous page, not to a previous stage.
+    await page.goBack();
+    await expect(page).toHaveURL(/\/$/);
+  });
+});

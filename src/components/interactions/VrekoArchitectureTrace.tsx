@@ -6,6 +6,7 @@ import type {
   TraceHop,
   VrekoArchitectureData,
 } from '@/lib/interactions';
+import { CopyViewLink } from './CopyViewLink';
 import { useDeepLinkedState } from './useDeepLinkedState';
 import { CopyableCommand } from './CopyableCommand';
 import styles from './VrekoArchitectureTrace.module.css';
@@ -30,7 +31,14 @@ import styles from './VrekoArchitectureTrace.module.css';
  * Selection, not expansion, is the state — one layer is always selected, so the panel
  * is never empty and there is no "nothing here yet" frame to design around.
  */
-export function VrekoArchitectureTrace({ data }: { data: VrekoArchitectureData }) {
+export function VrekoArchitectureTrace({
+  data,
+  shareAnchor,
+}: {
+  data: VrekoArchitectureData;
+  /** Section anchor for the shareable address. Absent means no share control. */
+  shareAnchor?: string;
+}) {
   const { external, system, containers, trace } = data;
 
   /** Draw order, outside → in → outside. Ids come from the content, not from here. */
@@ -65,7 +73,7 @@ export function VrekoArchitectureTrace({ data }: { data: VrekoArchitectureData }
   return (
     <div className={styles.wrap}>
       <div className={styles.diagram}>
-        <Legend />
+        <Legend shareAnchor={shareAnchor} />
 
         <OutsideNode
           container={external.upstream}
@@ -131,7 +139,13 @@ export function VrekoArchitectureTrace({ data }: { data: VrekoArchitectureData }
   );
 }
 
-function Legend() {
+/**
+ * The publication key, and the one control that turns the selected layer into an
+ * address. The legend row is where the diagram's own vocabulary is explained, which
+ * makes it the row a reader is already reading when they decide this is worth sending
+ * to someone.
+ */
+function Legend({ shareAnchor }: { shareAnchor?: string }) {
   return (
     <div className={styles.legend}>
       <span className={styles.legendTitle}>PUBLICATION BOUNDARY MODEL</span>
@@ -153,6 +167,12 @@ function Legend() {
         />
         OUTSIDE THE SYSTEM
       </span>
+
+      {shareAnchor ? (
+        <span className={styles.legendShare}>
+          <CopyViewLink anchor={shareAnchor} />
+        </span>
+      ) : null}
     </div>
   );
 }

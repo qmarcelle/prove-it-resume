@@ -139,6 +139,49 @@ half the job.
 
 ---
 
+## Shareable state
+
+Interaction stages are not written into the address as a reader steps through them.
+Browsing `/linear` leaves `/linear` alone; `COPY THIS VIEW`, on each interaction's
+ordinal row, builds the address on demand and carries the whole surface's state plus the
+sharer's section anchor. An arriving deep link is applied on mount exactly as before, and
+the one remaining write to the URL only ever deletes — a parameter the reader has stepped
+away from, so the address never asserts a stage the page is not in.
+
+`KNOWN_KEYS` in `interactions/deep-link.ts` is the list of query keys this page owns, and
+`deep-link.test.ts` holds it to the keys the interactions actually pass to
+`useDeepLinkedState`. See [ADR 0012](decisions/0012-state-can-be-a-link-not-is-one.md).
+
+---
+
+## Mobile
+
+The standard, as an acceptance criterion:
+
+> Mobile is not desktop stacked vertically. Mobile preserves the decision hierarchy and
+> recomposes any visualisation whose meaning depends on spatial comparison.
+
+Four viewports are gated with every disclosure open — 390×844, 320×568, 768×1024,
+1440×900 — against horizontal scroll, clipped leaf text, and, below 700px, any control
+under the touch floor. Two further tests check what a prohibition list cannot: the bound
+axis still shows every value against one shared marker at 390px, and the hero chain turns
+to rows rather than shrinking.
+
+The recompositions that needed design rather than a media query:
+
+| Component          | At mobile                                                                         |
+| ------------------ | --------------------------------------------------------------------------------- |
+| Section frame      | The index rail lies down; the number and eyebrow share one metadata line          |
+| Hero chain         | Five columns become five rows, same marks and same sentences                      |
+| Linear in practice | The tab strip stacks above its panel; every tab is a 44px control                 |
+| Bound axis         | Segment labels leave the bar for a legend beneath it; one shared bound throughout |
+| Repository diff    | The plan pair stacks in causal order rather than sitting in two narrow columns    |
+| Stage controls     | Previous / counter / Next hold one row; the share control takes the next          |
+
+See [ADR 0013](decisions/0013-mobile-recomposes-rather-than-stacks.md).
+
+---
+
 ## The receipt tab strip
 
 `ReceiptTabs` is the surface's one new client leaf. It renders the stacked list on the
@@ -347,25 +390,29 @@ Letter, carrying every external destination the route has.
 
 ## Test matrix
 
-| Area               | Where                               | What is asserted                                                                                                                                                                                                 |
-| ------------------ | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Fact / projection  | `src/content/resume/resume.test.ts` | Every printed bullet exists verbatim in facts; every quantity is in `RESUME_QUANTITIES`; no projection claims an `UNVERIFIED` fact; grouped capabilities are all durable; projections resolve without a stale id |
-| Durable stability  | `src/content/resume/resume.test.ts` | The durable projection selects every role and every bullet, in durable order                                                                                                                                     |
-| Linear projection  | `src/content/resume/resume.test.ts` | Initiatives lead; NAT promoted; Vreko demoted; receipts bounded and unlinked; footer → `/linear`                                                                                                                 |
-| Lens integrity     | `src/lib/role-lens.test.ts`         | Every lens — application lenses included — projects the same proof objects and only durable mapping rows                                                                                                         |
-| Registries         | `src/lib/role-lens.test.ts`         | Unique slugs across both registries; `/role/linear` unresolvable; each non-default lens printable exactly once; rail numbered by position                                                                        |
-| Private boundary   | `src/content/linear/linear.test.ts` | No workspace host or credential anywhere in `src/`; identifiers are identifiers; every receipt has a boundary and a verification date                                                                            |
-| Artifacts          | `src/content/content.test.ts`       | Every lens has a distinct PDF and the file is on disk                                                                                                                                                            |
-| Routing            | `tests/e2e/application.spec.ts`     | `/linear` 200; `/role/linear` 404; `/` and both role routes unchanged; `noindex, follow`, canonical `/`                                                                                                          |
-| Private boundary   | `tests/e2e/application.spec.ts`     | Served HTML and every `href` free of the workspace host                                                                                                                                                          |
-| Evidence integrity | `tests/e2e/application.spec.ts`     | Three stated-gap markers in the receipts section; disclosures and claim ledger present                                                                                                                           |
-| Page plan          | `src/lib/page-plan.test.ts`         | Numbers derive from position and renumber on reorder; identity and frame carry through; a section absent from the plan throws                                                                                    |
-| Page plan          | `src/lib/role-lens.test.ts`         | The plan and `proofOrder` name the same proofs in the same order; each section states one identity; a proof's durable stage and its plan position may differ                                                     |
-| Page plan          | `tests/e2e/application.spec.ts`     | Every planned anchor exists; proofs render in Linear order; the rail, the header nav and every section head print one sequence; no section prints its durable stage                                              |
-| Section frame      | `tests/e2e/application.spec.ts`     | All frames in use share one index-rail position and one content origin at 1440px                                                                                                                                 |
-| Résumé geometry    | `tests/e2e/resume.spec.ts`          | All four variants: two US Letter pages, no page or block overflow, masthead and identity headroom, contact row unwrapped, bottom-anchored content inside the sheet                                               |
-| Résumé content     | `tests/e2e/resume.spec.ts`          | Linear sheet leads on Portal Refresh, promotes NAT, prints all three identifiers, links to `/linear`; the durable sheet still leads on Vreko and links to the root                                               |
-| Manifest           | `tests/e2e/resume.spec.ts`          | Every variant exactly once; Linear's route, path, and download name                                                                                                                                              |
-| Downloads          | `tests/e2e/resume.spec.ts`          | Every résumé CTA on `/linear` resolves to the Linear PDF with the right filename                                                                                                                                 |
-| Accessibility      | `tests/e2e/application.spec.ts`     | axe-core on `/linear`, closed and with every disclosure open; no horizontal scroll at 320px                                                                                                                      |
-| Artifact drift     | `pnpm resume:pdf:check`             | Content fingerprint and committed PDF structure for all four variants                                                                                                                                            |
+| Area               | Where                                           | What is asserted                                                                                                                                                                                                 |
+| ------------------ | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Fact / projection  | `src/content/resume/resume.test.ts`             | Every printed bullet exists verbatim in facts; every quantity is in `RESUME_QUANTITIES`; no projection claims an `UNVERIFIED` fact; grouped capabilities are all durable; projections resolve without a stale id |
+| Durable stability  | `src/content/resume/resume.test.ts`             | The durable projection selects every role and every bullet, in durable order                                                                                                                                     |
+| Linear projection  | `src/content/resume/resume.test.ts`             | Initiatives lead; NAT promoted; Vreko demoted; receipts bounded and unlinked; footer → `/linear`                                                                                                                 |
+| Lens integrity     | `src/lib/role-lens.test.ts`                     | Every lens — application lenses included — projects the same proof objects and only durable mapping rows                                                                                                         |
+| Registries         | `src/lib/role-lens.test.ts`                     | Unique slugs across both registries; `/role/linear` unresolvable; each non-default lens printable exactly once; rail numbered by position                                                                        |
+| Private boundary   | `src/content/linear/linear.test.ts`             | No workspace host or credential anywhere in `src/`; identifiers are identifiers; every receipt has a boundary and a verification date                                                                            |
+| Artifacts          | `src/content/content.test.ts`                   | Every lens has a distinct PDF and the file is on disk                                                                                                                                                            |
+| Routing            | `tests/e2e/application.spec.ts`                 | `/linear` 200; `/role/linear` 404; `/` and both role routes unchanged; `noindex, follow`, canonical `/`                                                                                                          |
+| Private boundary   | `tests/e2e/application.spec.ts`                 | Served HTML and every `href` free of the workspace host                                                                                                                                                          |
+| Evidence integrity | `tests/e2e/application.spec.ts`                 | Three stated-gap markers in the receipts section; disclosures and claim ledger present                                                                                                                           |
+| Page plan          | `src/lib/page-plan.test.ts`                     | Numbers derive from position and renumber on reorder; identity and frame carry through; a section absent from the plan throws                                                                                    |
+| Page plan          | `src/lib/role-lens.test.ts`                     | The plan and `proofOrder` name the same proofs in the same order; each section states one identity; a proof's durable stage and its plan position may differ                                                     |
+| Page plan          | `tests/e2e/application.spec.ts`                 | Every planned anchor exists; proofs render in Linear order; the rail, the header nav and every section head print one sequence; no section prints its durable stage                                              |
+| Section frame      | `tests/e2e/application.spec.ts`                 | All frames in use share one index-rail position and one content origin at 1440px                                                                                                                                 |
+| Responsive         | `tests/e2e/responsive.spec.ts`                  | 390×844, 320×568, 768×1024, 1440×900 with every disclosure open: no horizontal scroll, no clipped leaf text, and below 700px no control under the touch floor                                                    |
+| Recomposition      | `tests/e2e/responsive.spec.ts`                  | At 390px the bound axis shows every segment value against one shared marker, and the hero chain turns to rows rather than shrinking                                                                              |
+| Shareable state    | `tests/e2e/interactions.spec.ts`                | Browsing leaves the address clean; an incoming deep link is honoured; a stale parameter is dropped on divergence; `COPY THIS VIEW` carries the whole page's state and its own anchor; reload rests; back leaves  |
+| Deep-link registry | `src/components/interactions/deep-link.test.ts` | The page-owned key list matches the keys the interactions actually deep-link, in both directions                                                                                                                 |
+| Résumé geometry    | `tests/e2e/resume.spec.ts`                      | All four variants: two US Letter pages, no page or block overflow, masthead and identity headroom, contact row unwrapped, bottom-anchored content inside the sheet                                               |
+| Résumé content     | `tests/e2e/resume.spec.ts`                      | Linear sheet leads on Portal Refresh, promotes NAT, prints all three identifiers, links to `/linear`; the durable sheet still leads on Vreko and links to the root                                               |
+| Manifest           | `tests/e2e/resume.spec.ts`                      | Every variant exactly once; Linear's route, path, and download name                                                                                                                                              |
+| Downloads          | `tests/e2e/resume.spec.ts`                      | Every résumé CTA on `/linear` resolves to the Linear PDF with the right filename                                                                                                                                 |
+| Accessibility      | `tests/e2e/application.spec.ts`                 | axe-core on `/linear`, closed and with every disclosure open; no horizontal scroll at 320px                                                                                                                      |
+| Artifact drift     | `pnpm resume:pdf:check`                         | Content fingerprint and committed PDF structure for all four variants                                                                                                                                            |
