@@ -73,7 +73,12 @@ export const defaultResumeProjection: ResumeProjection = {
         bulletIds: ['devops-strategy:azure', 'devops-strategy:governance'],
       },
       { id: 'systems-analyst', bulletIds: ['systems-analyst:portals'] },
-      { id: 'developer' },
+      /*
+       * One bullet from the earliest role, not two. The applications this person wrote
+       * are the fact a reader needs from 2016; the architectural shift around them is
+       * durable and is what the Linear sheet has room to add.
+       */
+      { id: 'developer', bulletIds: ['developer:provider-apps'] },
     ],
   },
 

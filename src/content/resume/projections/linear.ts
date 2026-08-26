@@ -43,7 +43,7 @@ export const linearResumeProjection: ResumeProjection = {
   profile: {
     label: '01 / PROFILE',
     heading: 'I build AI products and the systems that make them reliable in production.',
-    body: 'Nearly a decade building production software in regulated healthcare, from hands-on application development through technical and engineering leadership. It starts in React, writing provider applications, and ends leading the full-stack team behind the member and broker/employer portal estate: the browser, the APIs, identity and the enterprise data underneath. Recent independent work is specialised on agentic products and the integration infrastructure they need: persistent agent memory evaluated by ablation, a controlled experiment in agent coordination, and an open standard for repository intelligence. Each ships with the evidence needed to tell whether it works, which is what decides whether an agent product survives production.',
+    body: 'Nearly a decade building production software in regulated healthcare, from hands-on application development through technical and engineering leadership. It starts in React, writing provider applications, and ends leading the full-stack team behind the member and broker/employer portal estate: browser, APIs, identity and enterprise data. Recent independent work is specialised on agentic products: agent memory evaluated by ablation, a controlled coordination experiment, and an open standard for repository intelligence, each shipping with the evidence that says whether it works.',
   },
 
   systems: {
@@ -97,10 +97,7 @@ export const linearResumeProjection: ResumeProjection = {
        * is that the product surface was built and not only led, and this is the role
        * where that is true of one pair of hands on both halves of the stack.
        */
-      {
-        id: 'systems-analyst',
-        bulletIds: ['systems-analyst:portals', 'systems-analyst:microservices'],
-      },
+      { id: 'systems-analyst', bulletIds: ['systems-analyst:portals'] },
       // Where the hands were before the team was. Contact Preference and Fee Schedule
       // are the two things on this sheet with a single unambiguous author.
       { id: 'developer', bulletIds: ['developer:provider-apps'] },

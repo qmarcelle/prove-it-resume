@@ -20,10 +20,24 @@ const PAGE_H = 1056;
 /*
  * Vertical room every sheet must keep between its content and the bottom of its box.
  *
- * Not a style preference: a tolerance. The sheets are fixed-height with `overflow:
+ * Not a style preference, a tolerance. The sheets are fixed-height with `overflow:
  * hidden`, and text metrics differ between the machine a layout is tuned on and the one
  * that renders it: the same durable sheet that fit exactly here was clipped by 7px on a
  * CI runner. The reserve is what stops that being discovered in a print dialog.
+ *
+ * ## What the number does not tell you
+ *
+ * This is the floor the *runner* has to clear, and it is not the target to tune against
+ * locally. The gap between the two platforms scales with how much text a page carries,
+ * because the difference accumulates per line rather than per page. A later pass tuned
+ * two dense sheets to 40px and 31px of local headroom on macOS, which read as
+ * comfortable, and Linux turned them into 5px and **-4px**: the Linear sheet clipped its
+ * own section head, and the failure surfaced only in CI.
+ *
+ * Measured delta on a page holding a paragraph plus nine bullets: **about 35px**. A
+ * sparse page costs far less. So when adding content, budget local headroom of roughly
+ * `PAGE_RESERVE + 35` on a dense page before believing it fits, and treat a local
+ * reading under 60px on a full sheet as untested rather than as passing.
  */
 const PAGE_RESERVE = 12;
 
