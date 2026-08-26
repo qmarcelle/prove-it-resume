@@ -8,8 +8,11 @@
  * proof sections carried another, which is how the page ended up with its numbers at
  * four different horizontal positions.
  *
- * What is left here is what these sections actually own: the receipt list, and the
- * shape of a row that has no artifact behind it.
+ * What is left here is what these sections actually own: the section's own body, its
+ * call to action, and the product-history registers.
+ *
+ * The receipt list lives in `ReceiptTabs.module.css` instead: the tab strip owns it
+ * outright, and that file is a client component's. The note is in the other file.
  */
 
 .inner {
@@ -44,104 +47,167 @@
   text-decoration: none;
 }
 
-/* ── Receipts ─────────────────────────────────────────────────────────────── */
-.receipts {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
+/* ── Product history registers ────────────────────────────────────────────── */
+
+/*
+ * The progression: four stages in one row wherever four fit.
+ *
+ * Explicit track counts rather than `auto-fit`, because the number is meaningful. Four
+ * columns say "this is one progression"; three columns with a fourth stranded on a
+ * second row says the fourth stage is a different kind of thing, which is exactly the
+ * reading the section is trying to avoid.
+ *
+ * Each card is separated by a rule at its top rather than by a box, which is the
+ * surface's own grammar: structure comes from alignment and tone, not from outlines.
+ */
+.stages {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-5) var(--space-6);
   margin: var(--space-2) 0 0;
   padding: 0;
   list-style: none;
 }
 
-.receipt {
+.stage {
   display: flex;
   flex-direction: column;
-  gap: 0.875rem;
-  padding-top: 1rem;
-  border-top: var(--rule-strong);
+  gap: 0.375rem;
+  padding-top: 0.75rem;
+  border-top: var(--rule);
 }
 
-.receiptHead {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.5rem 0.875rem;
-}
-
-/*
- * The identifier is the handle. It is what makes an unlinkable claim checkable in the
- * only way it can be — by name, in a conversation — so it leads the row rather than
- * trailing it as metadata.
- */
-.receiptId {
+.stageOrdinal {
   font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: var(--tracking-meta-tight);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
   color: var(--color-accent);
-  flex: 0 0 auto;
 }
 
-.receiptTitle {
-  font-size: 1.0625rem;
+.stageTitle {
+  font-size: 1rem;
   font-weight: 700;
-  letter-spacing: -0.015em;
-  flex: 1 1 16rem;
+  letter-spacing: -0.01em;
 }
 
-.receiptStatus {
+.stageSpan {
   font-family: var(--font-mono);
   font-size: var(--text-meta-sm);
   letter-spacing: var(--tracking-meta-tight);
   color: var(--color-meta);
-  white-space: nowrap;
-}
-
-.receiptField {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.receiptLabel {
-  font-family: var(--font-mono);
-  font-size: var(--text-meta-sm);
-  letter-spacing: var(--tracking-meta);
-  color: var(--color-meta-quiet);
-}
-
-.receiptText {
-  font-size: 0.938rem;
-  line-height: 1.6;
-  color: var(--color-ink-secondary);
-  max-width: 72ch;
 }
 
 /*
- * Where a call to action would be, on a row that has earned none.
- *
- * Set in the same mono face and the same dashed-absence voice the evidence rows use, so
- * the reader meets a familiar shape rather than a novel one: this site says "[VERIFY
- * BEFORE PUBLISHING]" whenever a claim has no artifact behind it, and a private
- * workspace is no exception.
+ * The two flat registers. Same shape, different question — who the work was for, and
+ * what it spanned — so they share every rule and differ only in their content.
  */
-.receiptUnresolved {
+.register {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.5rem 0.75rem;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin-top: var(--space-3);
+}
+
+.registerHeading {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  font-weight: 400;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--color-meta-quiet);
+}
+
+/*
+ * Three tracks, filled left to right. Fixed rather than `auto-fit` so a register with
+ * two entries lays them out at the same width as a register with six — under `auto-fit`
+ * the empty tracks collapse and two entries stretch to half the page each, which reads
+ * as two headline claims rather than as two items in a list.
+ */
+.registerList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4) var(--space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.registerItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3125rem;
+  padding-top: 0.625rem;
+  border-top: var(--rule-quiet);
+}
+
+.registerLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-ink);
+  text-transform: uppercase;
+}
+
+.entryText {
+  font-size: 0.938rem;
+  line-height: 1.6;
+  color: var(--color-ink-secondary);
+  max-width: 58ch;
+}
+
+/*
+ * An entry the corpus cannot support.
+ *
+ * Deliberately the same dashed burnt-orange region the receipts use for a row with no
+ * artifact behind it: this site has exactly one visual answer for "not verified", and a
+ * second one would let a reader assume the two mean different things. The mark and the
+ * question sit inside one region so the boundary of what is unproven is unambiguous.
+ */
+.entryUnresolved {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
   align-self: flex-start;
-  padding: 0.375rem 0.625rem;
+  margin-top: 0.125rem;
+  padding: 0.5rem 0.625rem;
   border: 1px dashed var(--unresolved-mark, var(--color-border-dashed));
   border-radius: var(--radius);
+  max-width: 58ch;
+}
+
+.entryUnresolvedMark {
   font-family: var(--font-mono);
   font-size: var(--text-meta-sm);
   letter-spacing: var(--tracking-meta-tight);
   color: var(--unresolved-mark, var(--color-ink-muted));
 }
 
-.receiptUnresolvedNote {
-  color: var(--color-meta-quiet);
-  text-transform: none;
-  letter-spacing: normal;
+.entryUnresolvedNote {
+  font-size: 0.938rem;
+  line-height: 1.6;
+  color: var(--color-ink-secondary);
+}
+
+/*
+ * Two steps down, not one.
+ *
+ * At tablet widths four stage columns are ~150px each, which turns every title into a
+ * three-line stack — the sequence is still one row but nothing in it is readable. Two
+ * columns keeps the pairing legible while the section still has two dimensions.
+ *
+ * Below 700px the index rail has already lain down, so the whole section is a single
+ * reading column and any remaining track minimums would only force a horizontal scroll.
+ */
+@media (max-width: 1080px) {
+  .stages,
+  .registerList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .stages,
+  .registerList {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
 }

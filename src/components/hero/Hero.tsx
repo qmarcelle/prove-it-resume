@@ -42,10 +42,20 @@ const DURABLE_FRAMING: HeroFraming = {
 export function Hero({
   lens,
   framing = DURABLE_FRAMING,
+  figure,
   children,
 }: {
   lens: AnyLens;
   framing?: HeroFraming;
+  /**
+   * The composition under the Evidence Index. Defaults to the durable page's bounded
+   * path; an application surface may open on a different argument.
+   *
+   * A prop rather than a branch on `lens`, because the hero has no business knowing
+   * which surfaces exist — and because a figure is the one part of this section that is
+   * genuinely a composition decision rather than a copy decision.
+   */
+  figure?: React.ReactNode;
   children?: React.ReactNode;
 }) {
   const resumeAvailable = isResolved(RESUME);
@@ -99,7 +109,7 @@ export function Hero({
          */}
         <div className={styles.aside}>
           {children}
-          <BoundedField />
+          {figure ?? <BoundedField />}
         </div>
       </div>
     </section>

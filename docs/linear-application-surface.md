@@ -54,8 +54,8 @@ own order, and this one did — see "The sequence defect" below.
 | 01  | Product engineering history | `lin-history`   | `standard` | The production record the recent systems sit on                        |
 | 02  | Linear in practice          | `lin-practice`  | `band`     | Curated private-workspace receipts, marked unverified                  |
 | 03  | Never Ask Twice             | `more-evidence` | `standard` | Agent memory, promoted out of the appendix                             |
-| 04  | Interlock                   | `sec-04`        | `standard` | Coordination under concurrent agents — the durable proof               |
-| 05  | Repository Intelligence     | `sec-03`        | `band`     | `workspace.json` → Codex → Tally — the durable proof                   |
+| 04  | Repository Intelligence     | `sec-03`        | `band`     | `workspace.json` → Codex → Tally — the durable proof                   |
+| 05  | Interlock                   | `sec-04`        | `standard` | Coordination under concurrent agents — the durable proof               |
 | 06  | Vreko                       | `sec-02`        | `inline`   | MCP and codebase intelligence — the durable proof, demoted             |
 | 07  | Product judgment            | `lin-judgement` | `standard` | Evidence map, decision receipts, how an unfamiliar platform is entered |
 | 08  | Career                      | `sec-06`        | `standard` | The production history beneath the systems                             |
@@ -66,6 +66,12 @@ own order, and this one did — see "The sequence defect" below.
 The résumé bridge and the closing call to action are deliberately outside the sequence.
 They are the handoff after the argument ends, they carry no claim, and numbering them
 would say the page has one more thing to prove than it does.
+
+The proof order is the design direction's: Never Ask Twice, Repository Intelligence,
+Interlock, Vreko. It runs from the reader's own product problem outward — memory is the
+nearest thing in the corpus to what they build, repository context is the surface under
+it, and coordination under concurrent agents is the hardest claim and the one carrying a
+frozen packet and an independent verifier, so it lands last of the three.
 
 Two orderings differ from `/`, both deliberate:
 
@@ -108,6 +114,49 @@ section head on the served page and requires them to be one list.
 
 ---
 
+## The product-history registers
+
+Three registers read together — how the work progressed, who it was for, what it spanned
+— from `src/content/history/product-engineering.ts`.
+
+The design direction supplied this section with three details no source in this
+repository supports: a browser stack, ownership of distinct member, broker and employer
+product surfaces, and what was built between 2016 and 2019. All three are already
+recorded in `UNVERIFIED` in `content/resume/facts.ts`.
+
+So a record is either **stated**, carrying a `body` traceable to the fact corpus, or
+**unresolved**, carrying the thing it would like to say and the id of the recorded gap.
+There is no third state, because "present but hedged" is how unverified material gets
+read as evidence. Unresolved records take the same dashed burnt-orange treatment every
+unverified row on this site takes, marked `NOT YET EVIDENCE`, and they are never linked.
+
+Deleting those three entries was the alternative, and it is worse than it looks: a page
+that silently omits what it cannot prove reads as complete, and the reader never learns
+there was a question. Stated, they are the three things to ask about in an interview.
+
+Before this, `UNVERIFIED` existed and nothing rendered it. It was a test guard, which is
+half the job.
+
+---
+
+## The receipt tab strip
+
+`ReceiptTabs` is the surface's one new client leaf. It renders the stacked list on the
+server and on the first client render, then becomes the strip — so the degraded form is
+what the direction calls for, is what a reader without JavaScript keeps, and is not a
+fallback bolted on afterwards. Hydration detection is `useSyncExternalStore` rather than
+a state-setting effect.
+
+Arrow keys move between tabs and select as they go; Home and End reach the ends; the
+strip wraps. Selection is carried four ways — edge, field, label brightness, and a
+filled mark that is not chromatic at all — on top of `aria-selected`.
+
+Its stylesheet is its own. A CSS module imported by a client component is emitted into
+the client chunk graph, and the receipts are wholly owned by this component now, so
+there is nothing left for the two server sections beside it to share.
+
+---
+
 ## Section frame
 
 One outer frame, in `src/components/section/SectionFrame.tsx`, serves every section on
@@ -141,39 +190,39 @@ exist once there is one column, so the number and the eyebrow share a metadata l
 
 ## Component disposition
 
-| Component                                                                                                                  | Disposition          | Note                                                                                     |
-| -------------------------------------------------------------------------------------------------------------------------- | -------------------- | ---------------------------------------------------------------------------------------- |
-| `SiteHeader`                                                                                                               | MODIFY               | Nav and availability became props; defaults unchanged                                    |
-| `Hero`                                                                                                                     | MODIFY               | Framing became a prop, defaulting to the durable site copy                               |
-| `BoundedField` (hero animation)                                                                                            | REUSE                | Unchanged; runs once and settles, honours `prefers-reduced-motion`                       |
-| `EvidenceIndex`                                                                                                            | REUSE                | Already takes projected proofs                                                           |
-| `ProofNavProvider`                                                                                                         | MODIFY               | Stages became a prop, defaulting to `PROOF_STEPS`                                        |
-| `SectionFrame`                                                                                                             | CREATE               | The one outer frame and index rail every section on this surface is drawn from           |
-| `LensSurface.module.css`                                                                                                   | CREATE               | The Lit Work Surface: a palette swap at the composition root, not a dark variant         |
-| `ProofProgress`                                                                                                            | REUSE                | Reads stages from the provider                                                           |
-| `ProblemSection`                                                                                                           | REPLACE on `/linear` | Superseded by `ProductHistorySection`                                                    |
-| `ProductHistorySection`                                                                                                    | CREATE               | Opens the surface on the production record                                               |
-| `LinearInPracticeSection`                                                                                                  | CREATE               | Curated receipts, each with a boundary and a stated-gap marker                           |
-| `SupportingEvidence`                                                                                                       | MODIFY / REORDER     | Framing and an optional plan step became props; the work and its evidence are unchanged  |
-| `ProofSection` / `ProofChapter`                                                                                            | MODIFY               | Take an optional plan step; without one the durable shell and chapter mark are unchanged |
-| `InterlockSection`                                                                                                         | REUSE / REORDER      | Promoted to first proof; number and eyebrow now come from the plan                       |
-| `RepositoryIntelligenceSection`                                                                                            | REUSE / REORDER      | Number and eyebrow from the plan; the head leaves the signature block when framed        |
-| `VrekoSection`                                                                                                             | REUSE / DEMOTE       | Rendered last, in the `inline` frame; content unchanged                                  |
-| `RoleLensSection`                                                                                                          | REPLACE on `/linear` | Superseded by `ProductJudgementSection`                                                  |
-| `ProductJudgementSection`                                                                                                  | CREATE               | Same three blocks, same content, moved to the close; shares `RoleLens.module.css`        |
-| `CareerSection`                                                                                                            | MODIFY               | Optional plan step; without one its own eyebrow and heading render as on `/`             |
-| `ResumeBridge`                                                                                                             | REUSE                | Resolves the Linear PDF through `resumePdfPath`                                          |
-| `ClaimLedger`                                                                                                              | MODIFY               | Optional plan step; joins the numbered sequence instead of closing outside it            |
-| `EvidenceLink` / evidence rule                                                                                             | REUSE, NO BYPASS     | Receipts render the same unresolved marker as any other row without an artifact          |
-| `FinalCta`, `SiteFooter`                                                                                                   | REUSE                | Lens prop widened to `AnyLens`                                                           |
-| `ProveItResume`                                                                                                            | REUSE                | Unchanged; still renders `/` and `/role/[slug]`                                          |
-| `ApplicationSurface`                                                                                                       | CREATE               | The `/linear` composition                                                                |
-| `ResumeDocument`                                                                                                           | MODIFY               | Now a shell that selects a layout by projection                                          |
-| `ResumePage`/`Masthead`/`Section`/`SystemsSection`/`ExperienceSection`/`FoundationSection`/`AgentPlatformSection`/`Footer` | CREATE               | Print primitives extracted from the old monolith                                         |
-| `DefaultResumeLayout`                                                                                                      | CREATE               | The durable composition, written out explicitly                                          |
-| `LinearResumeLayout`                                                                                                       | CREATE               | The Linear composition, same primitives                                                  |
-| Design tokens                                                                                                              | MODIFY               | Added the `--lens-*` dark scale and the `--color-action-*` pair; no light value changed  |
-| Interactions                                                                                                               | REUSE                | All three, unchanged                                                                     |
+| Component                                                                                                                  | Disposition          | Note                                                                                                                                |
+| -------------------------------------------------------------------------------------------------------------------------- | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `SiteHeader`                                                                                                               | MODIFY               | Nav and availability became props; defaults unchanged                                                                               |
+| `Hero`                                                                                                                     | MODIFY               | Framing and the figure became props, both defaulting to the durable page's                                                          |
+| `BoundedField` (hero animation)                                                                                            | REUSE on `/`         | Unchanged. Superseded on this surface by `EvidenceChain`                                                                            |
+| `EvidenceIndex`                                                                                                            | REUSE                | Already takes projected proofs                                                                                                      |
+| `ProofNavProvider`                                                                                                         | MODIFY               | Stages became a prop, defaulting to `PROOF_STEPS`                                                                                   |
+| `SectionFrame`                                                                                                             | CREATE               | The one outer frame and index rail every section on this surface is drawn from                                                      |
+| `LensSurface.module.css`                                                                                                   | CREATE               | The Lit Work Surface: a palette swap at the composition root, not a dark variant                                                    |
+| `ProofProgress`                                                                                                            | REUSE                | Reads stages from the provider                                                                                                      |
+| `ProblemSection`                                                                                                           | REPLACE on `/linear` | Superseded by `ProductHistorySection`                                                                                               |
+| `ProductHistorySection`                                                                                                    | CREATE               | Opens the surface on the production record                                                                                          |
+| `LinearInPracticeSection`                                                                                                  | CREATE               | Curated receipts, each with a boundary and a stated-gap marker                                                                      |
+| `SupportingEvidence`                                                                                                       | MODIFY / REORDER     | Framing and an optional plan step became props; the work and its evidence are unchanged                                             |
+| `ProofSection` / `ProofChapter`                                                                                            | MODIFY               | Take an optional plan step; without one the durable shell and chapter mark are unchanged                                            |
+| `InterlockSection`                                                                                                         | REUSE / REORDER      | Third proof here; number and eyebrow now come from the plan                                                                         |
+| `RepositoryIntelligenceSection`                                                                                            | REUSE / REORDER      | Second proof here. Number and eyebrow from the plan; the head leaves the signature block when framed                                |
+| `VrekoSection`                                                                                                             | REUSE / DEMOTE       | Rendered last, in the `inline` frame; content unchanged                                                                             |
+| `RoleLensSection`                                                                                                          | REPLACE on `/linear` | Superseded by `ProductJudgementSection`                                                                                             |
+| `ProductJudgementSection`                                                                                                  | CREATE               | Same three blocks, same content, moved to the close; shares `RoleLens.module.css`                                                   |
+| `CareerSection`                                                                                                            | MODIFY               | Optional plan step; without one its own eyebrow and heading render as on `/`                                                        |
+| `ResumeBridge`                                                                                                             | REUSE                | Resolves the Linear PDF through `resumePdfPath`                                                                                     |
+| `ClaimLedger`                                                                                                              | MODIFY               | Optional plan step; joins the numbered sequence instead of closing outside it                                                       |
+| `EvidenceLink` / evidence rule                                                                                             | REUSE, NO BYPASS     | Receipts render the same unresolved marker as any other row without an artifact                                                     |
+| `FinalCta`, `SiteFooter`                                                                                                   | REUSE                | Lens prop widened to `AnyLens`                                                                                                      |
+| `ProveItResume`                                                                                                            | REUSE                | Unchanged; still renders `/` and `/role/[slug]`                                                                                     |
+| `ApplicationSurface`                                                                                                       | CREATE               | The `/linear` composition                                                                                                           |
+| `ResumeDocument`                                                                                                           | MODIFY               | Now a shell that selects a layout by projection                                                                                     |
+| `ResumePage`/`Masthead`/`Section`/`SystemsSection`/`ExperienceSection`/`FoundationSection`/`AgentPlatformSection`/`Footer` | CREATE               | Print primitives extracted from the old monolith                                                                                    |
+| `DefaultResumeLayout`                                                                                                      | CREATE               | The durable composition, written out explicitly                                                                                     |
+| `LinearResumeLayout`                                                                                                       | CREATE               | The Linear composition, same primitives                                                                                             |
+| Design tokens                                                                                                              | MODIFY               | Added the `--lens-*` dark scale, the `--color-action-*` and `--color-verdict-*` pairs, and `--focus-offset`; no light value changed |
+| Interactions                                                                                                               | REUSE                | All three, unchanged                                                                                                                |
 
 ---
 

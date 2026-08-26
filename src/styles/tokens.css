@@ -57,6 +57,31 @@
   --color-action-ink: var(--color-inverse-ink);
   --color-action-ink-quiet: var(--color-inverse-accent);
 
+  /*
+   * ---- Verdict chips ----
+   *
+   * The same lesson as the action pair above, learned a second time. `.verdictHolds`
+   * filled itself with `--color-ink` and set its label in `--color-inverse-ink`, which
+   * is two independent guesses about polarity: that ink is dark, and that inverse ink
+   * is light. Both hold on a light surface. On the Lit Work Surface, where ink *is* the
+   * light step, the two resolve to the same value and the chip renders as a blank
+   * rectangle — the word is still in the DOM, painted on itself.
+   *
+   * So a verdict states its ground and its ink together, and a surface answers with a
+   * pair it has actually looked at. The rule this encodes, for anything added later:
+   * a token naming text is not a background. Fills pair with a *ground* token
+   * (`--color-canvas`, `--color-inverse-bg`) or with a purpose-named pair like this
+   * one — never with a second ink token.
+   *
+   * `bound-axis.test.tsx` asserts the pair resolves to two different colours in both
+   * palettes, so a future surface cannot reintroduce the collision silently.
+   */
+  --color-verdict-held-bg: var(--color-ink);
+  --color-verdict-held-fg: var(--color-canvas);
+  --color-verdict-breached-bg: var(--color-surface);
+  --color-verdict-breached-fg: var(--color-ink);
+  --color-verdict-breached-border: var(--color-ink);
+
   /* ---- Inverse scale: dark CTA and the decision panel ---- */
   --color-inverse-bg: #1a1a17;
   --color-inverse-ink: #faf9f6;
@@ -105,6 +130,7 @@
   --rule-strong: 2px solid var(--color-ink);
 
   --focus-ring: 2px solid var(--color-accent);
+  --focus-offset: 2px;
 }
 
 /*

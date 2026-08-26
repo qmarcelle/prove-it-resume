@@ -1,7 +1,7 @@
 import { ClaimBoundary } from '@/components/evidence/ClaimBoundary';
 import { SectionHead, sectionFrameClass } from '@/components/section/SectionFrame';
-import { UNRESOLVED_LABEL } from '@/lib/evidence';
 import type { ApplicationLens, LinearReceipt, SurfaceStep } from '@/lib/types';
+import { ReceiptTabs } from './ReceiptTabs';
 import styles from './ApplicationSection.module.css';
 
 /**
@@ -45,36 +45,7 @@ export function LinearInPracticeSection({
       />
 
       <div className={styles.inner}>
-        <ol className={styles.receipts}>
-          {receipts.map((receipt) => (
-            <li className={styles.receipt} key={receipt.identifier}>
-              <div className={styles.receiptHead}>
-                <span className={styles.receiptId}>{receipt.identifier}</span>
-                <h3 className={styles.receiptTitle}>{receipt.title}</h3>
-                <span className={styles.receiptStatus}>{receipt.status}</span>
-              </div>
-
-              <div className={styles.receiptField}>
-                <span className={styles.receiptLabel}>QUESTION</span>
-                <p className={styles.receiptText}>{receipt.question}</p>
-              </div>
-
-              <div className={styles.receiptField}>
-                <span className={styles.receiptLabel}>FINDING</span>
-                <p className={styles.receiptText}>{receipt.finding}</p>
-              </div>
-
-              <ClaimBoundary variant="note">{receipt.boundary}</ClaimBoundary>
-
-              <p className={styles.receiptUnresolved}>
-                {UNRESOLVED_LABEL}
-                <span className={styles.receiptUnresolvedNote}>
-                  private workspace · verified {receipt.verifiedAt}
-                </span>
-              </p>
-            </li>
-          ))}
-        </ol>
+        <ReceiptTabs receipts={receipts} />
 
         <ClaimBoundary variant="note">{copy.boundary}</ClaimBoundary>
       </div>
