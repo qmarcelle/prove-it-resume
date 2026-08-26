@@ -11,7 +11,7 @@ import { defaultRole } from './default';
  * at the interesting part?
  *
  * Like every lens it is a projection. The rows below are the durable rows, promoted
- * into delivery order — discover, architect, build, integrate, release and deploy,
+ * into delivery order: discover, architect, build, integrate, release and deploy,
  * then verify and bound. Nothing is rewritten for this audience, because a row copied
  * for emphasis is a row that can drift away from the evidence it describes.
  *
@@ -38,7 +38,7 @@ export const endToEndDelivery: RoleLens = {
     'Explain architecture rather than hide behind AI-generated code',
   ]),
   showAvailability: true,
-  metaTitle: 'Qwynn Marcelle — end-to-end delivery evidence',
+  metaTitle: 'Qwynn Marcelle · end-to-end delivery evidence',
   metaDescription:
     'Discovery, architecture, implementation, testing, release, deployment and verification, each bound to a public artifact with its limits stated.',
   isDefault: false,

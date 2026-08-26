@@ -15,9 +15,9 @@ import {
 import type { SurfaceStep } from '@/lib/types';
 
 /**
- * 02 — Vreko. Spatial grammar: containment.
+ * 02: Vreko. Spatial grammar: containment.
  *
- * The argument this section has to make is about a boundary — what is published, what
+ * The argument this section has to make is about a boundary: what is published, what
  * is declared but not, and where inspection stops. So the layout is nested boxes you
  * open in place, and the publication state is carried by the stroke of each box rather
  * than by a badge beside it.
@@ -25,7 +25,7 @@ import type { SurfaceStep } from '@/lib/types';
  * The scan layer answers the section in four lines before the diagram appears, because
  * an evaluator skimming for fit should not have to drive an interaction to find out
  * what is being claimed. `LIMIT` restates the proof's own boundary rather than a
- * softened version of it — the scan layer is allowed to be shorter than the proof
+ * softened version of it: the scan layer is allowed to be shorter than the proof
  * layer, never kinder than it.
  */
 export function VrekoSection({ step }: { step?: SurfaceStep } = {}) {

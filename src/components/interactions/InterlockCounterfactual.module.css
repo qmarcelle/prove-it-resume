@@ -7,7 +7,7 @@
   border-top: var(--rule-strong);
   background: var(--color-surface);
   /*
-   * These panels quote real identifiers — 40-hex revisions, dataset URNs, digests,
+   * These panels quote real identifiers: 40-hex revisions, dataset URNs, digests,
    * repository-relative paths. Those are single unbreakable tokens, and one of them is
    * enough to set the width of the whole page on a 320px screen. `anywhere` (rather
    * than `break-word`) is deliberate: it is the value that also affects min-content
@@ -134,9 +134,11 @@
 }
 
 .evidenceSummary {
+  max-width: 72ch;
   font-size: 0.875rem;
   line-height: 1.6;
   color: var(--color-ink-tertiary);
+  text-wrap: pretty;
 }
 
 .evidenceFiles,
@@ -344,7 +346,7 @@
 /*
  * Reduced motion: bars render at their final widths with no width transition. The
  * ordering the animation carried is carried instead by the decision trace, where every
- * stage is stamped with its own label — intent before mutation is read, not watched.
+ * stage is stamped with its own label: intent before mutation is read, not watched.
  */
 @media (prefers-reduced-motion: reduce) {
   .segment,

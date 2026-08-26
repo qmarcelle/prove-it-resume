@@ -23,7 +23,7 @@ export function ClaimLedger({
   /**
    * The plan step this section was placed as, on a surface that has one.
    *
-   * A plain object crossing to a Client Component, which is fine — it is data, and it
+   * A plain object crossing to a Client Component, which is fine; it is data, and it
    * is the same object the rail and the header nav read. The alternative, letting this
    * section print a number of its own, is the thing the plan exists to prevent.
    */
@@ -35,7 +35,7 @@ export function ClaimLedger({
   return (
     <section
       className={`${styles.section} ${sectionFrameClass(step)}`.trim()}
-      id={step ? step.id : 'ledger'}
+      id={step ? step.id : 'claim-ledger'}
       aria-labelledby={step ? `${panelId}-title` : `${panelId}-label`}
     >
       {step ? (
@@ -63,7 +63,7 @@ export function ClaimLedger({
       </button>
 
       {/*
-        The wrapper scrolls horizontally on narrow viewports, so it must be focusable —
+        The wrapper scrolls horizontally on narrow viewports, so it must be focusable:
         otherwise its content is unreachable without a pointer. `role="region"` plus a
         name is what turns that focus stop into something meaningful to announce.
       */}

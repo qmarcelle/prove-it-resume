@@ -154,7 +154,7 @@ export const vrekoArchitecture: VrekoArchitectureData = {
           id: 'local-client',
           name: 'Local service client',
           responsibility:
-            'Published TypeScript client for the daemon over IPC — Unix sockets, or named pipes on Windows. Its type surface is the one part of the interior that is genuinely readable: seventeen method groups including snapshot, session, intelligence, learning, protection and violation.',
+            'Published TypeScript client for the daemon over IPC: Unix sockets, or named pipes on Windows. Its type surface is the one part of the interior that is genuinely readable: seventeen method groups including snapshot, session, intelligence, learning, protection and violation.',
           publication: 'public',
           identifier: '@vreko/local-service-client@1.0.1',
         },
@@ -323,7 +323,7 @@ export const vrekoArchitecture: VrekoArchitectureData = {
   boundaryVerification: {
     method:
       'Every package named above is a declared dependency of a published manifest. Four resolve; nine do not. Re-derive the split directly from the registry.',
-    command: 'npm view @vreko/intelligence version   # E404 — declared, not published',
+    command: 'npm view @vreko/intelligence version   # E404; declared, not published',
   },
 
   discrepancies: [
@@ -348,7 +348,7 @@ export const vrekoArchitecture: VrekoArchitectureData = {
   ],
 
   boundary:
-    'This describes what is published, not the whole product. The public repositories establish package identity, protocol surface, execution paths and the location of the proprietary boundary. They do not establish the core implementation, adoption, usage volume, or production scale — and no accuracy figure is published for the CLI’s AI-attributed change detection, which its README describes as a heuristic.',
+    'This describes what is published, not the whole product. The public repositories establish package identity, protocol surface, execution paths and the location of the proprietary boundary. They do not establish the core implementation, adoption, usage volume, or production scale. No accuracy figure is published for the CLI’s AI-attributed change detection, which its README describes as a heuristic.',
 
   sources: [
     {

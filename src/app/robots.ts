@@ -3,7 +3,7 @@ import { APPLICATION_LENSES } from '@/content/applications';
 
 /**
  * Role lenses and application surfaces are projections of `/`, not separate works, so
- * they are kept out of the index — both here and via `robots: { index: false }` on the
+ * they are kept out of the index; both here and via `robots: { index: false }` on the
  * routes themselves.
  *
  * The disallow list is derived from the registries rather than written out, so

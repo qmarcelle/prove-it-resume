@@ -15,9 +15,9 @@ This document is the map.
 | Route                               | What it is                                   | Indexing                    |
 | ----------------------------------- | -------------------------------------------- | --------------------------- |
 | `/`                                 | The durable evidence surface                 | indexed, canonical, sitemap |
-| `/role/athenahealth-yoh`            | Role lens — same page, reordered             | `noindex, follow` → `/`     |
-| `/role/end-to-end-delivery`         | Role lens — same page, reordered             | `noindex, follow` → `/`     |
-| `/role/linear`                      | **404 by construction**                      | —                           |
+| `/role/athenahealth-yoh`            | Role lens: same page, reordered              | `noindex, follow` → `/`     |
+| `/role/end-to-end-delivery`         | Role lens: same page, reordered              | `noindex, follow` → `/`     |
+| `/role/linear`                      | **404 by construction**                      | :                           |
 | `/linear`                           | The Linear application surface               | `noindex, follow` → `/`     |
 | `/resume/print`                     | Print source, durable projection             | `noindex, nofollow`         |
 | `/resume/print/athenahealth-yoh`    | Print source, durable projection, lens title | `noindex, nofollow`         |
@@ -28,7 +28,7 @@ This document is the map.
 
 `/role/linear` 404s because `ROLE_LENSES` and `APPLICATION_LENSES` are separate
 registries: `generateStaticParams` for `/role/[slug]` walks only the first, and
-`dynamicParams: false` refuses anything else. That is asserted rather than assumed —
+`dynamicParams: false` refuses anything else. That is asserted rather than assumed;
 one public address per application surface is the property the split registry exists to
 protect.
 
@@ -46,29 +46,29 @@ section's frame; `numberSections` stamps the visible number from position; and t
 the header nav, the skip link and every section head read that one stamped list.
 
 Numbers are not authored. A plan that carried its own numbers could disagree with its
-own order, and this one did — see "The sequence defect" below.
+own order, and this one did; see "The sequence defect" below.
 
-| #   | Section                     | Anchor          | Frame      | What it does                                                           |
-| --- | --------------------------- | --------------- | ---------- | ---------------------------------------------------------------------- |
-| —   | Hero                        | `#top`          | —          | The claim, the Evidence Index, the résumé link                         |
-| 01  | Product engineering history | `lin-history`   | `standard` | The production record the recent systems sit on                        |
-| 02  | Linear in practice          | `lin-practice`  | `band`     | Curated private-workspace receipts, marked unverified                  |
-| 03  | Never Ask Twice             | `more-evidence` | `standard` | Agent memory, promoted out of the appendix                             |
-| 04  | Repository Intelligence     | `sec-03`        | `band`     | `workspace.json` → Codex → Tally — the durable proof                   |
-| 05  | Interlock                   | `sec-04`        | `standard` | Coordination under concurrent agents — the durable proof               |
-| 06  | Vreko                       | `sec-02`        | `inline`   | MCP and codebase intelligence — the durable proof, demoted             |
-| 07  | Product judgment            | `lin-judgement` | `standard` | Evidence map, decision receipts, how an unfamiliar platform is entered |
-| 08  | Career                      | `sec-06`        | `standard` | The production history beneath the systems                             |
-| 09  | Claim ledger                | `ledger`        | `inline`   | Every claim, its basis, its limit                                      |
-| —   | Résumé bridge               | `#resume`       | —          | Downloads the Linear PDF                                               |
-| —   | Final CTA / footer          | —               | —          | —                                                                      |
+| #   | Section                     | Anchor                    | Frame      | What it does                                                           |
+| --- | --------------------------- | ------------------------- | ---------- | ---------------------------------------------------------------------- |
+| :   | Hero                        | `#top`                    | :          | The claim, the Evidence Index, the résumé link                         |
+| 01  | Product engineering history | `product-history`         | `standard` | The production record the recent systems sit on                        |
+| 02  | Linear in practice          | `linear-in-practice`      | `band`     | Curated private-workspace receipts, marked unverified                  |
+| 03  | Never Ask Twice             | `never-ask-twice`         | `standard` | Agent memory, promoted out of the appendix                             |
+| 04  | Repository Intelligence     | `repository-intelligence` | `band`     | `workspace.json` → Codex → Tally: the durable proof                    |
+| 05  | Interlock                   | `interlock`               | `standard` | Coordination under concurrent agents: the durable proof                |
+| 06  | Vreko                       | `vreko`                   | `inline`   | MCP and codebase intelligence: the durable proof, demoted              |
+| 07  | Product judgment            | `product-judgment`        | `standard` | Evidence map, decision receipts, how an unfamiliar platform is entered |
+| 08  | Career                      | `career`                  | `standard` | The production history beneath the systems                             |
+| 09  | Claim ledger                | `claim-ledger`            | `inline`   | Every claim, its basis, its limit                                      |
+| :   | Résumé bridge               | `#resume`                 | :          | Downloads the Linear PDF                                               |
+| :   | Final CTA / footer          | :                         | :          | :                                                                      |
 
 The résumé bridge and the closing call to action are deliberately outside the sequence.
 They are the handoff after the argument ends, they carry no claim, and numbering them
 would say the page has one more thing to prove than it does.
 
 The proof order is the design direction's: Never Ask Twice, Repository Intelligence,
-Interlock, Vreko. It runs from the reader's own product problem outward — memory is the
+Interlock, Vreko. It runs from the reader's own product problem outward: memory is the
 nearest thing in the corpus to what they build, repository context is the surface under
 it, and coordination under concurrent agents is the hardest claim and the one carrying a
 frozen packet and an independent verifier, so it lands last of the three.
@@ -116,23 +116,33 @@ section head on the served page and requires them to be one list.
 
 ## The product-history registers
 
-Three registers read together — how the work progressed, who it was for, what it spanned
-— from `src/content/history/product-engineering.ts`.
+Three registers read together (how the work progressed, who it was for, what it spanned)
+from `src/content/history/product-engineering.ts`.
 
 The design direction supplied this section with three details no source in this
-repository supports: a browser stack, ownership of distinct member, broker and employer
-product surfaces, and what was built between 2016 and 2019. All three are already
-recorded in `UNVERIFIED` in `content/resume/facts.ts`.
+repository supported at the time: a browser stack, ownership of distinct member, broker
+and employer product surfaces, and what was built between 2016 and 2019. All three were
+later established by the record and all three are now stated. `UNVERIFIED` in
+`content/resume/facts.ts` is empty.
 
-So a record is either **stated**, carrying a `body` traceable to the fact corpus, or
-**unresolved**, carrying the thing it would like to say and the id of the recorded gap.
-There is no third state, because "present but hedged" is how unverified material gets
-read as evidence. Unresolved records take the same dashed burnt-orange treatment every
-unverified row on this site takes, marked `NOT YET EVIDENCE`, and they are never linked.
+The mechanism it used stays. A record is either **stated**, carrying a `body` traceable
+to the fact corpus, or **unresolved**, carrying the thing it would like to say and the id
+of a recorded gap. There is no third state, because "present but hedged" is how
+unverified material gets read as evidence. Unresolved records take the same dashed
+burnt-orange treatment every unverified row on this site takes, marked
+`NOT YET EVIDENCE`, and they are never linked.
 
-Deleting those three entries was the alternative, and it is worse than it looks: a page
-that silently omits what it cannot prove reads as complete, and the reader never learns
-there was a question. Stated, they are the three things to ask about in an interview.
+Deleting an unresolved entry was always the alternative, and it is worse than it looks: a
+page that silently omits what it cannot prove reads as complete, and the reader never
+learns there was a question. Stated, they are the things to ask about in an interview,
+and when one is answered it stops being a question rather than staying on the page for
+effect. `ProductHistorySection.test.tsx` renders an unresolved fixture through the
+component, so the path is exercised even while nothing on the real page takes it.
+
+The register that says who the products served is team ownership throughout, and says so
+in each row. The hands-on work sits in the stage progression above it, attached to the
+years it was done. Keeping those two apart is what stops a portal estate delivered by
+fourteen engineers from reading as one person's build.
 
 Before this, `UNVERIFIED` existed and nothing rendered it. It was a test guard, which is
 half the job.
@@ -145,7 +155,7 @@ Interaction stages are not written into the address as a reader steps through th
 Browsing `/linear` leaves `/linear` alone; `COPY THIS VIEW`, on each interaction's
 ordinal row, builds the address on demand and carries the whole surface's state plus the
 sharer's section anchor. An arriving deep link is applied on mount exactly as before, and
-the one remaining write to the URL only ever deletes — a parameter the reader has stepped
+the one remaining write to the URL only ever deletes: a parameter the reader has stepped
 away from, so the address never asserts a stage the page is not in.
 
 `KNOWN_KEYS` in `interactions/deep-link.ts` is the list of query keys this page owns, and
@@ -161,8 +171,8 @@ The standard, as an acceptance criterion:
 > Mobile is not desktop stacked vertically. Mobile preserves the decision hierarchy and
 > recomposes any visualisation whose meaning depends on spatial comparison.
 
-Four viewports are gated with every disclosure open — 390×844, 320×568, 768×1024,
-1440×900 — against horizontal scroll, clipped leaf text, and, below 700px, any control
+Four viewports are gated with every disclosure open (390×844, 320×568, 768×1024,
+1440×900) against horizontal scroll, clipped leaf text, and, below 700px, any control
 under the touch floor. Two further tests check what a prohibition list cannot: the bound
 axis still shows every value against one shared marker at 390px, and the hero chain turns
 to rows rather than shrinking.
@@ -185,14 +195,14 @@ See [ADR 0013](decisions/0013-mobile-recomposes-rather-than-stacks.md).
 ## The receipt tab strip
 
 `ReceiptTabs` is the surface's one new client leaf. It renders the stacked list on the
-server and on the first client render, then becomes the strip — so the degraded form is
+server and on the first client render, then becomes the strip, so the degraded form is
 what the direction calls for, is what a reader without JavaScript keeps, and is not a
 fallback bolted on afterwards. Hydration detection is `useSyncExternalStore` rather than
 a state-setting effect.
 
 Arrow keys move between tabs and select as they go; Home and End reach the ends; the
-strip wraps. Selection is carried four ways — edge, field, label brightness, and a
-filled mark that is not chromatic at all — on top of `aria-selected`.
+strip wraps. Selection is carried four ways (edge, field, label brightness, and a
+filled mark that is not chromatic at all) on top of `aria-selected`.
 
 Its stylesheet is its own. A CSS module imported by a client component is emitted into
 the client chunk graph, and the receipts are wholly owned by this component now, so
@@ -205,8 +215,8 @@ there is nothing left for the two server sections beside it to share.
 One outer frame, in `src/components/section/SectionFrame.tsx`, serves every section on
 this surface. It owns two things nothing else may set:
 
-- **the index rail** — a fixed column at the section's own left edge holding the number;
-- **the content origin** — where the eyebrow, the heading and the lead begin.
+- **the index rail**: a fixed column at the section's own left edge holding the number;
+- **the content origin**: where the eyebrow, the heading and the lead begin.
 
 `frame` is the only axis of variation, and the page plan declares it, because how loudly
 a section is set is a decision about the page rather than about the section.
@@ -220,7 +230,7 @@ a section is set is a decision about the page rather than about the section.
 
 The band is inset rather than full-bleed, and pulls its content back with a negative
 inline margin equal to its padding. A padded band would move its own content origin
-inward and put its heading 28px right of every unbanded section — the exact misalignment
+inward and put its heading 28px right of every unbanded section: the exact misalignment
 the frame exists to remove. Reaching past the layout shell instead was not available:
 the measure and the gutters belong to the shell, and a full-bleed section would overlap
 the progress rail beside it.
@@ -273,9 +283,9 @@ exist once there is one column, so the number and the eyebrow share a metadata l
 
 ```
 src/content/
-  proofs/            durable proof — untouched by any lens
-  claims.ts          durable claim ledger — untouched
-  supporting/        Never Ask Twice — untouched, reframed on /linear
+  proofs/            durable proof (untouched by any lens
+  claims.ts          durable claim ledger) untouched
+  supporting/        Never Ask Twice: untouched, reframed on /linear
   site.ts            durable site copy; hero/nav defaults
   lenses.ts          ALL_LENSES / ALL_RESUME_LENSES / PRINTABLE_LENSES
   roles/             RoleLens records          → /role/<slug>
@@ -324,7 +334,7 @@ references, workspace URLs, API credentials, or any runtime path from the browse
 workspace.
 
 Receipts carry no link. No public artifact stands behind them, so under this site's own
-evidence rule they are stated claims — and they render the same
+evidence rule they are stated claims, and they render the same
 `[VERIFY BEFORE PUBLISHING]` marker as any other unresolved row, with the section stating
 plainly that they are not verified evidence.
 
@@ -383,7 +393,7 @@ any individual lens. Registering `linear` produced its print route and its PDF w
 edit to the script.
 
 `pnpm resume:pdf:check` compares the print route's content fingerprint against the
-recorded one and reads the committed PDF's own structure — real PDF, two pages, US
+recorded one and reads the committed PDF's own structure; real PDF, two pages, US
 Letter, carrying every external destination the route has.
 
 ---
@@ -395,7 +405,7 @@ Letter, carrying every external destination the route has.
 | Fact / projection  | `src/content/resume/resume.test.ts`             | Every printed bullet exists verbatim in facts; every quantity is in `RESUME_QUANTITIES`; no projection claims an `UNVERIFIED` fact; grouped capabilities are all durable; projections resolve without a stale id |
 | Durable stability  | `src/content/resume/resume.test.ts`             | The durable projection selects every role and every bullet, in durable order                                                                                                                                     |
 | Linear projection  | `src/content/resume/resume.test.ts`             | Initiatives lead; NAT promoted; Vreko demoted; receipts bounded and unlinked; footer → `/linear`                                                                                                                 |
-| Lens integrity     | `src/lib/role-lens.test.ts`                     | Every lens — application lenses included — projects the same proof objects and only durable mapping rows                                                                                                         |
+| Lens integrity     | `src/lib/role-lens.test.ts`                     | Every lens (application lenses included) projects the same proof objects and only durable mapping rows                                                                                                           |
 | Registries         | `src/lib/role-lens.test.ts`                     | Unique slugs across both registries; `/role/linear` unresolvable; each non-default lens printable exactly once; rail numbered by position                                                                        |
 | Private boundary   | `src/content/linear/linear.test.ts`             | No workspace host or credential anywhere in `src/`; identifiers are identifiers; every receipt has a boundary and a verification date                                                                            |
 | Artifacts          | `src/content/content.test.ts`                   | Every lens has a distinct PDF and the file is on disk                                                                                                                                                            |

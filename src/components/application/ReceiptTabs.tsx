@@ -28,7 +28,7 @@ const useHydrated = () =>
  *
  * The direction sets this block as three tabs carrying id, name and state, with the
  * selected receipt in a panel beside them. The site's own rule is that the page has to
- * be understandable with JavaScript off, and the direction agrees — it names the
+ * be understandable with JavaScript off, and the direction agrees; it names the
  * degraded form explicitly: "the tab set degrades to three stacked receipts".
  *
  * So the stacked form is not a fallback bolted on afterwards; it is what the server
@@ -37,15 +37,15 @@ const useHydrated = () =>
  * With scripting off that render never happens, and all three receipts stay open, each
  * with its own boundary and its own unresolved mark.
  *
- * The alternative — server-rendering `role="tab"` buttons and letting them do nothing
- * until hydration — was rejected because a control announced to assistive technology as
+ * The alternative: server-rendering `role="tab"` buttons and letting them do nothing
+ * until hydration: was rejected because a control announced to assistive technology as
  * a tab, that does not switch anything, is a worse failure than a longer page.
  *
  * ## Keyboard behaviour
  *
  * Arrow keys move between tabs and select as they go, with Home and End for the ends:
  * the WAI-ARIA automatic-activation pattern. The direction asks for the panel to take
- * focus on activation, and that is deliberately not done on arrow keys — moving focus
+ * focus on activation, and that is deliberately not done on arrow keys: moving focus
  * into the panel is exactly what would make the next arrow press stop working. Tab
  * reaches the panel, which carries `tabIndex={0}` so its prose is keyboard-scrollable.
  *
@@ -160,7 +160,7 @@ function ReceiptHead({ receipt }: { receipt: LinearReceipt }) {
 
 /**
  * The question, the finding, the boundary, and the mark that says none of it is
- * verified. Identical in both forms — the layout may change, the disclosure may not.
+ * verified. Identical in both forms: the layout may change, the disclosure may not.
  */
 function ReceiptBody({ receipt }: { receipt: LinearReceipt }) {
   return (

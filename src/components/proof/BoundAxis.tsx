@@ -11,7 +11,7 @@ import styles from './BoundAxis.module.css';
  * not have to trust.
  *
  * Everything shown is stated by the artifact, not computed here. Totals in particular
- * are read from the frame rather than summed from the segments — if the two ever
+ * are read from the frame rather than summed from the segments: if the two ever
  * disagree, that is a finding about the evidence and it should surface as a visibly
  * wrong bar, not be smoothed over by a component that recomputes what it draws.
  *
@@ -108,7 +108,7 @@ function Arm({
             style={{ width: `${(segment.value / scaleMax) * 100}%` }}
           >
             {/*
-             * Name and value together. The value is the whole point of the segment —
+             * Name and value together. The value is the whole point of the segment:
              * a bar labelled only "alpha" makes the reader measure it off the axis by
              * eye, which is exactly the estimation this section exists to remove.
              */}
@@ -125,7 +125,7 @@ function Arm({
        *
        * A segment worth 20 against a scale of 160 is an eighth of the axis, and an
        * eighth of a phone is not eight characters of mono. Left inside, `gamma 20`
-       * rendered as `gamm` — the reader lost the number the whole comparison turns on,
+       * rendered as `gamm`: the reader lost the number the whole comparison turns on,
        * and lost it silently, because the bar clips rather than overflows.
        *
        * So below the width where every label fits, the labels come out and the bar goes

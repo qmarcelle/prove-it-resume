@@ -10,7 +10,7 @@ import styles from '../ResumeDocument.module.css';
  *
  * The consequence is that this component fails by clipping rather than by reflowing,
  * so `tests/e2e/resume.spec.ts` asserts that no page's content exceeds its box for
- * every projection — not only for the one whose layout was tuned by hand.
+ * every projection, not only for the one whose layout was tuned by hand.
  */
 export function ResumePage({ n, children }: { n: 1 | 2; children: React.ReactNode }) {
   return (

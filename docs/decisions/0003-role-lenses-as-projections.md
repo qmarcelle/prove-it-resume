@@ -1,11 +1,11 @@
-# 0003 — Role lenses are projections, not duplicated pages
+# 0003: Role lenses are projections, not duplicated pages
 
 **Status:** accepted
 
 ## Problem
 
 The same evidence needs to be presented for different roles, emphasising different
-problems. The obvious implementation — a page per role — makes every application a
+problems. The obvious implementation (a page per role) makes every application a
 fork, and forks drift. Worse, if two lenses could state different things about the same
 system, an evaluator comparing them would learn that the claims are marketing.
 

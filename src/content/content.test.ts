@@ -4,14 +4,15 @@ import { describe, expect, it } from 'vitest';
 import { PROOFS } from '@/content/proofs';
 import { CLAIMS } from '@/content/claims';
 import { DECISION_RECEIPTS } from '@/content/decisions';
-import { PROFILES, RESUME } from '@/content/site';
+import { PROFILES, RESUME, SITE } from '@/content/site';
 import { neverAskTwice } from '@/content/supporting/never-ask-twice';
 import { PROOF_STEPS } from '@/lib/proof-steps';
 import { isResolved } from '@/lib/evidence';
-import { ALL_RESUME_LENSES } from '@/content/lenses';
+import { ALL_LENSES, ALL_RESUME_LENSES } from '@/content/lenses';
 import { defaultRole } from '@/content/roles';
 import { resumePdfPath } from '@/lib/resume';
 import { PUBLISHED_ORIGINS } from '@/content/published';
+import { RESUME_CAREER_DURATION } from '@/content/resume/facts';
 
 /**
  * Content-integrity tests.
@@ -30,12 +31,12 @@ describe('proof content', () => {
     // The rail's six stages must all be real anchors somewhere on the page.
     expect(PROOF_STEPS).toHaveLength(6);
     expect(PROOF_STEPS.map((step) => step.id)).toEqual([
-      'sec-01',
-      'sec-02',
-      'sec-03',
-      'sec-04',
-      'sec-05',
-      'sec-06',
+      'operating-thesis',
+      'vreko',
+      'repository-intelligence',
+      'interlock',
+      'role-fit',
+      'career',
     ]);
   });
 
@@ -87,7 +88,7 @@ describe('decision receipts', () => {
   it('answers every question from a recorded decision', () => {
     // These were populated from the Linear issues and Fibery Open Questions that carried
     // the reasoning when each decision was made. An unanswered receipt is still a valid
-    // state — the component renders its shape as AWAITING — but a partial one is not: a
+    // state (the component renders its shape as AWAITING) but a partial one is not: a
     // receipt that states a decision without its constraint or its cost is the kind of
     // tidied-up rationale this section exists to avoid.
     for (const receipt of DECISION_RECEIPTS) {
@@ -137,7 +138,7 @@ describe('evidence integrity', () => {
 
   /*
    * Evidence lives elsewhere and must say so with an absolute URL. The one exception is
-   * an artifact this site generates and serves itself — currently the résumé PDF —
+   * an artifact this site generates and serves itself (currently the résumé PDF)
    * which is a root-relative path. That exception is enumerated rather than pattern-
    * matched, so a relative href cannot appear anywhere else by accident.
    */
@@ -147,9 +148,69 @@ describe('evidence integrity', () => {
    * The other exception, enumerated for the same reason: a contact address is a way to
    * reach the person, not an artifact anyone can inspect, so it is the one record whose
    * destination is a scheme rather than a page. Naming the id keeps that from becoming
-   * a general licence — a `mailto:` anywhere else still fails the check below.
+   * a general licence: a `mailto:` anywhere else still fails the check below.
    */
   const CONTACT_SCHEME = new Set(['email']);
+
+  it('states a canonical origin the metadata layer can build absolute URLs from', () => {
+    /*
+     * `new URL(SITE.origin)` runs at module scope in the root layout, so a malformed
+     * value is a build failure with a stack trace pointing at Next rather than at the
+     * value. A trailing slash is checked separately because every consumer appends a
+     * path: `${origin}/role/x` would become `//role/x` and resolve to a different host.
+     */
+    expect(() => new URL(SITE.origin)).not.toThrow();
+    expect(new URL(SITE.origin).protocol).toBe('https:');
+    expect(SITE.origin.endsWith('/')).toBe(false);
+  });
+
+  it('gives every lens both halves of its own social card', () => {
+    // A lens missing either one silently inherits the durable page's card, which is how
+    // `/linear` came to unfurl as a description of a page it is not.
+    for (const lens of ALL_LENSES) {
+      expect(lens.metaTitle.length, `${lens.slug} has no metaTitle`).toBeGreaterThan(0);
+      expect(
+        lens.metaDescription.length,
+        `${lens.slug} has no metaDescription`,
+      ).toBeGreaterThan(0);
+    }
+
+    // And no two surfaces may describe themselves identically, or the card stops
+    // distinguishing the page it belongs to.
+    const titles = ALL_LENSES.map((lens) => lens.metaTitle);
+    expect(new Set(titles).size).toBe(titles.length);
+  });
+
+  it('never restates a career figure the fact corpus has retired', () => {
+    /*
+     * The résumé has its own guard for this. It was not enough: the retired figure lived
+     * on in the `/linear` hero as "Eight years in technology", spelled out, where a test
+     * looking for the numeral could not see it and neither could a search.
+     *
+     * The corpus is the authority on how long the career is, so every surface that talks
+     * about it is checked against the same record. A projection test cannot cover the
+     * pages that are not projections.
+     */
+    const surfaces = [
+      ...ALL_LENSES.flatMap((lens) => [lens.metaTitle, lens.metaDescription]),
+      // Application lenses carry their own hero copy; role lenses do not.
+      ...ALL_LENSES.flatMap((lens) =>
+        'hero' in lens
+          ? [lens.hero.headline, lens.hero.supporting, lens.hero.thesis]
+          : [],
+      ),
+      SITE.headline,
+      SITE.thesis,
+      SITE.supporting,
+    ].join(' ');
+
+    for (const retired of RESUME_CAREER_DURATION.retired) {
+      expect(
+        surfaces.toLowerCase(),
+        `a surface still states the retired figure "${retired}"`,
+      ).not.toContain(retired.toLowerCase());
+    }
+  });
 
   it('resolves external evidence only to absolute https URLs', () => {
     for (const ref of allRefs) {
@@ -210,7 +271,7 @@ describe('résumé artifacts', () => {
  *
  * A reader should land on the site or docs a person can actually read; the repository
  * the claim was written against belongs underneath as a citation, not as the
- * destination. These checks keep that ordering from quietly inverting — the failure
+ * destination. These checks keep that ordering from quietly inverting: the failure
  * mode is a future contributor "fixing" a CTA back to a GitHub URL because it felt more
  * precise, which is precisely the trade this made deliberately.
  */

@@ -1,5 +1,5 @@
 /*
- * How work becomes evidence — the application surface's hero figure.
+ * How work becomes evidence: the application surface's hero figure.
  *
  * ## Read this file as the settled frame
  *
@@ -11,10 +11,23 @@
  * ## A container query, not a media query
  *
  * The figure sits in the hero's flexible right column, so its own width and the
- * viewport's diverge sharply — the same 1024px viewport gives this figure roughly 390px
+ * viewport's diverge sharply: the same 1024px viewport gives this figure roughly 390px
  * of room, and a 900px viewport gives it the full measure once the hero has stacked. A
  * viewport query would get both cases backwards, so the row/column decision is made
  * against the figure's own inline size.
+ */
+/*
+ * ## Not a card
+ *
+ * This used to carry a border and a radius, which made the hero's right column two
+ * outlined objects stacked on each other: an Evidence Index a reader is meant to use,
+ * and a diagram explaining what the index is a list of. Two boxes of equal weight say
+ * they are two things of equal weight, and they are not; one is the ten-second answer
+ * and the other is its footnote.
+ *
+ * So the box goes and a hairline stays. The figure is now an annotation *under* the
+ * index rather than a second panel beside it, which is also the surface's own rule:
+ * a border here means an object you can inspect or operate.
  */
 .figure {
   container: evidence-chain / inline-size;
@@ -22,9 +35,8 @@
   flex-direction: column;
   gap: var(--space-3);
   margin: 0;
-  padding: var(--space-4);
-  border: var(--rule);
-  border-radius: var(--radius);
+  padding: var(--space-4) 0 0;
+  border-top: var(--rule);
 }
 
 .caption {
@@ -48,8 +60,8 @@
 
 /*
  * Five rows by default, five columns once the figure is wide enough to give each
- * station a readable measure. The direction rotates rather than shrinks — the same
- * marks and the same labels, turned — because five columns of two-word wraps would be
+ * station a readable measure. The direction rotates rather than shrinks: the same
+ * marks and the same labels, turned, because five columns of two-word wraps would be
  * a diagram of the layout rather than of the argument.
  */
 .chain {
@@ -86,8 +98,8 @@
  * The connector. A pseudo-element on the station it arrives at, so a station and the
  * line reaching it are one object and cannot be reordered apart.
  *
- * It grows from the origin the reading direction starts at — downward in the stacked
- * layout, rightward once the chain is a row — and lands halfway between one station's
+ * It grows from the origin the reading direction starts at: downward in the stacked
+ * layout, rightward once the chain is a row, and lands halfway between one station's
  * delay and the next, so the line is drawing while the mark it points at is still
  * arriving.
  */
@@ -138,7 +150,7 @@
   /*
    * The one moment of the sequence that is not a rise. It lands after every station has
    * arrived, so the reader sees the chain complete and *then* sees which end of it was
-   * earned — which is the order the argument is made in.
+   * earned, which is the order the argument is made in.
    */
   animation: chain-verify 660ms ease-out both;
   animation-delay: 2340ms;
@@ -213,7 +225,7 @@
  * Reduced motion removes the sequence rather than compressing it.
  *
  * The global rule clamps `animation-duration` but says nothing about delay, and a 1.5s
- * delay in front of a 0.01ms animation is still a staged reveal — the exact experience
+ * delay in front of a 0.01ms animation is still a staged reveal: the exact experience
  * the preference asks not to have. Dropping the animations entirely leaves the settled
  * frame, which every rule above already describes.
  */

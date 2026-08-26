@@ -17,7 +17,7 @@ import styles from '../ResumeDocument.module.css';
  *
  * Explicit rather than generated from a block list. There are exactly two layouts in
  * this application and there is no third coming; a generic renderer would trade this
- * file — which anyone can read top to bottom and check against the printed sheet — for
+ * file (which anyone can read top to bottom and check against the printed sheet) for
  * an interpreter plus a schema, and buy nothing with it.
  *
  * The order is load-bearing and not a style choice: profile, systems, boundary on page

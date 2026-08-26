@@ -20,7 +20,7 @@ import type { SurfaceStep } from '@/lib/types';
 import styles from './InterlockSection.module.css';
 
 /**
- * 04 — Interlock. Spatial grammar: measurement.
+ * 04: Interlock. Spatial grammar: measurement.
  *
  * The chapter furniture turns vertical here and the section reads against a horizontal
  * axis. That is not variety for its own sake: the argument is two arms measured against
@@ -119,7 +119,7 @@ export function InterlockSection({ step }: { step?: SurfaceStep } = {}) {
         {/*
          * The distinctions the packet insists on, as the packet states them. Rendered
          * as one mono line rather than a list because they are read as a single
-         * caveat — and joined from the content so the set cannot quietly shrink.
+         * caveat, and joined from the content so the set cannot quietly shrink.
          */}
         <ProofLayerColumn accent label="THE DISTINCTIONS THE PACKET INSISTS ON">
           <ProofLayerBody>{interlockHac330.distinctions.join(' · ')}</ProofLayerBody>

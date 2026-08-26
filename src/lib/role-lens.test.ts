@@ -180,12 +180,12 @@ describe('application lenses', () => {
   it('plans a page whose every stage is a section the surface renders', () => {
     const known = new Set([
       ...PROOFS.map((proof) => proof.sectionId),
-      'lin-history',
-      'lin-practice',
-      'lin-judgement',
-      'more-evidence',
-      'sec-06',
-      'ledger',
+      'product-history',
+      'linear-in-practice',
+      'product-judgment',
+      'never-ask-twice',
+      'career',
+      'claim-ledger',
     ]);
 
     for (const lens of APPLICATION_LENSES) {
@@ -218,10 +218,38 @@ describe('application lenses', () => {
         expect(step.label.length).toBeGreaterThan(0);
       }
 
-      // Two sections sharing an eyebrow would put the same name at two positions, which
-      // is the ambiguity the plan exists to remove.
-      const eyebrows = lens.pagePlan.map((step) => step.eyebrow);
-      expect(new Set(eyebrows).size).toBe(eyebrows.length);
+      /*
+       * Identity is `id` and `label`; the eyebrow names a *kind* and may repeat.
+       *
+       * Three sections share `AI PRODUCT PROOF` on purpose; that is what they are, and
+       * the eyebrow saying so is the point. What was wrong before was the eyebrow
+       * carrying `· 01`, `· 02`, `· 03`: a second ordinal system running under the
+       * page's own, disagreeing with the hero's third one about which system was `01`.
+       * Uniqueness belongs to the things that address a section, not to the label that
+       * classifies it.
+       */
+      const labels = lens.pagePlan.map((step) => step.label);
+      expect(new Set(labels).size).toBe(labels.length);
+    }
+  });
+
+  it('leaves the page plan as the only ordinal system on the surface', () => {
+    /*
+     * A visible number must mean position in the reading order and nothing else.
+     *
+     * The regression guarded against is the one that shipped: eyebrows reading
+     * `AI PRODUCT PROOF · 01` while the plan numbered the same section `03`, so the
+     * page asserted two different numbers for one place. Section-level copy states no
+     * ordinal of its own; `numberSections` stamps the only one there is.
+     */
+    for (const lens of APPLICATION_LENSES) {
+      for (const step of lens.pagePlan) {
+        expect(
+          step.eyebrow,
+          `"${step.eyebrow}" carries an ordinal: the plan owns the numbering`,
+        ).not.toMatch(/\b\d{1,2}\b/);
+        expect(step.label).not.toMatch(/\b\d{1,2}\b/);
+      }
     }
   });
 
@@ -239,7 +267,7 @@ describe('application lenses', () => {
   });
 
   it('places every proof section the plan names at that plan position', () => {
-    // A proof carries a durable stage — the position it holds on `/`. On an application
+    // A proof carries a durable stage: the position it holds on `/`. On an application
     // surface that reorders them, that stage is a fact about a different page, and the
     // section may not print it. This is the assertion that says the two are allowed to
     // differ, and that it is the plan the reader is shown.

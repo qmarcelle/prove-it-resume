@@ -21,8 +21,8 @@ import {
  *
  * A projection is a set of *selections over ids*. It names which systems appear and in
  * what order, which of a role's durable bullets to print and in what order, which
- * capability groups to show, and what to call each block. It carries framing copy — a
- * profile paragraph, a block label — and it carries no facts, because there is nowhere
+ * capability groups to show, and what to call each block. It carries framing copy: a
+ * profile paragraph, a block label, and it carries no facts, because there is nowhere
  * to put one: every list below is a list of ids.
  *
  * `resolveResume` turns that into a plain object the layout renders. Unknown ids are a

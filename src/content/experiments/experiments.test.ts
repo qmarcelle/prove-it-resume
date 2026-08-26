@@ -46,7 +46,7 @@ describe('evidence links', () => {
 
   it('pins every receipt evidence link, directories included', () => {
     // A receipt argues about a decision at a point in time. A link that follows main
-    // would quietly restate that argument against code the decision never saw — so a
+    // would quietly restate that argument against code the decision never saw, so a
     // receipt citing an evidence tree has to name the revision the tree was read at.
     const hrefs = DECISION_RECEIPTS.flatMap((receipt) =>
       (receipt.evidence ?? []).map((reference) => reference.href),
@@ -103,7 +103,7 @@ describe('repository decision run', () => {
 
   it('states what was held fixed, including the model', () => {
     // This run does involve a model, and the artifact records prompt and settings
-    // digests, so naming them is supported here — unlike in HAC-330.
+    // digests, so naming them is supported here: unlike in HAC-330.
     expect(repositoryDecision.controls.heldFixed.join(' ')).toMatch(/qwen-plus/);
     expect(repositoryDecision.controls.heldFixed.join(' ')).toMatch(/Prompt digest/);
   });

@@ -7,7 +7,7 @@ import { PUBLISHED_SITES } from '../published';
  * reproduced here at the same pin; a branch link would silently drift.
  *
  * **The rows for the controlled experiment point at HAC-330's own artifacts.** They
- * briefly pointed at HAC-342 — the public republication of the *cloud* run — which
+ * briefly pointed at HAC-342 (the public republication of the *cloud* run) which
  * meant a row labelled "frozen evidence packet", sitting directly under "controlled
  * experiment", opened a different experiment's packet. The repository is explicit that
  * HAC-330, HAC-340 and HAC-343 are three separate results and are never combined, so a
@@ -29,9 +29,9 @@ const ILK_PIN_SHORT = ILK_PIN.slice(0, 12);
  * The deep-link vocabulary is the cockpit's own, taken from its published contract
  * (`/media/hac-341/evidence/view-model.json`, `deepLink.shape`) and checked against the
  * running site rather than inferred: `run.local.treatment` and `run.local.baseline`
- * resolve, and so does `run.cloud.overview`. The cockpit refuses substitution — an
+ * resolve, and so does `run.cloud.overview`. The cockpit refuses substitution: an
  * unrecognised run or state renders "Run unavailable · Substitution refused" instead of
- * quietly showing the canonical run — so a stale link here degrades loudly, which is the
+ * quietly showing the canonical run, so a stale link here degrades loudly, which is the
  * behaviour this content model wants.
  *
  * The cockpit displays `PUBLICATION 75253e38791e…` for the cloud run: the same commit
@@ -48,7 +48,7 @@ const ILK_CLOUD = ilkRun('hac340-cloud', 'cloud', 'run.cloud.overview');
 
 export const interlock: Proof = {
   id: 'interlock',
-  sectionId: 'sec-04',
+  sectionId: 'interlock',
   stage: '04',
   eyebrow: '04 / PROOF THREE',
   railLabel: 'Interlock',
@@ -104,7 +104,7 @@ export const interlock: Proof = {
       id: 'ilk-cloud',
       // A separate recorded run, labelled as one. HAC-340 does not reproduce the
       // counterfactual above, and the repository is explicit that the two are never
-      // combined — so this row must not borrow the controlled experiment's artifacts.
+      // combined, so this row must not borrow the controlled experiment's artifacts.
       label: 'Cloud traversal · separate run',
       detail: 'Google ADK + Vertex AI + Cloud Run + MCP proxy',
       detailIsCode: true,
@@ -152,7 +152,7 @@ export const interlock: Proof = {
     {
       id: 'ilk-ev-cloud',
       kind: 'deployed',
-      title: 'Google Cloud participation (HAC-340) — a separate run',
+      title: 'Google Cloud participation (HAC-340): a separate run',
       description:
         'One recorded traversal through an authenticated decision/execution boundary, with the mutation and an independently authenticated read-back kept as separate facts. Published for logged-out inspection as HAC-342, with its own verifier. It does not reproduce the counterfactual above.',
       href: ILK_CLOUD,

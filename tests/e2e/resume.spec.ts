@@ -20,7 +20,7 @@ const PAGE_H = 1056;
 /*
  * Vertical room every sheet must keep between its content and the bottom of its box.
  *
- * Not a style preference — a tolerance. The sheets are fixed-height with `overflow:
+ * Not a style preference: a tolerance. The sheets are fixed-height with `overflow:
  * hidden`, and text metrics differ between the machine a layout is tuned on and the one
  * that renders it: the same durable sheet that fit exactly here was clipped by 7px on a
  * CI runner. The reserve is what stops that being discovered in a print dialog.
@@ -68,7 +68,7 @@ for (const { route, title } of ROUTES) {
 
     /*
      * Headroom, not just line count. The title and the domains string share one fixed
-     * measure, and the export's own tuning left 1.3px of slack — which fit on macOS and
+     * measure, and the export's own tuning left 1.3px of slack, which fit on macOS and
      * wrapped on Linux, because font metrics differ between Chromium builds. Asserting
      * the margin is what makes this catch a too-long title here rather than on whatever
      * platform someone else runs.
@@ -89,9 +89,9 @@ for (const { route, title } of ROUTES) {
 
   /*
    * The contact row holds the location and three links, and they fit on one line at
-   * this measure. Wrapping is not a layout failure here — the row is authored with
+   * this measure. Wrapping is not a layout failure here: the row is authored with
    * `flex-wrap: wrap` and a row gap, so a second line costs ~19px on a page that cannot
-   * reflow — but it is a legibility one, because the row is scanned rather than read
+   * reflow, but it is a legibility one, because the row is scanned rather than read
    * and a wrapped entry reads as belonging to whatever sits above it.
    *
    * One line is also what keeps a fourth entry from being added without anyone
@@ -100,8 +100,8 @@ for (const { route, title } of ROUTES) {
    */
   /*
    * The identity line carries the name, the place, and the page meta on one row. It has
-   * the same failure mode the target row does — font metrics differ between Chromium
-   * builds, so a line that fits on macOS can wrap on Linux — and the same consequence:
+   * the same failure mode the target row does: font metrics differ between Chromium
+   * builds, so a line that fits on macOS can wrap on Linux, and the same consequence:
    * a wrap here shifts the whole fixed-height document down. Asserted as headroom
    * rather than line count so a longer name fails here rather than on someone else's
    * machine.
@@ -141,7 +141,7 @@ for (const { route, title } of ROUTES) {
    * The bottom-anchored assertions below test the two elements that were clipped once
    * before, which made them a regression test for one failure rather than a test of the
    * property. A page box is `overflow: hidden`, so *any* block that outgrows it is
-   * silently cut — and a second layout, tuned by hand, is exactly where that happens
+   * silently cut, and a second layout, tuned by hand, is exactly where that happens
    * next. Comparing each page's scroll height to its client height catches all of it,
    * including content that overflows a flex child rather than the page itself.
    */
@@ -149,7 +149,7 @@ for (const { route, title } of ROUTES) {
    * A page that fits *exactly* is not a layout, it is a coincidence.
    *
    * Both sheets used to sum to 1056px of content in a 1056px box. It held until a CI
-   * runner rasterised a few glyphs differently and the last block was clipped — by a
+   * runner rasterised a few glyphs differently and the last block was clipped: by a
    * page reporting no overflow, because the block grows to fill and clips inside itself.
    *
    * So the property under test is a stated reserve, not the absence of overflow. The
@@ -178,7 +178,7 @@ for (const { route, title } of ROUTES) {
 
     /*
      * Reported on every run, not only on failure. Text metrics differ between machines,
-     * so the number that matters is the one CI measures — and a sheet drifting toward
+     * so the number that matters is the one CI measures, and a sheet drifting toward
      * the edge should be readable in a green run rather than discovered by a red one.
      */
     console.log(
@@ -228,12 +228,12 @@ for (const { route, title } of ROUTES) {
      * Both are pinned to the foot of their page with `margin-top: auto`; if anything
      * above them grows, these are the first things clipped.
      *
-     * The two layouts close page one on different blocks — the durable sheet on the
-     * systems boundary, the Linear sheet on the employment boundary — because they put
+     * The two layouts close page one on different blocks: the durable sheet on the
+     * systems boundary, the Linear sheet on the employment boundary, because they put
      * different material there. Page two ends on the document footer in both.
      */
     const pageOneAnchor = route.endsWith('/linear')
-      ? 'Titles, dates, and scope are stated as held'
+      ? 'Titles, dates and scope are stated as held'
       : 'Public source and recorded evidence';
 
     for (const [id, text] of [
@@ -312,10 +312,27 @@ test('the Linear résumé projects different content, from the same facts', asyn
     page.getByText('AI PRODUCTS · AGENT SYSTEMS · FULL-STACK PRODUCT ENGINEERING'),
   ).toBeVisible();
 
-  // Page one leads on customer-facing product work rather than on platform
+  // Page one leads on the customer-facing product surface rather than on platform
   // modernization, and the sentence is the durable one, promoted.
   const firstBullet = page.locator('#resume-page-1 article ul li').first();
-  await expect(firstBullet).toContainText('Portal Refresh');
+  await expect(firstBullet).toContainText('Consumer Portals');
+
+  /*
+   * And the frontend half of it is printed rather than left to inference. This sheet
+   * exists for a reader who needs to know the product surface was built and not only
+   * led, so the record has to carry both shapes of fact and keep them apart: React and
+   * two named applications with a single author in the earliest role, the portal estate
+   * attributed to the team that owned it in the latest.
+   */
+  const record = page
+    .locator('#resume-page-1 [class*="block"]')
+    .filter({ hasText: 'BlueCross BlueShield of Tennessee' })
+    .last();
+  await expect(record).toContainText('React');
+  await expect(record).toContainText('Sitecore');
+  await expect(record).toContainText('Contact Preference');
+  await expect(record).toContainText('Fee Schedule');
+  await expect(record).toContainText('team owned');
 
   // Never Ask Twice is a full entry here; on the durable sheet it is the ALSO footnote.
   await expect(page.locator('#resume-page-2 h3').first()).toHaveText('Never Ask Twice');

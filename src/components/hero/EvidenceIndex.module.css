@@ -1,15 +1,55 @@
+/*
+ * The Evidence Index.
+ *
+ * ## The density rule for this file
+ *
+ * This panel is the tallest object in the hero's right column and it decides what a
+ * reader sees before scrolling. It used to stand 570px: four rows of 121px each, of
+ * which only 70px was type (30 for the name, 22 for the summary, 18 for the status)
+ * and 51 was chrome. Nearly half of every row was padding and internal gaps.
+ *
+ * So when this needs to be shorter, the chrome goes first and the reading type is left
+ * alone. Row padding, the gaps inside a row, and the header band are the levers; the
+ * summary's line-height and the status line are not. A dense index a reader has to
+ * squint at costs more than the space it saves, and the whole point of the panel is that
+ * it can be scanned in ten seconds.
+ *
+ * The one line-height touched is the name's, and only because it is a heading that is
+ * always one line at every width this panel is rendered at; 1.6 there is not reading
+ * comfort, it is leading under a line that has nothing after it.
+ */
+/*
+ * No flex basis here, and that absence is the point.
+ *
+ * This carried `flex: 1 1 380px`; the same figure `Hero`'s `.aside` uses, where it is a
+ * *width*. But `.aside` lays its children out in a column, so the basis resolved against
+ * the block axis and 380px silently became a minimum *height*. It went unnoticed for as
+ * long as the rows were tall enough to exceed it, and appeared the moment they were not:
+ * the durable page's three-row index stood 380px around 331px of content, with 49px of
+ * empty ground inside a bordered card.
+ *
+ * This is the same trap `ProofSection.module.css` records for its masthead. A panel in a
+ * column is a block; it takes the height of what is in it.
+ */
 .index {
-  flex: 1 1 380px;
   min-width: 0;
   background: var(--color-surface);
   border: var(--rule);
 }
 
+/*
+ * The masthead: what the list is, how to read it, and which revision it is.
+ *
+ * `flex-wrap` because the caption is supplied by the composition and the durable page's
+ * is nine characters longer than this one's: at the width this panel takes on a phone,
+ * an unwrapped row of three metadata items is a horizontal scrollbar.
+ */
 .header {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: var(--space-3);
-  padding: var(--space-3) 1.125rem;
+  gap: 0.25rem var(--space-3);
+  padding: 0.625rem 1.125rem;
   background: var(--color-surface-raised);
   border-bottom: var(--rule);
   font-family: var(--font-mono);
@@ -19,6 +59,14 @@
 
 .title {
   color: var(--color-accent-deep);
+}
+
+.caption {
+  color: var(--color-meta);
+}
+
+.captionDivider {
+  color: var(--color-separator);
 }
 
 .revision {
@@ -34,11 +82,14 @@
 
 .entry {
   display: flex;
-  gap: var(--space-4);
-  padding: 1.125rem;
+  padding: 0.8125rem 1.125rem;
   border-bottom: var(--rule-quiet);
   color: var(--color-ink);
   transition: background-color 120ms ease;
+}
+
+.list li:last-child .entry {
+  border-bottom: 0;
 }
 
 .entry:hover {
@@ -46,24 +97,18 @@
   text-decoration: none;
 }
 
-.ordinal {
-  flex: none;
-  padding-top: 3px;
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  color: var(--color-meta-quiet);
-}
-
 .body {
   display: flex;
   flex-direction: column;
-  gap: 0.3125rem;
+  gap: 0.1875rem;
   min-width: 0;
 }
 
+/* Always one line at every width this panel is given. See the note at the top. */
 .name {
   font-size: 1.1875rem;
   font-weight: 700;
+  line-height: 1.3;
   letter-spacing: -0.02em;
 }
 
@@ -76,33 +121,4 @@
   font-family: var(--font-mono);
   font-size: var(--text-meta-lg);
   overflow-wrap: anywhere;
-}
-
-.status {
-  margin-top: 3px;
-}
-
-.footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-3);
-  padding: var(--space-3) 1.125rem;
-  background: var(--color-surface-subtle);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta-sm);
-  color: var(--color-meta);
-}
-
-.footerDivider {
-  color: var(--color-border);
-}
-
-/* The profile link is the index's one control, and takes the mobile control floor. */
-@media (max-width: 700px) {
-  .footer a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-  }
 }

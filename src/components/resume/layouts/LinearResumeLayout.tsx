@@ -17,8 +17,8 @@ import styles from '../ResumeDocument.module.css';
 /**
  * The Linear composition: the same primitives, arranged for a different question.
  *
- * Page one is the person — what they have built for customers and who they led doing
- * it. Page two is the machinery — the AI products, the agent-platform receipts, and
+ * Page one is the person: what they have built for customers and who they led doing
+ * it. Page two is the machinery: the AI products, the agent-platform receipts, and
  * the capabilities grouped so a reader can find the one they came for.
  *
  * That split is the whole argument of this variant. The durable résumé opens on
@@ -89,9 +89,11 @@ export function LinearResumeLayout({
             >
               {/*
                * Summary only, no tool chain: this line has to fit on one, and block 05
-               * already groups the same technologies by capability.
+               * already groups the same technologies by capability. The full stop is
+               * the component's, not the fact's: `summary` is a noun phrase, and the
+               * sentence it lands in is a rendering decision.
                */}
-              — {systems.compact.system.summary}.
+              {systems.compact.system.summary}.
             </ResumeCompactEntry>
           ) : null}
 

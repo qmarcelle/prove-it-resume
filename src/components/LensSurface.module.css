@@ -8,15 +8,15 @@
  * ## Why this is a palette swap and not a dark stylesheet
  *
  * There is no `.dark` variant of anything below this element. Every component on this
- * surface — the evidence panels, the disclosure controls, the receipts, the decision
- * diff, the counterfactual axis, the claim ledger, the header and the footer — already
+ * surface: the evidence panels, the disclosure controls, the receipts, the decision
+ * diff, the counterfactual axis, the claim ledger, the header and the footer: already
  * reads the `--color-*` names, so remapping those names once here inverts all of them,
  * including components written after this file. The alternative is a parallel dark rule
  * for each, which for `RepositoryDecisionDiff` alone would be ~480 lines of CSS whose
  * only job is to drift out of sync with its light twin.
  *
  * `ProofSignature` already uses exactly this technique for the durable page's one dark
- * chapter, and it reads the `--color-inverse-*` pair rather than raw hexes — which is
+ * chapter, and it reads the `--color-inverse-*` pair rather than raw hexes, which is
  * why remapping that pair here lands the signature block inside *this* palette instead
  * of importing the light page's graphite into a warm charcoal field.
  *
@@ -24,8 +24,8 @@
  *
  * Amber appears where it means something: verified state, the eyebrow that names a
  * section, an accent border on evidence, the primary call to action, the focus ring.
- * The mapping is deliberately lossy — the light palette has two accent text steps and
- * this one has a single amber for type — because a second, dimmer amber on this ground
+ * The mapping is deliberately lossy: the light palette has two accent text steps and
+ * this one has a single amber for type, because a second, dimmer amber on this ground
  * reads as a different signal rather than a quieter one.
  *
  * ## Losses, stated
@@ -62,6 +62,15 @@
   --color-border: var(--lens-border-subtle);
   --color-border-quiet: var(--lens-border-internal);
   --color-border-dashed: var(--lens-border-active);
+  /*
+   * The separator takes the index rail's tone rather than the border's.
+   *
+   * Inheriting the border put a 1.26:1 dot between two metadata items; the mark was in
+   * the DOM and the reader saw a gap. This is the same tone the section numbers use,
+   * already chosen as the quietest step that clears 3:1 on both the canvas and the band,
+   * which is exactly what a mark that must be seen and must not be read needs.
+   */
+  --color-separator: var(--lens-index);
 
   /* ---- The one saturated mark ---- */
   --color-accent: var(--lens-accent-text);
@@ -70,7 +79,7 @@
   --color-accent-surface: var(--lens-accent-field);
 
   /*
-   * The strongest mark this surface has is amber, not ink — ink here is nearly white,
+   * The strongest mark this surface has is amber, not ink: ink here is nearly white,
    * and a filled near-white button would outshout every piece of evidence on the page.
    */
   --color-action-fill: var(--lens-accent);
@@ -81,7 +90,7 @@
    * The verdict chips, answered rather than inherited.
    *
    * The default pair is graphite-on-cream: a solid dark chip punched into a light page.
-   * Inherited here it would have been a near-white chip carrying near-white type — the
+   * Inherited here it would have been a near-white chip carrying near-white type: the
    * collision the pair exists to make impossible.
    *
    * "Held" is the one place on this page a measured constraint is reported as having
@@ -97,10 +106,27 @@
   --color-verdict-breached-border: var(--lens-border-active);
 
   /*
+   * The selected stage, answered rather than inherited.
+   *
+   * The default is cream type on an ink fill with a warm-sand ordinal. Inherited here
+   * the fill becomes cream and the ordinal stays bright amber: #efc97e on #f0ede6,
+   * 1.35:1, a numeral painted onto its own background.
+   *
+   * The label keeps the canvas at 16.1:1. The ordinal takes the deep amber-brown this
+   * surface already declares for amber metadata on a light fill: 9.4:1, quieter than
+   * the label by the same margin the light palette uses, and still unmistakably amber.
+   * The fill itself is unchanged: a fully amber selected tab would spend the page's
+   * one saturated mark on a control.
+   */
+  --color-step-active-bg: var(--lens-text);
+  --color-step-active-fg: var(--lens-canvas);
+  --color-step-active-index: var(--lens-accent-ink-quiet);
+
+  /*
    * The inverse pair, remapped rather than left alone.
    *
    * On the durable page this is graphite-on-cream: a small inverted panel punched into
-   * a light field. Here the field is already dark, so "inverted" means *elevated* — the
+   * a light field. Here the field is already dark, so "inverted" means *elevated*: the
    * signature block and the dark call to action step up a tone rather than flipping,
    * and the page keeps one continuous ladder instead of two competing darks.
    */
@@ -118,7 +144,7 @@
    * The strong rule stays neutral.
    *
    * On the light page it is 2px of ink: the strongest structural line available. Its
-   * dark equivalent is the most raised border, not amber — the rule appears at fourteen
+   * dark equivalent is the most raised border, not amber: the rule appears at fourteen
    * block tops on this page, and spending the page's one saturated mark on section
    * furniture would leave a reader unable to tell a structural line from a verified one.
    */
@@ -126,7 +152,7 @@
 
   /*
    * The ring is the fill amber, not the type amber: it is a mark, not a word. It also
-   * stands one pixel further off than on the light page — at 2px on this ground the
+   * stands one pixel further off than on the light page: at 2px on this ground the
    * ring touches the control's own border and reads as a thickened edge instead of as
    * focus. 3px is the direction's own figure.
    */
@@ -149,7 +175,7 @@
  * The field runs past the composition.
  *
  * The document background is set on `body` from `--color-canvas`, which this element
- * cannot reach upwards to change — so overscroll, and any band taller than the
+ * cannot reach upwards to change, so overscroll, and any band taller than the
  * composition, would show cream behind a charcoal page. Scoped by `:has()` so the
  * durable routes, which never render this class, are untouched.
  */
@@ -170,7 +196,7 @@
  * `--unresolved-mark` is the page's one guard against its own presentation: a
  * private-workspace claim and a digest-checked artifact must not be able to look alike.
  * Amber is reserved for what has been verified, so material that has not is given its
- * own colour — burnt orange, a dashed edge, and the word — rather than a dimmer amber,
+ * own colour (burnt orange, a dashed edge, and the word) rather than a dimmer amber,
  * which would read as verified-but-quieter.
  */
 .surface {

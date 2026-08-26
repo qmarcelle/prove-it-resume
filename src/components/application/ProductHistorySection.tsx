@@ -6,6 +6,7 @@ import type {
   ApplicationLens,
   HistoryEntry,
   HistoryRecord,
+  ProductHistory,
   SurfaceStep,
 } from '@/lib/types';
 import styles from './ApplicationSection.module.css';
@@ -26,11 +27,15 @@ import styles from './ApplicationSection.module.css';
  * register read together, and that structure is kept because it is how the question
  * actually gets asked: how did the work grow, who was it for, how wide did it go.
  *
- * Two of those registers contain entries the fact corpus does not support, and they are
- * rendered as open questions rather than dropped. A page that quietly omits what it
- * cannot prove looks complete; a page that names the gap tells a reader exactly what to
- * ask in the interview. The unresolved entries take the same dashed burnt-orange mark
- * every unverified row on this site takes — never evidence styling, and never a link.
+ * Two of those registers used to contain entries the fact corpus could not support, and
+ * they rendered as open questions rather than being dropped. A page that quietly omits
+ * what it cannot prove looks complete; a page that names the gap tells a reader exactly
+ * what to ask in the interview. Every one of those questions has since been answered by
+ * the record, so the page currently states all three registers in full.
+ *
+ * The unresolved branch stays. It takes the same dashed burnt-orange mark every
+ * unverified row on this site takes, never evidence styling and never a link, and a
+ * fixture test keeps it working for the next question this page cannot answer.
  *
  * It states no new evidence. Every stated line traces to `content/resume/facts.ts`, and
  * `product-history.test.ts` holds it there.
@@ -43,24 +48,32 @@ export function ProductHistorySection({
   copy,
   step,
   nextId,
+  history = PRODUCT_ENGINEERING_HISTORY,
 }: {
   copy: ApplicationLens['sections']['history'];
   step: SurfaceStep;
   /** The section the closing call to action moves the reader to. */
   nextId: string;
+  /**
+   * The records to render. Defaults to the durable history, and exists as a parameter
+   * for one reason: `UNVERIFIED` is empty as of the final fact pass, so nothing on the
+   * real page currently takes the unresolved branch below. A rendering path with no
+   * instance is a rendering path that quietly rots, and this one has to work the next
+   * time the record cannot answer a question. `ProductHistorySection.test.tsx` renders
+   * an unresolved fixture through it.
+   */
+  history?: ProductHistory;
 }) {
-  const history = PRODUCT_ENGINEERING_HISTORY;
-
   return (
     <section
       className={sectionFrameClass(step)}
       id={step.id}
-      aria-labelledby="lin-history-title"
+      aria-labelledby="product-history-title"
     >
       <SectionHead
         step={step}
         title={copy.heading}
-        titleId="lin-history-title"
+        titleId="product-history-title"
         lead={copy.body}
       />
 
@@ -122,7 +135,7 @@ function Register({
  *
  * The unresolved branch reads as a sentence rather than as a status chip with prose
  * beside it. "Not yet evidence" is the claim being made about the line, so it belongs
- * inside the marked region, not next to it — a reader skimming the dashed boxes should
+ * inside the marked region, not next to it: a reader skimming the dashed boxes should
  * come away with the open questions, not with six identical labels.
  */
 function EntryBody({ entry }: { entry: HistoryRecord }) {

@@ -18,7 +18,7 @@ test('no affordance ends in a decorative glyph', async ({ page }) => {
 
   /*
    * Scoped to the *last* character rather than to any occurrence, because arrows are
-   * still legitimate content here — `workspace.json → Codex → Tally` is a pipeline, not
+   * still legitimate content here: `workspace.json → Codex → Tally` is a pipeline, not
    * a call to action. What must be gone is the trailing glyph that used to carry the
    * promise, since an icon is `aria-hidden` and a screen-reader user would hear nothing
    * in its place.
@@ -74,7 +74,7 @@ test('every affordance still carries its word', async ({ page }) => {
   /*
    * "Change is never colour alone" generalises: it is never *mark* alone either. An
    * icon-only control is allowed, but it has to name itself, which is why the one on
-   * this page — the guided-mode exit — carries an `aria-label`.
+   * this page (the guided-mode exit) carries an `aria-label`.
    */
   const unnamed = await page.locator('a, button').evaluateAll((els) =>
     els
@@ -94,7 +94,7 @@ test('every affordance still carries its word', async ({ page }) => {
  * The hero's sequence is driven by `setTimeout`, so its wall-clock length is a floor and
  * not a bound: with the suite at full parallelism these timers are starved and a ~3s
  * choreography has been observed still sitting on beat zero six seconds in. These budgets
- * are generous on purpose — a slow machine is not a regression, and Playwright resolves
+ * are generous on purpose: a slow machine is not a regression, and Playwright resolves
  * as soon as the attribute lands, so the passing case costs nothing.
  */
 const REWIND_MS = 10_000;
@@ -110,8 +110,8 @@ const figureOf = (page: Page) => page.locator('figure:has(svg[data-beat])');
  * Arrive at the figure and watch it finish.
  *
  * Two waits, and the first one is the load-bearing one. `data-beat="3"` is already true
- * at first paint — the server renders the settled frame and the sequence rewinds into it
- * — so waiting only for beat 3 passes instantly and reads the composition before it has
+ * at first paint: the server renders the settled frame and the sequence rewinds into it,
+ * so waiting only for beat 3 passes instantly and reads the composition before it has
  * played. Beat 0 first proves the rewind happened; the scroll then satisfies the viewport
  * gate, which is a no-op on a viewport where the figure was already on screen.
  */
@@ -159,7 +159,7 @@ test.describe('the hero composition', () => {
   /*
    * It plays on first meaningful viewport entry, not on mount. A sequence that had
    * already finished by the time the reader scrolled to it would be a load-order
-   * accident, and the beats are the claim — they are worth nothing unwatched.
+   * accident, and the beats are the claim; they are worth nothing unwatched.
    */
   test('waits for the stage to be on screen before it plays', async ({ page }) => {
     // Short enough that the figure starts well below the fold in either project.
@@ -183,7 +183,7 @@ test.describe('the hero composition', () => {
 
   /*
    * The bracket is a claim boundary, and this page renders those rather than collapsing
-   * them to make a picture tidier — `boundary` sits inside `EvidenceKind` on purpose. So
+   * them to make a picture tidier: `boundary` sits inside `EvidenceKind` on purpose. So
    * it survives to the settled frame with its name attached.
    */
   test('keeps the named boundary in the settled frame', async ({ page, viewport }) => {
@@ -198,7 +198,7 @@ test.describe('the hero composition', () => {
   });
 
   /*
-   * The node outside the bracket is excluded, never absorbed — it leaves outward, and it
+   * The node outside the bracket is excluded, never absorbed; it leaves outward, and it
    * is not standing in the settled frame. It is the one mark on the stage with no station
    * label, and the export's second pass exists because an anonymous dashed box left
    * beside the answer is what stopped the first frame being readable cold.

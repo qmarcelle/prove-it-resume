@@ -25,11 +25,19 @@
   margin-right: -0.125rem;
 }
 
+/*
+ * A boundary is the sentence a careful reader is most likely to stop on, and it was the
+ * longest line on the page in both variants: `flex: 1 1 300px` is a *minimum*, and next
+ * to a 132px label it grew to whatever the section was wide. The measure binds the
+ * growth; the basis still governs when the row wraps.
+ */
 .body {
   flex: 1 1 300px;
+  max-width: 72ch;
   font-size: 0.875rem;
   line-height: 1.6;
   color: var(--color-ink-strong);
+  text-wrap: pretty;
 }
 
 /* The standalone variant, used beside evidence panels rather than inside a drawer. */

@@ -17,6 +17,8 @@ import { SupportingEvidence } from '@/components/supporting/SupportingEvidence';
 import { LinearInPracticeSection } from '@/components/application/LinearInPracticeSection';
 import { ProductHistorySection } from '@/components/application/ProductHistorySection';
 import { ProductJudgementSection } from '@/components/application/ProductJudgementSection';
+import { neverAskTwice } from '@/content/supporting/never-ask-twice';
+import { proofEntry, supportingEntry } from '@/lib/index-entries';
 import { numberSections, requireStep, stepsById } from '@/lib/page-plan';
 import { projectProofs } from '@/lib/role-lens';
 import type { ApplicationLens, SurfaceStep } from '@/lib/types';
@@ -28,8 +30,8 @@ import styles from './ProveItResume.module.css';
  *
  * A second composition rather than a flag on `ProveItResume`, and that is the one real
  * judgement call in this feature. The two pages share every component below the section
- * level — the header, the hero, the three proof sections, the career list, the résumé
- * bridge, the claim ledger, the footer, the evidence rule, and the whole token layer —
+ * level: the header, the hero, the three proof sections, the career list, the résumé
+ * bridge, the claim ledger, the footer, the evidence rule, and the whole token layer,
  * and differ in which sections appear, in what order, and what opens the page. Encoding
  * that difference as branches inside one component would have produced a file where
  * every second line asks which surface it is on, and the honest reading of a page like
@@ -38,7 +40,7 @@ import styles from './ProveItResume.module.css';
  * What must not fork is the evidence, and it does not: the proof sections are the same
  * modules `/` renders, `projectProofs` is the same projection, and this file introduces
  * no `Proof`, no `Claim`, and no evidence row. `role-lens.test.ts` asserts that every
- * lens — application lenses included — projects the same proof objects as the durable
+ * lens (application lenses included) projects the same proof objects as the durable
  * set, so a section added here cannot smuggle in a claim.
  *
  * ## The page plan is the only sequence
@@ -46,7 +48,7 @@ import styles from './ProveItResume.module.css';
  * Every visible number, the reading order, each section's eyebrow, the header nav, the
  * skip link, the guided rail and the progress rail are read from `lens.pagePlan`,
  * stamped once by `numberSections`. No section states its own position, and a section
- * rendered here that the plan does not list throws rather than rendering unnumbered —
+ * rendered here that the plan does not list throws rather than rendering unnumbered,
  * because a page whose map and page disagree is the failure this whole arrangement is
  * for.
  */
@@ -84,6 +86,33 @@ export function ApplicationSurface({ lens }: { lens: ApplicationLens }) {
 
   const opening = steps[0];
 
+  /*
+   * The Evidence Index, in the page's own order and including the promoted entry.
+   *
+   * Built from the plan rather than from `proofOrder`, so the hero lists what this page
+   * actually leads with. The index used to show the three durable proofs while the body
+   * opened its evidence with a fourth system, so the ten-second surface advertised a
+   * set the sixty-second one contradicted. Never Ask Twice is the closest system in the
+   * corpus to what this reader builds; an index that structurally could not name it was
+   * pointing at the wrong three.
+   *
+   * `supportingEntry` returns null for work carrying no listing, and `proof` steps
+   * whose proof is not in the projection drop out the same way, so this cannot render a
+   * row for something the page does not have.
+   */
+  const byProofId = new Map(proofs.map((proof) => [proof.id, proof]));
+  const indexEntries = steps.flatMap((entry) => {
+    if (entry.proof) {
+      const proof = byProofId.get(entry.proof);
+      return proof ? [{ ...proofEntry(proof), id: entry.id }] : [];
+    }
+    if (entry.id === 'never-ask-twice') {
+      const promoted = supportingEntry(neverAskTwice, entry.id);
+      return promoted ? [promoted] : [];
+    }
+    return [];
+  });
+
   return (
     <ProofNavProvider steps={steps}>
       <div className={lensStyles.surface}>
@@ -104,7 +133,7 @@ export function ApplicationSurface({ lens }: { lens: ApplicationLens }) {
          * reader already operates the pipeline the chain draws.
          */}
         <Hero figure={<EvidenceChain />} framing={lens.hero} lens={lens}>
-          <EvidenceIndex proofs={proofs} />
+          <EvidenceIndex entries={indexEntries} caption="START ANYWHERE" />
         </Hero>
 
         <div className={styles.body}>
@@ -120,21 +149,21 @@ export function ApplicationSurface({ lens }: { lens: ApplicationLens }) {
             <LinearInPracticeSection
               copy={lens.sections.inPractice}
               receipts={lens.receipts}
-              step={step('lin-practice')}
+              step={step('linear-in-practice')}
             />
 
             {/*
              * Never Ask Twice, promoted out of the appendix.
              *
              * It is the closest of the four systems to what this reader builds, and on
-             * `/` it sits after the three proofs as supporting work. Here it leads them
-             * — with a number, which is the part that was missing: promoted content that
+             * `/` it sits after the three proofs as supporting work. Here it leads them:
+             * with a number, which is the part that was missing: promoted content that
              * stays outside the sequence reads as an aside no matter where it is put.
              * The work, its question, its surface, its boundary, and its evidence row
              * are the same records; only the framing above it and its position change.
              */}
             <SupportingEvidence
-              step={step('more-evidence')}
+              step={step('never-ask-twice')}
               framing={{
                 heading: 'Never Ask Twice',
                 lead: 'Persistent agent memory is the part of an agent product that is easiest to demo and hardest to trust. This one was built with a forgetting policy and measured by ablation rather than by impression.',
@@ -146,10 +175,10 @@ export function ApplicationSurface({ lens }: { lens: ApplicationLens }) {
               return Section ? <Section key={entry.id} step={entry} /> : null;
             })}
 
-            <ProductJudgementSection lens={lens} step={step('lin-judgement')} />
-            <CareerSection proofs={proofs} step={step('sec-06')} />
+            <ProductJudgementSection lens={lens} step={step('product-judgment')} />
+            <CareerSection proofs={proofs} step={step('career')} />
             <ResumeBridge lens={lens} />
-            <ClaimLedger step={step('ledger')} />
+            <ClaimLedger step={step('claim-ledger')} />
           </main>
         </div>
 

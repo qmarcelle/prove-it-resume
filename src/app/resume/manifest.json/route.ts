@@ -5,8 +5,8 @@ import { resumeDownloadName, resumePdfPath, resumePrintRoute } from '@/lib/resum
  * The set of résumé variants to generate, published by the app itself.
  *
  * The PDF build reads this from the running server rather than importing the content
- * modules directly. That keeps one source of truth — register a lens of either kind and
- * its PDF is generated without touching the script — and avoids a build script that has
+ * modules directly. That keeps one source of truth: register a lens of either kind and
+ * its PDF is generated without touching the script, and avoids a build script that has
  * to replicate the app's path aliases to walk the same content graph.
  *
  * `ALL_RESUME_LENSES` rather than the role registry, so an application lens is a

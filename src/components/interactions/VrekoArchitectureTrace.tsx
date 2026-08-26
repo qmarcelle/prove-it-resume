@@ -14,21 +14,21 @@ import styles from './VrekoArchitectureTrace.module.css';
 /**
  * Vreko as containment: nested boundaries, opened in place.
  *
- * The previous version was a semantic zoom with a separate stepped trace beneath it —
+ * The previous version was a semantic zoom with a separate stepped trace beneath it:
  * expand the system, then walk a request through it hop by hop. Two controls, two
  * mental models, and the trace's hops were a list you read *after* the diagram rather
  * than something the diagram showed.
  *
  * The redesign collapses both into one: every layer is drawn where it actually sits,
  * inside or outside the publication boundary, and selecting one puts its hop detail in
- * the panel beside it. The boundary is the diagram's own geometry — solid stroke for
- * published, dashed for declared-but-unpublished, hairline for outside the system — so
+ * the panel beside it. The boundary is the diagram's own geometry: solid stroke for
+ * published, dashed for declared-but-unpublished, hairline for outside the system, so
  * the public/private split is read off the picture rather than off a legend of badges.
  *
  * What did not change is the evidence. Every layer, hop, publication state and
  * discrepancy is the same record it was; this rearranges how they are reached.
  *
- * Selection, not expansion, is the state — one layer is always selected, so the panel
+ * Selection, not expansion, is the state; one layer is always selected, so the panel
  * is never empty and there is no "nothing here yet" frame to design around.
  */
 export function VrekoArchitectureTrace({
@@ -58,8 +58,8 @@ export function VrekoArchitectureTrace({
 
   /*
    * The hop is joined to the container rather than stored on it. A hop describes a
-   * *crossing into* a layer, and not every layer has one — the local edge is a second
-   * entry point rather than a further boundary inward — so the panel renders the
+   * *crossing into* a layer, and not every layer has one: the local edge is a second
+   * entry point rather than a further boundary inward, so the panel renders the
    * crossing fields only where a crossing was actually recorded.
    */
   const hop = trace.find((entry) => entry.atContainerId === selected.id);
@@ -271,8 +271,8 @@ function LayerNode({
                     {component.name}
                     {component.identifier ? (
                       <span className={styles.componentId}>
-                        {' '}
-                        — {component.identifier}
+                        {' · '}
+                        {component.identifier}
                       </span>
                     ) : null}
                   </span>

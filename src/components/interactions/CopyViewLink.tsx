@@ -21,7 +21,7 @@ const CONFIRMATION_MS = 2400;
  *
  * Deep-linkable interaction state used to be written into the URL as the reader stepped
  * through it, which meant ordinary reading produced
- * `?interlock=evidence&layer=workspace&decision=comparison#sec-02`. The capability was
+ * `?interlock=evidence&layer=workspace&decision=comparison#vreko`. The capability was
  * worth keeping and the default was not, so it moved behind an explicit act: this.
  *
  * ## Why it copies the whole page's state, not this panel's
@@ -76,8 +76,7 @@ export function CopyViewLink({ anchor }: { anchor: string }) {
           size={12}
         />
         <span className="visually-hidden">
-          {' '}
-          — a link that reopens this page at its current stages
+          , a link that reopens this page at its current stages
         </span>
       </button>
       <span aria-live="polite" className="visually-hidden">

@@ -4,13 +4,13 @@ import type { Proof, SurfaceStep } from '@/lib/types';
 import styles from './ProofSection.module.css';
 
 /**
- * Shared shell for a proof section — and now only the shell.
+ * Shared shell for a proof section, and now only the shell.
  *
  * The three proofs were never forced into one template; the redesign takes that
  * further. Each section is split into a *scan layer* (the argument in one pass) and a
  * *proof layer* (the diagram, the run, the artifacts), and each gets its own spatial
  * grammar: containment for Vreko, causality for Repository Intelligence, measurement
- * for Interlock. What the shell still guarantees is the part that must not vary — the
+ * for Interlock. What the shell still guarantees is the part that must not vary: the
  * section boundary, the scroll target, the measure, and the accessible name.
  *
  * The masthead moved out. It used to live here as eyebrow + title + thesis, which
@@ -19,7 +19,7 @@ import styles from './ProofSection.module.css';
  * `titleId` this element points `aria-labelledby` at.
  *
  * `tone` inverts the section for Repository Intelligence. It is a prop rather than a
- * per-section stylesheet because the contrast budget is a page-level decision — the
+ * per-section stylesheet because the contrast budget is a page-level decision: the
  * redesign allows exactly one dark chapter among the proofs, and a single switch is
  * what makes a second one an obvious edit rather than an accident.
  */
@@ -63,7 +63,7 @@ export function ProofSection({
  * A proof's chapter furniture, sourced from wherever the surface keeps its sequence.
  *
  * This is the seam that removed the defect. A proof section used to state its own
- * position twice over — `stage={vreko.stage}` and `label="PROOF ONE"` — and both were
+ * position twice over (`stage={vreko.stage}` and `label="PROOF ONE"`) and both were
  * facts about `/`. Rendered on an application surface that reorders the proofs, they
  * were simply wrong: Vreko printed `02 · PROOF ONE` in sixth position while the rail
  * beside it counted `06`.
@@ -120,7 +120,7 @@ export function ProofChapter({
  *
  * The redesign gives Repository Intelligence a dark treatment because its argument is
  * a single recorded run and it should read as the page's one held note. It does *not*
- * darken the whole section — the three-layer chain and the evidence panel below carry
+ * darken the whole section: the three-layer chain and the evidence panel below carry
  * evidence the redesign never showed on dark, and inventing dark variants for six
  * unrelated components to satisfy a band would be a lot of surface area for no
  * argument. So the band covers the signature and the remainder stays on light ground.

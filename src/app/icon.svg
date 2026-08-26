@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Q, Qwynn Marcelle">
+  <title>Q, Qwynn Marcelle</title>
+  <desc>
+    The personal mark: an amber Q on the page's own charcoal.
+
+    Not the Marcelle Labs logo, which belongs to a company rather than to a person, and
+    nothing borrowed from the organisation this application is addressed to.
+
+    Three constraints shaped it. It carries its own ground, so it reads the same against
+    light and dark browser chrome rather than dissolving into one of them. The ring is
+    heavy (4 units of a 32 unit box, so 2px at 16px) because a hairline monogram is a grey
+    smudge in a tab strip. And the tail is a straight rule rather than a calligraphic
+    stroke: the rule is this design's structural mark, and at 16px a diagonal that thin is
+    the first thing to disappear.
+
+    Colours are the token values, not approximations. Charcoal 1a1a17 is the ink step;
+    amber d9a84e is the lens accent, the one saturated mark the surface spends.
+  </desc>
+  <rect width="32" height="32" rx="7" fill="#1a1a17" />
+  <circle cx="16" cy="15" r="7.5" fill="none" stroke="#d9a84e" stroke-width="4" />
+  <rect
+    x="17.5"
+    y="19.5"
+    width="4"
+    height="8"
+    rx="0.5"
+    fill="#d9a84e"
+    transform="rotate(-38 19.5 23.5)"
+  />
+</svg>

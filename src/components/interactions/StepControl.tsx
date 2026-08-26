@@ -33,7 +33,7 @@ export type Step = {
  *
  * `shareAnchor` puts the "copy this view" control on the ordinal row. It belongs beside
  * the stage counter because that is where the state a reader might want to hand on is
- * displayed, and because the alternative — a floating page-level share control — would
+ * displayed, and because the alternative (a floating page-level share control) would
  * be a general affordance for something that only means anything in three places.
  */
 export function StepControl({
@@ -52,9 +52,9 @@ export function StepControl({
   /** id of the region this control drives. */
   controls?: string;
   /**
-   * Section anchor for the shareable address, e.g. `sec-04`. Absent means this control
-   * is somewhere a link back to it would not land — so no control is offered rather
-   * than one producing an address that misses.
+   * Section anchor for the shareable address, e.g. `interlock`. Absent means this
+   * control is somewhere a link back to it would not land, so no control is offered
+   * rather than one producing an address that misses.
    */
   shareAnchor?: string;
 }) {

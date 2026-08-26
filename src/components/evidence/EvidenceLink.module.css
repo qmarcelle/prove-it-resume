@@ -9,7 +9,7 @@
 
 /*
  * The unresolved state. It reads as a note rather than a control, because it is not
- * one — there is nothing to click, and dressing it up as a disabled button would only
+ * one; there is nothing to click, and dressing it up as a disabled button would only
  * invite the click.
  *
  * The quiet inline form is used per row. Panels report the total separately ("0 of 8
@@ -46,7 +46,7 @@
  * At mobile these stop being a trailing note on a row and become the row's control.
  *
  * They are standalone calls to action rather than links inside a sentence, so the
- * inline-link exemption in WCAG 2.5.8 does not apply to them — and this page's own
+ * inline-link exemption in WCAG 2.5.8 does not apply to them, and this page's own
  * direction is stricter anyway: 44px minimum for every control at mobile. At 15px tall
  * these were the primary interaction of the whole surface rendered as a thumb-sized
  * miss.

@@ -7,8 +7,8 @@ import { VrekoArchitectureTrace } from './VrekoArchitectureTrace';
 /**
  * The behaviours worth pinning after the containment redesign.
  *
- * The diagram no longer expands and no longer steps a trace, so the old contract — zoom
- * in, walk hop by hop — is gone. What replaced it has to keep the same guarantees:
+ * The diagram no longer expands and no longer steps a trace, so the old contract: zoom
+ * in, walk hop by hop: is gone. What replaced it has to keep the same guarantees:
  * nothing moves without a user, the publication state of every layer is stated rather
  * than left to the stroke, and the panel tells you what a crossing withholds.
  */
@@ -71,7 +71,7 @@ describe('VrekoArchitectureTrace', () => {
   /*
    * The local edge is a second entry point, not a further boundary inward, so the
    * content records no crossing for it. The panel must then omit the crossing fields
-   * rather than invent one — this is the case that would tempt a future edit to fill
+   * rather than invent one; this is the case that would tempt a future edit to fill
    * the gap with plausible text.
    */
   it('omits the crossing fields for a layer with no recorded hop', async () => {

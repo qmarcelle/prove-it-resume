@@ -32,8 +32,8 @@ export type IconPlacement = 'trailing' | 'leading' | 'alone';
 /**
  * The stroke width, in view-box units, that renders as exactly one pixel.
  *
- * The whole page is built out of 1px rules — `--rule`, `--rule-quiet`, the 1px borders
- * on every panel — and a stroke that lands anywhere else reads as a second, competing
+ * The whole page is built out of 1px rules: `--rule`, `--rule-quiet`, the 1px borders
+ * on every panel, and a stroke that lands anywhere else reads as a second, competing
  * weight. Because the view box is 24 units wide and the rendered box is `size` pixels,
  * the scale factor is `size / 24`, so `24 / size` units always draw one pixel. That is
  * why the number changes with the size: keeping `strokeWidth` constant is what makes
@@ -48,7 +48,7 @@ export function hairlineStrokeWidth(size: IconSize): number {
  *
  * Always decorative. There is no `label` prop and no way to make one of these carry
  * meaning on its own, because the rule on this page is that a mark never replaces a
- * word — status, actions, and evidence all keep their spelled-out text and the icon
+ * word: status, actions, and evidence all keep their spelled-out text and the icon
  * adds a second channel beside it. The one icon-only control on the site
  * (`GuidedProofNav`'s exit button) names itself with `aria-label` on the button, not on
  * the glyph.

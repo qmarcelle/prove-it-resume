@@ -9,8 +9,8 @@ import type { IconName } from './paths';
  * make the glyph unreachable except through a meaning.
  *
  * The page this replaces had the opposite problem. A single `↓` was doing four
- * unrelated jobs — download a file, expand a disclosure, scroll to a section, and show
- * the direction of dataflow — and `↗` was doing three, standing in for an exact frozen
+ * unrelated jobs: download a file, expand a disclosure, scroll to a section, and show
+ * the direction of dataflow, and `↗` was doing three, standing in for an exact frozen
  * artifact, a living profile page, and a pinned citation that is deliberately not a
  * live page. A reader could not predict what an affordance would do by looking at it.
  */
@@ -18,7 +18,7 @@ export type Affordance =
   /** Opens an exact, inspectable artifact in a new tab. */
   | 'inspect-artifact'
   /**
-   * Leaves for another site — a profile, an organisation, a living page.
+   * Leaves for another site: a profile, an organisation, a living page.
    *
    * Deliberately distinct from `inspect-artifact`, and the distinction is the reason
    * this set exists at all. A frozen artifact is a thing a reader can check a claim
@@ -57,7 +57,7 @@ export type Affordance =
 /**
  * The mapping, and the only one.
  *
- * `icon-semantics.test.ts` asserts this is injective — no icon may serve two meanings —
+ * `icon-semantics.test.ts` asserts this is injective (no icon may serve two meanings)
  * so a future edit that reuses `arrow-down` for both a download and an anchor fails the
  * suite rather than passing review. That is the same enforcement posture the evidence
  * rules already use: the pinned-commit rule is a test, not a convention.
@@ -83,8 +83,8 @@ export const AFFORDANCE_ICON: Readonly<Record<Affordance, IconName>> = {
 /**
  * Which promise a call-to-action label is making.
  *
- * The content already draws this distinction in words — a row says `READ THE SPEC` or
- * `INSPECT FROZEN RUN`, never both — so the affordance is read back out of the verb
+ * The content already draws this distinction in words: a row says `READ THE SPEC` or
+ * `INSPECT FROZEN RUN`, never both, so the affordance is read back out of the verb
  * rather than added to `EvidenceRef` as a field. A second field would be a second place
  * for the same fact to live, and the two would eventually disagree.
  *

@@ -10,7 +10,7 @@
  * was right and the default was wrong. Reading three sections of the page turned a clean
  * address into
  *
- *     /linear?interlock=evidence&layer=workspace&decision=comparison#sec-02
+ *     /linear?interlock=evidence&layer=workspace&decision=comparison#vreko
  *
  * which reads as a debug harness rather than a finished page, and which a reader then
  * carries into their history, their bookmarks, and anything they paste.
@@ -27,7 +27,7 @@
  * lot of structure for a value that is only ever read at the moment of a click.
  *
  * Nothing renders from this. It is read once, on demand, by the control the reader
- * pressed — so there is no subscription, no snapshot, and nothing to keep in sync.
+ * pressed, so there is no subscription, no snapshot, and nothing to keep in sync.
  */
 
 /** Non-default interaction state, by query key. A key at its default is never present. */
@@ -42,7 +42,7 @@ export function publishDeepLinkState(key: string, value: string | null): void {
  * The address that reproduces what the reader is currently looking at.
  *
  * Built from the live page rather than from a stored base, so it carries whichever
- * origin and path the reader actually loaded — a preview deployment included.
+ * origin and path the reader actually loaded: a preview deployment included.
  *
  * Any parameter this page does not own is preserved. A campaign tag or a referrer
  * marker on the incoming URL is not ours to discard, and dropping it would make a
@@ -62,7 +62,7 @@ export function buildViewUrl(anchor?: string): string {
  * The keys this page owns.
  *
  * Listed rather than derived from what has mounted, because `buildViewUrl` has to clear
- * a stale parameter for an interaction that is on the page but has not registered — a
+ * a stale parameter for an interaction that is on the page but has not registered: a
  * reader who arrives at `?decision=comparison`, scrolls only to Interlock and copies
  * from there must not hand out a link asserting a Repository Intelligence stage that
  * their own page is no longer in. `deep-link.test.ts` asserts this list matches the keys

@@ -1,10 +1,10 @@
-# 0010 — Application lenses and résumé content projections
+# 0010: Application lenses and résumé content projections
 
 **Status:** accepted
 
 ## Problem
 
-The evidence surface needed a deeply tailored page for one company — Linear — at
+The evidence surface needed a deeply tailored page for one company (Linear) at
 `/linear`, together with a résumé written for that reader rather than the durable one
 under a different heading.
 
@@ -12,15 +12,15 @@ Two things in the existing architecture did not stretch to that.
 
 **Role lenses are deliberately generic.** A `RoleLens` reorders proofs and promotes rows
 in the evidence map. It has no route of its own, no hero framing, no page order, and no
-way to introduce material — all correct for a lens that says "read this for a platform
+way to introduce material: all correct for a lens that says "read this for a platform
 role", and none of it sufficient for a surface addressed to one organisation.
 
 **A role-specific résumé changed only the masthead title.** ADR 0007 records that
 narrowly, and it was right at the time: widening it would have let a résumé say different
 things to different readers, which is the opposite of what the artifact is for. But the
-Linear application needs a genuinely different _selection_ — customer-facing work leading
+Linear application needs a genuinely different _selection_ (customer-facing work leading
 the enterprise record, agent memory promoted out of the footnote, an agent-platform block
-that the durable sheet has no room for — and a title swap cannot express any of it.
+that the durable sheet has no room for) and a title swap cannot express any of it.
 
 There is also a private-data problem the existing architecture had never faced. The most
 relevant Linear material lives in the owner's private workspace, and a public page is
@@ -33,8 +33,8 @@ exactly where "just render what the API returns" becomes a leak.
    gates, and the PDF pipeline on day one. Every correction would then have to be made
    twice, and the second copy is the one that goes stale.
 2. **`/role/linear`, with `RoleLens` widened.** No new type, no new route shape. It turns
-   the lightweight lens into a bag of optional fields — a public path, a hero, a page
-   plan, receipts — that every generic lens then carries as five nulls, and makes "does
+   the lightweight lens into a bag of optional fields (a public path, a hero, a page
+   plan, receipts) that every generic lens then carries as five nulls, and makes "does
    this lens own a page?" a question you answer by reading the object rather than its
    type. It also puts a company-specific application under the generic role namespace,
    where it reads as one of a series.
@@ -58,7 +58,7 @@ second deployment would isolate the things that must stay identical while doing 
 about the thing that actually differs.
 
 It is `noindex, follow`, canonical to `/`, absent from the sitemap, and disallowed in
-`robots.txt` — the same treatment role lenses get, for the same reason. It exists so one
+`robots.txt`: the same treatment role lenses get, for the same reason. It exists so one
 link resolves to a page written for the person opening it, not to compete with the
 durable artifact in an index. The disallow list is derived from `APPLICATION_LENSES`, so
 registering a surface cannot leave it indexable because someone forgot a file.
@@ -83,7 +83,7 @@ is.
 ### Why the page is a second composition rather than a flag
 
 `ProveItResume` renders `/` and `/role/[slug]`; `ApplicationSurface` renders `/linear`.
-They differ in which sections appear, in what order, and what opens the page — the
+They differ in which sections appear, in what order, and what opens the page: the
 application surface drops the operating thesis, adds a product history and a
 Linear-in-practice section, promotes Never Ask Twice ahead of the proofs, and closes on
 product judgement rather than opening on role fit.
@@ -100,7 +100,7 @@ That was not enough on its own, and the first implementation proved it: the rail
 the plan while each proof section printed the durable stage it holds on `/`, so a reader
 who clicked "05" arrived at a section introducing itself as "03". The plan is now the
 single authority for order, visible number, section identity, the header nav and the
-rail — and it authors no numbers at all, since `numberSections` derives them from
+rail, and it authors no numbers at all, since `numberSections` derives them from
 position. A section takes a `SurfaceStep` and states nothing about where it is;
 `requireStep` throws if a rendered section is absent from the plan, so an unnumbered
 section is a build failure rather than a quiet gap. See
@@ -108,7 +108,7 @@ section is a build failure rather than a quiet gap. See
 
 ### How durable facts stay canonical
 
-`src/content/resume/facts.ts` holds what is true — identity, chronology with
+`src/content/resume/facts.ts` holds what is true: identity, chronology with
 individually addressable bullets, systems, capability groups, credentials. A projection
 in `src/content/resume/projections/` is a set of _selections over ids_ plus framing copy.
 It names which systems appear and in what order, which of a role's bullets to print and
@@ -121,15 +121,20 @@ meant, and on a fixed page box that failure is otherwise a gap nobody notices.
 Four invariants are executable, in `src/content/resume/resume.test.ts`:
 
 - every bullet a projection renders exists verbatim in the fact corpus;
-- every number in a projection's framing prose is in `RESUME_QUANTITIES`, so a metric
-  cannot be strengthened for an audience without failing a test;
-- no projection names a fact recorded in `UNVERIFIED` — currently the frontend framework,
-  per-audience product ownership, and anything about 2016–2019 beyond the title held;
+- every number a projection prints, in framing prose or in a selected bullet, is in
+  `RESUME_QUANTITIES`, so a metric cannot be strengthened for an audience without failing
+  a test;
+- no projection names a fact recorded in `UNVERIFIED`, which is currently empty because
+  every question it held has been answered by the record; the mechanism stays wired for
+  the next one;
+- no bullet describing team-owned work is written in the voice of a personal author,
+  which is enforced through an `ownership` field rather than through phrasing
+  discipline;
 - every grouped capability also appears in the durable stack line, a system's tool chain,
   or a role bullet, so a group cannot become the place a new technology quietly appears.
 
 The durable projection selects every fact in its durable order. It is the artifact other
-processes already hold, so it changes only as a deliberate global correction — and the
+processes already hold, so it changes only as a deliberate global correction, and the
 content fingerprint in `scripts/resume-artifacts.json` catches an accidental one.
 
 ### How private Linear data is kept out of the browser

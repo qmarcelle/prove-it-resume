@@ -1,4 +1,4 @@
-# 0006 — "Ask me to defend a decision" is a receipt, not a checkbox list
+# 0006: "Ask me to defend a decision" is a receipt, not a checkbox list
 
 **Status:** accepted
 **Amended:** receipts populated from recorded reasoning (see _Amendment_ below)
@@ -17,7 +17,7 @@ No answers to these questions were supplied with the design.
 1. **Port the checkboxes as drawn.** Faithful to the mockup. Preserves an interaction
    that gives the evaluator nothing.
 2. **Write plausible answers.** Fills the layout. Fabricates architectural reasoning on
-   a page whose entire argument is that claims should be inspectable — the single worst
+   a page whose entire argument is that claims should be inspectable: the single worst
    thing this artifact could do.
 3. **Build the receipt component and render an explicit awaiting state.**
 
@@ -30,29 +30,29 @@ decision now.
 An unanswered receipt shows its own structure with each section marked `AWAITING`, and
 says plainly that it has not been written yet.
 
-## Amendment — receipts populated from the decision record
+## Amendment: receipts populated from the decision record
 
 The original blocker was sourcing, not design: the reasoning existed, but not in the
 material supplied with the mockup. It was recovered from the systems that recorded each
-decision when it was made — Linear issues carrying the constraint, the alternatives, and
+decision when it was made: Linear issues carrying the constraint, the alternatives, and
 the disposition, and Fibery Open Questions carrying the measured outcome and its
 interpretation boundary.
 
 All seven receipts are now answered. The rules applied:
 
 - **No inference.** A receipt states what the record states. Where a decision was
-  reversed, narrowed, or killed, the receipt says so — three of the seven end in a
+  reversed, narrowed, or killed, the receipt says so: three of the seven end in a
   negative or a withdrawn result, because that is what was measured.
 - **Evidence must be openable.** Four receipts carry evidence rows, all pointing at
   public, revision-pinned artifacts (evidence trees at an exact SHA, and the pull
   requests that record a rollout). Where the only record is a private Linear issue, no
-  evidence row is claimed — the identifier appears in the prose as provenance instead.
+  evidence row is claimed: the identifier appears in the prose as provenance instead.
   `EvidenceLink` remains the only component that can emit an href, so this rule is
   enforced by the type system rather than by review.
 - **The awaiting branch stays.** It is the correct state for a future question that has
   been asked but not yet answered from a record.
 
-`EVIDENCE` was listed in `RECEIPT_SECTIONS` but never rendered by the answered branch —
+`EVIDENCE` was listed in `RECEIPT_SECTIONS` but never rendered by the answered branch:
 an unanswered receipt promised a section the answered one dropped. The answered branch
 now renders it when rows are present.
 

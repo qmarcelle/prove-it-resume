@@ -1,4 +1,4 @@
-# 0004 — Most of the application stays Server Components
+# 0004: Most of the application stays Server Components
 
 **Status:** accepted
 

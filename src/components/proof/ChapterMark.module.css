@@ -13,7 +13,7 @@
  * The chapter number is background furniture, and the export set it in the rule colour
  * to say so. That is a stroke colour: as 64px text on canvas it lands at 1.31:1, well
  * under the 3:1 that large text owes. `--color-meta` is the quietest token that clears
- * it, at 3.5:1 — still plainly recessive, and actually legible.
+ * it, at 3.5:1; still plainly recessive, and actually legible.
  */
 .number {
   font-family: var(--font-mono);

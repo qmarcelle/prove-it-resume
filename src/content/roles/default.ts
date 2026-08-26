@@ -63,7 +63,7 @@ export const defaultRole: RoleLens = {
     },
   ],
   showAvailability: true,
-  metaTitle: 'Qwynn Marcelle — Prove It Resume',
+  metaTitle: 'Qwynn Marcelle · Prove It Resume',
   metaDescription:
     'A technical evidence surface for hiring decisions. Three engineering claims about AI platform and developer systems work, with inspectable evidence and stated boundaries.',
   isDefault: true,

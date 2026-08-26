@@ -6,7 +6,7 @@ import { RoleEvidenceMap } from './RoleEvidenceMap';
 import styles from './RoleLens.module.css';
 
 /**
- * 05 — Role Fit. The projection layer, and the only section a role lens changes.
+ * 05: Role Fit. The projection layer, and the only section a role lens changes.
  *
  * Everything above this point is identical on every route. That is the design: an
  * evaluator comparing `/` with `/role/athenahealth-yoh` should find the same systems,
@@ -15,7 +15,7 @@ import styles from './RoleLens.module.css';
  */
 export function RoleLensSection({ lens }: { lens: Lens }) {
   return (
-    <section className={styles.section} id="sec-05" aria-labelledby="sec-05-title">
+    <section className={styles.section} id="role-fit" aria-labelledby="role-fit-title">
       <div className={styles.inner}>
         <p className={styles.eyebrow}>05 / APPLY THE EVIDENCE</p>
 
@@ -28,7 +28,7 @@ export function RoleLensSection({ lens }: { lens: Lens }) {
           ) : null}
         </ul>
 
-        <h2 className={styles.heading} id="sec-05-title">
+        <h2 className={styles.heading} id="role-fit-title">
           {lens.roleFitHeading}
         </h2>
 

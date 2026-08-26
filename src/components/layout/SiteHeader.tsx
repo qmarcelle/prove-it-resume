@@ -6,16 +6,16 @@ import { ActionIcon } from '@/components/icon/Icon';
 import styles from './SiteHeader.module.css';
 
 /**
- * Sticky header. Server Component — nothing here needs client JavaScript.
+ * Sticky header. Server Component; nothing here needs client JavaScript.
  *
  * The in-page nav is a real `<nav>` of ordinary anchors, so it works before hydration
  * and without JavaScript entirely.
  */
 const DURABLE_NAV = [
-  { label: 'Proof', href: '#sec-02' },
-  { label: 'Systems', href: '#sec-03' },
-  { label: 'Role Fit', href: '#sec-05' },
-  { label: 'Career', href: '#sec-06' },
+  { label: 'Proof', href: '#vreko' },
+  { label: 'Systems', href: '#repository-intelligence' },
+  { label: 'Role Fit', href: '#role-fit' },
+  { label: 'Career', href: '#career' },
   { label: 'About', href: '#about' },
 ] as const;
 
@@ -58,7 +58,7 @@ export function SiteHeader({
           <a href={SITE.github} target="_blank" rel="noreferrer noopener">
             GitHub
             <ActionIcon affordance="visit-external-site" size={12} />
-            <span className="visually-hidden"> — opens in a new tab</span>
+            <span className="visually-hidden">, opens in a new tab</span>
           </a>
           {resumeAvailable ? (
             <ResumeDownloadLink
@@ -67,7 +67,7 @@ export function SiteHeader({
               lens={lens}
             />
           ) : (
-            <span className={styles.resumeUnavailable}>Résumé — not yet published</span>
+            <span className={styles.resumeUnavailable}>Résumé, not yet published</span>
           )}
         </div>
       </div>

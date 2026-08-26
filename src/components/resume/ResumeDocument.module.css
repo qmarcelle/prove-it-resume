@@ -5,7 +5,7 @@
  * 8.5in × 11in artifact: nothing reflows, there is no viewport to respond to, and the
  * design's exact values are the specification. The *colours* are the shared tokens,
  * because the palette is identical to the export apart from the quietest greys, which
- * this project darkened for legibility (see docs/design-import.md, deviation 8) —
+ * this project darkened for legibility (see docs/design-import.md, deviation 8):
  * a decision that applies at least as strongly to 9.5px metadata on paper.
  */
 
@@ -54,9 +54,9 @@
 }
 
 /*
- * The second page carries the densest block on either sheet — the durable projection
+ * The second page carries the densest block on either sheet: the durable projection
  * prints the stack, education, certifications and nonprofit leadership below a full
- * experience list — so its frame is a little tighter than the first's. See the reserve
+ * experience list, so its frame is a little tighter than the first's. See the reserve
  * note beside `.foundation`.
  */
 .page:last-child {
@@ -130,7 +130,7 @@
  *
  * The export sized this when the name shared its row with nothing but the page meta.
  * The row now also carries the location, and at 38px the three of them fit on macOS
- * with 21px to spare and on Linux with 6px — Chromium's font metrics differ between
+ * with 21px to spare and on Linux with 6px: Chromium's font metrics differ between
  * platforms, so that is a line that renders correctly here and wraps in CI. Four pixels
  * off the name buys ~31px and puts both platforms comfortably clear, while leaving it
  * nearly three times the size of anything beside it.
@@ -176,13 +176,13 @@
 
 /*
  * The domains line shares one fixed 7.3in measure with the target title, and the export
- * tunes that pair to fit with about 1.3px to spare — 0.2% of the line. That survives on
+ * tunes that pair to fit with about 1.3px to spare: 0.2% of the line. That survives on
  * the machine the design was drawn on and nowhere else: on CI's Linux Chromium the same
  * markup wrapped to two lines, which on a fixed page box pushes the whole document down
  * ~21px.
  *
  * So this metadata line drops one notch, to sizes the document already uses elsewhere
- * (10.5px matches the block-number rails), which buys ~31px of headroom — 4.4%. The
+ * (10.5px matches the block-number rails), which buys ~31px of headroom: 4.4%. The
  * reduced tracking follows the same reasoning as deviation 8 in docs/design-import.md.
  * `tests/e2e/resume.spec.ts` asserts the headroom, not just the line count, so a future
  * title that eats it fails here rather than on someone else's platform.
@@ -285,7 +285,7 @@
 
 /*
  * 01 / Profile and 04 / Foundation. The export sets a different gap on each block's
- * body — 9px, 12px, 8px — rather than one shared rhythm. On a fixed page box those
+ * body (9px, 12px, 8px) rather than one shared rhythm. On a fixed page box those
  * 3px differences accumulate into a visibly different bottom edge, so they are kept
  * distinct rather than harmonised.
  */
@@ -418,7 +418,7 @@
 }
 
 /*
- * `margin-top: auto` pins this to the foot of the page box — the reason the pages are
+ * `margin-top: auto` pins this to the foot of the page box; the reason the pages are
  * explicitly sized rather than left to the print engine.
  */
 .boundary {
@@ -535,7 +535,7 @@
 
 /* ── Agent-platform receipts ──────────────────────────────────────────────────
  * A denser relative of `.system`: an identifier, a title, a status, and one paragraph.
- * No VERIFY link, because there is no public artifact to point at — the block's own
+ * No VERIFY link, because there is no public artifact to point at: the block's own
  * boundary says so rather than the row implying otherwise with a dead affordance.
  */
 .receipt {
@@ -559,8 +559,8 @@
 
 /*
  * The identifier is set in the mono face and in the accent, like the VERIFY links it
- * sits where. It is the checkable part of the row — an interviewer can ask about
- * META-268 by name — so it reads as the row's handle rather than as metadata.
+ * sits where. It is the checkable part of the row: an interviewer can ask about
+ * META-268 by name, so it reads as the row's handle rather than as metadata.
  */
 .receiptId {
   font-family: var(--font-mono);
@@ -599,7 +599,7 @@
 /*
  * 5px above the rule, not 7.
  *
- * The durable sheet's second page used to sum to exactly its own height — 1056px of
+ * The durable sheet's second page used to sum to exactly its own height: 1056px of
  * content in a 1056px box, with `overflow: hidden` underneath it. That is not a layout,
  * it is a coincidence, and it held only for as long as every glyph rasterised the way it
  * did on the machine it was tuned on. A CI runner whose metrics moved by a few pixels
@@ -607,7 +607,7 @@
  *
  * These five rows are where most of the reserve comes from: one value, changed once,
  * rather than a pixel taken from each of five different rhythms. The block-body gaps above are left
- * alone deliberately — the export sets 9px, 12px and 8px on the three bodies and that
+ * alone deliberately: the export sets 9px, 12px and 8px on the three bodies and that
  * distinction is load-bearing for the bottom edge.
  *
  * `resume.spec.ts` now requires a minimum reserve on every page, so "it fits exactly"
@@ -635,7 +635,7 @@
 
 /*
  * The technical stack is a single wrapped run of five or six lines, and it is a
- * reference list rather than prose — nobody reads it left to right. 1.42 is tight for a
+ * reference list rather than prose: nobody reads it left to right. 1.42 is tight for a
  * paragraph and correct for this, and on the page with the least room it is worth ~8px
  * of the reserve described beside `.foundation`.
  */

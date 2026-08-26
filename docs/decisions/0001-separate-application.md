@@ -1,4 +1,4 @@
-# 0001 — Prove It Resume is a separate application
+# 0001: Prove It Resume is a separate application
 
 **Status:** accepted
 
@@ -28,7 +28,7 @@ A standalone application in its own repository.
 - The repository is inspectable as a work sample, and its CI, tests, and commit history
   are part of what it demonstrates.
 - Nothing here is shared with Marcelle Labs. If a genuine second consumer appears, the
-  token layer in `src/styles/tokens.css` is the natural extraction point — but not
+  token layer in `src/styles/tokens.css` is the natural extraction point, but not
   before, since one consumer does not justify a package.
 - The visual language is duplicated rather than shared. Accepted: divergence between a
   company site and a personal hiring artifact is fine, and often correct.

@@ -1,6 +1,6 @@
 /*
  * A query container. The rules that decide whether the segment labels fit inside the
- * bar are measured against this element's own width, not the viewport's — the axis
+ * bar are measured against this element's own width, not the viewport's: the axis
  * appears both full-measure and inside a narrow proof column, and at 1440px the framed
  * variant is narrower than the same axis at 900px unframed.
  */
@@ -25,7 +25,7 @@
 
 /*
  * The track holds both arms and the single bound marker. The marker is absolutely
- * positioned across the full height so it is literally one line through both arms —
+ * positioned across the full height so it is literally one line through both arms;
  * see the component comment; this is the geometry the claim rests on.
  */
 .track {
@@ -179,7 +179,7 @@
  *
  * The narrowest segment in the bound experiment is an eighth of the axis. Eight
  * characters of mono need about 59px, so the in-bar labels only fit once the axis is
- * roughly 500px wide — and below that the bar clips them, which loses the number
+ * roughly 500px wide, and below that the bar clips them, which loses the number
  * without saying it has. So the labels start outside the bar and move in only where
  * there is room, rather than starting inside and being cut.
  *

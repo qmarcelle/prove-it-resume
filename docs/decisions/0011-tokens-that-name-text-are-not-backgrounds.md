@@ -1,4 +1,4 @@
-# 0011 — A token that names text is never a background
+# 0011: A token that names text is never a background
 
 **Status:** accepted
 
@@ -16,7 +16,7 @@ The rule behind it:
 }
 ```
 
-Two independent assumptions are encoded there — that ink is dark, and that inverse ink
+Two independent assumptions are encoded there: that ink is dark, and that inverse ink
 is light. Both are true on the durable page. `LensSurface.module.css` remaps `--color-*`
 at the composition root so every component inverts without knowing it, and on that
 surface `--color-ink` _is_ the light step. Fill and label resolved to `#f0ede6` each.
@@ -28,8 +28,8 @@ correct. The only detector was a person looking at the page.
 
 This is the second time the same mistake shipped. `--color-action-fill` /
 `--color-action-ink` exists because three filled buttons made the identical assumption
-during the first Lit Work Surface pass. Fixing it once, in one place, did not generalise
-— which is what makes it a rule rather than a bug.
+during the first Lit Work Surface pass. Fixing it once, in one place, did not generalise,
+which is what makes it a rule rather than a bug.
 
 ## Alternatives
 
@@ -55,8 +55,8 @@ reported as having survived, and amber is what this surface spends on verified.
 
 **The rule.**
 
-> A token that names text is not a background. A fill pairs with a _ground_ token —
-> `--color-canvas`, `--color-surface*`, `--color-inverse-bg` — which inverts alongside
+> A token that names text is not a background. A fill pairs with a _ground_ token
+> (> `--color-canvas`, `--color-surface*`, `--color-inverse-bg`) which inverts alongside
 > it, or with a purpose-named `{bg,fg}` pair that a surface has to answer deliberately.
 > It never pairs with a second ink token.
 
@@ -76,11 +76,11 @@ that produced this rule found exactly one instance of it in the codebase.
   rule cannot prove legibility, and this is the half that can.
 - Two checks rather than one, deliberately. The structural check catches the pattern
   before it renders; the rendered check catches a collision arriving by some route the
-  pattern does not describe — a third token, an alpha composite, a future surface.
+  pattern does not describe: a third token, an alpha composite, a future surface.
 - A new surface that inverts polarity has to answer the verdict pair, the action trio,
   and anything else purpose-named, rather than inheriting a guess. That is more work at
   the moment a surface is created and less work every time afterwards.
-- The audit is recorded rather than repeated: every other ink-as-fill in the codebase —
-  the skip link, the pressed states in `StepControl` and `InterlockCounterfactual`, the
-  final call to action, the 404 link — pairs against a ground token and survives
+- The audit is recorded rather than repeated: every other ink-as-fill in the codebase
+  (the skip link, the pressed states in `StepControl` and `InterlockCounterfactual`, the
+  final call to action, the 404 link) pairs against a ground token and survives
   inversion. They were checked, and they are correct as written.

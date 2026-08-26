@@ -1,13 +1,14 @@
 import type { Metadata } from 'next';
 import { ApplicationSurface } from '@/components/ApplicationSurface';
 import { linearApplication } from '@/content/applications';
+import { surfaceMetadata } from '@/lib/metadata';
 
 /**
  * The Linear application surface.
  *
  * A route in this application rather than a second deployment. It shares the durable
  * evidence, the design tokens, the evidence-integrity rule, the interactions, the
- * résumé build, the accessibility gates, and the deploy — so a URL path is the right
+ * résumé build, the accessibility gates, and the deploy, so a URL path is the right
  * isolation boundary and a second project would only guarantee the two drift. ADR 0010
  * has the full reasoning.
  *
@@ -18,8 +19,7 @@ import { linearApplication } from '@/content/applications';
  * and there is no reason to withhold them from a crawler that got here anyway.
  */
 export const metadata: Metadata = {
-  title: { absolute: linearApplication.metaTitle },
-  description: linearApplication.metaDescription,
+  ...surfaceMetadata(linearApplication, linearApplication.publicPath),
   alternates: { canonical: '/' },
   robots: { index: false, follow: true },
 };

@@ -15,7 +15,7 @@
  *
  * `.section` sets the rhythm on `/`, where the proofs *are* the page. Where a plan
  * exists the frame supplies padding, ground and scroll offset, and all this has left to
- * do is space the section's own blocks — so it deliberately carries no padding, no rule
+ * do is space the section's own blocks, so it deliberately carries no padding, no rule
  * and no scroll margin, which would otherwise be applied twice.
  */
 .framedInner {
@@ -25,12 +25,27 @@
 }
 
 /*
+ * The head is a child of this column rather than a sibling of it, which is how the
+ * proof sections happened to get a gap under their heads while the editorial sections
+ * got none. Now that the head states its own, this column's gap would be added to it,
+ * so the accidental one is dropped and the stated one governs, and every section on the
+ * page opens at the same distance from its head.
+ *
+ * Addressed by the attribute rather than by class, because `data-section-head` is
+ * already the stable handle this file's sibling test reaches for; a CSS-module class
+ * from `SectionFrame` is not reachable from here at all.
+ */
+.framedInner > [data-section-head] {
+  margin-bottom: 0;
+}
+
+/*
  * The one dark chapter.
  *
  * Inset rather than full-bleed: the page measure and gutters are owned by the layout
  * shell, and reaching past them from inside a section would mean either changing that
  * shell or overlapping the proof-progress rail that sits beside it. So the ground
- * changes without the measure moving, which is the point — the chapter is marked by
+ * changes without the measure moving, which is the point: the chapter is marked by
  * contrast and density, not by a different width.
  */
 .dark {
@@ -51,7 +66,7 @@
 
 /*
  * Typography only. The masthead is a flex *row*, so the basis that lets the thesis
- * share that row lives on the row's own rule below — set here it would be a flex-basis
+ * share that row lives on the row's own rule below: set here it would be a flex-basis
  * on whatever axis the parent happens to use, and in a column that 420px silently
  * becomes 420px of height.
  */
@@ -61,6 +76,7 @@
   font-size: 1.0625rem;
   line-height: 1.6;
   color: var(--color-ink-strong);
+  text-wrap: pretty;
 }
 
 .masthead > .thesis {
@@ -110,7 +126,7 @@
 /*
  * `EvidenceLink` is tuned for its common case: an evidence *row*, where the call to
  * action sits hard right of the label and must never break across lines. Both of those
- * rules misfire when the same link is stacked in a column under its own title —
+ * rules misfire when the same link is stacked in a column under its own title:
  * `margin-left: auto` right-aligns each one independently, staircasing them by text
  * width, and `nowrap` runs a long title straight off the side of a narrow viewport.
  *
@@ -143,10 +159,17 @@
   color: var(--color-inverse-accent);
 }
 
+/*
+ * A layer body is usually one short line inside a column, and occasionally a whole
+ * boundary statement spanning the layer, which is where it ran to 94 characters. The
+ * measure binds the long case and never reaches the short one.
+ */
 .layerBody {
+  max-width: 74ch;
   font-size: 0.844rem;
   line-height: 1.6;
   color: var(--color-ink-secondary);
+  text-wrap: pretty;
 }
 
 .layerDark .layerBody {
@@ -192,9 +215,11 @@
 }
 
 .fieldBody {
+  max-width: 68ch;
   font-size: 0.938rem;
   line-height: 1.65;
   color: var(--color-ink-secondary);
+  text-wrap: pretty;
 }
 
 .tags {
@@ -234,8 +259,8 @@
  *
  * The mapping is deliberately lossy where the light palette has more steps than the
  * dark one: three ink greys and two metadata greys all collapse onto the single quiet
- * inverse ink. That is what keeps every pairing above AA on graphite — the quiet
- * inverse ink is 10.1:1 on this ground, and the accent 9.6:1 — where a finer gradient
+ * inverse ink. That is what keeps every pairing above AA on graphite: the quiet
+ * inverse ink is 10.1:1 on this ground, and the accent 9.6:1; where a finer gradient
  * would put the lightest steps under it.
  */
 .signature {

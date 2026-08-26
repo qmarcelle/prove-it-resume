@@ -15,7 +15,7 @@ describe('numberSections', () => {
 
   it('renumbers the whole plan when one section moves', () => {
     // The property the surface depends on. A section cannot keep a stale number after a
-    // reorder, because it never held one — the number is a function of the list.
+    // reorder, because it never held one: the number is a function of the list.
     const moved = [PLAN[2], PLAN[0], PLAN[1]];
     expect(numberSections(moved).map((step) => [step.id, step.n])).toEqual([
       ['c', '01'],

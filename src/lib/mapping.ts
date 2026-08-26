@@ -2,7 +2,7 @@ import type { RoleEvidenceMapping } from './types';
 
 /**
  * Moves the named problems to the front of a mapping, preserving the durable order of
- * everything else. Role lenses use this to express emphasis without duplicating rows —
+ * everything else. Role lenses use this to express emphasis without duplicating rows:
  * a copied row is a row that can drift out of sync with the evidence it describes.
  *
  * Names that do not match a row are ignored, and repeats collapse, so a stale or sloppy

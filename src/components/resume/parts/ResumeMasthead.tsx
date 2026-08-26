@@ -6,8 +6,8 @@ export type MastheadLink = { label: string; href: string };
  * Page one's masthead: identity, target, contact.
  *
  * Three fixed rows, in that order, on every projection. The target row is the only
- * place a lens shows through — the title is the lens's, the domains string is the
- * projection's — and both share one fixed 7.3in measure, which is why
+ * place a lens shows through: the title is the lens's, the domains string is the
+ * projection's, and both share one fixed 7.3in measure, which is why
  * `resume.spec.ts` asserts headroom on that row rather than merely counting lines.
  *
  * Location sits with the name, not in the contact row. It answers "who and where",

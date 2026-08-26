@@ -9,7 +9,7 @@ import {
 /**
  * The evidence-integrity rule is the load-bearing invariant of this site: no call to
  * action without a real artifact behind it. These tests pin the exact conditions, because
- * a regression here would not look like a bug — it would look like a working link.
+ * a regression here would not look like a bug; it would look like a working link.
  */
 describe('resolveEvidence', () => {
   it('resolves only when a destination is present and verified', () => {

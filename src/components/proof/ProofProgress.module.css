@@ -78,10 +78,29 @@
 /*
  * Below the two-column breakpoint the rail would eat roughly a third of a 320px
  * viewport before any evidence appeared. It becomes a compact horizontal strip that
- * scrolls within itself — the sticky behaviour and `aria-current` semantics are
+ * scrolls within itself: the sticky behaviour and `aria-current` semantics are
  * unchanged, only the axis is.
+ *
+ * ## Why 943 and not a round number
+ *
+ * This value is not a taste judgement, it is the point at which the layout shell stops
+ * being able to seat the rail beside the main column. `ProveItResume.module.css` lays
+ * the two out as a wrapping flex row, so the rail drops onto its own line the moment
+ * `rail basis + gap + main basis` exceeds the content box:
+ *
+ *     2 × --page-gutter (64) + rail 180 + --space-7 gap (40) + main 660  =  944px
+ *
+ * The threshold used to be 899, and the fifteen-hundredth of the web between 900 and
+ * 943 got a rail that had already been pushed full-width by the wrap while still being
+ * *styled* as a sidebar: nine steps in two wrapped rows, no horizontal scroll, no
+ * closing rule, stacked above the evidence. It was not a squeeze and not a strip. It
+ * was the state nobody designed, and 900px is a common laptop-with-a-sidebar width.
+ *
+ * So the strip now begins one pixel before the wrap does, and the two agree by
+ * construction. `application.spec.ts` sweeps the band and asserts there is no width at
+ * which the rail is full-width and still laid out as a column.
  */
-@media (max-width: 899px) {
+@media (max-width: 943px) {
   .rail {
     flex: 1 1 100%;
     top: 0;

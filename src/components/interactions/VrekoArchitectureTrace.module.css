@@ -62,7 +62,7 @@
 
 /*
  * Flow arrows. These name what crosses each gap, so they are text and take a text
- * colour — `--color-border-dashed` is the declared-but-unpublished *stroke*, and at
+ * colour: `--color-border-dashed` is the declared-but-unpublished *stroke*, and at
  * 12px it reads at 2.08:1.
  */
 .flow {

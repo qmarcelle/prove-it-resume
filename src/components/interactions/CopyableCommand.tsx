@@ -29,7 +29,7 @@ const CONFIRMATION_MS = 2400;
  *
  * A failed copy says so. The clipboard is unavailable over plain HTTP and can be denied
  * outright, and a control that silently did nothing would be indistinguishable from one
- * that worked — so the word changes to name the failure, and the command stays selectable
+ * that worked, so the word changes to name the failure, and the command stays selectable
  * behind it. There is no success colour here either: the state is carried by the word and
  * by the mark, which is the same rule the rest of the page follows.
  */

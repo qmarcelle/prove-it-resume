@@ -14,7 +14,7 @@ import styles from './EvidenceDisclosure.module.css';
  *
  * Built from a real `<button>` and a plain conditional render rather than `<details>`,
  * because the trigger sits inside the evidence panel while the drawer opens below the
- * whole two-column block — a relationship `<details>` cannot express without moving one
+ * whole two-column block: a relationship `<details>` cannot express without moving one
  * of them. `aria-controls` and `aria-expanded` restore the association that
  * `<details>` would have given for free.
  *

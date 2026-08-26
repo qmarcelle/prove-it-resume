@@ -15,6 +15,7 @@ import { RepositoryIntelligenceSection } from '@/components/proof/sections/Repos
 import { VrekoSection } from '@/components/proof/sections/VrekoSection';
 import { RoleLensSection } from '@/components/role/RoleLens';
 import { SupportingEvidence } from '@/components/supporting/SupportingEvidence';
+import { proofEntry } from '@/lib/index-entries';
 import { projectProofs } from '@/lib/role-lens';
 import type { RoleLens } from '@/lib/types';
 import styles from './ProveItResume.module.css';
@@ -28,14 +29,14 @@ import styles from './ProveItResume.module.css';
  *
  * Everything here is a Server Component except `ProofNavProvider` and the four
  * interactive leaves inside it. The provider renders `children` untouched, so passing
- * server-rendered sections through it does not drag them across the client boundary —
+ * server-rendered sections through it does not drag them across the client boundary:
  * the sections, evidence rows, and copy all render on the server and ship no JavaScript.
  *
  * Proof sections are mapped by id rather than listed literally, so a lens that reorders
  * `proofOrder` reorders the page too.
  *
  * An *application* lens gets its own composition in `ApplicationSurface` rather than a
- * branch here — it renders a different set of sections in a different order, and a
+ * branch here; it renders a different set of sections in a different order, and a
  * component asking which surface it is on at every second line is two compositions
  * wearing one name. Everything below the section level is shared, and the evidence is
  * the same evidence; see ADR 0010.
@@ -51,14 +52,17 @@ export function ProveItResume({ lens }: { lens: RoleLens }) {
 
   return (
     <ProofNavProvider>
-      <a className={styles.skipLink} href="#sec-01">
+      <a className={styles.skipLink} href="#operating-thesis">
         Skip to the proof
       </a>
 
       <SiteHeader lens={lens} showAvailability={lens.showAvailability} />
 
       <Hero lens={lens}>
-        <EvidenceIndex proofs={proofs} />
+        <EvidenceIndex
+          entries={proofs.map(proofEntry)}
+          caption="THE THREE DURABLE PROOFS"
+        />
       </Hero>
 
       <div className={styles.body}>

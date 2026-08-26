@@ -5,13 +5,13 @@ import styles from './EvidenceChain.module.css';
  *
  * ## What it argues
  *
- * Five stations in one direction — a product someone depends on, the context resolved
+ * Five stations in one direction: a product someone depends on, the context resolved
  * for it, the agent that acts inside a boundary, the decision that changed, and the
  * frozen artifact that proves it. The last one is the only saturated mark on the page,
  * which is the whole thesis stated in a colour: evidence is what survives the chain,
  * and amber is spent where it was earned rather than sprinkled for emphasis.
  *
- * The durable page's hero figure argues something else — that a decision is bounded —
+ * The durable page's hero figure argues something else (that a decision is bounded)
  * and stays where it is. This surface opens on the pipeline instead because the reader
  * it is written for already operates one.
  *
@@ -36,7 +36,7 @@ import styles from './EvidenceChain.module.css';
 
 /**
  * Framing copy. It names no system, states no metric, and makes no claim a proof below
- * does not already carry — the same standard the hero's words are held to.
+ * does not already carry: the same standard the hero's words are held to.
  */
 const STATIONS: readonly {
   id: string;

@@ -27,8 +27,8 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   /*
-   * Nothing may push the page sideways. The design has several wide rows — evidence
-   * tables, architecture strips — and each scrolls inside its own container instead.
+   * Nothing may push the page sideways. The design has several wide rows: evidence
+   * tables, architecture strips, and each scrolls inside its own container instead.
    */
   overflow-x: hidden;
 }

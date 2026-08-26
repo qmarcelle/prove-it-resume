@@ -126,8 +126,8 @@
 /*
  * Below the two-column breakpoint the proof rail becomes a sticky horizontal strip at
  * the top of the viewport. Two stacked sticky elements would either overlap or eat a
- * third of a 320px screen, so the header releases: it scrolls away and the rail — the
- * navigation you actually want while reading the proof — is the one that stays.
+ * third of a 320px screen, so the header releases: it scrolls away and the rail; the
+ * navigation you actually want while reading the proof: is the one that stays.
  */
 @media (max-width: 899px) {
   .header {

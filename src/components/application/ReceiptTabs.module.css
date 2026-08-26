@@ -3,12 +3,12 @@
  * that has no artifact behind it.
  *
  * Separate from `ApplicationSection.module.css` because the receipts are now wholly
- * owned by `ReceiptTabs` — the two server sections beside it no longer render a receipt
+ * owned by `ReceiptTabs`: the two server sections beside it no longer render a receipt
  * row, so a shared stylesheet would only describe rules neither of them uses.
  *
  * It also keeps this file on one side of the server/client boundary. A CSS module
  * imported by a client component is emitted into the client chunk graph, and a module
- * pulled into both graphs is a chunking question rather than a styling one — not a
+ * pulled into both graphs is a chunking question rather than a styling one, not a
  * question worth leaving open in a file that every section on the surface depends on.
  */
 
@@ -39,7 +39,7 @@
 
 /*
  * The identifier is the handle. It is what makes an unlinkable claim checkable in the
- * only way it can be — by name, in a conversation — so it leads the row rather than
+ * only way it can be (by name, in a conversation) so it leads the row rather than
  * trailing it as metadata.
  */
 .receiptId {
@@ -82,7 +82,8 @@
   font-size: 0.938rem;
   line-height: 1.6;
   color: var(--color-ink-secondary);
-  max-width: 72ch;
+  max-width: 68ch;
+  text-wrap: pretty;
 }
 
 /*
@@ -135,7 +136,7 @@
 }
 
 /*
- * A tab. Minimum 44px at every width — the direction asks for it at mobile and there is
+ * A tab. Minimum 44px at every width: the direction asks for it at mobile and there is
  * no width at which a smaller target would be an improvement.
  */
 .tab {

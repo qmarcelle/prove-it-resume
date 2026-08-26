@@ -26,7 +26,7 @@ const BASE = 'qwynn-marcelle-resume';
  * job title, which is genuinely upper-case in this document's voice.
  *
  * The lens titles use a middot separator ("Staff / Principal · AI Platform & Developer
- * Systems"); the export used a plain run. The middot is kept — it is the site's own
+ * Systems"); the export used a plain run. The middot is kept; it is the site's own
  * typographic convention and reads correctly at this size.
  */
 export function resumeTargetTitle(lens: SurfaceLens = defaultRole): string {
@@ -46,7 +46,7 @@ export function resumePrintRoute(lens: SurfaceLens = defaultRole): string {
 /**
  * Filename a browser should save the download as.
  *
- * An application lens is named by its organisation rather than by its role title — a
+ * An application lens is named by its organisation rather than by its role title: a
  * file called `Qwynn Marcelle - Resume (Linear).pdf` is what the person on the other
  * end is looking for in their downloads folder, and it is shorter and less ambiguous
  * than the title would be. Role lenses keep the title, because there is no organisation

@@ -10,7 +10,7 @@ describe('the affordance map', () => {
    * The rule this file exists to enforce: one meaning, one icon.
    *
    * Semantic discipline is what separates an interface that was designed from one that
-   * was decorated, and it is exactly the kind of rule that decays quietly — someone
+   * was decorated, and it is exactly the kind of rule that decays quietly: someone
    * reuses `external-link` for "visit a profile" because it is already imported, and a
    * year later the mark predicts nothing. Stated as a convention it survives about as
    * long as reviewer attention does. Stated here it fails the suite.
@@ -41,7 +41,7 @@ describe('the affordance map', () => {
   /*
    * Not a tidiness check. Every vendored shape costs bytes in every document that
    * renders it, and a shape no affordance points at is a shape being carried for a use
-   * that was abandoned — the icon-set equivalent of dead code.
+   * that was abandoned: the icon-set equivalent of dead code.
    */
   it('vendors no shape that no affordance uses', () => {
     const used = new Set(icons);

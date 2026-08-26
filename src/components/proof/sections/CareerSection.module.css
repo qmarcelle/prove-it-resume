@@ -75,9 +75,11 @@
 }
 
 .entryText {
+  max-width: 68ch;
   font-size: 0.938rem;
   line-height: 1.65;
   color: var(--color-ink-secondary);
+  text-wrap: pretty;
 }
 
 .tags {

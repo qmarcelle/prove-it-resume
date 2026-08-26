@@ -128,3 +128,28 @@
   line-height: 1.6;
   color: var(--color-ink-tertiary);
 }
+
+/*
+ * The receipt shape strip, on a surface that states it before the receipts.
+ *
+ * Read from `RECEIPT_SECTIONS`, which is also what an unanswered receipt renders as its
+ * own skeleton, so the strip and the receipts cannot describe different shapes.
+ */
+.receiptShape {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-meta);
+}
+
+.receiptShapeItem + .receiptShapeItem::before {
+  content: '·';
+  margin-right: var(--space-3);
+  color: var(--color-separator);
+}

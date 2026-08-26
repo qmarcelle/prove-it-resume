@@ -21,14 +21,14 @@ import type { LinearReceipt } from '@/lib/types';
  *   → `LinearReceipt[]` → page
  *
  * Every stage of that runs at build time on a machine holding the credential. The
- * browser only ever receives the last one. Deliberately not implemented in this pass —
- * see ADR 0010 — because three receipts do not justify a credentialled build step, and
+ * browser only ever receives the last one. Deliberately not implemented in this pass
+ * (see ADR 0010) because three receipts do not justify a credentialled build step, and
  * the seam is worth more written down than half-built.
  *
  * ## What a reader can and cannot check
  *
  * These carry no `publicEvidenceHref`, because no public artifact exists behind them.
- * Under this site's own evidence rule that makes them *unverified* — they render as
+ * Under this site's own evidence rule that makes them *unverified*; they render as
  * stated claims with no call to action, exactly like every other row whose artifact is
  * not inspectable. That is the honest rendering, and it is why they sit in their own
  * section with their own boundary rather than being mixed into the proof evidence.
@@ -40,7 +40,7 @@ export const LINEAR_RECEIPTS: readonly LinearReceipt[] = [
     question:
       'Should agent work be handed to Codex through Linear’s own delegation, or through an orchestration layer built alongside it?',
     finding:
-      'Native delegation was kept; the custom boundary was drawn around what Linear does not own — local execution, repository context, and the evidence written back.',
+      'Native delegation was kept. The custom boundary was drawn around what Linear does not own: local execution, repository context, and the evidence written back.',
     status: 'Decided · boundary held',
     boundary:
       'A decision record about one workspace’s configuration. It does not establish throughput, adoption, or that the same boundary is right for a team with different execution surfaces.',

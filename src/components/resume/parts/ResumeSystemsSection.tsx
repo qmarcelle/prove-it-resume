@@ -22,7 +22,7 @@ export function ResumeSystemsSection({
   systems: readonly ResumeSystemFact[];
   /**
    * The tool chain under each entry. Suppressed where the projection carries a grouped
-   * capability block instead — the two say the same thing, and a two-page sheet cannot
+   * capability block instead: the two say the same thing, and a two-page sheet cannot
    * afford to say anything twice.
    */
   showStack?: boolean;

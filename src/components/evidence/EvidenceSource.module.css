@@ -1,6 +1,6 @@
 /*
  * Sits under the call to action, not beside it. The CTA answers "can I look at this?";
- * this answers "what exactly was this claim written against?" — a question that only
+ * this answers "what exactly was this claim written against?": a question that only
  * arrives second, so it reads second.
  */
 /*
@@ -8,13 +8,13 @@
  *
  * This used to be `nowrap`, on the reasoning that `source: repo@sha · path` is one
  * citation and reads better unbroken. That holds where the column is wide, and on the
- * application surface the evidence panel sits in a 438px aside beside a framed proof —
+ * application surface the evidence panel sits in a 438px aside beside a framed proof:
  * where a 40-character revision line simply ran out past the right edge of the page and
  * took the document's horizontal scrollbar with it. A citation that pushes the whole
  * page sideways is not more readable.
  *
  * `anywhere` rather than `break-word`, because the thing that overruns is a single
- * unbroken token — a commit sha, a path — which `break-word` leaves alone until it has
+ * unbroken token (a commit sha, a path) which `break-word` leaves alone until it has
  * already overflowed.
  */
 .source {

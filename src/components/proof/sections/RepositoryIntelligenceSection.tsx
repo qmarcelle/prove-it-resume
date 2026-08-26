@@ -27,7 +27,7 @@ import type { SurfaceStep } from '@/lib/types';
 import styles from './RepositoryIntelligenceSection.module.css';
 
 /**
- * 03 — Repository Intelligence. Spatial grammar: causality.
+ * 03: Repository Intelligence. Spatial grammar: causality.
  *
  * This is the section most at risk of collapsing into a project gallery, because it
  * names three artifacts. The layout resists that in two moves.
@@ -38,7 +38,7 @@ import styles from './RepositoryIntelligenceSection.module.css';
  * is worth trusting stays on screen while the consequence is read.
  *
  * Second, the three layers follow on light ground as one vertical chain where each is
- * the previous one's consequence — a contract, an implementation of that contract, an
+ * the previous one's consequence: a contract, an implementation of that contract, an
  * enterprise integration of that implementation. Three receipts for one argument.
  *
  * The `ArchitectureStrip` that used to open the section is gone: it restated the chain
@@ -55,7 +55,7 @@ export function RepositoryIntelligenceSection({ step }: { step?: SurfaceStep } =
    * heading floating above it on light ground would read as a second opener. On a lens
    * surface the band is one block inside a section the plan has already framed and
    * numbered, so the head sits where every other section's head sits and the signature
-   * becomes what it actually is — the figure.
+   * becomes what it actually is: the figure.
    */
   const chapter = (
     <ProofChapter

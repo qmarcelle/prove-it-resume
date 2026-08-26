@@ -3,7 +3,7 @@
  *
  * The outer frame is no longer here. Section ground, rhythm, scroll offset, the index
  * rail and the head all come from `SectionFrame`, which is the one geometry every
- * section on a lens surface is drawn from — editorial, receipts, proof, compact and
+ * section on a lens surface is drawn from: editorial, receipts, proof, compact and
  * banded alike. Before that existed these sections carried a shell of their own and the
  * proof sections carried another, which is how the page ended up with its numbers at
  * four different horizontal positions.
@@ -26,6 +26,7 @@
   line-height: 1.65;
   color: var(--color-ink-strong);
   max-width: 68ch;
+  text-wrap: pretty;
 }
 
 .cta {
@@ -98,8 +99,8 @@
 }
 
 /*
- * The two flat registers. Same shape, different question — who the work was for, and
- * what it spanned — so they share every rule and differ only in their content.
+ * The two flat registers. Same shape, different question, who the work was for, and
+ * what it spanned, so they share every rule and differ only in their content.
  */
 .register {
   display: flex;
@@ -118,7 +119,7 @@
 
 /*
  * Three tracks, filled left to right. Fixed rather than `auto-fit` so a register with
- * two entries lays them out at the same width as a register with six — under `auto-fit`
+ * two entries lays them out at the same width as a register with six: under `auto-fit`
  * the empty tracks collapse and two entries stretch to half the page each, which reads
  * as two headline claims rather than as two items in a list.
  */
@@ -191,7 +192,7 @@
  * Two steps down, not one.
  *
  * At tablet widths four stage columns are ~150px each, which turns every title into a
- * three-line stack — the sequence is still one row but nothing in it is readable. Two
+ * three-line stack: the sequence is still one row but nothing in it is readable. Two
  * columns keeps the pairing legible while the section still has two dimensions.
  *
  * Below 700px the index rail has already lain down, so the whole section is a single

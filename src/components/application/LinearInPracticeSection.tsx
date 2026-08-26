@@ -10,7 +10,7 @@ import styles from './ApplicationSection.module.css';
  * This is the section where an application surface is most tempted to cheat: the
  * material is genuinely the most relevant thing on the page and it is also the only
  * material with no public artifact behind it. The temptation is to give each row a
- * confident link — to the workspace, to a profile, to anything — and let the affordance
+ * confident link (to the workspace, to a profile, to anything) and let the affordance
  * imply verification the row does not have.
  *
  * It does not. Each row carries the same `[VERIFY BEFORE PUBLISHING]` marker every
@@ -19,7 +19,7 @@ import styles from './ApplicationSection.module.css';
  * reader who wants something they can open is told, here, to look below.
  *
  * The data path matters as much as the rendering. `receipts` is a fixed array in
- * `content/linear/receipts.ts` — no fetch, no credential, and no private workspace URL
+ * `content/linear/receipts.ts`: no fetch, no credential, and no private workspace URL
  * anywhere in the bundle. `linear.test.ts` asserts that rather than trusting it.
  */
 export function LinearInPracticeSection({
@@ -35,12 +35,12 @@ export function LinearInPracticeSection({
     <section
       className={sectionFrameClass(step)}
       id={step.id}
-      aria-labelledby="lin-practice-title"
+      aria-labelledby="linear-in-practice-title"
     >
       <SectionHead
         step={step}
         title={copy.heading}
-        titleId="lin-practice-title"
+        titleId="linear-in-practice-title"
         lead={copy.body}
       />
 

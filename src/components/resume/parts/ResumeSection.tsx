@@ -3,7 +3,7 @@ import styles from '../ResumeDocument.module.css';
 /**
  * A numbered block: the mono label rail on the left, the content on the right.
  *
- * Every section of every projection is one of these, which is the point — the rail
+ * Every section of every projection is one of these, which is the point: the rail
  * width, the label typography, and the 24px gutter are the document's spine, and a
  * section that set its own would be visibly a different document on the same sheet.
  *
@@ -12,7 +12,7 @@ import styles from '../ResumeDocument.module.css';
  * carry it.
  *
  * `density` selects the body's internal rhythm. The export sets a different gap on each
- * block — 9px, 12px, 8px — rather than one shared value, and on a fixed page box those
+ * block (9px, 12px, 8px) rather than one shared value, and on a fixed page box those
  * 3px differences accumulate into a visibly different bottom edge, so they are named
  * and kept rather than harmonised.
  */
@@ -60,7 +60,7 @@ export function ResumeSection({
  * A stated limit, in the document's own boundary voice.
  *
  * `anchored` pins it to the foot of the page. That is right when the boundary closes a
- * sheet, and wrong when another block follows it — which is why it is a prop rather
+ * sheet, and wrong when another block follows it, which is why it is a prop rather
  * than baked into the class, and why the Linear projection's systems boundary sits
  * inline while the durable résumé's sits on the bottom rule.
  */

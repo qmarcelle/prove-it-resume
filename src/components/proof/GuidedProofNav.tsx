@@ -12,7 +12,7 @@ import styles from './GuidedProofNav.module.css';
  * reader exactly where they are.
  *
  * The dock announces stage changes politely so a screen-reader user who presses NEXT is
- * told where they landed — scrolling on its own tells them nothing.
+ * told where they landed: scrolling on its own tells them nothing.
  */
 export function GuidedProofNav() {
   const { guided, activeIndex, steps, next, previous, exitGuided } = useProofNav();

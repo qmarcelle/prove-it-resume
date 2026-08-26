@@ -1,4 +1,14 @@
+/*
+ * The close, and the boundary that says it is one.
+ *
+ * On the durable page this block inverts (dark on cream) and the change of ground
+ * carries the transition on its own. On the Lit Work Surface both sides are already
+ * dark and the inverse ground is one tonal step up from the canvas, so the same rule
+ * that worked there says almost nothing here. The hairline is the surface's own answer:
+ * a border only where two things would otherwise touch, and here two chapters do.
+ */
 .section {
+  border-top: var(--rule);
   background: var(--color-inverse-bg);
   color: var(--color-inverse-ink);
 }
@@ -9,7 +19,7 @@
   gap: 1.25rem;
   max-width: var(--page-max);
   margin: 0 auto;
-  padding: 4.5rem var(--page-gutter) var(--space-8);
+  padding: var(--space-chapter) var(--page-gutter) var(--space-8);
 }
 
 .heading {

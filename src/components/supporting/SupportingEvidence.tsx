@@ -30,7 +30,7 @@ const DURABLE_FRAMING: SupportingFraming = {
 /**
  * Additional systems, shown after the three proofs rather than beside them.
  *
- * The framing is load-bearing: "not six side projects — three engineering problems with
+ * The framing is load-bearing: "not six side projects; three engineering problems with
  * multiple independent receipts". This section exists so relevant supporting work is
  * findable without turning the page into a project grid, which is why it is one entry
  * in one card and not a row of tiles.
@@ -45,7 +45,7 @@ export function SupportingEvidence({
    *
    * Optional because `/` has no plan: it renders the durable six in a fixed order and
    * this entry is its appendix, unnumbered by design. Where a step *is* supplied the
-   * section takes its number, eyebrow and frame from it and states none of its own —
+   * section takes its number, eyebrow and frame from it and states none of its own,
    * which is what stops a promoted appendix from arriving on an application surface
    * with no place in that surface's sequence.
    */
@@ -56,14 +56,14 @@ export function SupportingEvidence({
   return (
     <section
       className={`${styles.section} ${sectionFrameClass(step)}`.trim()}
-      id={step ? step.id : 'more-evidence'}
-      aria-labelledby="more-evidence-title"
+      id={step ? step.id : 'never-ask-twice'}
+      aria-labelledby="never-ask-twice-title"
     >
       {step ? (
         <SectionHead
           step={step}
           title={framing.heading}
-          titleId="more-evidence-title"
+          titleId="never-ask-twice-title"
           lead={framing.lead}
         />
       ) : null}
@@ -74,7 +74,7 @@ export function SupportingEvidence({
             <p className={styles.eyebrow}>{framing.eyebrow}</p>
 
             <div className={styles.head}>
-              <h2 className={styles.heading} id="more-evidence-title">
+              <h2 className={styles.heading} id="never-ask-twice-title">
                 {framing.heading}
               </h2>
               <p className={styles.lead}>{framing.lead}</p>

@@ -3,17 +3,21 @@ import { ActionIcon } from '@/components/icon/Icon';
 import styles from './ProblemSection.module.css';
 
 /**
- * 01 — the operating thesis. The problem the three proofs are all about.
+ * 01: the operating thesis. The problem the three proofs are all about.
  *
  * "Show me what you built" is an anchor rather than a button: it goes to a fixed place
  * and has no state, so it should be a link. That also makes it work without JavaScript.
  */
 export function ProblemSection() {
   return (
-    <section className={styles.section} id="sec-01" aria-labelledby="sec-01-title">
+    <section
+      className={styles.section}
+      id="operating-thesis"
+      aria-labelledby="operating-thesis-title"
+    >
       <div className={styles.inner}>
         <p className={styles.eyebrow}>{PROBLEM_SECTION.eyebrow}</p>
-        <h2 className={styles.heading} id="sec-01-title">
+        <h2 className={styles.heading} id="operating-thesis-title">
           {PROBLEM_SECTION.heading}
         </h2>
 
@@ -28,7 +32,7 @@ export function ProblemSection() {
 
         <p className={styles.pullquote}>{PROBLEM_SECTION.pullquote}</p>
 
-        <a className={styles.cta} href="#sec-02">
+        <a className={styles.cta} href="#vreko">
           Show me what you built
           <ActionIcon affordance="move-down-page" size={14} />
         </a>

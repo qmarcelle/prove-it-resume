@@ -1,4 +1,4 @@
-# 0002 — Proof content is data, not page-local JSX
+# 0002: Proof content is data, not page-local JSX
 
 **Status:** accepted
 
@@ -33,7 +33,7 @@ model. Presentation stays in components.
   it does not establish. That is a type error, not a review comment.
 - `resolveEvidence` in `src/lib/evidence.ts` is the only path to an evidence link, so
   the "no CTA without evidence" rule is enforced centrally rather than per component.
-- Role lenses become projections over the same data — see ADR 0003.
+- Role lenses become projections over the same data; see ADR 0003.
 - Content changes need a deploy. Acceptable at this cadence.
 - Sections still own their own layout. The data model deliberately does not try to
   describe presentation; three proofs that make different arguments earn different

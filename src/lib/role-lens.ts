@@ -31,7 +31,7 @@ export function getApplicationLens(slug: string): ApplicationLens | undefined {
  * Resolves any lens that has a printable résumé at `/resume/print/<slug>`.
  *
  * One resolver for both kinds, because the print route does not care which kind it was
- * handed — it renders whichever content projection the lens names. Splitting it would
+ * handed; it renders whichever content projection the lens names. Splitting it would
  * mean a new application lens needed an edit in the print route as well as a
  * registration, which is exactly the coupling the registry exists to remove.
  */
@@ -47,7 +47,7 @@ export function listPrintableSlugs(): string[] {
  * Projects the durable proof set through a lens.
  *
  * A lens may reorder proofs and may name a subset it cares about. It may never add,
- * remove, or alter one — proofs named in `proofOrder` that do not exist are ignored, and
+ * remove, or alter one: proofs named in `proofOrder` that do not exist are ignored, and
  * any proof the lens omits is appended in its durable position so evidence cannot be
  * quietly dropped from a projection.
  */

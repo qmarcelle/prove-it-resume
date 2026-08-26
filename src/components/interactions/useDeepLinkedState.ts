@@ -20,8 +20,8 @@ import { publishDeepLinkState } from './deep-link';
  *
  * This used to write every state change into the URL with `replaceState`. The capability
  * was right; the default was wrong. Three sections read normally turned the address into
- * `?interlock=evidence&layer=workspace&decision=comparison#sec-02`, which is a debug
- * harness rather than a finished page — and the reader carried it into their history and
+ * `?interlock=evidence&layer=workspace&decision=comparison#vreko`, which is a debug
+ * harness rather than a finished page, and the reader carried it into their history and
  * anything they pasted without ever asking for it.
  *
  * Now the state is published to a registry instead, and `COPY THIS VIEW` builds the

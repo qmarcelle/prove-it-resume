@@ -14,12 +14,12 @@ import styles from './SectionFrame.module.css';
  * So the frame is normalised *before* any visual treatment is applied to it. What every
  * section shares now:
  *
- * - the same content origin — the section's own left edge, which every block below the
+ * - the same content origin: the section's own left edge, which every block below the
  *   head is set from;
- * - the same index rail — a fixed column at that origin holding the sequence number, so
+ * - the same index rail: a fixed column at that origin holding the sequence number, so
  *   headings across editorial, receipts, proof, compact and banded sections land on one
  *   vertical line rather than four;
- * - the same head grammar — index, eyebrow, title, lead — sourced from the page plan.
+ * - the same head grammar (index, eyebrow, title, lead) sourced from the page plan.
  *
  * `frame` is the only axis of variation, and it is declared by the plan rather than by
  * the section, because how loudly a section is set is a decision about the page.
@@ -57,7 +57,7 @@ export function SectionHead({
    *
    * Only the standard frame rules its head. A band already states its own edges, a
    * compact section is about to be followed by its figure, and an inline head is the
-   * demotion — a rule under any of the three would be a second boundary in the same
+   * demotion: a rule under any of the three would be a second boundary in the same
    * place, which is how a page ends up looking ruled rather than structured.
    */
   ruled?: boolean;

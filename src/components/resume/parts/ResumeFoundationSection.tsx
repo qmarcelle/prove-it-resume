@@ -9,7 +9,7 @@ import styles from '../ResumeDocument.module.css';
  * uses and what most readers expect; grouped rows are what a reader looking for a
  * specific competence needs, because a 22-item list gives them no way to answer "does
  * this person do the frontend as well as the platform?" without reading all of it.
- * Both are the same facts — `resume.test.ts` asserts every grouped item also appears
+ * Both are the same facts: `resume.test.ts` asserts every grouped item also appears
  * in the durable run or in a system's stack.
  */
 export function ResumeFoundationSection({
@@ -37,7 +37,7 @@ export function ResumeFoundationSection({
          * The grouped form stacks its heading above the rows rather than beside them.
          *
          * Beside them it would nest a second label column inside the block's own 140px
-         * rail, leaving each capability run about 200px to wrap in — every row went to
+         * rail, leaving each capability run about 200px to wrap in: every row went to
          * two lines and the block cost a third of page two to say five short things.
          */
         <div className={styles.capabilityBlock}>

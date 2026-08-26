@@ -19,7 +19,7 @@ import styles from './InterlockCounterfactual.module.css';
  * screen: same axis, same bound, same clock.
  *
  * The second is that the arms advance together through named stages. The point of the
- * experiment is *when* the decision happens — before shared state is mutated — and a
+ * experiment is *when* the decision happens (before shared state is mutated) and a
  * reader cannot see "before" without a time axis.
  *
  * Perturbation is a user action, never autoplay. Removing the coupling evidence flips
@@ -69,8 +69,8 @@ export function InterlockCounterfactual({
 
   /*
    * Perturbation replaces the frames of the stages it affects and leaves the rest
-   * alone. The uncoordinated arm is unchanged throughout — it has no decision point to
-   * flip — which is itself part of what the control demonstrates.
+   * alone. The uncoordinated arm is unchanged throughout; it has no decision point to
+   * flip, which is itself part of what the control demonstrates.
    */
   const stages: readonly InterlockStage[] = useMemo(() => {
     if (!perturbed) return data.stages;
@@ -178,7 +178,7 @@ export function InterlockCounterfactual({
 
         {perturbed ? (
           <p className={styles.perturbNote}>
-            Same decision function, same intents, same policy, identical final tree — and
+            Same decision function, same intents, same policy, identical final tree, and
             the opposite decision, because the evidence changed. In this history alpha and
             beta are still coupled; the commit graph simply never showed it.
           </p>

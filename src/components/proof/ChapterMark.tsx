@@ -9,11 +9,11 @@ import styles from './ChapterMark.module.css';
  * difference between the three proofs is a prop rather than three hand-built headers
  * that will drift.
  *
- * - `horizontal` — an oversized number beside the title. Vreko, which opens the sequence.
- * - `inline` — number and run identifier on one metadata line, title beneath. Repository
+ * - `horizontal`: an oversized number beside the title. Vreko, which opens the sequence.
+ * - `inline`: number and run identifier on one metadata line, title beneath. Repository
  *   Intelligence, whose dark treatment is already carrying the emphasis and does not
  *   need a second loud element.
- * - `vertical` — the number over a rule with the label rotated alongside. Interlock,
+ * - `vertical`: the number over a rule with the label rotated alongside. Interlock,
  *   which is read against a horizontal axis and wants its chapter furniture out of that
  *   axis's way.
  *

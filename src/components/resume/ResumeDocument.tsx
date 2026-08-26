@@ -11,7 +11,7 @@ import { ResumeSheet } from './parts/ResumePage';
  * pagination: two fixed page boxes rather than a single reflowing text stream. That
  * choice is load-bearing. The design places a boundary note at the foot of page one and
  * a footer at the foot of page two using `margin-top: auto`, which only means anything
- * inside a box of known height — let the browser paginate this and both float upward
+ * inside a box of known height: let the browser paginate this and both float upward
  * into the middle of whatever page they land on.
  *
  * So each page is exactly `8.5in × 11in` with `overflow: hidden`, and the print rules
@@ -21,8 +21,8 @@ import { ResumeSheet } from './parts/ResumePage';
  *
  * ## Two layouts, chosen by the projection
  *
- * `projection` names a *content* projection — which durable facts appear, in what order
- * — and each projection declares which of the two compositions renders it. The switch
+ * `projection` names a *content* projection, which durable facts appear, in what order,
+ * and each projection declares which of the two compositions renders it. The switch
  * is exhaustive on purpose: adding a third layout is a type error here rather than a
  * silent fallthrough to the durable one, which would ship the wrong résumé under the
  * right filename.

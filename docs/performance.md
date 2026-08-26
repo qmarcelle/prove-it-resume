@@ -71,7 +71,7 @@ serves the files from the same origin, with `display: swap`. Measured CLS is 0.0
 
 The hero composition tested that rule rather than sitting outside it. It arrived as a
 prototype for a `.lottie` asset, and it ships as CSS transitions keyed off a `data-beat`
-attribute — the export's own recommendation was to deploy the prototype and defer buying
+attribute: the export's own recommendation was to deploy the prototype and defer buying
 a runtime until the concept had been in front of real readers. The trigger for revisiting
 that, and the nine constraints any asset would have to meet, are in
 `docs/decisions/0009-a-fourth-animated-treatment.md`. The only motion in
@@ -86,7 +86,7 @@ there is no third-party JavaScript, no tracking, and no consent surface to build
 lazy load. The fifteen action icons and three concept marks are inline SVG rendered on the
 server: no request, no decode, no `next/image`, and no chance of arriving after layout.
 Each carries explicit `width` and `height` attributes, so its box exists before any
-stylesheet resolves — which is the same reason the status glyphs are fixed-size spans.
+stylesheet resolves, which is the same reason the status glyphs are fixed-size spans.
 
 If a raster image is ever added, it goes through `next/image` with explicit dimensions.
 
@@ -105,7 +105,7 @@ change rather than a layout shift.
   the drawer contents, and every boundary are in the HTML so they are present without
   JavaScript, searchable in-page, and readable by a crawler.
 - **Both role routes are prerendered.** With a handful of lenses this is free. If lenses
-  ever numbered in the hundreds, `generateStaticParams` would need revisiting — but that
+  ever numbered in the hundreds, `generateStaticParams` would need revisiting, but that
   would also mean the artifact had become something else.
 
 ## Not measured

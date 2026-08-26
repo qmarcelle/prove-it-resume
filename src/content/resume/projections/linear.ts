@@ -10,9 +10,9 @@ import type { ResumeProjection } from '../projection';
  * platform under it?", which changes what deserves the scarce space on two sheets:
  *
  * - The profile leads on products rather than on infrastructure.
- * - The enterprise record leads on the customer-facing initiatives — Portal Refresh,
- *   CIAM, Shared Health — with modernization and DevOps beneath them. Same sentences,
- *   reordered. Nothing here is written for this reader.
+ * - The enterprise record leads on the customer-facing portals and the team that
+ *   delivered them, with the enterprise programmes and the platform modernization
+ *   beneath. Same sentences, reordered. Nothing here is written for this reader.
  * - Never Ask Twice is promoted out of the ALSO footnote into a full product entry,
  *   because agent memory is the closest of the four to what this reader builds.
  * - Vreko drops to the compact line. It is the strongest MCP artifact in the corpus and
@@ -23,11 +23,17 @@ import type { ResumeProjection } from '../projection';
  * - Certifications and nonprofit leadership are dropped, which is what pays for the
  *   receipts block. They are still facts; they are not the facts this reader needs.
  *
- * What is *not* here is as deliberate. There is no frontend framework, no per-audience
- * product ownership, and nothing about the 2016–2019 period beyond the title held,
- * because this corpus does not establish any of them — see `UNVERIFIED` in `facts.ts`.
- * Those are the three things a Linear-shaped résumé would most like to claim, which is
- * exactly why the absence is recorded rather than quietly filled.
+ * What is *not* here is as deliberate, and the list is now short. The frontend, the
+ * per-audience portals and the 2016–2019 period were all open questions and are all
+ * stated facts. What this projection still does not say is GraphQL, a state-management
+ * library, a named design system, or any broker capability nobody supplied. GraphQL is
+ * the one worth naming: it is on the target role's published stack, and it is absent
+ * because no record establishes it rather than because nobody noticed.
+ *
+ * The other thing it will not do is flatten ownership. Five lines under the lead role
+ * describe a portal estate and four of them say whose it was, because the difference
+ * between "the team owned" and "built" is the difference between a true sentence and a
+ * flattering one. `ownership` in `facts.ts` makes that a field rather than a habit.
  */
 export const linearResumeProjection: ResumeProjection = {
   id: 'linear',
@@ -37,7 +43,7 @@ export const linearResumeProjection: ResumeProjection = {
   profile: {
     label: '01 / PROFILE',
     heading: 'I build AI products and the systems that make them reliable in production.',
-    body: '8 years building production software inside regulated healthcare — hands-on across services, data, identity, and delivery — and 2.5 years leading the teams doing it. The work spans both halves of a product: the customer-facing platform initiatives and the platform underneath them. Recent independent work is specialised on agentic products and the integration infrastructure they need: persistent agent memory evaluated by ablation, a controlled experiment in agent coordination, and an open standard for repository intelligence. Each ships with the evidence needed to tell whether it works, which is what decides whether an agent product survives production.',
+    body: 'Nearly a decade building production software in regulated healthcare, from hands-on application development through technical and engineering leadership. It starts in React, writing provider applications, and ends leading the full-stack team behind the member and broker/employer portal estate: the browser, the APIs, identity and the enterprise data underneath. Recent independent work is specialised on agentic products and the integration infrastructure they need: persistent agent memory evaluated by ablation, a controlled experiment in agent coordination, and an open standard for repository intelligence. Each ships with the evidence needed to tell whether it works, which is what decides whether an agent product survives production.',
   },
 
   systems: {
@@ -48,8 +54,8 @@ export const linearResumeProjection: ResumeProjection = {
       // the bullet spends the line on the thing a reader cannot infer from the name.
       { id: 'never-ask-twice', bulletIds: ['never-ask-twice:product'] },
       { id: 'interlock', bulletIds: ['interlock:separation'] },
-      // One bullet. The specification is the durable half — a standard someone else can
-      // adopt — and the integration story is carried by the proof section on the site.
+      // One bullet. The specification is the durable half (a standard someone else can
+      // adopt) and the integration story is carried by the proof section on the site.
       { id: 'workspace-json', bulletIds: ['workspace-json:standard'] },
     ],
     compact: { label: 'ALSO', systemId: 'vreko' },
@@ -69,25 +75,35 @@ export const linearResumeProjection: ResumeProjection = {
     roles: [
       {
         id: 'team-lead',
-        // Customer-facing initiatives first, then the identity work behind them, then
-        // the platform record. Durable bullets, promoted — not rewritten.
+        /*
+         * The product surface first, then what stood behind it, then who it served,
+         * then the architecture the whole estate had to answer, then the team that
+         * delivered it. A reader who stops after two lines still has "full-stack team,
+         * portals plus APIs, member and broker/employer", which is the claim.
+         */
         bulletIds: [
-          'team-lead:initiatives',
-          'team-lead:auth',
-          'team-lead:ai-engineering',
-          'team-lead:modernization',
+          'team-lead:portals',
+          'team-lead:services',
+          'team-lead:brokers',
+          'team-lead:shared-health',
+          'team-lead:team',
         ],
       },
+      // One line. The delivery-modernization record is real and is not what this reader
+      // is buying, so it takes the smallest space that still states it.
+      { id: 'devops-strategy', bulletIds: ['devops-strategy:azure'] },
+      /*
+       * The hands-on portal work, then the services under it. This projection's argument
+       * is that the product surface was built and not only led, and this is the role
+       * where that is true of one pair of hands on both halves of the stack.
+       */
       {
-        id: 'devops-strategy',
-        bulletIds: [
-          'devops-strategy:governance',
-          'devops-strategy:test-automation',
-          'devops-strategy:frameworks',
-        ],
+        id: 'systems-analyst',
+        bulletIds: ['systems-analyst:portals', 'systems-analyst:microservices'],
       },
-      { id: 'systems-analyst' },
-      { id: 'developer' },
+      // Where the hands were before the team was. Contact Preference and Fee Schedule
+      // are the two things on this sheet with a single unambiguous author.
+      { id: 'developer', bulletIds: ['developer:provider-apps'] },
     ],
   },
 

@@ -70,7 +70,7 @@ describe('RepositoryDecisionDiff', () => {
     const user = userEvent.setup();
     render(<RepositoryDecisionDiff data={foreignShape} />);
 
-    await user.click(screen.getByRole('button', { name: /Add repository evidence/ }));
+    await user.click(screen.getByRole('button', { name: /Add evidence$/ }));
 
     expect(screen.getByText('service-mesh-observation')).toBeVisible();
     expect(screen.getByText('Deployment topology record')).toBeVisible();
@@ -85,7 +85,7 @@ describe('RepositoryDecisionDiff', () => {
     // never something the reader has to unlock.
     expect(screen.getByText('VARIED')).toBeVisible();
     expect(screen.getByText('HELD FIXED')).toBeVisible();
-    expect(screen.getByText(/Model — qwen-plus/)).toBeVisible();
+    expect(screen.getByText(/Model: qwen-plus/)).toBeVisible();
   });
 
   it('discloses evidence, then the diff, then attribution, in that order', async () => {
@@ -97,26 +97,127 @@ describe('RepositoryDecisionDiff', () => {
     expect(screen.queryByText('Exact producing source')).toBeNull();
     expect(screen.queryByText('ADDED')).toBeNull();
 
-    await user.click(screen.getByRole('button', { name: /Add repository evidence/ }));
+    await user.click(screen.getByRole('button', { name: /Add evidence$/ }));
     expect(screen.getByText('Exact producing source')).toBeVisible();
     expect(screen.queryByText('ADDED')).toBeNull();
 
-    await user.click(screen.getByRole('button', { name: /Compare plans/ }));
+    await user.click(screen.getByRole('button', { name: /Compare$/ }));
     expect(screen.getByText('ADDED')).toBeVisible();
     expect(screen.getByText('REMOVED')).toBeVisible();
     expect(screen.getByText('CONSTRAINED')).toBeVisible();
     // Attribution is still withheld at the comparison stage.
     expect(screen.queryByText(/BECAUSE OF/)).toBeNull();
 
-    await user.click(screen.getByRole('button', { name: /Attribute the change/ }));
+    await user.click(screen.getByRole('button', { name: /Attribute$/ }));
     expect(screen.getAllByText(/BECAUSE OF/).length).toBe(3);
+  });
+
+  it('folds the evidence bodies into a receipt once the comparison is the question', async () => {
+    const user = userEvent.setup();
+    render(<RepositoryDecisionDiff data={repositoryDecision} />);
+
+    await user.click(screen.getByRole('button', { name: /Add evidence$/ }));
+    expect(
+      screen.getByText(/Artifact repository, revision, and repository-relative/),
+    ).toBeVisible();
+
+    await user.click(screen.getByRole('button', { name: /Compare$/ }));
+
+    // The bodies fold away.
+    expect(
+      screen.queryByText(/Artifact repository, revision, and repository-relative/),
+    ).toBeNull();
+
+    // What they leave behind still names every piece of evidence and its kind, so
+    // BECAUSE OF E1 + E2 stays resolvable without expanding anything.
+    expect(screen.getByText('Repository evidence (3)')).toBeVisible();
+    for (const label of [
+      'Exact producing source',
+      'Source location absent from the catalog',
+      'No co-change evidence available',
+    ]) {
+      expect(screen.getByText(label)).toBeVisible();
+    }
+    expect(screen.getByText('E1')).toBeVisible();
+  });
+
+  it('re-expands folded evidence on request, and keeps it expanded', async () => {
+    const user = userEvent.setup();
+    render(<RepositoryDecisionDiff data={repositoryDecision} />);
+
+    await user.click(screen.getByRole('button', { name: /Compare$/ }));
+
+    const restore = screen.getByRole('button', { name: /Show evidence detail/ });
+    expect(restore).toHaveAttribute('aria-expanded', 'false');
+    await user.click(restore);
+
+    expect(screen.getByText(/Artifact repository, revision/)).toBeVisible();
+
+    /*
+     * The stage supplies a default, not a verdict. A reader who has asked for the
+     * evidence back should not have to ask again on the next stage, and the provenance
+     * the next stage adds has to land inside the block they just opened.
+     */
+    await user.click(screen.getByRole('button', { name: /Attribute$/ }));
+    expect(screen.getByText(/Artifact repository, revision/)).toBeVisible();
+    expect(screen.getByText('@workspacejson/cli')).toBeVisible();
+  });
+
+  it('folds the plan pair into a changed decision once attribution is the question', async () => {
+    const user = userEvent.setup();
+    render(<RepositoryDecisionDiff data={repositoryDecision} />);
+
+    await user.click(screen.getByRole('button', { name: /Compare$/ }));
+    expect(screen.getByText(/^Add a dbt quality check for game_events/)).toBeVisible();
+
+    await user.click(screen.getByRole('button', { name: /Attribute$/ }));
+
+    // The plans fold; the decision they changed does not.
+    expect(screen.queryByText(/^Add a dbt quality check for game_events/)).toBeNull();
+    expect(screen.getByText('CHANGED DECISION')).toBeVisible();
+    expect(screen.getByText('Catalog projection only')).toBeVisible();
+    expect(screen.getByText('Catalog projection + repository evidence')).toBeVisible();
+
+    // Counted from the artifact's own delta rows, in its own vocabulary.
+    expect(screen.getByText('1 removed, 1 added, 1 constrained')).toBeVisible();
+
+    // The attributed rows are what the space went to.
+    expect(screen.getAllByText(/BECAUSE OF/).length).toBe(3);
+
+    await user.click(screen.getByRole('button', { name: /Show both plans/ }));
+    expect(screen.getByText(/^Add a dbt quality check for game_events/)).toBeVisible();
+  });
+
+  it('keeps the baseline plan above the evidence that changed it', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<RepositoryDecisionDiff data={repositoryDecision} />);
+
+    await user.click(screen.getByRole('button', { name: /Compare$/ }));
+
+    /*
+     * Folding must not reorder the argument. The plan pair is one collapsible unit with
+     * two positions precisely so the evidence stays between the plan made without it
+     * and the plan made with it; rendering both plans adjacently would put the changed
+     * plan above its own cause.
+     */
+    const order = [
+      screen.getByText('Catalog projection only'),
+      screen.getByText('Repository evidence (3)'),
+      screen.getByText('Catalog projection + repository evidence'),
+      screen.getByText('What changed'),
+    ];
+    const positions = order.map((node) => {
+      const all = [...container.querySelectorAll('*')];
+      return all.indexOf(node);
+    });
+    expect(positions).toEqual([...positions].sort((a, b) => a - b));
   });
 
   it('carries the recorded absence of co-change evidence rather than hiding it', async () => {
     const user = userEvent.setup();
     render(<RepositoryDecisionDiff data={repositoryDecision} />);
 
-    await user.click(screen.getByRole('button', { name: /Add repository evidence/ }));
+    await user.click(screen.getByRole('button', { name: /Add evidence$/ }));
 
     expect(screen.getByText('No co-change evidence available')).toBeVisible();
     expect(screen.getByText(/no partners are asserted/)).toBeVisible();
@@ -126,7 +227,7 @@ describe('RepositoryDecisionDiff', () => {
     const user = userEvent.setup();
     render(<RepositoryDecisionDiff data={repositoryDecision} />);
 
-    await user.click(screen.getByRole('button', { name: /Compare plans/ }));
+    await user.click(screen.getByRole('button', { name: /Compare$/ }));
 
     for (const label of ['ADDED', 'REMOVED', 'CONSTRAINED']) {
       expect(screen.getByText(label)).toBeVisible();
@@ -149,13 +250,14 @@ describe('RepositoryDecisionDiff', () => {
     const user = userEvent.setup();
     render(<RepositoryDecisionDiff data={repositoryDecision} />);
 
-    const first = screen.getByRole('button', { name: /Baseline plan/ });
+    const first = screen.getByRole('button', { name: /Baseline$/ });
     first.focus();
     await user.keyboard('{ArrowRight}');
 
-    expect(
-      screen.getByRole('button', { name: /Add repository evidence/ }),
-    ).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: /Add evidence$/ })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
     expect(screen.getByText('Exact producing source')).toBeVisible();
   });
 
@@ -166,12 +268,13 @@ describe('RepositoryDecisionDiff', () => {
     expect(screen.getByRole('button', { name: /Previous/ })).toBeDisabled();
 
     await user.click(screen.getByRole('button', { name: /Next/ }));
-    expect(
-      screen.getByRole('button', { name: /Add repository evidence/ }),
-    ).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: /Add evidence$/ })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
 
     await user.click(screen.getByRole('button', { name: /Previous/ }));
-    expect(screen.getByRole('button', { name: /Baseline plan/ })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: /Baseline$/ })).toHaveAttribute(
       'aria-pressed',
       'true',
     );

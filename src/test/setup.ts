@@ -10,7 +10,7 @@ afterEach(cleanup);
  * The interaction components reflect their stage into the query string, and jsdom keeps
  * one `window.history` for the whole file. Without this, a test that steps an
  * interaction forward leaves `?decision=…` behind and the next test mounts already
- * advanced — which looks like a component bug and is not one. Resetting here rather than
+ * advanced, which looks like a component bug and is not one. Resetting here rather than
  * per-file means any future deep-linked component gets the same isolation for free.
  */
 afterEach(() => {

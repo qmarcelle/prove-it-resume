@@ -8,8 +8,8 @@ import { getPrintableLens, listPrintableSlugs } from '@/lib/role-lens';
  * The printable résumé under one lens.
  *
  * A lens changes two things here: the masthead's target title, and which *content
- * projection* renders. Role lenses change only the first — the durable résumé under a
- * different heading — because a generic lens has no business reordering a career.
+ * projection* renders. Role lenses change only the first: the durable résumé under a
+ * different heading, because a generic lens has no business reordering a career.
  * An application lens may change both, and the Linear lens does: same corpus, different
  * selection and different order. See ADR 0010.
  *
@@ -33,7 +33,7 @@ export async function generateMetadata({
   if (!lens) return {};
 
   return {
-    title: { absolute: `Qwynn Marcelle — résumé · ${lens.roleTitle}` },
+    title: { absolute: `Qwynn Marcelle · résumé · ${lens.roleTitle}` },
     robots: { index: false, follow: false },
   };
 }

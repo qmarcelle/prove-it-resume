@@ -118,10 +118,18 @@
   color: var(--color-inverse-accent);
 }
 
+/*
+ * A receipt is the longest continuous prose on this page and the only prose a reader
+ * opens deliberately. Unbounded it ran to 98 characters a line across the full section
+ * width; the measure is stated so an open receipt reads like a document rather than
+ * like a log.
+ */
 .fieldBody {
+  max-width: 72ch;
   font-size: 0.938rem;
   line-height: 1.6;
   color: var(--color-inverse-ink);
+  text-wrap: pretty;
 }
 
 .fieldList {
@@ -161,7 +169,7 @@
  * The call to action is rendered by EvidenceLink, which is styled for the light
  * surface. These receipts sit on the inverse surface, so the accent is corrected here
  * rather than by adding a variant prop to the one component that is allowed to emit an
- * href — its single responsibility is resolution, not theming.
+ * href; its single responsibility is resolution, not theming.
  */
 .evidenceRow a {
   color: var(--color-inverse-accent);

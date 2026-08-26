@@ -4,32 +4,35 @@ A technical evidence surface for hiring decisions.
 
 > **Important evidence should be easy to find at decision time.**
 
-## What this is
-
 An artifact that lets an evaluator understand, inspect, and challenge evidence of senior
 engineering capability, rather than reading a conventional résumé and taking it on faith.
-
-It organises three engineering claims, each with multiple independent receipts:
-
-|        | Claim                                                                       | Status                              |
-| ------ | --------------------------------------------------------------------------- | ----------------------------------- |
-| **01** | **Vreko** — MCP and codebase intelligence for agentic development workflows | Shipped system                      |
-| **02** | **Repository Intelligence** — `workspace.json` → Codex → Tally              | Standard · implemented · integrated |
-| **03** | **Interlock** — can environment evidence change a coordination decision?    | Controlled evidence                 |
-
-Not a portfolio of six side projects. Three arguments, with the evidence for each and an
-explicit statement of what that evidence does _not_ establish.
-
-## Why it is not a conventional résumé site
-
 A résumé asks to be believed. This asks to be checked.
 
-Every claim carries a boundary, every proof exposes its evidence, and the Claim Ledger
-lists all of it in one auditable table. Where an exact artifact does not exist yet, the
-page says so instead of linking somewhere plausible — see **Evidence policy** below.
+Three engineering claims carry it, each with multiple independent receipts:
 
-The implementation is also part of the evidence. The architecture, accessibility, tests,
-and the decisions behind them are meant to hold up to inspection.
+|        | Claim                                                                      | Status                              |
+| ------ | -------------------------------------------------------------------------- | ----------------------------------- |
+| **01** | **Vreko**: MCP and codebase intelligence for agentic development workflows | Shipped system                      |
+| **02** | **Repository Intelligence**: `workspace.json` → Codex → Tally              | Standard · implemented · integrated |
+| **03** | **Interlock**: can environment evidence change a coordination decision?    | Controlled evidence                 |
+
+Not a portfolio of six side projects. Three arguments, with the evidence for each and an
+explicit statement of what that evidence does _not_ establish. A fourth system, **Never
+Ask Twice**, is supporting work on `/` and leads the evidence on `/linear`: application
+surfaces may reorder what is emphasised, never what is claimed.
+
+The implementation is part of the evidence. The architecture, accessibility, tests, and
+the decisions behind them are meant to hold up to inspection.
+
+## Start here
+
+| If you want to                   | Open                                                                                                                                                                                                                                                        |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Understand the system            | **Architecture** below, then [`docs/decisions/`](docs/decisions/)                                                                                                                                                                                           |
+| Inspect `/linear`                | [`src/app/linear/page.tsx`](src/app/linear/page.tsx) → [`ApplicationSurface`](src/components/ApplicationSurface.tsx) → [`content/applications/linear.ts`](src/content/applications/linear.ts)                                                               |
+| Inspect evidence integrity       | [`src/lib/evidence.ts`](src/lib/evidence.ts) and [`src/content/content.test.ts`](src/content/content.test.ts)                                                                                                                                               |
+| Inspect the résumé pipeline      | [`content/resume/facts.ts`](src/content/resume/facts.ts) + [`projections/`](src/content/resume/projections/), built by [`scripts/build-resume-pdf.mts`](scripts/build-resume-pdf.mts). See [ADR 0007](docs/decisions/0007-resume-pdf-generated-at-build.md) |
+| Know why any of it is like it is | [`docs/decisions/`](docs/decisions/): indexed, with the rejected alternatives                                                                                                                                                                               |
 
 ## Architecture
 
@@ -39,7 +42,7 @@ src/
     page.tsx              the durable evidence surface
     role/[slug]/page.tsx  the same surface, projected through a role lens
                           (athenahealth-yoh, end-to-end-delivery)
-    linear/page.tsx       an application surface — its own composition,
+    linear/page.tsx       an application surface, its own composition,
                           the same evidence
     resume/print/         the print sources the PDFs are rendered from
   components/             presentation; no content lives here
@@ -50,114 +53,132 @@ src/
     experiments/          the frozen runs the interactions are bound to
     resume/facts.ts       the durable résumé fact corpus
     resume/projections/   what a given reader should see first
-    applications/         application lenses
+    applications/         application lenses, including each one's page plan
     linear/receipts.ts    curated public receipts from a private workspace
   lib/                    types, the evidence rule, lens projection
   styles/tokens.css       the design language as custom properties
 design/reference/claude/  the original design export, preserved unmodified
-docs/                     design import, ADRs, content audit, performance,
-                          interaction contract, design provenance,
-                          the Linear application surface
+docs/                     ADRs and the working notes behind them
 ```
-
-Five ideas carry the design:
 
 **Content is data.** Proofs, claims, and boundaries live in typed modules under
 `src/content/`, not inside JSX. `boundary` is a required field on `Proof`, so a proof
-cannot ship without stating its limits.
+cannot ship without stating its limits. See [ADR 0002](docs/decisions/0002-proof-content-as-data.md)
 
 **Lenses are projections, not forks.** A lens may reorder and reframe; it holds no proof
-content, so it structurally cannot change a claim. `/` and `/role/<slug>` render the same
-component with a different lens. A test asserts that every row in every lens exists
-_verbatim_ in the durable mapping, so a lens cannot author copy for one audience —
-`/role/end-to-end-delivery` reorders the durable rows into delivery sequence rather than
-writing its own.
-
-**An application surface is a route, not a second application.** `/linear` is a
-first-class page addressed to one organisation: its own reading order, its own hero
-framing, its own résumé. It shares the evidence, the tokens, the evidence rule, the
-interactions, the PDF pipeline, and the deploy, so a URL path is the isolation boundary
-and there is no second copy to drift. `ApplicationLens` is distinct from `RoleLens`
-because it owns a route and a page plan; the registries stay separate so `/role/linear`
-404s rather than becoming a second address for the same application. See
-[ADR 0010](docs/decisions/0010-application-lenses-and-resume-projections.md) and
-[`docs/linear-application-surface.md`](docs/linear-application-surface.md).
+content, so it structurally cannot change a claim. A test asserts that every row in every
+lens exists _verbatim_ in the durable mapping. `/linear` is a first-class route addressed
+to one organisation, sharing the evidence, the tokens, the evidence rule, the
+interactions, the PDF pipeline and the deploy: `ApplicationLens` is a separate registry
+from `RoleLens`, so `/role/linear` 404s by construction. See [ADR 0003](docs/decisions/0003-role-lenses-as-projections.md),
+[ADR 0010](docs/decisions/0010-application-lenses-and-resume-projections.md),
+[`docs/linear-application-surface.md`](docs/linear-application-surface.md)
 
 **The résumé is durable facts plus projections over them.** `content/resume/facts.ts`
-holds the chronology, the systems, and the capabilities; a projection selects facts by id,
-orders them, and frames them. It has no field in which to put a fact. Tests assert that
-every printed bullet exists verbatim in the corpus, that no projection states a quantity
-the corpus has not established, and that none of them claims one of the facts recorded as
-unverified.
+holds the chronology, the systems, and the capabilities; a projection selects facts by
+id, orders them, and frames them. It has no field in which to put a fact. Tests assert
+that every printed bullet exists verbatim in the corpus, that every quantity appears
+inside the exact claim `RESUME_QUANTITIES` permits (the number _and_ what it counts),
+and that no projection claims one of the facts recorded as unverified.
 
-**Server Components by default.** `"use client"` appears in seventeen files, all genuinely
-interactive. The page works before hydration: anchors, the evidence index, every link,
-and the hero composition's settled frame are ordinary HTML.
+**One page plan, one ordinal system.** A surface's `pagePlan` is the only sequence: the
+rail, the header nav, the skip link and every section number are stamped from position by
+`numberSections`, and a section the plan does not list throws at build time. A section's
+`id` is separate from its number (semantic, permanent, and the anchor a shared link
+carries) so reordering a page renumbers it and invalidates nothing.
 
-**Interaction state can be a link; it is not one by default.** Browsing `/linear` leaves
-the address alone. `COPY THIS VIEW` builds the shareable one, carrying the whole page's
-state and the section the reader is in, and a link arrived at is honoured exactly as
-before. Reading three sections used to rewrite the URL into
-`?interlock=…&layer=…&decision=…`, which nobody asked for and which reads as a debug
-harness. See [ADR 0012](docs/decisions/0012-state-can-be-a-link-not-is-one.md).
-
-**Mobile recomposes; it does not stack.** A recruiter opens this from a phone, so 390,
-320, 768 and 1440 are gated with every disclosure open: no horizontal scroll, no clipped
-evidence, no control under 44px below 700px. Two further tests check the half a
-prohibition list cannot — that the Interlock axis still shows every value against one
-shared bound at 390px, and that the hero chain turns rather than shrinks. See
-[ADR 0013](docs/decisions/0013-mobile-recomposes-rather-than-stacks.md).
-
-**Tokens that name text are never backgrounds.** A filled control pairs its fill with a
-_ground_ token, or with a purpose-named `{bg,fg}` pair a surface has to answer. Pairing
-two ink tokens is what made the Interlock verdict chip render as a blank rectangle on the
-dark surface — the word was in the DOM, painted on itself, and every automated check
-passed. A test now scans every stylesheet for the pattern, and a browser test reads the
-resolved colours back off both palettes. See
-[ADR 0011](docs/decisions/0011-tokens-that-name-text-are-not-backgrounds.md).
+**Server Components by default.** `"use client"` appears in seventeen files, all
+genuinely interactive. The page works before hydration: anchors, the evidence index,
+every link, one worked decision receipt, and the hero composition's settled frame are
+ordinary HTML. See [ADR 0004](docs/decisions/0004-server-components-by-default.md)
 
 **A page states what it cannot prove.** The design direction supplied the product-history
 section with a frontend stack, per-audience product surfaces, and a description of the
-2016–2019 period. No source in this repository establishes any of them, so the section is
-built and those three entries render the recorded gap instead — dashed, marked `NOT YET
-EVIDENCE`, never linked. Deleting them would have left a page that reads as complete and
-a reader who never learns a question was asked.
+2016–2019 period. No source established any of them at the time, so those three entries
+rendered the recorded gap instead: dashed, marked `NOT YET EVIDENCE`, never linked.
+Deleting them would have left a page that reads as complete and a reader who never
+learns a question was asked.
 
-**One meaning, one icon.** Affordances name what they promise — inspect an artifact, read
-a document, save a file, expand in place — and the shape follows from the promise rather
-than the other way round. A test fails if any icon ever carries two meanings. Icon
-geometry is vendored rather than installed: `dependencies` is exactly `next`, `react`,
-`react-dom`.
+All three were later answered by the record and are now stated. Closing a gap once it is
+genuinely answered is the other half of recording it, and the mechanism stays wired and
+tested for the next question the corpus cannot answer.
 
-The reasoning is in [`docs/decisions/`](docs/decisions/); the defensible detail is in
-[`docs/implementation-notes.md`](docs/implementation-notes.md).
+Four more rules are enforced by tests and explained in their own records: interaction
+state is shareable but never written while browsing
+([ADR 0012](docs/decisions/0012-state-can-be-a-link-not-is-one.md)); mobile recomposes
+rather than stacking, gated at four viewports with every disclosure open
+([ADR 0013](docs/decisions/0013-mobile-recomposes-rather-than-stacks.md)); a token that
+names text is never a background, and text inside a fill takes its colour from that
+fill's stated pair ([ADR 0011](docs/decisions/0011-tokens-that-name-text-are-not-backgrounds.md));
+and one meaning gets one icon, with the geometry vendored rather than installed
+([ADR 0008](docs/decisions/0008-vendored-icon-set.md)): `dependencies` is exactly
+`next`, `react`, `react-dom`.
+
+## Evidence policy
+
+**No evidence CTA without evidence.**
+
+A row renders as a link only when it names a destination _and_ that destination has been
+confirmed to be the artifact the row claims. A link to a general profile page is not an
+artifact, and neither is a link back to the section the reader is already in. Everything
+else renders `VERIFY BEFORE PUBLISHING`, and each evidence panel reports its own state
+honestly.
+
+The rule lives in one function, `resolveEvidence` in `src/lib/evidence.ts`. `EvidenceLink`
+takes a record rather than an href, so there is no way to produce a link that bypasses it.
+
+Every evidence row on the three primary claims resolves to an exact artifact, and each
+was opened and confirmed to be the thing its row names: Vreko 8/8, Repository
+Intelligence 12/12, Interlock 8/8, Never Ask Twice 1/1. The Interlock rows point at a
+**pinned commit**, not a branch, and a test enforces that for every GitHub evidence link
+on the site.
+
+## What is not established
+
+Nothing on this site was invented to fill a gap. No metrics, adoption figures,
+employment details, URLs, or architectural rationale have been fabricated. Three things
+a product-oriented résumé would like to say, and does not:
+
+`UNVERIFIED` in `src/content/resume/facts.ts` is empty, and that is a result rather than
+a shrug. It held three entries for most of this project: no established frontend
+framework, no per-audience product ownership, and a title-only 2016–2019. Each was true
+of the record as supplied, each rendered on the page as an open question, and each has
+since been answered.
+
+Three things a reader might expect and will not find, because none is an evidence gap:
+the exact year TypeScript arrived, an exhaustive broker or employer feature catalogue,
+and GraphQL. GraphQL is worth naming: it is on the target role's published stack and is
+simply not claimed, which is what the rule is for. The full content audit is in
+[`docs/content-audit.md`](docs/content-audit.md).
 
 ## Design provenance
 
 The approved design was produced in Claude Design and is preserved unmodified at
 [`design/reference/claude/`](design/reference/claude/), with SHA-256 hashes recorded in
-that directory's README.
-
-Those files are **reference, not source**. They contain Claude Design runtime constructs
-(`<x-dc>`, `<sc-if>`, `{{ binding }}`, a `DCLogic` class) which were translated by hand
-into React, TypeScript, and CSS Modules. They are not under `public/` and are never
-served.
-
+that directory's README. Those files are **reference, not source**; they contain Claude
+Design runtime constructs that were translated by hand into React, TypeScript, and CSS
+Modules. They are not under `public/` and are never served.
+[ADR 0005](docs/decisions/0005-design-export-as-reference.md) has the reasoning;
 [`docs/design-import.md`](docs/design-import.md) records what was extracted, where each
-piece landed, and every deliberate deviation from the mockup.
+piece landed, and every deliberate deviation.
 
 A later motion-and-disclosure storyboard drove the three progressive-disclosure
-interactions. It was consumed as an interaction specification and **not** committed —
-its hash, treatment, and every deviation are recorded in
+interactions. It was consumed as an interaction specification and **not** committed; its
+hash, treatment, and every deviation are in
 [`docs/design-provenance.md`](docs/design-provenance.md), and the durable rules it
 produced are in [`docs/interaction-contract.md`](docs/interaction-contract.md).
 
-A fourth import, "Hero Concept B", supplied the hero composition and the marks cropped
-from its settled frame. Both of its passes are committed with the others: "The Bounded
-Path" is the one that ships, and "The Bounded Field" is kept beside it because the
-decision record cites it and the second pass exists to correct it. It was authored as a
-prototype for a `.lottie` asset and ships as CSS, on its own recommendation that the
-prototype deploy first and the runtime decision wait for real readers.
+## House style
+
+**No em dashes.** They are the most reliable surface tell of generated prose, and a
+document arguing that its claims can be checked cannot afford a typographic habit that
+makes a reader stop and wonder who wrote the argument. A colon, a semicolon, a comma,
+parentheses, or two sentences will all carry the pause. The en dash stays, because
+`08/2016 – 08/2019` is punctuation rather than a rhetorical device.
+
+The rule covers comments and decision records as well as rendered copy, because this
+README sends an evaluator to read them. `src/test/typography.test.ts` enforces it over
+every file git would keep, tracked or not, and runs in `pnpm test` and in CI.
 
 ## Local development
 
@@ -175,9 +196,9 @@ pnpm dev            # http://localhost:3000
 pnpm format:check   # prettier
 pnpm lint           # eslint (flat config)
 pnpm typecheck      # tsc --noEmit, strict
-pnpm test           # vitest — unit and component
+pnpm test           # vitest (unit and component
 pnpm build          # next build
-pnpm test:e2e       # playwright — browser + axe-core accessibility
+pnpm test:e2e       # playwright) browser + axe-core accessibility
 ```
 
 All six run in CI on every pull request. The browser suite needs Chromium once:
@@ -187,8 +208,9 @@ pnpm exec playwright install chromium
 ```
 
 Accessibility is a gate rather than a follow-up: axe-core runs against the durable page,
-a role lens, the Linear application surface, and each with every disclosure open, at
-desktop and at 320px.
+a role lens, and the Linear application surface, each with every disclosure open, at
+desktop and at 320px. Contrast is checked on resolved colours in both palettes, not on
+declared ones.
 
 The résumé PDFs are generated from real print routes and committed:
 
@@ -196,70 +218,6 @@ The résumé PDFs are generated from real print routes and committed:
 pnpm resume:pdf        # regenerate every variant from the manifest
 pnpm resume:pdf:check  # verify the committed artifacts are still current
 ```
-
-## Evidence policy
-
-**No evidence CTA without evidence.**
-
-A row renders as a link only when it names a destination _and_ that destination has been
-confirmed to be the artifact the row claims. A link to a general profile page is not an
-artifact, and neither is a link back to the section the reader is already in.
-
-Everything else renders `VERIFY BEFORE PUBLISHING`, and each evidence panel reports its
-own state honestly — "0 of 8 evidence items resolve to an inspectable artifact".
-
-The rule lives in one function, `resolveEvidence` in `src/lib/evidence.ts`. `EvidenceLink`
-takes a record rather than an href, so there is no way to produce a link that bypasses it.
-Tests assert that no evidence record points at the bare GitHub profile or at an on-page
-anchor.
-
-## Status
-
-**Implementation complete**
-
-- All six proof stages, the Evidence Index, and the Claim Ledger
-- Guided proof navigation, active-stage tracking, evidence disclosures
-- Role-lens projection with the supplied `athenahealth / Yoh` lens
-- An application surface at `/linear`, with a Linear-specific résumé projection
-- Decision Receipt component; all seven receipts answered from the decision record
-- Three progressive-disclosure interactions, each bound to a frozen public artifact:
-  the Repository Decision Diff, the Interlock counterfactual, and the Vreko semantic
-  zoom and request trace
-- Accessibility, responsive, and browser test coverage; CI
-
-**Evidence bound**
-
-Every evidence row on the three primary claims now resolves to an exact artifact, and
-each was opened and confirmed to be the thing its row names:
-
-| Claim                        | Resolved |
-| ---------------------------- | -------- |
-| Vreko                        | 8 / 8    |
-| Repository Intelligence      | 12 / 12  |
-| Interlock                    | 8 / 8    |
-| Never Ask Twice (supporting) | 1 / 1    |
-
-The Interlock rows point at a **pinned commit**, not a branch, so the packet a reader
-opens is the packet the claim was made against. A test enforces that for every GitHub
-evidence link on the site.
-
-**Awaiting owner-supplied content**
-
-- The frontend framework used at BlueCross, if any, is not established by anything
-  supplied here, so no projection names one
-- Per-audience product ownership (member, broker, employer) is not established; the
-  corpus names the Portal Refresh, CIAM and Shared Health initiatives and nothing
-  beneath them
-- The 08/2016 – 08/2019 developer period is title-only
-
-Each is recorded in `UNVERIFIED` in `src/content/resume/facts.ts`, and a test fails if a
-projection ever claims one.
-
-The complete list, with what each item needs, is in
-[`docs/content-audit.md`](docs/content-audit.md).
-
-Nothing on this site was invented to fill a gap. No metrics, adoption figures,
-employment details, URLs, or architectural rationale have been fabricated.
 
 ## License
 

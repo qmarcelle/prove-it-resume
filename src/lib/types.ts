@@ -25,7 +25,7 @@ export type EvidenceKind =
  * A pinned, immutable citation sitting behind a row's user-facing call to action.
  *
  * The rule for these links is that the reader should land on the published site or
- * docs — that is the artifact a person can actually read. But a published page is a
+ * docs; that is the artifact a person can actually read. But a published page is a
  * live surface: it can be rewritten, and a claim that cites one cites a moving target.
  * So a row may also carry the exact frozen artifact the claim was made against, which
  * renders as a quiet secondary citation rather than as the call to action.
@@ -52,7 +52,7 @@ export type EvidenceRef = {
   href?: string;
   /**
    * Whether the destination has been confirmed to be the artifact this row names.
-   * `verified: false` suppresses the call to action entirely — see `resolveEvidence`.
+   * `verified: false` suppresses the call to action entirely; see `resolveEvidence`.
    */
   verified: boolean;
 } & SourcePin;
@@ -61,7 +61,7 @@ export type EvidenceRef = {
 export type EvidenceSummaryRow = {
   id: string;
   label: string;
-  /** Optional second line — a path, an architecture sketch, a tool chain. */
+  /** Optional second line: a path, an architecture sketch, a tool chain. */
   detail?: string;
   /** Renders `detail` in the mono face, for code-shaped values. */
   detailIsCode?: boolean;
@@ -97,7 +97,10 @@ export type ProofField = {
 
 export type Proof = {
   id: string;
-  /** DOM id and scroll target, e.g. `sec-02`. Matches the design export. */
+  /**
+   * Stable identity of the section this proof renders in: DOM id, anchor, and what a
+   * shared link carries. Semantic (`vreko`) so it survives being reordered.
+   */
   sectionId: string;
   /** Two-digit stage number as shown in the rail and eyebrow. */
   stage: string;
@@ -139,6 +142,30 @@ export type SupportingWork = {
   surface: string;
   boundary: string;
   evidence: EvidenceRef;
+  /**
+   * How this work names itself where it is listed rather than rendered: the Evidence
+   * Index on a surface that promotes it out of the appendix.
+   *
+   * Compression of the record above, never an addition to it: `content.test.ts` asserts
+   * every word of the status label is already used of this work somewhere durable.
+   */
+  listing?: ProofListing & { status: ProofStatus };
+};
+
+/**
+ * One row of the Evidence Index: a name, a line, a state, and where it lives.
+ *
+ * A listing shape, deliberately narrow. Both a `Proof` and a promoted `SupportingWork`
+ * flatten into it, and there is no field here in which to put a claim, so composing an
+ * index cannot become a way to say something the durable record does not.
+ */
+export type IndexEntry = {
+  /** The section's stable identity; the anchor this row links to. */
+  id: string;
+  title: string;
+  summary: string;
+  summaryIsCode?: boolean;
+  status: ProofStatus;
 };
 
 /** A row of the Claim Ledger: what is asserted, on what basis, and within what limit. */
@@ -150,10 +177,12 @@ export type Claim = {
 };
 
 /**
- * A Decision Receipt. Every field after `question` is optional because, for now, none
- * of them are populated: the design export supplied the questions but no answers, and
- * inventing architectural reasoning would defeat the point of the artifact. A receipt
- * with no `decision` renders in an explicit awaiting state.
+ * A Decision Receipt: a question, and the recorded answer to it.
+ *
+ * All seven are answered from the decision record. Everything after `question` stays
+ * optional so a receipt whose reasoning has not been recovered renders its own shape
+ * with each missing section marked `AWAITING`: an honest gap rather than invented
+ * architectural rationale, which is the failure this artifact exists to argue against.
  */
 export type DecisionReceipt = {
   id: string;
@@ -175,7 +204,7 @@ export type RoleEvidenceMapping = {
 };
 
 /**
- * The identifier of a résumé content projection — see `src/content/resume/`.
+ * The identifier of a résumé content projection; see `src/content/resume/`.
  *
  * Declared here rather than in the content module so a lens can name its projection
  * without `lib` importing `content` and closing an import cycle.
@@ -187,7 +216,7 @@ export type ResumeProjectionId = 'default' | 'linear';
  *
  * Two kinds satisfy it: a `RoleLens`, addressable at `/role/<slug>`, and an
  * `ApplicationLens`, which owns a first-class route of its own. Both are projections of
- * the same durable evidence, and neither has a field in which to put proof content —
+ * the same durable evidence, and neither has a field in which to put proof content;
  * that constraint is what makes "a lens cannot change a claim" structural rather than
  * a convention someone has to remember.
  */
@@ -239,17 +268,17 @@ export type RoleLens = SurfaceLens & {
 /**
  * The outer geometry one section of an application surface is set in.
  *
- * Four frames, not four stylesheets. Every section on a lens surface — editorial,
- * receipts, proof, the compact treatments — is drawn from the same index rail and the
+ * Four frames, not four stylesheets. Every section on a lens surface: editorial,
+ * receipts, proof, the compact treatments: is drawn from the same index rail and the
  * same content origin, and this is the only axis on which they are allowed to differ.
  *
- * - `standard` — the default. Section ground, an oversized index number, a ruled head.
- * - `band` — the same head on its own tonal step, marking a block that groups without
+ * - `standard`: the default. Section ground, an oversized index number, a ruled head.
+ * - `band`: the same head on its own tonal step, marking a block that groups without
  *   boxing. Inset rather than full-bleed: the measure and the gutters belong to the
  *   layout shell, and a section reaching past them would overlap the progress rail.
- * - `compact` — `standard` with the head unruled and the title one step down, for a
+ * - `compact`: `standard` with the head unruled and the title one step down, for a
  *   section whose own figure is carrying the emphasis.
- * - `inline` — no oversized number: index and eyebrow share one metadata line. For the
+ * - `inline`: no oversized number: index and eyebrow share one metadata line. For the
  *   sections the plan deliberately demotes.
  */
 export type SectionFrame = 'standard' | 'band' | 'compact' | 'inline';
@@ -258,12 +287,21 @@ export type SectionFrame = 'standard' | 'band' | 'compact' | 'inline';
  * One section of an application surface's page plan, as authored.
  *
  * Note what is *not* here: the visible number. A page plan that carried its own numbers
- * could disagree with its own order, and on this surface it did — proof sections were
+ * could disagree with its own order, and on this surface it did: proof sections were
  * printing the stage they hold on `/` while the rail counted their position here. The
  * number is stamped from position by `numberSections`, so the two cannot drift.
  */
 export type SurfaceSection = {
-  /** DOM id of the section this step scrolls to. */
+  /**
+   * The section's stable identity: its DOM id, its anchor, and what a shared link
+   * carries. Semantic and permanent: `interlock`, not `sec-04`.
+   *
+   * Held apart from the visible number on purpose. The number is a *position* and moves
+   * when the plan is reordered; the identity is what the section *is* and must not.
+   * When the two were the same field, `/linear` handed out `#sec-02` from a section it
+   * printed as `06`, so a copied link asserted a number its own page contradicted.
+   * Reordering the plan now renumbers the page and invalidates nothing.
+   */
   id: string;
   /** How the section names itself in the rail and the header nav. */
   label: string;
@@ -320,7 +358,7 @@ export type LinearReceipt = {
  * The site's rule is that a claim without a checkable basis is not evidence. Applied to
  * a *page section* rather than to an evidence row, that rule has two possible readings:
  * drop the unsupported entry, or state the gap. This type is the second reading, and it
- * is the one the surface takes — a dropped entry leaves a page that looks complete and
+ * is the one the surface takes: a dropped entry leaves a page that looks complete and
  * a reader who never learns a question was asked.
  *
  * `unverifiedId` points at a record in `UNVERIFIED` in `content/resume/facts.ts` rather
@@ -342,7 +380,7 @@ export type HistoryGap = {
  * state, because "present but hedged" is how unverified material gets read as evidence.
  *
  * Split out from the two shapes below so `product-history.test.ts` can hold stages and
- * flat entries to the same rule in one pass — the rule is about what a record may
+ * flat entries to the same rule in one pass: the rule is about what a record may
  * claim, and that does not change with how the record is captioned.
  */
 export type HistoryRecord = {
@@ -386,14 +424,14 @@ export type ProductHistory = {
  * route, composed from the same durable evidence as `/`.
  *
  * Distinct from `RoleLens` because it carries things a role lens has no business
- * carrying — its own public path, its own hero framing, its own page plan, and its own
+ * carrying; its own public path, its own hero framing, its own page plan, and its own
  * résumé content projection. Bolting those onto `RoleLens` as optional fields would
  * turn the lightweight type into a bag of maybes, and would make "does this lens own a
  * route?" a question you answer by reading the object rather than its type.
  *
  * What it deliberately does *not* carry is proof content. Like every lens it selects
  * and orders; `linearReceipts` is the one place it introduces material of its own, and
- * that material is typed, curated, boundary-bearing, and tested — not a `Proof`.
+ * that material is typed, curated, boundary-bearing, and tested, not a `Proof`.
  */
 export type ApplicationLens = SurfaceLens & {
   kind: 'application';
@@ -401,7 +439,7 @@ export type ApplicationLens = SurfaceLens & {
   publicPath: string;
   /** Required here: an application surface is always addressed to someone. */
   organisation: string;
-  /** Hero framing for this application. Copy only — it states no new evidence. */
+  /** Hero framing for this application. Copy only; it states no new evidence. */
   hero: {
     eyebrow: string;
     headline: string;
@@ -415,7 +453,7 @@ export type ApplicationLens = SurfaceLens & {
    *
    * Section order, visible section number, section identity, the header nav, and the
    * guided rail are all read from this one list. Nothing on the page may state its own
-   * position — see `SurfaceSection`.
+   * position; see `SurfaceSection`.
    */
   pagePlan: readonly SurfaceSection[];
   /** Curated public receipts from the owner's private workspace, if any. */

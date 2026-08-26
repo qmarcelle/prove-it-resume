@@ -29,7 +29,7 @@ export function FinalCta({ lens }: { lens: AnyLens }) {
           >
             GitHub
             <ActionIcon affordance="visit-external-site" size={14} />
-            <span className="visually-hidden"> — opens in a new tab</span>
+            <span className="visually-hidden">, opens in a new tab</span>
           </a>
           {resumeAvailable ? (
             <ResumeDownloadLink
@@ -39,7 +39,7 @@ export function FinalCta({ lens }: { lens: AnyLens }) {
               lens={lens}
             />
           ) : (
-            <span className={styles.pending}>RÉSUMÉ — NOT YET PUBLISHED</span>
+            <span className={styles.pending}>RÉSUMÉ, NOT YET PUBLISHED</span>
           )}
         </div>
 

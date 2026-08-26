@@ -19,12 +19,20 @@
   background: var(--color-surface);
 }
 
+/*
+ * A stage label names where you are; the panel below explains what that means. Two words
+ * is the ceiling, and `nowrap` is what keeps the second one from being orphaned onto a
+ * line of its own: "Add / evidence" reads as two stages rather than one. The strip
+ * itself still wraps, so a narrow viewport recomposes the row instead of shrinking the
+ * words inside it.
+ */
 .step {
   display: inline-flex;
   align-items: center;
   gap: 0.4375rem;
   padding: 0.5625rem 0.8125rem;
   min-height: 44px;
+  white-space: nowrap;
   background: transparent;
   border: 0;
   font-family: var(--font-mono);
@@ -46,13 +54,21 @@
   color: var(--color-meta-quiet);
 }
 
+/*
+ * The selected stage names all three of its colours from one purpose-built triple.
+ *
+ * The ordinal is set here rather than left to `.ordinal` above because its contrast is
+ * against the *selected fill*, not against the control's resting surface, and a colour
+ * chosen against the wrong background is how it came to render at 1.35:1 on the Lit
+ * Work Surface. See the token block for the whole account.
+ */
 .step[aria-pressed='true'] {
-  background: var(--color-ink);
-  color: var(--color-canvas);
+  background: var(--color-step-active-bg);
+  color: var(--color-step-active-fg);
 }
 
 .step[aria-pressed='true'] .ordinal {
-  color: var(--color-inverse-accent);
+  color: var(--color-step-active-index);
 }
 
 .ordinalControls {
@@ -117,7 +133,7 @@
 
   .step {
     /* A basis of auto means "as wide as the label", which is exactly what must not
-       happen here — the longest label would set the page width. */
+       happen here: the longest label would set the page width. */
     flex: 1 1 8rem;
     min-width: 0;
     justify-content: center;
@@ -134,7 +150,7 @@
    * Previous, the counter and Next hold one row; the share control takes the next.
    *
    * Three controls plus a counter do not fit across a phone, and letting them share a
-   * row squeezes each into a two-line box — "← Previo / us" beside "Nex / t →", which
+   * row squeezes each into a two-line box: "← Previo / us" beside "Nex / t →", which
    * reads as a broken layout rather than a compact one. The stepping controls belong
    * together, and the share control is a different kind of act, so that is where the
    * row breaks.

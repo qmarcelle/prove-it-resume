@@ -4,14 +4,14 @@ import { PUBLISHED_SITES } from '../published';
 /**
  * Copy is carried over from the Claude Design export verbatim unless noted.
  *
- * In the export every row pointed either at `#sec-02` — the section the reader is
- * already in — or at the general GitHub profile. Neither is the artifact the row
+ * In the export every row pointed either at `#vreko`: the section the reader is
+ * already in, or at the general GitHub profile. Neither is the artifact the row
  * names, so all four were unresolved.
  *
  * Each row's call to action now points at the published documentation on
  * `docs.vreko.dev`, because that is the artifact a reader can actually work through;
  * the repository stays as the pinned source underneath. Every destination below was
- * checked against the live docs — `/mcp` carries the tool surface and setup, `/mcp-tools`
+ * checked against the live docs: `/mcp` carries the tool surface and setup, `/mcp-tools`
  * the session flow, `/how-it-works` the observation and intelligence layers, and
  * `/configuration` the MCP integration and environment boundaries.
  *
@@ -22,7 +22,7 @@ const MCP_REPO = 'https://github.com/vreko-dev/mcp-server';
 const DOCS = PUBLISHED_SITES.vrekoDocs;
 export const vreko: Proof = {
   id: 'vreko',
-  sectionId: 'sec-02',
+  sectionId: 'vreko',
   stage: '02',
   eyebrow: '02 / PROOF ONE',
   railLabel: 'Vreko',

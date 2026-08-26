@@ -41,7 +41,7 @@ test('wide tables scroll inside their own container, not the page', async ({ pag
   await page.goto('/');
   await page.getByRole('button', { name: /SHOW CLAIM LEDGER/ }).click();
 
-  const scrollable = await page.locator('#ledger').evaluate((el) => {
+  const scrollable = await page.locator('#claim-ledger').evaluate((el) => {
     const wrap = el.querySelector('table')?.parentElement;
     if (!wrap) return null;
     return {
@@ -76,8 +76,8 @@ test('body copy stays legible on a small screen', async ({ page }) => {
 /**
  * The application surface's responsive gates.
  *
- * A recruiter opens this from a phone — from email, from LinkedIn, from an applicant
- * tracking system — and a page arguing for product-engineering judgement that arrives as
+ * A recruiter opens this from a phone: from email, from LinkedIn, from an applicant
+ * tracking system, and a page arguing for product-engineering judgement that arrives as
  * a desktop document squeezed into 390px has undermined its own claim before it is read.
  *
  * The standard these encode:
@@ -85,7 +85,7 @@ test('body copy stays legible on a small screen', async ({ page }) => {
  * > Mobile is not desktop stacked vertically. Mobile preserves the decision hierarchy
  * > and recomposes any visualisation whose meaning depends on spatial comparison.
  *
- * So they check both halves. The prohibitions below are the mechanical half — nothing
+ * So they check both halves. The prohibitions below are the mechanical half; nothing
  * clipped, nothing under a thumb's width, nothing scrolling sideways. The two tests
  * after them are the other half: the hero chain and the bound axis have to still make
  * their comparison at 390px, not merely fit in it.
@@ -118,8 +118,8 @@ for (const viewport of SURFACE_VIEWPORTS) {
 
     // And the counterfactual at the stage that draws the bars.
     await page
-      .locator('#sec-04')
-      .getByRole('button', { name: /Resulting state/ })
+      .locator('#interlock')
+      .getByRole('button', { name: /Result$/ })
       .click();
 
     const report = await page.evaluate((min) => {
@@ -170,19 +170,19 @@ test('the bound axis moves its labels out of the bar rather than clipping them',
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/linear');
   await page
-    .locator('#sec-04')
-    .getByRole('button', { name: /Resulting state/ })
+    .locator('#interlock')
+    .getByRole('button', { name: /Result$/ })
     .click();
 
   /*
    * The narrowest segment is an eighth of the axis. Inside the bar at this width its
-   * label rendered as "gamm" — the number the whole comparison turns on, lost silently,
+   * label rendered as "gamm": the number the whole comparison turns on, lost silently,
    * because a bar clips rather than overflows. Every value has to be readable, and the
    * bar has to still be one shared scale with one shared bound.
    */
   // Scoped to the legend: the in-bar label is the same words, and at this width it is
   // the one that has been switched off.
-  const axis = page.locator('#sec-04 [class*="BoundAxis"][class*="axis"]').first();
+  const axis = page.locator('#interlock [class*="BoundAxis"][class*="axis"]').first();
   await expect(
     axis.locator('[class*="legendItem"]').filter({ hasText: 'gamma 20' }).first(),
   ).toBeVisible();
