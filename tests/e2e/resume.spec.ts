@@ -17,6 +17,16 @@ import { expect, test, type Page } from '@playwright/test';
 const PAGE_W = 816;
 const PAGE_H = 1056;
 
+/*
+ * Vertical room every sheet must keep between its content and the bottom of its box.
+ *
+ * Not a style preference — a tolerance. The sheets are fixed-height with `overflow:
+ * hidden`, and text metrics differ between the machine a layout is tuned on and the one
+ * that renders it: the same durable sheet that fit exactly here was clipped by 7px on a
+ * CI runner. The reserve is what stops that being discovered in a print dialog.
+ */
+const PAGE_RESERVE = 12;
+
 const ROUTES = [
   { route: '/resume/print', title: 'STAFF / PRINCIPAL AI PLATFORM ENGINEER' },
   { route: '/resume/print/athenahealth-yoh', title: 'SENIOR AI PLATFORM ENGINEER' },
@@ -135,6 +145,55 @@ for (const { route, title } of ROUTES) {
    * next. Comparing each page's scroll height to its client height catches all of it,
    * including content that overflows a flex child rather than the page itself.
    */
+  /*
+   * A page that fits *exactly* is not a layout, it is a coincidence.
+   *
+   * Both sheets used to sum to 1056px of content in a 1056px box. It held until a CI
+   * runner rasterised a few glyphs differently and the last block was clipped — by a
+   * page reporting no overflow, because the block grows to fill and clips inside itself.
+   *
+   * So the property under test is a stated reserve, not the absence of overflow. The
+   * page is let size to its content, measured, and restored; the number is reported
+   * either way, so a sheet drifting toward the edge is visible in CI long before it
+   * crosses it.
+   */
+  test(`${route} keeps a reserve inside both page boxes`, async ({ page }) => {
+    await printPage(page, route);
+
+    const reserve = await page.evaluate(() =>
+      [...document.querySelectorAll<HTMLElement>('[id^="resume-page-"]')].map((sheet) => {
+        const box = sheet.clientHeight;
+        const height = sheet.style.height;
+        const overflow = sheet.style.overflow;
+
+        sheet.style.height = 'auto';
+        sheet.style.overflow = 'visible';
+        const wanted = sheet.scrollHeight;
+        sheet.style.height = height;
+        sheet.style.overflow = overflow;
+
+        return { id: sheet.id, box, wanted, headroom: box - wanted };
+      }),
+    );
+
+    /*
+     * Reported on every run, not only on failure. Text metrics differ between machines,
+     * so the number that matters is the one CI measures — and a sheet drifting toward
+     * the edge should be readable in a green run rather than discovered by a red one.
+     */
+    console.log(
+      `${route} headroom: ` +
+        reserve.map((sheet) => `${sheet.id} ${sheet.headroom}px`).join(' · '),
+    );
+
+    for (const sheet of reserve) {
+      expect(
+        sheet.headroom,
+        `${sheet.id} has ${sheet.headroom}px of headroom; content wants ${sheet.wanted} of ${sheet.box}`,
+      ).toBeGreaterThanOrEqual(PAGE_RESERVE);
+    }
+  });
+
   test(`${route} fits its content inside both page boxes`, async ({ page }) => {
     await printPage(page, route);
 

@@ -31,7 +31,7 @@
   width: var(--page-w);
   height: var(--page-h);
   box-sizing: border-box;
-  padding: 0.55in 0.6in 0.45in;
+  padding: 0.55in 0.6in 0.42in;
   background: var(--color-canvas);
   color: var(--color-ink);
   font-family: var(--font-sans);
@@ -45,7 +45,7 @@
   line-height: normal;
   display: flex;
   flex-direction: column;
-  gap: 17px;
+  gap: 15px;
   overflow: hidden;
 
   /* Screen-only card chrome; removed at print. */
@@ -53,9 +53,15 @@
   box-shadow: 0 2px 10px rgb(0 0 0 / 25%);
 }
 
+/*
+ * The second page carries the densest block on either sheet — the durable projection
+ * prints the stack, education, certifications and nonprofit leadership below a full
+ * experience list — so its frame is a little tighter than the first's. See the reserve
+ * note beside `.foundation`.
+ */
 .page:last-child {
-  padding: 0.5in 0.6in 0.4in;
-  gap: 12px;
+  padding: 0.5in 0.6in 0.36in;
+  gap: 10px;
 }
 
 /*
@@ -589,9 +595,27 @@
 }
 
 /* ── 04 Foundation ────────────────────────────────────────────────────────── */
+
+/*
+ * 5px above the rule, not 7.
+ *
+ * The durable sheet's second page used to sum to exactly its own height — 1056px of
+ * content in a 1056px box, with `overflow: hidden` underneath it. That is not a layout,
+ * it is a coincidence, and it held only for as long as every glyph rasterised the way it
+ * did on the machine it was tuned on. A CI runner whose metrics moved by a few pixels
+ * clipped the last block, and the page reported no overflow while doing it.
+ *
+ * These five rows are where most of the reserve comes from: one value, changed once,
+ * rather than a pixel taken from each of five different rhythms. The block-body gaps above are left
+ * alone deliberately — the export sets 9px, 12px and 8px on the three bodies and that
+ * distinction is load-bearing for the bottom edge.
+ *
+ * `resume.spec.ts` now requires a minimum reserve on every page, so "it fits exactly"
+ * fails there rather than in a print dialog.
+ */
 .foundation {
   border-top: 1px solid var(--color-border);
-  padding-top: 7px;
+  padding-top: 4px;
   display: flex;
   gap: 18px;
 }
@@ -609,11 +633,17 @@
   color: var(--color-meta-quiet);
 }
 
+/*
+ * The technical stack is a single wrapped run of five or six lines, and it is a
+ * reference list rather than prose — nobody reads it left to right. 1.42 is tight for a
+ * paragraph and correct for this, and on the page with the least room it is worth ~8px
+ * of the reserve described beside `.foundation`.
+ */
 .foundationStack {
   flex: 1 1 auto;
   margin: 0;
   font-size: 12.5px;
-  line-height: 1.55;
+  line-height: 1.42;
   color: var(--color-ink-secondary);
   text-wrap: pretty;
 }
