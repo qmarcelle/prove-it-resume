@@ -2,6 +2,7 @@
 
 import { useId, useRef, useState, useSyncExternalStore } from 'react';
 import { ClaimBoundary } from '@/components/evidence/ClaimBoundary';
+import { ActionIcon } from '@/components/icon/Icon';
 import { UNRESOLVED_LABEL } from '@/lib/evidence';
 import type { LinearReceipt } from '@/lib/types';
 import styles from './ReceiptTabs.module.css';
@@ -35,7 +36,7 @@ const useHydrated = () =>
  * renders and what the first client render reproduces, which is also why there is no
  * hydration mismatch to reconcile. The strip takes over on the render after hydration.
  * With scripting off that render never happens, and all three receipts stay open, each
- * with its own boundary and its own unresolved mark.
+ * with its own boundary and its own evidence mark.
  *
  * The alternative: server-rendering `role="tab"` buttons and letting them do nothing
  * until hydration: was rejected because a control announced to assistive technology as
@@ -159,8 +160,8 @@ function ReceiptHead({ receipt }: { receipt: LinearReceipt }) {
 }
 
 /**
- * The question, the finding, the boundary, and the mark that says none of it is
- * verified. Identical in both forms: the layout may change, the disclosure may not.
+ * The question, the finding, the boundary, and the mark that says how far it can be
+ * checked. Identical in both forms: the layout may change, the disclosure may not.
  */
 function ReceiptBody({ receipt }: { receipt: LinearReceipt }) {
   return (
@@ -177,12 +178,52 @@ function ReceiptBody({ receipt }: { receipt: LinearReceipt }) {
 
       <ClaimBoundary variant="note">{receipt.boundary}</ClaimBoundary>
 
-      <p className={styles.receiptUnresolved}>
-        {UNRESOLVED_LABEL}
-        <span className={styles.receiptUnresolvedNote}>
-          private workspace · verified {receipt.verifiedAt}
+      <ReceiptEvidenceMark receipt={receipt} />
+    </>
+  );
+}
+
+/**
+ * How far this row can be checked, in the place a call to action would sit.
+ *
+ * Three states, three visibly different marks, and the differences are load-bearing
+ * rather than decorative:
+ *
+ * - **unresolved** keeps the dashed `[VERIFY BEFORE PUBLISHING]` every unverified row
+ *   on this site carries. Nothing has been checked and the mark says so.
+ * - **private-verified** is a solid hairline rather than a dash, because the dashed
+ *   treatment is this site's mark for *absence* and something was in fact checked. It
+ *   still offers nothing to click, and its words name who did the checking and against
+ *   what, so it cannot be misread as the guarantee the row below it carries.
+ * - **public-verified** is the only one with a destination, because it is the only one
+ *   with somewhere honest to send a reader.
+ *
+ * The middle state is the one to watch in review. Its whole risk is drifting toward
+ * looking like the third, and the moment it gains a link or the word "verified" standing
+ * on its own, it is claiming something the reader cannot check.
+ */
+function ReceiptEvidenceMark({ receipt }: { receipt: LinearReceipt }) {
+  const { evidence } = receipt;
+
+  if (evidence.state === 'unresolved') {
+    return <p className={styles.receiptUnresolved}>{UNRESOLVED_LABEL}</p>;
+  }
+
+  if (evidence.state === 'private-verified') {
+    return (
+      <p className={styles.receiptAttested}>
+        PRIVATE SOURCE
+        <span className={styles.receiptAttestedNote}>
+          checked against the issue {evidence.checkedAt}, not independently verifiable
         </span>
       </p>
-    </>
+    );
+  }
+
+  return (
+    <a className={styles.receiptEvidence} href={evidence.href}>
+      {evidence.label}
+      <ActionIcon affordance="inspect-artifact" size={14} />
+    </a>
   );
 }

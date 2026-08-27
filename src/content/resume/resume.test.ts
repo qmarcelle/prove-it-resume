@@ -453,16 +453,39 @@ describe('the Linear projection', () => {
     }
   });
 
-  it('promotes Never Ask Twice out of the footnote and demotes Vreko into it', () => {
+  it('promotes Never Ask Twice to the lead and carries no footnote at all', () => {
+    /*
+     * Vreko used to sit in the ALSO line here, demoted because it is the least
+     * differentiating of the four for a reader already operating an agent platform. The
+     * page-two budget then ran out, and the choice was between that one line and words
+     * in a boundary. The boundary won: a footnote is content, a boundary is the promise
+     * the whole document rests on.
+     */
     expect(resolved.systems.entries[0].id).toBe('never-ask-twice');
-    expect(resolved.systems.compact?.system.id).toBe('vreko');
+    expect(resolved.systems.compact).toBeUndefined();
+
+    // And the demotion did not become a deletion: it is still a durable system, still
+    // printed in full on the sheet addressed to nobody in particular.
+    const durable = resolveResume(RESUME_PROJECTIONS.default);
+    expect(
+      [
+        ...durable.systems.entries.map((entry) => entry.id),
+        durable.systems.compact?.system.id,
+      ].filter(Boolean),
+    ).toContain('vreko');
   });
 
   it('carries agent-platform receipts, each with a boundary and no link', () => {
+    /*
+     * The printed sheet has no evidence marks on the receipt rows, so it relies entirely
+     * on the block boundary to say what these are. That only holds while no receipt has
+     * a destination: the moment one does, the résumé is withholding something the page
+     * shows, and this test is where that gets noticed.
+     */
     expect(resolved.agentPlatform?.receipts.length).toBeGreaterThan(0);
     for (const receipt of resolved.agentPlatform?.receipts ?? []) {
       expect(receipt.boundary.length).toBeGreaterThan(0);
-      expect(receipt.publicEvidenceHref).toBeUndefined();
+      expect(receipt.evidence).not.toHaveProperty('href');
     }
   });
 

@@ -144,16 +144,21 @@ test('no private workspace data reaches the served page', async ({ page }) => {
   }
 });
 
-test('receipts state their limits and claim no verified evidence', async ({ page }) => {
+test('receipts state how far each one can be checked', async ({ page }) => {
   await page.goto('/linear');
 
   const section = page.locator('#linear-in-practice');
 
   /*
-   * One stated-gap marker per receipt, in the place a call to action would sit, but
-   * the receipts are a tab strip once the page has hydrated, so only the open one is on
-   * screen. Walking the strip is the assertion that matters: no receipt may be reachable
-   * without its marker, because a receipt without one reads as verified evidence.
+   * The receipts are a tab strip once the page has hydrated, so only the open one is on
+   * screen and walking the strip is the assertion that matters: no receipt may be
+   * reachable without its evidence mark, because a receipt without one reads as verified
+   * evidence.
+   *
+   * All three are currently `private-verified`. The claims were checked against the
+   * underlying issues; the issues are in a private workspace, so there is nothing to
+   * link and the mark says exactly that. What it must not do is offer a destination,
+   * which is the one way this state could mislead a reader.
    */
   const tabs = section.getByRole('tab');
   await expect(tabs).toHaveCount(3);
@@ -161,12 +166,61 @@ test('receipts state their limits and claim no verified evidence', async ({ page
   for (const identifier of ['META-268', 'META-331', 'INFRA-11']) {
     await tabs.filter({ hasText: identifier }).click();
     const panel = section.getByRole('tabpanel');
-    await expect(panel.getByText('[VERIFY BEFORE PUBLISHING]')).toHaveCount(1);
-    // Every receipt states what it does not establish, in the same panel as the finding.
-    await expect(panel.getByText(/It does not establish|Establishes/)).toHaveCount(1);
+
+    await expect(panel.getByText(/PRIVATE SOURCE/)).toHaveCount(1);
+    await expect(panel.getByText(/not independently verifiable/)).toHaveCount(1);
+    await expect(panel.locator('a[href]')).toHaveCount(0);
+
+    /*
+     * Every receipt states what it does not establish, in the same panel as the finding.
+     * Asserted as the presence of a labelled BOUNDARY block rather than by matching a
+     * phrase: this check used to grep for "does not establish", which quietly stopped
+     * testing anything the moment a corrected boundary phrased the same limit as "not
+     * evidence that...". A test that tracks wording tests the wording.
+     */
+    await expect(panel.locator('[class*="__boundary"]')).toHaveCount(1);
   }
 
-  await expect(section.getByText(/stated claims, not verified evidence/)).toBeVisible();
+  // And the block says who did the checking rather than implying nobody did.
+  await expect(section.getByText(/author's attestation/)).toBeVisible();
+  await expect(section.getByText(/not something you can open/)).toBeVisible();
+});
+
+/**
+ * The corrected claims.
+ *
+ * Each of these three receipts overstated its record before an audit against the source
+ * issues. The finished-sounding statuses are the part that mattered: "Decided", "in use"
+ * and a bare "Implemented" all read as closed work, and none of the three was closed.
+ * This asserts the corrected wording survives, because the pressure to round a status up
+ * is permanent and a diff is easy to miss.
+ */
+test('receipts state their status no more finally than the record supports', async ({
+  page,
+}) => {
+  await page.goto('/linear');
+  const section = page.locator('#linear-in-practice');
+
+  // A conditional boundary and a failed proof gate, not a settled decision.
+  await expect(section.getByText('Boundary defined · proof incomplete')).toBeVisible();
+  await section.getByRole('tab', { name: /META-268/ }).click();
+  await expect(
+    section.getByRole('tabpanel').getByText(/failed the repository-context gate/),
+  ).toBeVisible();
+
+  // An operating model under validation, not a completed rollout.
+  await expect(
+    section.getByText('Operating contract · validation ongoing'),
+  ).toBeVisible();
+
+  // An API that exists, described no further than the code shows.
+  await expect(section.getByText('Implemented · lifecycle API')).toBeVisible();
+
+  // The three superseded statuses must not come back.
+  const prose = await section.innerText();
+  for (const stale of ['Decided · boundary held', 'Implemented · in use']) {
+    expect(prose, `${stale} overstates the record`).not.toContain(stale);
+  }
 });
 
 test('/linear projects the durable proofs rather than forking them', async ({ page }) => {
@@ -350,6 +404,72 @@ test('/linear does not scroll horizontally at 320px', async ({ page }) => {
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
   );
   expect(overflow).toBeLessThanOrEqual(1);
+});
+
+/**
+ * The same question asked of the form the server actually sends.
+ *
+ * This exists because the hydrated page hid a real bug. The receipts render as a stacked
+ * list before hydration and as a tab strip after, and only the stacked form has the
+ * status spans. One of those carried `white-space: nowrap`, which was harmless while a
+ * status read "Decided" and became a horizontal scroll the moment one read "Operating
+ * contract · validation ongoing".
+ *
+ * In a browser that overflow exists only in the window before hydration, so measuring it
+ * is a race: the page-level check read 1px over on a laptop and 4px over on the CI
+ * runner, which is how a layout bug passed on the machine that introduced it. With
+ * scripting off the stacked form is not a window, it is the whole page, and the
+ * measurement is deterministic.
+ *
+ * That is also the honest reason to test it. This site's rule is that the page works
+ * before hydration, so the stacked form is a supported rendering rather than a transient,
+ * and a supported rendering that scrolls sideways on a phone is broken.
+ */
+test('the server-rendered receipts fit a 320px screen', async ({ browser }) => {
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    viewport: { width: 320, height: 720 },
+  });
+  const page = await context.newPage();
+  await page.goto('/linear');
+
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(
+    overflow,
+    'the stacked receipts push the page wider than the screen',
+  ).toBeLessThanOrEqual(1);
+
+  /*
+   * And the cause rather than the margin. What produces horizontal scroll is an element
+   * whose *min-content* width exceeds the space it has; that is a measured property, so
+   * it fails identically on every platform instead of depending on how wide the mono
+   * font happens to be.
+   */
+  const tooWide = await page.evaluate(() => {
+    const section = document.querySelector('#linear-in-practice');
+    if (!section) return ['#linear-in-practice is missing'];
+
+    const offenders: string[] = [];
+    for (const el of section.querySelectorAll<HTMLElement>('*')) {
+      const available = (el.parentElement ?? section).clientWidth;
+      if (!available) continue;
+      const previous = el.style.width;
+      el.style.width = 'min-content';
+      const min = el.getBoundingClientRect().width;
+      el.style.width = previous;
+      if (min > available + 1) {
+        offenders.push(
+          `${el.tagName} needs ${Math.round(min)}px inside ${available}px: "${(el.textContent ?? '').slice(0, 44)}"`,
+        );
+      }
+    }
+    return offenders;
+  });
+
+  expect(tooWide).toEqual([]);
+  await context.close();
 });
 
 /**
