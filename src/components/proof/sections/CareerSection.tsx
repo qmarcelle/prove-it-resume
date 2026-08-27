@@ -67,7 +67,7 @@ export function CareerSection({
                 {entry.id === 'marcelle-labs' ? (
                   <a
                     className={styles.link}
-                    href={SITE.github}
+                    href={SITE.organisation}
                     target="_blank"
                     rel="noreferrer noopener"
                   >

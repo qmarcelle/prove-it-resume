@@ -12,6 +12,68 @@ import { VrekoArchitectureTrace } from './VrekoArchitectureTrace';
  * nothing moves without a user, the publication state of every layer is stated rather
  * than left to the stroke, and the panel tells you what a crossing withholds.
  */
+/**
+ * The CDN-hardening property.
+ *
+ * A proxy in front of this site rewrote `vreko-mcp-server@3.1.1` into an obfuscated
+ * email placeholder, because that is the shape of an address. Hydration then failed with
+ * a text mismatch on every page rendering this figure and React rebuilt the tree, which
+ * reads as the page flashing.
+ *
+ * Nothing in a build can observe that: the corruption happens between the CDN and the
+ * reader. What a test *can* hold is the property that makes the rewrite impossible in
+ * the first place, which is that no single text node contains `name@version`.
+ *
+ * Both halves matter and they pull against each other. Split too little and the pattern
+ * comes back; split in a way that changes the rendered string and the figure now lies
+ * about which package it names. So the reader-visible text is asserted intact alongside
+ * the split.
+ */
+describe('package identifiers survive a CDN that scans for email addresses', () => {
+  /*
+   * The shape an obfuscator actually acts on: local part, `@`, then a dotted suffix.
+   *
+   * The dot is the load-bearing half and was worth measuring rather than guessing. The
+   * same figure renders repository pins like `interlock@75253e38791e`, which are the
+   * same shape minus the dot, and production leaves all twelve of them untouched while
+   * rewriting every `name@1.2.3`. Matching the looser pattern here would fail this test
+   * on strings no CDN has ever mangled, which is how a guard starts getting deleted.
+   */
+  const EMAIL_SHAPED = /[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z0-9.-]+/;
+
+  function textNodes(root: HTMLElement): string[] {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const out: string[] = [];
+    let node = walker.nextNode();
+    while (node) {
+      const value = node.nodeValue?.trim();
+      if (value) out.push(value);
+      node = walker.nextNode();
+    }
+    return out;
+  }
+
+  it('never renders a package name and version in one text node', () => {
+    const { container } = render(<VrekoArchitectureTrace data={vrekoArchitecture} />);
+
+    const offenders = textNodes(container).filter((text) => EMAIL_SHAPED.test(text));
+    expect(
+      offenders,
+      'a text node reads as an email address and will be rewritten in transit',
+    ).toEqual([]);
+  });
+
+  it('still reads as the identifier it names', () => {
+    // The split is invisible: `textContent` is what a reader sees and copies, and it has
+    // to be the real package specifier, `@` included.
+    render(<VrekoArchitectureTrace data={vrekoArchitecture} />);
+
+    const system = vrekoArchitecture.system;
+    expect(system.identifier).toMatch(EMAIL_SHAPED);
+    expect(document.body.textContent).toContain(system.identifier);
+  });
+});
+
 describe('VrekoArchitectureTrace', () => {
   const renderTrace = () => render(<VrekoArchitectureTrace data={vrekoArchitecture} />);
 
