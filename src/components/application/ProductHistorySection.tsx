@@ -1,9 +1,12 @@
 import { ClaimBoundary } from '@/components/evidence/ClaimBoundary';
 import { ActionIcon } from '@/components/icon/Icon';
+import { ProgressiveDisclosure } from '@/components/interactions/ProgressiveDisclosure';
 import { SectionHead, sectionFrameClass } from '@/components/section/SectionFrame';
+import { DISCLOSURE_KEYS, requirePath } from '@/lib/disclosure';
 import { PRODUCT_ENGINEERING_HISTORY } from '@/content/history/product-engineering';
 import type {
   ApplicationLens,
+  DisclosureCopy,
   HistoryEntry,
   HistoryRecord,
   ProductHistory,
@@ -21,11 +24,25 @@ import styles from './ApplicationSection.module.css';
  * knows. What they do not know is whether the person has shipped customer-facing
  * software at scale before, so that is what opens here.
  *
- * ## Three registers, and the one that refuses to answer
+ * ## What the reader meets, and in what order
  *
- * The direction sets this as a progression, an audience register and a discipline
- * register read together, and that structure is kept because it is how the question
- * actually gets asked: how did the work grow, who was it for, how wide did it go.
+ * The section used to state all three registers at once: a four-stage progression, who
+ * the products served, and the disciplines the work spanned. Every line of it was
+ * traceable, and reading it still cost more than a reader will spend before they have
+ * decided the person is interesting. So the progression stays visible, because *the
+ * work grew in a direction* is the claim, and the two flat registers move behind the
+ * question that actually asks for them.
+ *
+ * ## Two projections over one record, not a second record
+ *
+ * `stageSummaries`, `surfaces` and `capabilities` are all keyed by the durable entry
+ * they compress, so the deep layer cannot name an audience or a discipline the record
+ * does not have, and a row added to `product-engineering.ts` cannot silently fail to
+ * appear here. `product-history.test.ts` holds both directions. The long-form durable
+ * bodies are not deleted; where a projection exists it is simply the shorter way to
+ * read the same row, and the underlying facts remain in the résumé corpus.
+ *
+ * ## The unresolved branch
  *
  * Two of those registers used to contain entries the fact corpus could not support, and
  * they rendered as open questions rather than being dropped. A page that quietly omits
@@ -36,9 +53,6 @@ import styles from './ApplicationSection.module.css';
  * The unresolved branch stays. It takes the same dashed burnt-orange mark every
  * unverified row on this site takes, never evidence styling and never a link, and a
  * fixture test keeps it working for the next question this page cannot answer.
- *
- * It states no new evidence. Every stated line traces to `content/resume/facts.ts`, and
- * `product-history.test.ts` holds it there.
  *
  * Its number, its eyebrow and its frame come from `step`, which is the surface's page
  * plan. This section does not know where it sits, and that is the point: the sequence
@@ -64,6 +78,8 @@ export function ProductHistorySection({
    */
   history?: ProductHistory;
 }) {
+  const path = (id: string): DisclosureCopy => requirePath(copy.paths, id);
+
   return (
     <section
       className={sectionFrameClass(step)}
@@ -78,10 +94,16 @@ export function ProductHistorySection({
       />
 
       <div className={styles.inner}>
+        {copy.secondBeat ? <p className={styles.body}>{copy.secondBeat}</p> : null}
+
         {/*
          * An ordered list, because this register really is one: the whole claim of the
-         * block is that the work grew in a direction. The audience and discipline
-         * registers below are unordered, and are marked up that way.
+         * block is that the work grew in a direction. The two flat registers behind the
+         * first curiosity path are unordered, and are marked up that way.
+         *
+         * Each stage prints the projection where the surface supplies one and the
+         * durable body where it does not, so this renders correctly for a lens that has
+         * not written summaries as well as for one that has.
          */}
         <ol className={styles.stages}>
           {history.stages.map((stage) => (
@@ -89,15 +111,73 @@ export function ProductHistorySection({
               <span className={styles.stageOrdinal}>{stage.ordinal}</span>
               <h3 className={styles.stageTitle}>{stage.title}</h3>
               <span className={styles.stageSpan}>{stage.span}</span>
-              <EntryBody entry={stage} />
+              {copy.stageSummaries?.[stage.id] ? (
+                <p className={styles.entryText}>{copy.stageSummaries[stage.id]}</p>
+              ) : (
+                <EntryBody entry={stage} />
+              )}
             </li>
           ))}
         </ol>
 
-        <Register heading={history.audiencesHeading} entries={history.audiences} />
-        <Register heading={history.disciplinesHeading} entries={history.disciplines} />
+        <ProgressiveDisclosure
+          label="Questions this history can answer"
+          queryKey={DISCLOSURE_KEYS['product-history']}
+          paths={[
+            {
+              id: path('built').id,
+              invitation: path('built').invitation,
+              label: path('built').label,
+              content: (
+                <div className={styles.deepLayer}>
+                  <Register
+                    entries={history.audiences}
+                    heading={history.audiencesHeading}
+                    projection={copy.surfaces}
+                  />
 
-        <ClaimBoundary variant="note">{copy.boundary}</ClaimBoundary>
+                  {copy.capabilities?.length ? (
+                    <div className={styles.register}>
+                      <h4 className={styles.registerHeading}>
+                        {history.disciplinesHeading}
+                      </h4>
+                      <dl className={styles.capabilities}>
+                        {copy.capabilities.map((capability) => (
+                          <div className={styles.capability} key={capability.id}>
+                            <dt className={styles.registerLabel}>{capability.label}</dt>
+                            <dd className={styles.capabilityItems}>{capability.items}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    </div>
+                  ) : (
+                    <Register
+                      entries={history.disciplines}
+                      heading={history.disciplinesHeading}
+                    />
+                  )}
+
+                  <ClaimBoundary variant="note">{copy.boundary}</ClaimBoundary>
+                </div>
+              ),
+            },
+            {
+              id: path('leadership').id,
+              invitation: path('leadership').invitation,
+              label: path('leadership').label,
+              content: (
+                <div className={styles.deepLayer}>
+                  <div className={styles.deepProse}>
+                    {path('leadership').paragraphs?.map((paragraph) => (
+                      <p key={paragraph}>{paragraph}</p>
+                    ))}
+                  </div>
+                  <ClaimBoundary variant="note">{copy.boundary}</ClaimBoundary>
+                </div>
+              ),
+            },
+          ]}
+        />
 
         <a className={styles.cta} href={`#${nextId}`}>
           Show me what you have built with Linear
@@ -108,21 +188,34 @@ export function ProductHistorySection({
   );
 }
 
+/**
+ * One flat register: who the work was for, or what it spanned.
+ *
+ * Prints the surface's one-line projection where there is one and the durable body
+ * where there is not, so the same component serves a lens that has compressed the
+ * record and one that has not.
+ */
 function Register({
   heading,
   entries,
+  projection,
 }: {
   heading: string;
   entries: readonly HistoryEntry[];
+  projection?: Readonly<Record<string, string>>;
 }) {
   return (
     <div className={styles.register}>
-      <h3 className={styles.registerHeading}>{heading}</h3>
+      <h4 className={styles.registerHeading}>{heading}</h4>
       <ul className={styles.registerList}>
         {entries.map((entry) => (
           <li className={styles.registerItem} key={entry.id}>
             <span className={styles.registerLabel}>{entry.label}</span>
-            <EntryBody entry={entry} />
+            {projection?.[entry.id] ? (
+              <p className={styles.entryText}>{projection[entry.id]}</p>
+            ) : (
+              <EntryBody entry={entry} />
+            )}
           </li>
         ))}
       </ul>

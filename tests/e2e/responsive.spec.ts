@@ -1,4 +1,5 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+import { deepestPathCount, openEveryPath, openPath } from './disclosure';
 
 const VIEWPORTS = [
   { name: '320', width: 320, height: 720 },
@@ -105,23 +106,41 @@ for (const viewport of SURFACE_VIEWPORTS) {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
     await page.goto('/linear');
 
-    // Every disclosure open: revealed content is where these regressions hide.
-    for (const name of [
-      /Inspect evidence.*EV-ILK/,
-      /Inspect evidence.*EV-WSJ/,
-      /Inspect evidence.*EV-VRK/,
-      /SHOW CLAIM LEDGER/,
-    ]) {
-      const control = page.getByRole('button', { name }).first();
-      if (await control.count()) await control.click();
+    /*
+     * Every layer of this page open, one curiosity path at a time.
+     *
+     * Most of `/linear` now lives behind a named question, and only one path per section
+     * can be open at once, so a single sweep would measure the orientation layer and
+     * half the evidence. The check runs once per path index instead, which is what keeps
+     * this test measuring the whole page rather than the shallowest reading of it.
+     */
+    const passes = await deepestPathCount(page);
+
+    for (let pass = 0; pass < Math.max(passes, 1); pass += 1) {
+      await openEveryPath(page, pass);
+
+      for (const name of [
+        /Inspect evidence.*EV-ILK/,
+        /Inspect evidence.*EV-WSJ/,
+        /Inspect evidence.*EV-VRK/,
+        /SHOW CLAIM LEDGER/,
+      ]) {
+        const control = page.getByRole('button', { name }).first();
+        if (await control.count()) await control.click();
+      }
+
+      // And the counterfactual at the stage that draws the bars, where it is on screen.
+      const result = page.locator('#interlock').getByRole('button', { name: /Result$/ });
+      if (await result.count()) await result.click();
+
+      await expectNoClipping(page, viewport.width);
     }
+  });
+}
 
-    // And the counterfactual at the stage that draws the bars.
-    await page
-      .locator('#interlock')
-      .getByRole('button', { name: /Result$/ })
-      .click();
-
+/** The measurement itself, run against whatever the page is currently showing. */
+async function expectNoClipping(page: Page, width: number) {
+  {
     const report = await page.evaluate((min) => {
       const clipped = [...document.querySelectorAll<HTMLElement>('*')]
         .filter((el) => {
@@ -158,10 +177,10 @@ for (const viewport of SURFACE_VIEWPORTS) {
      * Touch targets are a mobile rule. At 1440 a 24px inline citation is a mouse target
      * and correct as it is, so the floor applies where a thumb is the input.
      */
-    if (viewport.width <= 700) {
+    if (width <= 700) {
       expect(report.smallTargets, 'a control is under the thumb floor').toEqual([]);
     }
-  });
+  }
 }
 
 test('the bound axis moves its labels out of the bar rather than clipping them', async ({
@@ -169,6 +188,7 @@ test('the bound axis moves its labels out of the bar rather than clipping them',
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/linear');
+  await openPath(page.locator('#interlock'), /Walk the coordination proof/);
   await page
     .locator('#interlock')
     .getByRole('button', { name: /Result$/ })

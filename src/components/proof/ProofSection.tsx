@@ -79,6 +79,8 @@ export function ProofChapter({
   meta,
   orientation = 'horizontal',
   tone = 'light',
+  title,
+  lead,
 }: {
   proof: Proof;
   step?: SurfaceStep;
@@ -87,14 +89,25 @@ export function ProofChapter({
   meta?: string;
   orientation?: 'horizontal' | 'inline' | 'vertical';
   tone?: 'light' | 'dark';
+  /**
+   * Framing overrides for a surface that enters this proof through a question rather
+   * than through its name.
+   *
+   * Copy only, and only where a page plan has already framed the section. The proof's
+   * own title and thesis remain the durable record and are what `/` renders; an
+   * application surface may ask the same evidence a different opening question, which
+   * is a projection, not a second claim.
+   */
+  title?: string;
+  lead?: string;
 }) {
   if (step) {
     return (
       <SectionHead
         step={step}
-        title={proof.title}
+        title={title ?? proof.title}
         titleId={`${proof.id}-title`}
-        lead={proof.thesis}
+        lead={lead ?? proof.thesis}
       />
     );
   }

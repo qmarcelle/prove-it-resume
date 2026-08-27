@@ -506,10 +506,75 @@ export type ApplicationLens = SurfaceLens & {
    * carried its own would be a second place for the surface to name the same section.
    */
   sections: {
-    history: { heading: string; body: string; boundary: string };
-    inPractice: { heading: string; body: string; boundary: string };
+    history: SectionProjection & {
+      /** Application framing over the durable role-anchored chronology, by stage id. */
+      stageSummaries?: Readonly<Record<string, string>>;
+      /**
+       * The capability register, projected from the durable disciplines.
+       *
+       * `id` names the `HistoryEntry` this compresses, so the projection cannot drift
+       * into a discipline the record does not have; `product-history.test.ts` holds it
+       * there. The durable long-form body stays in `product-engineering.ts` and the
+       * underlying facts stay in the résumé corpus. This is a shorter way to read them,
+       * not a replacement set.
+       */
+      capabilities?: readonly { id: string; label: string; items: string }[];
+      /** Compact projections of the durable audience rows, by `HistoryEntry` id. */
+      surfaces?: Readonly<Record<string, string>>;
+      boundary: string;
+    };
+    inPractice: SectionProjection & { boundary: string };
+    /** Never Ask Twice, promoted into the sequence on this surface. */
+    memory: SectionProjection;
+    repositoryIntelligence: SectionProjection;
+    interlock: SectionProjection;
     judgement: { heading: string };
   };
+};
+
+/**
+ * One curiosity path's copy: the question, and the prose behind it.
+ *
+ * Copy only. A path may *compose* evidence a section already renders (receipts, a
+ * counterfactual, an evidence link) but it states no artifact of its own, which is what
+ * keeps a projection from becoming a second evidence corpus that drifts from the
+ * durable one.
+ */
+export type DisclosureCopy = {
+  /** Matches the rendered path's id, and so the shareable `?key=<id>` value. */
+  id: string;
+  /**
+   * The amber invitation. States the question the path answers.
+   *
+   * No trailing arrow glyph: the mark is an `ActionIcon` named by affordance. And no
+   * `Learn more`, which promises the reader nothing they can decide on.
+   */
+  invitation: string;
+  /** The mono label the opened panel announces itself with. */
+  label: string;
+  /** The deep layer's prose, in reading order. */
+  paragraphs?: readonly string[];
+  /** A quieter closing note: a scope note, or where the evidence stops. */
+  note?: string;
+};
+
+/**
+ * An application surface's framing over one section.
+ *
+ * The shape every progressively disclosed section shares: what must be understood
+ * without interacting, and the one or two questions that may follow. Two paths is the
+ * ceiling the direction sets, and the reason is editorial rather than technical: a
+ * third invitation stops reading as a conversation and starts reading as a menu.
+ */
+export type SectionProjection = {
+  heading: string;
+  /** The orientation paragraph: the twenty-second answer. */
+  body: string;
+  /** The second beat, which is where the tension usually lives. */
+  secondBeat?: string;
+  /** A compact mono signal that deeper curated material exists. */
+  signal?: string;
+  paths: readonly DisclosureCopy[];
 };
 
 /**

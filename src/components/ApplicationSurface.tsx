@@ -21,7 +21,7 @@ import { neverAskTwice } from '@/content/supporting/never-ask-twice';
 import { proofEntry, supportingEntry } from '@/lib/index-entries';
 import { numberSections, requireStep, stepsById } from '@/lib/page-plan';
 import { projectProofs } from '@/lib/role-lens';
-import type { ApplicationLens, SurfaceStep } from '@/lib/types';
+import type { ApplicationLens, SectionProjection, SurfaceStep } from '@/lib/types';
 import lensStyles from './LensSurface.module.css';
 import styles from './ProveItResume.module.css';
 
@@ -52,12 +52,26 @@ import styles from './ProveItResume.module.css';
  * because a page whose map and page disagree is the failure this whole arrangement is
  * for.
  */
-const PROOF_SECTIONS: Record<string, (props: { step: SurfaceStep }) => React.ReactNode> =
-  {
-    vreko: VrekoSection,
-    'repository-intelligence': RepositoryIntelligenceSection,
-    interlock: InterlockSection,
-  };
+const PROOF_SECTIONS: Record<
+  string,
+  (props: { step: SurfaceStep; projection?: SectionProjection }) => React.ReactNode
+> = {
+  vreko: VrekoSection,
+  'repository-intelligence': RepositoryIntelligenceSection,
+  interlock: InterlockSection,
+};
+
+/**
+ * Which lens section projection frames which proof.
+ *
+ * Vreko is deliberately absent. It is demoted on this surface rather than promoted, and
+ * a section already reduced to one row of platform depth does not need a curiosity path
+ * to make it shorter; forcing one would be interaction for its own sake.
+ */
+const SECTION_PROJECTIONS: Record<string, 'repositoryIntelligence' | 'interlock'> = {
+  'repository-intelligence': 'repositoryIntelligence',
+  interlock: 'interlock',
+};
 
 export function ApplicationSurface({ lens }: { lens: ApplicationLens }) {
   const proofs = projectProofs(lens);
@@ -165,14 +179,32 @@ export function ApplicationSurface({ lens }: { lens: ApplicationLens }) {
             <SupportingEvidence
               step={step('never-ask-twice')}
               framing={{
-                heading: 'Never Ask Twice',
-                lead: 'Persistent agent memory is the part of an agent product that is easiest to demo and hardest to trust. This one was built with a forgetting policy and measured by ablation rather than by impression.',
+                heading: lens.sections.memory.heading,
+                lead: lens.sections.memory.body,
               }}
+              projection={lens.sections.memory}
             />
 
+            {/*
+             * The proof sections, each handed this surface's framing where it has one.
+             *
+             * `SECTION_PROJECTIONS` keys a lens projection to a proof, so a proof this
+             * surface has not framed simply renders its durable composition rather
+             * than needing a branch here. The sections are the same modules `/`
+             * renders; what the projection changes is the opening question and the
+             * order, never what the evidence says.
+             */}
             {proofSteps.map((entry) => {
               const Section = PROOF_SECTIONS[entry.proof as string];
-              return Section ? <Section key={entry.id} step={entry} /> : null;
+              if (!Section) return null;
+              const projection = SECTION_PROJECTIONS[entry.proof as string];
+              return (
+                <Section
+                  key={entry.id}
+                  step={entry}
+                  projection={projection ? lens.sections[projection] : undefined}
+                />
+              );
             })}
 
             <ProductJudgementSection lens={lens} step={step('product-judgment')} />

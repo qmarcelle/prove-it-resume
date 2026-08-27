@@ -4,8 +4,22 @@ export const neverAskTwice: SupportingWork = {
   id: 'never-ask-twice',
   title: 'Never Ask Twice',
   question: 'Can persistent agent memory reduce unnecessary re-asking?',
+  /*
+   * "Deterministic", not "live", and the correction is the point rather than a wording
+   * preference.
+   *
+   * This line used to read "evaluated with a live re-ask-rate ablation" directly above a
+   * `boundary` stating that the ablation runs against fixed synthetic fixtures and a
+   * stubbed model client so that scoring is deterministic. The record contradicted
+   * itself, and it did so in the direction that flatters: the summary is what a reader
+   * skims and the boundary is what they read afterwards, so the stronger claim was the
+   * one doing the work.
+   *
+   * The product can be live while its evaluation is deterministic. Those are two facts
+   * and this line now states only the second, which is the one it is about.
+   */
   summary:
-    'An enterprise support MemoryAgent that carries customer context across sessions, evaluated with a live re-ask-rate ablation.',
+    'An enterprise support MemoryAgent that carries customer context across sessions, evaluated with a deterministic re-ask-rate ablation.',
   tags: ['AGENT MEMORY', 'RETRIEVAL', 'EVALUATION', 'ABLATION'],
   surface: 'forgetting policy · MCP · pgvector / Postgres · TypeScript · cloud execution',
   boundary:

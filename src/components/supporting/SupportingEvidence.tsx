@@ -1,8 +1,10 @@
 import { neverAskTwice } from '@/content/supporting/never-ask-twice';
 import { ClaimBoundary } from '@/components/evidence/ClaimBoundary';
 import { EvidenceLink } from '@/components/evidence/EvidenceLink';
+import { ProgressiveDisclosure } from '@/components/interactions/ProgressiveDisclosure';
 import { SectionHead, sectionFrameClass } from '@/components/section/SectionFrame';
-import type { SurfaceStep } from '@/lib/types';
+import { DISCLOSURE_KEYS, requirePath } from '@/lib/disclosure';
+import type { DisclosureCopy, SectionProjection, SurfaceStep } from '@/lib/types';
 import styles from './SupportingEvidence.module.css';
 
 /**
@@ -38,6 +40,7 @@ const DURABLE_FRAMING: SupportingFraming = {
 export function SupportingEvidence({
   framing = DURABLE_FRAMING,
   step,
+  projection,
 }: {
   framing?: SupportingFraming;
   /**
@@ -50,6 +53,16 @@ export function SupportingEvidence({
    * with no place in that surface's sequence.
    */
   step?: SurfaceStep;
+  /**
+   * An application surface's curiosity paths over this work.
+   *
+   * Absent on `/`, where the entry is an appendix card and a reader who has scrolled
+   * that far is already past the point of needing to be invited. Where it is supplied
+   * the card does not disappear: it moves inside the evaluation path, whole, because
+   * the question, the tags, the surface, the boundary and the evidence row are the
+   * durable record and this pass reorders evidence rather than removing it.
+   */
+  projection?: SectionProjection;
 } = {}) {
   const work = neverAskTwice;
 
@@ -82,42 +95,93 @@ export function SupportingEvidence({
           </>
         )}
 
-        <div className={styles.card}>
-          <div className={styles.body}>
-            {/*
-             * On `/` the section is called "Additional systems" and the card names the
-             * work. Where a page plan promotes this entry the plan's own head names it,
-             * and repeating the title immediately underneath reads as two things rather
-             * than one.
-             */}
-            {step ? null : <h3 className={styles.title}>{work.title}</h3>}
-            <p className={styles.question}>{work.question}</p>
-            <p className={styles.summary}>{work.summary}</p>
-            <ul className={styles.tags}>
-              {work.tags.map((tag) => (
-                <li className={styles.tag} key={tag}>
-                  {tag}
-                </li>
-              ))}
-            </ul>
-          </div>
+        {projection ? (
+          <>
+            {projection.secondBeat ? (
+              <p className={styles.orientation}>{projection.secondBeat}</p>
+            ) : null}
 
-          <div className={styles.meta}>
-            <div className={styles.metaBlock}>
-              <span className={styles.metaLabel}>SURFACE</span>
-              <span className={styles.metaValue}>{work.surface}</span>
-            </div>
-            <ClaimBoundary variant="note">{work.boundary}</ClaimBoundary>
-            <div className={styles.cta}>
-              <EvidenceLink
-                reference={work.evidence}
-                cta="INSPECT PROOF"
-                variant="block"
-              />
-            </div>
-          </div>
-        </div>
+            <ProgressiveDisclosure
+              label="Questions this system can answer"
+              queryKey={DISCLOSURE_KEYS['never-ask-twice']}
+              paths={[
+                {
+                  ...requirePath(projection.paths, 'failures'),
+                  content: <Prose copy={requirePath(projection.paths, 'failures')} />,
+                },
+                {
+                  ...requirePath(projection.paths, 'evaluation'),
+                  content: (
+                    <div className={styles.deepLayer}>
+                      <Prose copy={requirePath(projection.paths, 'evaluation')} />
+                      {/*
+                       * The durable card, entire. The reader asked how the memory was
+                       * tested, and the record's own boundary is the answer to the
+                       * question underneath that one: tested how *far*.
+                       */}
+                      <Card step={step} work={work} />
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </>
+        ) : (
+          <Card step={step} work={work} />
+        )}
       </div>
     </section>
+  );
+}
+
+/** A disclosure path's prose, with its quieter closing note where it has one. */
+function Prose({ copy }: { copy: DisclosureCopy }) {
+  return (
+    <div className={styles.deep}>
+      {copy.paragraphs?.map((paragraph) => (
+        <p key={paragraph}>{paragraph}</p>
+      ))}
+      {copy.note ? <p className={styles.register}>{copy.note}</p> : null}
+    </div>
+  );
+}
+
+/**
+ * The durable entry: what it asks, what it is, what it runs on, where it stops, and the
+ * one thing a reader can open. Identical on every surface; only its position moves.
+ */
+function Card({ step, work }: { step?: SurfaceStep; work: typeof neverAskTwice }) {
+  return (
+    <div className={styles.card}>
+      <div className={styles.body}>
+        {/*
+         * On `/` the section is called "Additional systems" and the card names the
+         * work. Where a page plan promotes this entry the plan's own head names it,
+         * and repeating the title immediately underneath reads as two things rather
+         * than one.
+         */}
+        {step ? null : <h3 className={styles.title}>{work.title}</h3>}
+        <p className={styles.question}>{work.question}</p>
+        <p className={styles.summary}>{work.summary}</p>
+        <ul className={styles.tags}>
+          {work.tags.map((tag) => (
+            <li className={styles.tag} key={tag}>
+              {tag}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className={styles.meta}>
+        <div className={styles.metaBlock}>
+          <span className={styles.metaLabel}>SURFACE</span>
+          <span className={styles.metaValue}>{work.surface}</span>
+        </div>
+        <ClaimBoundary variant="note">{work.boundary}</ClaimBoundary>
+        <div className={styles.cta}>
+          <EvidenceLink reference={work.evidence} cta="INSPECT PROOF" variant="block" />
+        </div>
+      </div>
+    </div>
   );
 }

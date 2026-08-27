@@ -195,13 +195,105 @@ export const linearApplication: ApplicationLens = {
        * against. The résumé used to say "8 years in technology" a few lines above that
        * same span, which was the same failure pointing the other way, and it is retired.
        */
-      body: 'The AI work below is recent. The habit underneath it is not: nearly a decade inside regulated healthcare engineering, where a release that looks fine and is wrong costs more than one that fails loudly. The work was customer-facing (member, broker and employer portals, built as well as led) alongside the microservice architecture, identity, and delivery pipelines that carry them. Then two and a half years leading the teams doing both halves.',
+      body: 'I started in production support, then built provider-facing applications before moving into the customer portal stack behind Member, Broker, and Employer experiences. Over time the work expanded from React and browser flows into services, identity, delivery, architecture, and eventually leading the full-stack Consumer Portals team.',
+      secondBeat:
+        'The through-line was leverage: make the next change easier to understand, test, reuse, and ship than the last one. That meant modernizing the application platform, but also learning that architecture only works when the problem and tradeoffs are clear to the people who have to support the decision.',
+      stageSummaries: {
+        'stage-01':
+          'Production support → provider-facing React applications, including Contact Preference and Fee Schedule.',
+        'stage-02':
+          'Member portal architecture, login/MFA, billing transparency, routing, services, and identity boundaries.',
+        'stage-03':
+          'Developer feedback loops, Azure DevOps adoption, CI/CD, and platform direction across a constrained delivery system.',
+        'stage-04':
+          'Led the full-stack Consumer Portals team across Member and shared Broker/Employer experiences, APIs, identity, multi-tenancy, and modernization.',
+      },
+      /*
+       * The four durable audience rows, compressed to one line each.
+       *
+       * Keyed by `HistoryEntry` id rather than restated in order, so a row added to or
+       * renamed in the durable record cannot silently lose its projection here. The
+       * enterprise row is kept even though the direction names only three surfaces:
+       * dropping it would remove the one line that says the team's services fed
+       * consumers beyond the portals, which is the fact that makes this backend work
+       * rather than four front ends.
+       */
+      surfaces: {
+        'audience-provider':
+          'Contact Preference and Fee Schedule, built hands-on early in the career.',
+        'audience-member':
+          'Authenticated portal experiences including login/MFA and billing transparency, over services the team owned supplying claims, ID-card and enrollment information.',
+        'audience-broker-employer':
+          'Shared portal infrastructure the same team owned: authenticated book-of-business visibility, credentialing, and multi-tenancy by requirement.',
+        'audience-enterprise':
+          "Member information assembled from Facets and other enterprise sources, flowing back out through the team's services to consumers beyond the portals.",
+      },
+      /*
+       * The capability register: six rows, not the four the direction lists.
+       *
+       * The direction's four are the four a Linear reader asks about, and they are
+       * first. But the durable record has six disciplines, and this projection is the
+       * only place they are rendered on this surface, so shipping four would delete
+       * product delivery and the regulated environment from the page rather than
+       * compress them. Six mono rows are still a register a reader scans in seconds;
+       * six paragraphs were the density this pass exists to remove.
+       */
+      capabilities: [
+        {
+          id: 'discipline-frontend',
+          label: 'Frontend',
+          items: 'React → Next.js · Sitecore · routing · auth/MFA · Turborepo monorepo',
+        },
+        {
+          id: 'discipline-backend',
+          label: 'Services & data',
+          items: 'Node.js · REST APIs · Facets + enterprise data',
+        },
+        {
+          id: 'discipline-identity',
+          label: 'Identity',
+          items: 'CIAM · OAuth/SAML · Ping · multi-tenancy',
+        },
+        {
+          id: 'discipline-release',
+          label: 'Delivery',
+          items: 'Azure DevOps · OpenShift · Tekton · Argo CD',
+        },
+        {
+          id: 'discipline-product',
+          label: 'Product delivery',
+          items: 'Customer-facing platform initiatives carried across teams',
+        },
+        {
+          id: 'discipline-regulated',
+          label: 'Regulated environment',
+          items: 'Nearly a decade of production work inside regulated healthcare',
+        },
+      ],
+      paths: [
+        {
+          id: 'built',
+          invitation: 'What did I actually build?',
+          label: 'CUSTOMER SURFACES AND WHAT SAT BEHIND THEM',
+        },
+        {
+          id: 'leadership',
+          invitation: 'What changed as I moved from builder to lead?',
+          label: 'FROM BUILDER TO LEAD',
+          paragraphs: [
+            'The technical problem was easier for me to see than the organizational one. I initially assumed the limitations of the existing development model were obvious. They were not. Existing Java expertise, infrastructure investment, and an overloaded roadmap made management’s pushback reasonable.',
+            'I started using architecture diagrams as shared decision surfaces rather than documentation after the fact. Making Member, Broker, Employer, shared packages, APIs, identity boundaries, and deployment surfaces visible at once changed the quality of the conversation.',
+            'One developer completed a user story in roughly half the usual time once the newer feedback loop let them exercise and validate the change directly. This is one observed story, not a claim that the modernization doubled team productivity.',
+            'I was directionally right that engineering leverage mattered, but wrong to assume it could compensate indefinitely for too much concurrent work. Today I would attack both: improve the engineering system and challenge the portfolio-level work in progress.',
+          ],
+        },
+      ],
       boundary:
-        'Themes are surfaced in place of employer-confidential details. The portals were delivered by a team, and the named initiatives are enterprise programmes led or aligned across teams rather than products owned end to end by one engineer. The conventional chronology, with titles and dates, is in the résumé below.',
+        'Scope note: named customer surfaces and systems span both hands-on work and later team ownership. The résumé carries the conventional chronology. No portfolio-wide productivity multiplier is claimed.',
     },
     inPractice: {
-      heading: 'I already run agent execution with Linear as the control plane.',
-      body: 'Not an opinion formed from the documentation. These are decisions taken while wiring agent work through Linear in a private workspace: what to delegate natively, where the orchestration boundary belongs, and what an agent has to emit for the issue to still make sense to a human a month later.',
+      heading: 'I already use Linear as the control plane for agent work.',
+      body: 'The interesting part has not been whether Linear can launch an agent. It has been deciding what Linear should own natively, what belongs in specialist execution surfaces, and what an agent needs to leave behind so the work is still legible to a human later.',
       boundary:
         /*
          * Composed from the durable constant rather than restated. These two strings were
@@ -210,7 +302,136 @@ export const linearApplication: ApplicationLens = {
          * correction to the evidence rule would have landed in one and not the other.
          */
         `${LINEAR_RECEIPTS_BOUNDARY} Everything below this section is the part you can open and check.`,
+      secondBeat:
+        'I have been testing those boundaries in my own workflow rather than treating the platform architecture as an abstract preference. One of the cleaner native paths failed its first repository-context gate, which is exactly the kind of result I want a system to make visible.',
+      /*
+       * The one thing the orientation layer says about the receipts before a reader
+       * asks: that there are three, and how far they can be checked. Enough to
+       * establish that deeper material exists without spending the reader's attention
+       * on private-workspace decision detail they have not chosen yet.
+       */
+      signal: '3 curated decisions · private-source verified',
+      paths: [
+        {
+          id: 'native-delegation',
+          invitation: 'See the native delegation proof that failed',
+          label: 'META-268 · NATIVE DELEGATION VS CUSTOM ORCHESTRATION',
+          paragraphs: [
+            'Should bounded repository work go through Linear’s native Codex delegation or through a custom orchestration layer?',
+            'The simpler native boundary remains desirable, but only when issue and repository context survive the handoff. The first proof reached a Linear Agent Session and still failed the repository-context gate, so I did not promote the architecture preference into a production claim.',
+            'Native execution should own bounded repository work when the context contract is proven. Custom orchestration retains routing, governance, cross-tool coordination, and evidence aggregation where those responsibilities are not product-native.',
+          ],
+        },
+        {
+          id: 'operating-decisions',
+          invitation: 'Inspect the three operating decisions',
+          label: 'CURATED RECEIPTS · PRIVATE-SOURCE VERIFIED',
+        },
+      ],
     },
+
+    /*
+     * Never Ask Twice, framed as the customer problem it solved rather than as the
+     * memory vocabulary it is built from.
+     *
+     * The durable record in `never-ask-twice.ts` is unchanged and still carries the
+     * question, the surface, the boundary and the evaluation link. What changes here is
+     * only the order a reader meets them in: promise first, trust problem second, and
+     * the three-tier mechanics only once somebody has asked for architecture.
+     */
+    memory: {
+      heading:
+        'A support agent that remembers the customer without making memory opaque.',
+      body: 'The product promise was simple: if a customer already told the agent their environment, plan, SLA, or open issue, the next conversation should not begin by asking for all of it again.',
+      secondBeat:
+        'The harder problem turned out not to be recall. It was making sure remembered facts stayed tenant-scoped, attributable to a real interaction, replaceable when they became stale, and visible when the agent used them.',
+      paths: [
+        {
+          id: 'failures',
+          invitation: 'See the failures that changed the design',
+          label: 'THREE CORRECTIONS',
+          paragraphs: [
+            'The write path looked healthy and persisted nothing. A test double let the distillation path pass while the real persistence behaviour was hollow. The fix was to validate candidates against the constrained fact schema and make persistence failure visible.',
+            'Tenant isolation existed on read, not write. The read path was scoped correctly, but a fact could still be written under the wrong tenant. The boundary moved to the write path.',
+            'The recall explanation was not tied to what the model actually used. An early panel reflected presentation state instead of the cited-facts payload. The UI was rebound to the facts behind the answer.',
+            'That changed the thesis for me: governed recall is the product. Remembering more is not useful if scope, source, and revocation are unclear.',
+          ],
+        },
+        {
+          id: 'evaluation',
+          invitation: 'How did I test whether memory helped?',
+          label: 'DETERMINISTIC EVALUATION',
+          paragraphs: [
+            'The regression harness compares memory behaviour under fixed synthetic fixtures and deterministic scoring. It checks whether useful context survives between sessions, whether superseded facts replace stale ones, and whether forgetting actually removes what should no longer be recalled.',
+          ],
+          /*
+           * The architecture register sits inside the evaluation path rather than in the
+           * orientation layer, which is the whole point of the reordering: a reader who
+           * asked how memory was tested has earned the vocabulary, and a reader who did
+           * not never has to parse it.
+           */
+          note: 'TypeScript / Node.js · PostgreSQL + pgvector · working / episodic / semantic memory · model-assisted distillation · MCP · forgetting / supersession',
+        },
+      ],
+    },
+
+    repositoryIntelligence: {
+      heading:
+        'Does giving an agent more repository evidence actually improve its decision?',
+      body: 'I started by making repository context portable: a committed specification, a producer, and agent integrations. That solved an access problem. It did not answer the harder question of whether the added information deserved credit for a better decision.',
+      secondBeat:
+        'The work has increasingly become an evaluation problem: establish a competent no-context baseline first, then ask whether the added repository evidence changes the decision for a reason the experiment can actually attribute.',
+      paths: [
+        {
+          id: 'baseline',
+          invitation: 'Why isn’t more context automatically better?',
+          label: 'WHAT CHANGED THE QUESTION',
+          paragraphs: [
+            'An early demonstration correlated repository history with the desired conclusion without proving that the omitted relationship caused the failure. I rebuilt the fixture and narrowed the claim.',
+            'If the baseline already makes the right decision, retrieval cannot be credited for causing it. Baseline competence is an invalidation condition, not an inconvenience.',
+            'The current question is not “can I retrieve useful-looking facts?” It is “which decision-time repository facts survive a competent baseline and causally change an agent decision?”',
+          ],
+          note: 'The contract and the integrations are public and implemented. The causal question is active research and is still being characterised; no result is claimed here that a public artifact does not carry.',
+        },
+        {
+          id: 'path',
+          invitation: 'Walk the repository-to-agent path',
+          label: 'STANDARD → CODEX → TALLY',
+        },
+      ],
+    },
+
+    interlock: {
+      heading: 'Two agents can each be right and still be wrong together.',
+      body: 'Two actions can be individually valid and still violate a shared constraint when they happen together. Interlock asks whether current environment evidence can make that coordination decision before either mutation lands.',
+      secondBeat:
+        'The important test was not whether the UI could display evidence next to a decision. The decision had to change when the evidence changed, and the protected action had to reject a path that bypassed the coordination receipt.',
+      paths: [
+        {
+          id: 'proof',
+          invitation: 'Walk the coordination proof',
+          label: 'THE COORDINATION PROOF',
+          paragraphs: [
+            'Problem: two locally valid intents share one bounded environment constraint.',
+            'Counterfactual: compare uncoordinated execution with evidence-bound coordination under the same task structure.',
+            'Load-bearing evidence: perturb the environment evidence. The coordination decision must change with it.',
+            'Load-bearing receipt: attempt the protected mutation without the required receipt. The target must reject it.',
+            'Observed outcome: EXECUTED and independently authenticated OBSERVED stay separate facts.',
+          ],
+        },
+        {
+          id: 'limits',
+          invitation: 'See what the experiment refuses to claim',
+          label: 'WHERE THE EVIDENCE STOPS',
+          paragraphs: [
+            'The controlled counterfactual ran locally. The Google Cloud traversal is a separate recorded run. Neither proves the other.',
+            'The result is not a universal safety proof, not a fleet-scale concurrency guarantee, and not evidence about behaviour outside the stated constraint and environment.',
+            'Negative findings stay visible. A bounded system is stronger when the reader can see where the evidence stops.',
+          ],
+        },
+      ],
+    },
+
     judgement: {
       heading: 'Ask me to defend a decision.',
     },

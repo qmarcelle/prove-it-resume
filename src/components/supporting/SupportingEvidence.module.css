@@ -127,6 +127,50 @@
   margin-top: auto;
 }
 
+/*
+ * The application projection's orientation beat and deep layers.
+ *
+ * The card below is unchanged and keeps its own geometry; these are the paragraphs that
+ * now sit above it and the panels it moves inside.
+ */
+.orientation {
+  max-width: 68ch;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--color-ink-strong);
+  text-wrap: pretty;
+}
+
+.deepLayer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.deep {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  max-width: 68ch;
+  font-size: 0.938rem;
+  line-height: 1.65;
+  color: var(--color-ink-secondary);
+  text-wrap: pretty;
+}
+
+/*
+ * The architecture register: one mono line of dot-separated parts, subordinate to the
+ * product story above it by design. It is what the system is built from, which is the
+ * last thing a reader needs and the first thing this section used to say.
+ */
+.register {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  line-height: 1.6;
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-meta);
+}
+
 @media (max-width: 640px) {
   .meta {
     padding-left: 0;

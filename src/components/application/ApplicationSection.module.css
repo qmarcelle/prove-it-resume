@@ -29,6 +29,73 @@
   text-wrap: pretty;
 }
 
+/*
+ * A compact mono line in the orientation layer, saying that curated depth exists
+ * without spending the reader's attention on it yet.
+ */
+.signal {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-meta);
+}
+
+/* ── The deep layer ───────────────────────────────────────────────────────── */
+
+/*
+ * What an opened curiosity path contains. Stacked, quiet, and deliberately not a card:
+ * the panel is already bounded by the disclosure's rule, and boxing it again would
+ * build the card system this pass exists to avoid.
+ */
+.deepLayer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.deepProse {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  max-width: 68ch;
+  font-size: 0.938rem;
+  line-height: 1.65;
+  color: var(--color-ink-secondary);
+  text-wrap: pretty;
+}
+
+/*
+ * The capability register: a definition list, because that is what it is.
+ *
+ * Two tracks rather than the register's three. Each row is a label and a run of
+ * dot-separated technologies, which needs horizontal room to stay on one or two lines;
+ * at three tracks the items wrap into ragged four-line blocks and the register stops
+ * being scannable, which was the entire reason for compressing it.
+ */
+.capabilities {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4) var(--space-6);
+  margin: 0;
+}
+
+.capability {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3125rem;
+  padding-top: 0.625rem;
+  border-top: var(--rule-quiet);
+}
+
+.capabilityItems {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  line-height: 1.55;
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-ink-secondary);
+}
+
 .cta {
   align-self: flex-start;
   margin-top: 0.625rem;
@@ -202,6 +269,12 @@
   .stages,
   .registerList {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1080px) {
+  .capabilities {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
