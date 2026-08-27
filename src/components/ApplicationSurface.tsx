@@ -21,7 +21,12 @@ import { neverAskTwice } from '@/content/supporting/never-ask-twice';
 import { proofEntry, supportingEntry } from '@/lib/index-entries';
 import { numberSections, requireStep, stepsById } from '@/lib/page-plan';
 import { projectProofs } from '@/lib/role-lens';
-import type { ApplicationLens, SectionProjection, SurfaceStep } from '@/lib/types';
+import type {
+  ApplicationLens,
+  DisclosureCopy,
+  SectionProjection,
+  SurfaceStep,
+} from '@/lib/types';
 import lensStyles from './LensSurface.module.css';
 import styles from './ProveItResume.module.css';
 
@@ -54,7 +59,11 @@ import styles from './ProveItResume.module.css';
  */
 const PROOF_SECTIONS: Record<
   string,
-  (props: { step: SurfaceStep; projection?: SectionProjection }) => React.ReactNode
+  (props: {
+    step: SurfaceStep;
+    projection?: SectionProjection;
+    paths?: readonly DisclosureCopy[];
+  }) => React.ReactNode
 > = {
   vreko: VrekoSection,
   'repository-intelligence': RepositoryIntelligenceSection,
@@ -64,14 +73,30 @@ const PROOF_SECTIONS: Record<
 /**
  * Which lens section projection frames which proof.
  *
- * Vreko is deliberately absent. It is demoted on this surface rather than promoted, and
- * a section already reduced to one row of platform depth does not need a curiosity path
- * to make it shorter; forcing one would be interaction for its own sake.
+ * Vreko is absent, and stays absent: it is demoted on this surface, and framing it here
+ * would mean this page restating a durable proof's own thesis in weaker words.
  */
 const SECTION_PROJECTIONS: Record<string, 'repositoryIntelligence' | 'interlock'> = {
   'repository-intelligence': 'repositoryIntelligence',
   interlock: 'interlock',
 };
+
+/**
+ * Which proofs take curiosity paths without framing.
+ *
+ * A second map rather than a branch on the proof id, and symmetric with the one above:
+ * a surface says what it supplies to a section, and the section decides what to do with
+ * it. Vreko is the only member and the reason is a measurement rather than a taste.
+ *
+ * The earlier pass gave it no path, on the reasoning that a section already reduced to
+ * one row of platform depth does not need one. The `inline` frame changed the chrome,
+ * not the content: at rest this section rendered 2067px on a desktop and 3930px on a
+ * phone, against an average of 667px for the five chapters before it. A reader finished
+ * five conversations and walked into the densest block on the page, immediately before
+ * the close. Its scan layer already answers it in four lines, including the limit, so
+ * what it needed was not a shorter argument but the boundary the other six sections have.
+ */
+const SECTION_PATHS: Record<string, 'vreko'> = { vreko: 'vreko' };
 
 export function ApplicationSurface({ lens }: { lens: ApplicationLens }) {
   const proofs = projectProofs(lens);
@@ -198,11 +223,13 @@ export function ApplicationSurface({ lens }: { lens: ApplicationLens }) {
               const Section = PROOF_SECTIONS[entry.proof as string];
               if (!Section) return null;
               const projection = SECTION_PROJECTIONS[entry.proof as string];
+              const paths = SECTION_PATHS[entry.proof as string];
               return (
                 <Section
                   key={entry.id}
                   step={entry}
                   projection={projection ? lens.sections[projection] : undefined}
+                  paths={paths ? lens.sections[paths].paths : undefined}
                 />
               );
             })}

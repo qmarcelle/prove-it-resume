@@ -31,6 +31,12 @@ export const DISCLOSURE_KEYS = {
   'repository-intelligence': 'context',
   interlock: 'coordination',
   /*
+   * Vreko's evidence, which is the one demoted section that still renders a full proof.
+   * `platform` after its eyebrow, and deliberately not `layer`, which the architecture
+   * trace inside it already owns.
+   */
+  vreko: 'platform',
+  /*
    * The closing mapping's remainder. Named here for the same reason the five chapters
    * are: once a reviewer has sent someone `/linear?mapping=complete` to make a point
    * about breadth, that address has to keep resolving.

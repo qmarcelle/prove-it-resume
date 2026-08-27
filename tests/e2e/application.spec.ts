@@ -1256,3 +1256,69 @@ test('the career record does not restate the product history chapter', async ({
   await page.goto('/');
   await expect(page.locator('#career')).toContainText('Sitecore customer portals');
 });
+
+/**
+ * Vreko answers at rest, and keeps its proof one question away.
+ *
+ * This section is demoted on this surface and was still the largest block on the page:
+ * 2067px on a desktop and 3930px on a phone at rest, against roughly 667px for each of
+ * the five chapters before it, landing immediately before the close. Its scan layer is
+ * already a complete twenty-second answer, limit included, so the proof underneath moved
+ * behind the question that asks for it.
+ *
+ * Both halves are asserted, because "compressed" and "deleted" look identical from a
+ * test that only reads the resting page: the four scan lines still state the limit, and
+ * the diagram, the evidence panel and the recorded contradictions all still arrive.
+ */
+test('vreko states its limit at rest and keeps its proof behind a question', async ({
+  page,
+}) => {
+  await page.goto('/linear');
+  const section = page.locator('#vreko');
+
+  // The scan layer, including the part that does not flatter.
+  await expect(section).toContainText('4 published packages, 9 declared and unpublished');
+  await expect(section).toContainText(/No implementation source is published/);
+
+  // And no proof under it yet.
+  await expect(section.getByText('RECORDED CONTRADICTIONS · 3')).toHaveCount(0);
+  await expect(
+    section.getByRole('button', { name: /Inspect evidence.*EV-VRK/ }),
+  ).toHaveCount(0);
+
+  await openPath(section, /Re-derive the published\/unpublished split/);
+
+  // All of it, unchanged.
+  await expect(section.getByText('RECORDED CONTRADICTIONS · 3')).toBeVisible();
+  await expect(
+    section.getByRole('button', { name: /Inspect evidence.*EV-VRK/ }),
+  ).toBeVisible();
+  await expect(section).toContainText('npm view @vreko/intelligence version');
+  await expect(section.getByRole('button', { name: /COPY THIS VIEW/ })).toBeVisible();
+
+  // `/` renders the same proof directly: it is a proof there, not an aside.
+  await page.goto('/');
+  await expect(
+    page.locator('#vreko').getByText('RECORDED CONTRADICTIONS · 3'),
+  ).toBeVisible();
+});
+
+/**
+ * An address shared before this section had a disclosure still resolves.
+ *
+ * `?layer=` names a layer of the containment diagram, which now lives behind a question.
+ * Without the path declaring that key as one of its own, such a link would land on a
+ * scan layer and silently drop the state it was sent to show, which is the one failure
+ * mode a deterministic address exists to prevent.
+ */
+test('a layer link shared before the disclosure still opens the diagram', async ({
+  page,
+}) => {
+  await page.goto('/linear?layer=protocol-surface');
+
+  const section = page.locator('#vreko');
+  await expect(
+    section.getByRole('group', { name: /THE PUBLICATION BOUNDARY/ }),
+  ).toBeVisible();
+  await expect(section.getByText('SELECTED LAYER')).toBeVisible();
+});

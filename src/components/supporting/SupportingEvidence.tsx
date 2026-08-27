@@ -136,15 +136,21 @@ export function SupportingEvidence({
         )}
 
         {/*
-         * The live product, at section level on both surfaces.
+         * The live product, on the surfaces that promoted this work.
          *
          * Not inside the evaluation path, which is where the proof lives: a reader who
          * asked how memory was *tested* did not ask for a demo, and putting the running
          * agent behind that question would make reaching it depend on choosing the one
          * artifact it is not. Not above the invitations either. It sits under them,
          * which is what "subordinate to the curiosity paths" means in layout.
+         *
+         * Absent on `/`, where this is the appendix and is deliberately one entry in one
+         * card. A reader who has scrolled past three proofs to reach it is being offered
+         * a pointer, not a product tour, and the card's own `INSPECT PROOF` is the right
+         * single exit there. The record carries all three artifacts either way, so this
+         * is a decision about what a surface shows, not about what is known.
          */}
-        <LiveProduct artifacts={work.evidence} />
+        {projection ? <LiveProduct artifacts={work.evidence} /> : null}
       </div>
     </section>
   );

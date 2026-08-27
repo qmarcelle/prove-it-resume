@@ -460,6 +460,31 @@ export const linearApplication: ApplicationLens = {
       ],
     },
 
+    /*
+     * Vreko's one question, and no framing.
+     *
+     * The section's own scan layer already answers it in four lines: the problem, what
+     * was built, four published packages against nine declared and unpublished, and the
+     * limit that no implementation source is published anywhere. That is a complete
+     * twenty-second answer and this surface has nothing to add to it.
+     *
+     * What sat under those four lines, visible by default, was the whole proof: the
+     * containment diagram, the selected-layer detail, the re-derive command, the evidence
+     * panel, three recorded contradictions and the boundary. 2067px on a desktop, against
+     * 667px average for the five chapters above it, immediately before the close. The
+     * invitation names the one thing that material uniquely offers a reader: the split is
+     * not asserted here, it is checkable from the registry in one command.
+     */
+    vreko: {
+      paths: [
+        {
+          id: 'boundary',
+          invitation: 'Re-derive the published/unpublished split',
+          label: 'THE PUBLICATION BOUNDARY',
+        },
+      ],
+    },
+
     judgement: {
       heading: 'Ask me to defend a decision.',
     },

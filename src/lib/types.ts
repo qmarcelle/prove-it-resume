@@ -563,6 +563,20 @@ export type ApplicationLens = SurfaceLens & {
     memory: SectionProjection;
     repositoryIntelligence: SectionProjection;
     interlock: SectionProjection;
+    /**
+     * Vreko, demoted but not abridged.
+     *
+     * Paths only, and typed that way rather than as a `SectionProjection`, because this
+     * section needs no framing from the surface: the proof's own scan layer already
+     * states the problem, what was built, the published/declared split and the limit in
+     * four lines. A heading and a body here would be this surface restating a durable
+     * proof in its own words, and unrendered copy in the lens is copy that drifts.
+     *
+     * What it does need is the boundary the scan layer does not draw. Everything after
+     * those four lines is the diagram, the evidence panel and the recorded
+     * contradictions, and at rest that was the single largest block on the page.
+     */
+    vreko: { paths: readonly DisclosureCopy[] };
     judgement: { heading: string };
   };
 };
