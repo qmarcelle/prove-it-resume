@@ -49,17 +49,24 @@ export function useDeepLinkedState(
   const validate = useRef(isValid);
 
   useEffect(() => {
-    const raw = new URLSearchParams(window.location.search).get(key);
-    if (raw !== null && validate.current(raw)) {
-      setValue(raw);
-      publishDeepLinkState(key, raw === initial ? null : raw);
-    }
+    const applyLocation = () => {
+      const raw = new URLSearchParams(window.location.search).get(key);
+      const next = raw !== null && validate.current(raw) ? raw : initial;
+      setValue(next);
+      publishDeepLinkState(key, next === initial ? null : next);
+    };
+
+    applyLocation();
+    window.addEventListener('popstate', applyLocation);
 
     /*
      * Published on unmount as absent. A section removed from a surface must not leave
      * its stage in a link copied from the section beside it.
      */
-    return () => publishDeepLinkState(key, null);
+    return () => {
+      window.removeEventListener('popstate', applyLocation);
+      publishDeepLinkState(key, null);
+    };
   }, [key, initial]);
 
   const update = useCallback(

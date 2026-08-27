@@ -198,3 +198,86 @@
   flex: 1 1 520px;
   min-width: 0;
 }
+
+/* ── The application projection ───────────────────────────────────────────── */
+
+/*
+ * A surface that enters this proof through its research question, rather than through
+ * the infrastructure that answers it. The blocks below are the section's own; only the
+ * orientation layer and the status dimensions are added here.
+ */
+.projection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.projectionBeat {
+  max-width: 68ch;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--color-ink-strong);
+  text-wrap: pretty;
+}
+
+/*
+ * Three status dimensions, side by side.
+ *
+ * Read as one line of three so a reader takes them as a single reading of the work's
+ * state. Stacked they read as three separate announcements, which overstates how much
+ * ceremony the distinction deserves.
+ */
+.dimensions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-6);
+  margin: 0;
+}
+
+.dimension {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-top: 0.5rem;
+  border-top: var(--rule-quiet);
+}
+
+.dimension dt {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-ink);
+  text-transform: uppercase;
+}
+
+.dimension dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-meta);
+}
+
+.deepLayer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.deepProse {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  max-width: 68ch;
+  font-size: 0.938rem;
+  line-height: 1.65;
+  color: var(--color-ink-secondary);
+  text-wrap: pretty;
+}
+
+@media (max-width: 640px) {
+  .dimensions {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+}

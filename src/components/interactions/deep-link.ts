@@ -1,5 +1,20 @@
 'use client';
 
+/*
+ * The disclosure keys are declared in `lib/disclosure`, not here, and are deliberately
+ * not re-exported from this module.
+ *
+ * The sections that name a key are server components. A value imported from a
+ * `'use client'` module reaches a server component as a client reference rather than as
+ * the object, so every lookup returns `undefined`, every section publishes its state
+ * under the key `undefined`, and the last one to mount wins. The page still looks
+ * correct; only `COPY THIS VIEW` gives it away, by handing out `?undefined=path`.
+ *
+ * Re-exporting the map from here would rebuild that trap for the next caller, so the one
+ * import path is the plain module.
+ */
+import { DISCLOSURE_KEYS } from '@/lib/disclosure';
+
 /**
  * The page's shareable state, held apart from the URL.
  *
@@ -68,4 +83,9 @@ export function buildViewUrl(anchor?: string): string {
  * their own page is no longer in. `deep-link.test.ts` asserts this list matches the keys
  * the interactions actually pass to `useDeepLinkedState`.
  */
-export const KNOWN_KEYS = ['decision', 'interlock', 'layer'] as const;
+export const KNOWN_KEYS = [
+  'decision',
+  'interlock',
+  'layer',
+  ...Object.values(DISCLOSURE_KEYS),
+] as const;

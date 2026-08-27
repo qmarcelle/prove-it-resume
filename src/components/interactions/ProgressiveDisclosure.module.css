@@ -1,0 +1,185 @@
+/*
+ * The one disclosure grammar, dressed in the surface's existing vocabulary.
+ *
+ * There is no new card system here and no bento. An invitation is amber mono text on a
+ * quiet rule, which is what every other "there is more this way" affordance on the site
+ * already is, and an opened panel is separated by the same strong rule the proof layers
+ * use. The reader should not be able to tell that five sections share one widget,
+ * because the widget looks like the page rather than like a component library.
+ *
+ * Nothing here animates. State is carried by the arrow's direction, the panel's
+ * presence, and `aria-expanded`, so a reader with reduced motion, a reader who missed
+ * the transition, and a screen-reader user all learn the same thing from the same
+ * source. There is deliberately no height transition to suppress.
+ */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-2);
+}
+
+/*
+ * The invitations, as a list.
+ *
+ * A real `ul` rather than a row of buttons: two questions the section can answer *is* a
+ * list, and marking it up as one is what lets a screen reader announce "2 items" before
+ * the reader commits to either. The group is named by `aria-label` on the list for the
+ * same reason.
+ */
+.invitations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.invitation {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.5rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--color-accent-border);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-lg);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-accent);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 120ms ease;
+}
+
+.invitation:hover .invitationText,
+.close:hover {
+  text-decoration: underline;
+}
+
+/*
+ * The open invitation keeps its amber but loses its underline rule, because the panel
+ * below it now carries the boundary. Two rules stacked eight pixels apart read as a
+ * rendering fault rather than as emphasis.
+ */
+.invitation[data-open] {
+  border-bottom-color: transparent;
+}
+
+.invitationText {
+  text-wrap: pretty;
+}
+
+/*
+ * The opened panel.
+ *
+ * `scroll-margin-top` matters more here than it looks: the panel is a focus target, and
+ * a browser scrolling it under the sticky header on focus is the one way this pattern
+ * can lose a reader's place. `:focus-visible` is styled rather than suppressed because
+ * the panel really does receive focus on open.
+ */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-top: 1.25rem;
+  border-top: var(--rule-strong);
+  scroll-margin-top: var(--scroll-offset);
+}
+
+.panel:focus {
+  outline: none;
+}
+
+.panel:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 6px;
+}
+
+.panelHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.panelLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  font-weight: 400;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--color-meta-quiet);
+}
+
+/*
+ * The way back.
+ *
+ * Quiet rather than amber, and stated as a sentence. Amber on this site promises new
+ * evidence forward; spending it on "go back" would make the loudest thing in an opened
+ * panel the exit. It is a real control with a real focus target, not an icon alone,
+ * because "how do I get out of this" should never require a reader to guess a glyph.
+ */
+.close {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-ink-secondary);
+  cursor: pointer;
+}
+
+/*
+ * Mobile: the invitations stop being a row of links and become a stack of full-width
+ * questions.
+ *
+ * This is the part that is designed rather than inherited. Flex-wrapping two mono
+ * questions at 380px produces two ragged blocks whose tap targets are the text width,
+ * so each becomes its own full-width row with the arrow pushed to the trailing edge:
+ * a list of things to open, reachable with a thumb, in the reading order the section
+ * already established.
+ */
+@media (max-width: 640px) {
+  .invitations {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .invitations li {
+    display: flex;
+  }
+
+  .invitation {
+    flex: 1;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: var(--rule-quiet);
+  }
+
+  .invitation[data-open] {
+    border-bottom-color: transparent;
+  }
+
+  .panel {
+    padding-top: var(--space-4);
+  }
+
+  /*
+   * The label and the exit stop competing for one baseline at this width; the exit sits
+   * under the label at full tap height rather than being squeezed beside it.
+   */
+  .panelHead {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+}

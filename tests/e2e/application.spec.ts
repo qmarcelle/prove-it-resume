@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
+import { openEveryPath, openPath } from './disclosure';
 
 /**
  * Let every running animation finish before anything is measured.
@@ -128,6 +129,12 @@ test('the durable routes are unchanged', async ({ page }) => {
 
 test('no private workspace data reaches the served page', async ({ page }) => {
   await page.goto('/linear');
+  // The receipts are behind the question that asks for them, so the leak surface only
+  // exists once they are on the page. Checked there rather than at rest.
+  await openPath(
+    page.locator('#linear-in-practice'),
+    /Inspect the three operating decisions/,
+  );
   const html = await page.content();
 
   expect(html).not.toMatch(/linear\.app/i);
@@ -148,6 +155,7 @@ test('receipts state how far each one can be checked', async ({ page }) => {
   await page.goto('/linear');
 
   const section = page.locator('#linear-in-practice');
+  await openPath(section, /Inspect the three operating decisions/);
 
   /*
    * The receipts are a tab strip once the page has hydrated, so only the open one is on
@@ -200,6 +208,7 @@ test('receipts state their status no more finally than the record supports', asy
 }) => {
   await page.goto('/linear');
   const section = page.locator('#linear-in-practice');
+  await openPath(section, /Inspect the three operating decisions/);
 
   // A conditional boundary and a failed proof gate, not a settled decision.
   await expect(section.getByText('Boundary defined · proof incomplete')).toBeVisible();
@@ -236,6 +245,13 @@ test('/linear projects the durable proofs rather than forking them', async ({ pa
     order.filter((id) => ['vreko', 'repository-intelligence', 'interlock'].includes(id)),
   ).toEqual(['repository-intelligence', 'interlock', 'vreko']);
 
+  /*
+   * The proof's own evidence disclosure still travels with it. It sits behind the
+   * question that walks the coordination proof on this surface, which is a change of
+   * position: what matters here is that the durable control is the same one, not that
+   * it is reachable without asking.
+   */
+  await openPath(page.locator('#interlock'), /Walk the coordination proof/);
   await expect(
     page.getByRole('button', { name: /Inspect evidence.*EV-ILK/ }),
   ).toBeVisible();
@@ -384,6 +400,9 @@ test('/linear has no automatically detectable accessibility violations', async (
 test('/linear is clean with its disclosures open', async ({ page }) => {
   await page.goto('/linear');
 
+  // The curiosity paths first: they are where most of this page's content now lives, so
+  // an audit that skipped them would be auditing the orientation layer alone.
+  await openEveryPath(page);
   await page.getByRole('button', { name: /Inspect evidence.*EV-ILK/ }).click();
   await page.getByRole('button', { name: /Inspect evidence.*EV-WSJ/ }).click();
   await page.getByRole('button', { name: /Inspect evidence.*EV-VRK/ }).click();
@@ -541,6 +560,8 @@ test('the hero chain is complete with motion disabled', async ({ page }) => {
 test('product history states the record rather than a gap', async ({ page }) => {
   await page.goto('/linear');
   const section = page.locator('#product-history');
+  // The registers this asserts over are behind the question that asks what was built.
+  await openPath(section, /What did I actually build/);
 
   // Nothing is outstanding, so nothing is marked outstanding.
   await expect(section.getByText('NOT YET EVIDENCE')).toHaveCount(0);
@@ -572,10 +593,11 @@ test('product history attributes the portal estate to the team that owned it', a
 }) => {
   await page.goto('/linear');
   const section = page.locator('#product-history');
+  await openPath(section, /What did I actually build/);
 
-  await expect(section.getByText(/Services the team owned/)).toBeVisible();
+  await expect(section.getByText(/services the team owned/i)).toBeVisible();
   await expect(
-    section.getByText(/shared portal infrastructure the same team owned/),
+    section.getByText(/shared portal infrastructure the same team owned/i),
   ).toBeVisible();
 
   // And the hands-on work is still stated as hands-on where it was.
@@ -593,6 +615,7 @@ test('product history attributes the portal estate to the team that owned it', a
 test('receipt tabs move under the arrow keys', async ({ page }) => {
   await page.goto('/linear');
   const section = page.locator('#linear-in-practice');
+  await openPath(section, /Inspect the three operating decisions/);
   const tabs = section.getByRole('tab');
 
   await tabs.first().click();

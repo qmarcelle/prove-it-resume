@@ -70,3 +70,72 @@
   font-size: var(--text-meta);
   color: var(--color-ink);
 }
+
+/* ── The application projection ───────────────────────────────────────────── */
+
+/*
+ * A surface that states the composition problem before the machinery. The blocks it
+ * arranges are the section's own; only the orientation beat and the secondary branch
+ * below are added here.
+ */
+.projection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.projectionBeat {
+  max-width: 68ch;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--color-ink-strong);
+  text-wrap: pretty;
+}
+
+.deepLayer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.deepProse {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  max-width: 68ch;
+  font-size: 0.938rem;
+  line-height: 1.65;
+  color: var(--color-ink-secondary);
+  text-wrap: pretty;
+}
+
+.deepNote {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  line-height: 1.6;
+  letter-spacing: var(--tracking-meta-tight);
+  color: var(--color-meta);
+}
+
+/*
+ * The cloud traversal, marked as answering a different question.
+ *
+ * The label is the load-bearing part. Without it a link sitting under the coordination
+ * proof reads as more evidence for that proof, which is precisely the substitution the
+ * durable record refuses to make.
+ */
+.branch {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-self: flex-start;
+  padding-top: 0.625rem;
+  border-top: var(--rule-quiet);
+}
+
+.branchLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-meta-quiet);
+}

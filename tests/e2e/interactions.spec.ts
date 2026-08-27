@@ -1,4 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
+import { openPath } from './disclosure';
 import { expect, test, type Page } from '@playwright/test';
 
 /**
@@ -606,10 +607,24 @@ function contrast(fg: string, bg: string): number {
   return (a + 0.05) / (b + 0.05);
 }
 
+/**
+ * The counterfactual, wherever the surface keeps it.
+ *
+ * On `/` it is in the section's opening layer. On `/linear` it sits behind the question
+ * that walks the coordination proof, so reaching it costs one click there and none here.
+ * Parameterised tests over both routes call this rather than branching inline.
+ */
+async function reachCounterfactual(page: Page, route: string) {
+  if (route === '/linear') {
+    await openPath(page.locator('#interlock'), /Walk the coordination proof/);
+  }
+}
+
 for (const route of ['/', '/linear']) {
   test.describe(`verdict chips on ${route}`, () => {
     test('are legible against their own fill', async ({ page }) => {
       await page.goto(route);
+      await reachCounterfactual(page, route);
       const panel = interlock(page);
       await panel.getByRole('button', { name: /Result$/ }).click();
 
@@ -671,6 +686,7 @@ for (const route of ['/', '/linear']) {
   test.describe(`the selected stage on ${route}`, () => {
     test('is legible against the fill its own control paints', async ({ page }) => {
       await page.goto(route);
+      await reachCounterfactual(page, route);
 
       const selected = interlock(page).locator('[aria-pressed="true"]').first();
       await expect(selected).toBeVisible();
@@ -740,9 +756,26 @@ for (const route of ['/', '/linear']) {
  * still honoured, the control still produces a link that carries the whole page's state,
  * and a URL never asserts a stage the page is not in.
  */
+
+/**
+ * Bring both stepped interactions onto the page.
+ *
+ * On `/linear` the counterfactual and the recorded-run diff each sit behind a named
+ * question. Opening those paths is what a reader does before they can step either
+ * control, so it is what these tests do too.
+ */
+async function openStepped(page: Page) {
+  await openPath(page.locator('#interlock'), /Walk the coordination proof/);
+  await openPath(
+    page.locator('#repository-intelligence'),
+    /Walk the repository-to-agent path/,
+  );
+}
+
 test.describe('shareable state', () => {
   test('ordinary interaction leaves the address alone', async ({ page }) => {
     await page.goto('/linear');
+    await openStepped(page);
     const panel = interlock(page);
 
     await panel.getByRole('button', { name: /Result$/ }).click();
@@ -790,6 +823,7 @@ test.describe('shareable state', () => {
   }) => {
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
     await page.goto('/linear');
+    await openStepped(page);
 
     // Two different panels moved off their defaults, then shared from the second.
     await diff(page)
@@ -816,12 +850,42 @@ test.describe('shareable state', () => {
     expect(new URL(page.url()).search).toBe('');
   });
 
+  /**
+   * A copied address names every key it carries.
+   *
+   * This is the one failure the unit suite structurally cannot see. The sections that
+   * name a disclosure key are server components; while the map lived in a `'use client'`
+   * module every lookup reached them as a client reference and resolved to `undefined`,
+   * so all five sections published their state under one key called `undefined` and the
+   * last to mount won. The page rendered correctly and every component test passed. Only
+   * the copied link showed it, as `?undefined=path`.
+   *
+   * So the assertion is on the address, from a real build, with several panels open.
+   */
+  test('a copied link names every key it carries', async ({ page, context }) => {
+    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+    await page.goto('/linear');
+    await openStepped(page);
+    await openPath(page.locator('#product-history'), /What did I actually build/);
+
+    await interlock(page)
+      .getByRole('button', { name: /COPY THIS VIEW/ })
+      .click();
+
+    const copied = new URL(await page.evaluate(() => navigator.clipboard.readText()));
+    expect([...copied.searchParams.keys()]).not.toContain('undefined');
+    expect(copied.searchParams.get('coordination')).toBe('proof');
+    expect(copied.searchParams.get('context')).toBe('path');
+    expect(copied.searchParams.get('history')).toBe('built');
+  });
+
   test('a copied link reopens the page in the state it described', async ({
     page,
     context,
   }) => {
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
     await page.goto('/linear');
+    await openStepped(page);
 
     await interlock(page)
       .getByRole('button', { name: /Evidence$/ })
@@ -840,11 +904,19 @@ test.describe('shareable state', () => {
 
   test('reload returns the page to its resting state', async ({ page }) => {
     await page.goto('/linear');
+    await openStepped(page);
     await interlock(page)
       .getByRole('button', { name: /Result$/ })
       .click();
 
     await page.reload();
+
+    /*
+     * Nothing was written to the address, so the reload lands on the orientation layer
+     * and the reader opens the proof again themselves. That the counterfactual comes
+     * back at its first stage rather than mid-argument is the assertion.
+     */
+    await openPath(page.locator('#interlock'), /Walk the coordination proof/);
 
     /*
      * The first stage, because nothing was ever written to the address. That is the
@@ -861,6 +933,7 @@ test.describe('shareable state', () => {
   test('stepping never fills the back button', async ({ page }) => {
     await page.goto('/');
     await page.goto('/linear');
+    await openStepped(page);
 
     const panel = interlock(page);
     for (const stage of [/Intents$/, /Decision$/, /Result$/]) {
