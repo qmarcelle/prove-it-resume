@@ -18,12 +18,22 @@ export const SITE = {
   eyebrow: 'AI PLATFORM · DEVELOPER SYSTEMS · TECHNICAL LEADERSHIP',
   headline: 'I build the infrastructure between AI agents and production software.',
   thesis: 'Important evidence should be easy to find at decision time.',
+  /*
+   * The product half was missing and the record supports it.
+   *
+   * This line was six infrastructure nouns. `/linear` says "full-stack" in its first
+   * sentence because the corpus establishes it, and the durable surface saying less than
+   * the tailored one is the wrong way round: an application lens may reorder emphasis,
+   * never carry a claim the root cannot. Nothing here is new, it is the same record
+   * stated where a reader arriving without a role in mind will meet it.
+   */
   supporting:
-    'MCP and tool surfaces, repository intelligence, developer platforms, CI/CD integration, agent coordination, and the evidence needed to determine whether the resulting system actually works.',
+    'Customer-facing product engineering and the platforms underneath it: MCP and tool surfaces, repository intelligence, developer platforms, CI/CD integration, agent coordination, and the evidence needed to determine whether the resulting system actually works.',
   availability: 'AVAILABLE FOR STAFF / PRINCIPAL AI PLATFORM WORK',
   capabilities: [
     'MCP',
     'AGENTIC SYSTEMS',
+    'FULL-STACK PRODUCT',
     'DEVELOPER PLATFORMS',
     'CI/CD',
     'REPOSITORY INTELLIGENCE',
@@ -31,6 +41,22 @@ export const SITE = {
   ],
   github: 'https://github.com/qmarcelle',
   githubLabel: 'github.com/qmarcelle',
+  /*
+   * The organisation, distinct from the personal profile, and used in exactly one place.
+   *
+   * "Selected Marcelle Labs work" pointed at `github.com/qmarcelle`, which is a personal
+   * profile rather than the thing the row names: a reader following it landed on a list
+   * of everything this person has ever pushed and had to go looking for the work the
+   * sentence promised. `github.com/Marcelle-Labs` is where that work actually is, and it
+   * carries `interlock` and `never-ask-twice` publicly, which are two of the systems
+   * this site claims.
+   *
+   * It is still an index rather than an artifact, so it stays out of the evidence model:
+   * the header, hero and footer keep the personal profile as a *profile* link, and no
+   * evidence row points at either. `content.test.ts` holds both to that.
+   */
+  organisation: 'https://github.com/Marcelle-Labs',
+  organisationLabel: 'github.com/Marcelle-Labs',
   /*
    * The canonical origin this artifact is published at.
    *
@@ -178,15 +204,41 @@ export const CAREER = {
     {
       id: 'enterprise-healthcare',
       title: 'Enterprise healthcare engineering',
-      meta: '~10 YEARS',
-      body: 'Nearly a decade working inside enterprise healthcare engineering environments.',
+      /*
+       * The dated span, not a rounded figure.
+       *
+       * This read "~10 YEARS", which is the same error as the retired "8 years in
+       * technology" pointing the other way: the tenure is 08/2016 to 03/2026, so a tilde
+       * rounding it *up* to ten claims more than the dates support, on a page whose
+       * argument is that its claims can be checked. The span states itself and needs no
+       * qualifier.
+       */
+      meta: '2016 – 2026',
+      /*
+       * The arc rather than a restatement of the title. The body used to say "Nearly a
+       * decade working inside enterprise healthcare engineering environments", directly
+       * beneath a heading reading "Enterprise healthcare engineering", which spent the
+       * one line this entry gets on saying its own name again.
+       */
+      body: 'Provider applications first, hands-on. Then the member, broker and employer portal estate: the browser, the APIs behind it, and the enterprise data underneath. Then the team that delivered it.',
+      /*
+       * Product and platform, in that order.
+       *
+       * This list was ten infrastructure themes and no product signal at all: a reader
+       * arriving here could not tell that any of the work was customer-facing, while
+       * `/linear` states the front end, the portals and the surfaces by name. That was
+       * not a positioning choice, it was drift. The durable corpus establishes all of
+       * it, and `content.test.ts` now holds every tag to a fact that exists there.
+       */
       tags: [
+        'React / Next.js',
+        'Sitecore customer portals',
+        'member, broker and employer surfaces',
+        'multi-tenant architecture',
+        'Node.js services and enterprise data',
         'legacy Java systems',
-        'Node / TypeScript modernization',
-        'platform architecture',
         'CI/CD',
         'Kubernetes / OpenShift',
-        'Argo CD',
         'IAM',
         'OAuth / SAML',
         'regulated production environments',

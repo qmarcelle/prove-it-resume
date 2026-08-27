@@ -19,7 +19,8 @@ Present in the design export and used as-is.
 | Thesis line                                                 | `content/site.ts`                       | From the visual-directions artifact.                           |
 | Availability banner                                         | `content/site.ts`                       | Export default was `showAvailability: true`.                   |
 | Capability chips (6)                                        | `content/site.ts`                       | Verbatim.                                                      |
-| `github.com/qmarcelle`                                      | header, hero, career, footer, résumé    | Real. Used as a **profile** link only.                         |
+| `github.com/qmarcelle`                                      | header, hero, footer, résumé            | Real. Used as a **profile** link only.                         |
+| `github.com/Marcelle-Labs`                                  | career                                  | Real. The organisation, where the named work is. Not evidence. |
 | `workspacejson.dev/showcase/tally`                          | Repository Intelligence                 | Real. The one verified per-artifact evidence link on the site. |
 | Operating thesis + three facets                             | `content/site.ts`                       | Verbatim.                                                      |
 | All three proof theses, problems, and "built"/"work" blocks | `content/proofs/*`                      | Verbatim.                                                      |
@@ -112,8 +113,11 @@ holds the run and state ids to that contract.
 
 **Still unresolved**
 
-- "Selected Marcelle Labs work": currently the GitHub profile; should become a specific
-  destination.
+- ~~"Selected Marcelle Labs work": currently the GitHub profile; should become a specific
+  destination.~~ **Resolved.** It now points at `github.com/Marcelle-Labs`, which is where
+  that work is and which publicly carries `interlock` and `never-ask-twice`. Still an
+  index rather than a single artifact, so it stays outside the evidence model, and
+  `content.test.ts` fails if either profile is ever used as an evidence destination.
 
 ---
 

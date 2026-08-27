@@ -131,6 +131,19 @@
   letter-spacing: -0.02em;
 }
 
+/*
+ * The `@` between a package name and its version, in an element of its own.
+ *
+ * Purely structural: it inherits everything and changes nothing a reader sees. Its job
+ * is to break the string into two text nodes so a CDN scanning for email addresses does
+ * not find one. See `PackageIdentifier` for the incident this comes from.
+ */
+.identifierAt {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
 .systemId {
   font-family: var(--font-mono);
   font-size: var(--text-meta);

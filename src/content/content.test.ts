@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { PROOFS } from '@/content/proofs';
 import { CLAIMS } from '@/content/claims';
 import { DECISION_RECEIPTS } from '@/content/decisions';
-import { PROFILES, RESUME, SITE } from '@/content/site';
+import { CAREER, PROFILES, RESUME, SITE } from '@/content/site';
 import { neverAskTwice } from '@/content/supporting/never-ask-twice';
 import { PROOF_STEPS } from '@/lib/proof-steps';
 import { isResolved } from '@/lib/evidence';
@@ -12,7 +12,13 @@ import { ALL_LENSES, ALL_RESUME_LENSES } from '@/content/lenses';
 import { defaultRole } from '@/content/roles';
 import { resumePdfPath } from '@/lib/resume';
 import { PUBLISHED_ORIGINS } from '@/content/published';
-import { RESUME_CAREER_DURATION } from '@/content/resume/facts';
+import {
+  RESUME_CAPABILITY_GROUPS,
+  RESUME_CAREER_DURATION,
+  RESUME_EMPLOYER,
+  RESUME_ROLES,
+  RESUME_STACK_LINE,
+} from '@/content/resume/facts';
 
 /**
  * Content-integrity tests.
@@ -123,9 +129,17 @@ describe('evidence integrity', () => {
   });
 
   it('never points an evidence record at a bare profile page', () => {
+    /*
+     * Both profiles, personal and organisational. The org page is a better destination
+     * for the career section's "selected work" link than the personal one, because it
+     * holds the work that sentence names, but it is still an index of repositories
+     * rather than the artifact a claim was written against. Promoting it into the
+     * evidence model would be the same mistake one level up.
+     */
     for (const ref of allRefs) {
       if (!isResolved(ref)) continue;
       expect(ref.href).not.toBe('https://github.com/qmarcelle');
+      expect(ref.href).not.toBe('https://github.com/Marcelle-Labs');
     }
   });
 
@@ -179,6 +193,62 @@ describe('evidence integrity', () => {
     // distinguishing the page it belongs to.
     const titles = ALL_LENSES.map((lens) => lens.metaTitle);
     expect(new Set(titles).size).toBe(titles.length);
+  });
+
+  it('grounds every career theme on the durable surface in a durable fact', () => {
+    /*
+     * The career section is hand-written copy in `site.ts`, which makes it the one place
+     * on this site where a claim about the employment record can be made without going
+     * through `facts.ts`. That is exactly how it drifted: its themes were ten
+     * infrastructure nouns and no product signal, months after the corpus established
+     * React, Next.js, Sitecore and the portal estate, so the durable surface said less
+     * about this career than the tailored one did.
+     *
+     * The résumé cannot drift that way because a projection has no field to author in.
+     * This section can, so it gets the check instead: every theme it lists has to be
+     * traceable to something the corpus actually holds.
+     *
+     * Compared on the leading word, the same way the capability groups are, because
+     * "React / Next.js" and "Kubernetes / OpenShift" carry qualifiers that are
+     * presentation rather than claim.
+     */
+    const durable = [
+      RESUME_STACK_LINE,
+      ...RESUME_ROLES.flatMap((role) => role.bullets.map((bullet) => bullet.text)),
+      ...RESUME_CAPABILITY_GROUPS.map((group) => group.items),
+      // Titles and the employer note, because two of these themes are context rather
+      // than technology: "engineering leadership" is established by the chronology of
+      // titles held, and "regulated production environments" by the employer record.
+      // A durable fact does not have to be a tool to be a fact.
+      ...RESUME_ROLES.map((role) => role.title),
+      RESUME_EMPLOYER.note,
+    ]
+      .join(' · ')
+      .toLowerCase();
+
+    const themes = CAREER.entries.flatMap((entry) =>
+      'tags' in entry && entry.tags ? entry.tags : [],
+    );
+    expect(themes.length).toBeGreaterThan(0);
+
+    for (const theme of themes) {
+      const head = theme.split(/[ /(,]/)[0].toLowerCase();
+      expect(
+        durable,
+        `the career section claims "${theme}" with no durable fact`,
+      ).toContain(head);
+    }
+  });
+
+  it('states the employment span rather than a rounded one', () => {
+    /*
+     * `~10 YEARS` sat here for months. It is the retired "8 years in technology" error
+     * pointing the other way: the tenure runs 08/2016 to 03/2026, so a tilde rounding up
+     * to a decade claims more than the dates support. A span states itself.
+     */
+    const metas = CAREER.entries.map((entry) => entry.meta).join(' ');
+    expect(metas).toContain(RESUME_EMPLOYER.span);
+    expect(metas, 'a rounded career figure is back').not.toMatch(/~\s*\d+\s*years/i);
   });
 
   it('never restates a career figure the fact corpus has retired', () => {

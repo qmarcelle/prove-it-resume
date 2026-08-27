@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 import type {
   ArchitectureContainer,
   TraceHop,
@@ -85,7 +85,9 @@ export function VrekoArchitectureTrace({
         <div className={styles.system}>
           <div className={styles.systemHead}>
             <span className={styles.systemName}>{system.name}</span>
-            <span className={styles.systemId}>{system.identifier}</span>
+            <span className={styles.systemId}>
+              <PackageIdentifier value={system.identifier} />
+            </span>
           </div>
 
           <div className={styles.edges}>
@@ -210,9 +212,71 @@ function OutsideNode({
     >
       <span className={styles.nodeName}>{container.name}</span>
       <span className={styles.nodeMeta}>
-        {container.identifier} · {PUBLICATION_LABEL[container.publication]}
+        <PackageIdentifier value={container.identifier} /> ·{' '}
+        {PUBLICATION_LABEL[container.publication]}
       </span>
     </button>
+  );
+}
+
+/**
+ * A package identifier, split so that no single text node reads as an email address.
+ *
+ * ## Why a component exists for rendering a string
+ *
+ * Because a CDN rewrote these strings in transit and broke the page.
+ *
+ * The site is served through Cloudflare, which had Email Address Obfuscation enabled.
+ * That feature scans delivered HTML for anything shaped like an address and swaps it for
+ * `[email protected]` plus a decoder script. `vreko-mcp-server@3.1.1` is shaped like an
+ * address, so five of these identifiers were rewritten on `/`, `/linear` and every role
+ * lens.
+ *
+ * The consequence was not cosmetic. React's client bundle expected the real string, the
+ * delivered HTML carried the placeholder, and hydration failed with a text mismatch
+ * (React #418) on every page that renders this figure. React then discarded the
+ * server-rendered markup and rebuilt the tree, which is visible as the page flashing.
+ * Nothing in the build could see it: the corruption happens after the build, between the
+ * CDN and the reader.
+ *
+ * ## What this does, and what it does not
+ *
+ * It puts the `@` that separates name from version in an element of its own, so the text
+ * nodes either side are `vreko-mcp-server` and `3.1.1`. Neither matches the pattern, and
+ * the rendered string, its spacing and what a reader copies are all unchanged.
+ *
+ * It is a mitigation, not the fix. The fix is turning the CDN feature off, because the
+ * same rewrite still mangles the `mailto:` on every page. This is the belt: it makes the
+ * figure robust to any proxy that decides a version specifier looks like an inbox,
+ * whatever the CDN is configured to do next year.
+ */
+function PackageIdentifier({ value }: { value: string | undefined }) {
+  if (!value) return null;
+
+  /*
+   * Every `@`, not just the version separator.
+   *
+   * The first attempt split on the last one, which is wrong for two reasons this data
+   * actually contains. Scoped packages open with an `@` of their own (`@vreko/cli@3.3.5`)
+   * and one field holds two specifiers joined by a separator
+   * (`vreko-mcp-server@3.1.1 · @vreko/cli@3.3.5`), so splitting once left a whole
+   * `name@version` intact in the remainder. Splitting on all of them is both simpler and
+   * the only version that holds for a string whose shape is not known in advance.
+   */
+  const parts = value.split('@');
+  if (parts.length === 1) return <>{value}</>;
+
+  return (
+    <>
+      {parts.map((part, index) => (
+        // Index keys: the parts are positional fragments of one immutable string, so
+        // there is no identity to track and nothing ever reorders.
+        <Fragment key={index}>
+          {index > 0 ? <span className={styles.identifierAt}>@</span> : null}
+          {part}
+        </Fragment>
+      ))}
+    </>
   );
 }
 
@@ -251,7 +315,8 @@ function LayerNode({
         >
           <span className={styles.nodeName}>{container.name}</span>
           <span className={styles.nodeMeta}>
-            {container.identifier} · {PUBLICATION_LABEL[container.publication]}
+            <PackageIdentifier value={container.identifier} /> ·{' '}
+            {PUBLICATION_LABEL[container.publication]}
           </span>
         </button>
 
@@ -272,7 +337,7 @@ function LayerNode({
                     {component.identifier ? (
                       <span className={styles.componentId}>
                         {' · '}
-                        {component.identifier}
+                        <PackageIdentifier value={component.identifier} />
                       </span>
                     ) : null}
                   </span>
@@ -308,7 +373,8 @@ function DetailPanel({
         <span className={styles.panelEyebrow}>SELECTED LAYER</span>
         <h3 className={styles.panelTitle}>{container.name}</h3>
         <span className={styles.panelId}>
-          {container.identifier} · {PUBLICATION_LABEL[container.publication]}
+          <PackageIdentifier value={container.identifier} /> ·{' '}
+          {PUBLICATION_LABEL[container.publication]}
         </span>
       </div>
 
