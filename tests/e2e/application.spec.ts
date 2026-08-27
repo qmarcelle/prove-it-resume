@@ -933,8 +933,16 @@ test('every decision receipt rests collapsed, with the section still stating its
 
   const judgment = page.locator('#product-judgment');
 
-  // The summaries are all there: seven questions, every one of them shut.
-  const triggers = judgment.getByRole('button', { expanded: false });
+  /*
+   * The summaries are all there: seven questions, every one of them shut.
+   *
+   * Scoped to the receipt group rather than to the section, because the section also
+   * carries the mapping's own control now. The invariant is unchanged: it is still
+   * "every receipt, and nothing but a receipt, rests collapsed", said about the seven
+   * controls it was always about.
+   */
+  const receipts = judgment.getByRole('group', { name: 'Decision receipts' });
+  const triggers = receipts.getByRole('button', { expanded: false });
   await expect(triggers).toHaveCount(7);
   await expect(judgment.getByRole('button', { expanded: true })).toHaveCount(0);
   await expect(
@@ -1075,3 +1083,242 @@ for (const path of ['/', '/linear']) {
     );
   });
 }
+
+/**
+ * The hero introduces; it does not summarise the page.
+ *
+ * Before the disclosure pass the hero was the only thing above the proofs, so it carried
+ * the portal estate and the Linear control plane itself. Sections 01 and 02 now open on
+ * both, in their own words, within one scroll of it. A hero that repeats them is not
+ * merely redundant: it spends the reader's first ten seconds saying twice what the page
+ * is about to say once, better.
+ *
+ * The assertion is the *relation*, not the wording. The hero may be rewritten freely;
+ * what may not come back is the hero and the chapters making the same points.
+ */
+test('the hero introduces rather than restating the chapters below it', async ({
+  page,
+}) => {
+  await page.goto('/linear');
+
+  const hero = page.locator('section#top');
+  const supporting = (await hero.locator('p').allTextContents()).join(' ');
+
+  // Still the two things a hero has to establish.
+  expect(supporting, 'the production background is gone').toMatch(/[Nn]early a decade/);
+  expect(supporting, 'the recent agent work is gone').toMatch(/memory/i);
+
+  // And not the two the chapters own.
+  expect(supporting, 'the hero is retelling section 01').not.toMatch(/Sitecore/i);
+  expect(supporting, 'the hero is retelling section 02').not.toMatch(/control plane/i);
+
+  await expect(page.locator('#product-history')).toContainText(/portal/i);
+  await expect(page.locator('#linear-in-practice')).toContainText(/control plane/i);
+});
+
+/**
+ * The closing mapping leads with the rows this surface promoted, and loses none of them.
+ *
+ * Eight problem/evidence/discussion rows are an orientation on `/`, where the table opens
+ * the argument. Arriving after five chapters they read as a second inventory, so the
+ * default view is the promoted subset and the rest is one named control away.
+ *
+ * This is the test that has to stay honest about the difference between compressing a
+ * view and deleting evidence, so it asserts both halves: fewer rows at rest, and every
+ * durable problem present once the reader asks.
+ */
+const MAPPING_PROBLEMS = [
+  'Build production-grade agent systems',
+  'Persist agent state across sessions',
+  'Introduce agents into developer workflows',
+  'Integrate agents with enterprise metadata systems',
+  'Explain architecture rather than hide behind AI-generated code',
+  'Build MCP servers and tool surfaces',
+  'Integrate with CI/CD',
+  'Improve engineering productivity',
+];
+
+test('the closing mapping compresses its default view without losing a row', async ({
+  page,
+}) => {
+  await page.goto('/linear');
+  const section = page.locator('#product-judgment');
+
+  const problems = () =>
+    section.locator('tbody th[scope="row"]').allTextContents() as Promise<string[]>;
+
+  const resting = await problems();
+  expect(
+    resting.length,
+    'the closing view is showing the whole mapping again',
+  ).toBeLessThan(MAPPING_PROBLEMS.length);
+  // What it does show is the front of the lens's own ordering, never a re-selection.
+  expect(resting).toEqual(MAPPING_PROBLEMS.slice(0, resting.length));
+
+  await openPath(section, /See the rest of the mapping/);
+
+  // Every durable row, exactly once, across the default table and the revealed one.
+  expect((await problems()).sort()).toEqual([...MAPPING_PROBLEMS].sort());
+
+  // `/` opens on this table and must keep showing all of it.
+  await page.goto('/');
+  const durable = await page.locator('#role-fit tbody th[scope="row"]').allTextContents();
+  expect(durable.sort()).toEqual([...MAPPING_PROBLEMS].sort());
+});
+
+test('the rest of the mapping has a deterministic address', async ({ page }) => {
+  await page.goto('/linear?mapping=complete');
+
+  const panel = page
+    .locator('#product-judgment')
+    .getByRole('group', { name: /THE PROBLEMS THIS WORK ALSO TOUCHES/ });
+  await expect(panel).toBeVisible();
+  await expect(panel).toContainText('Improve engineering productivity');
+});
+
+/**
+ * The live product and the deterministic evaluation are different artifacts.
+ *
+ * `neverasktwice.dev` is publicly reachable again, and a running agent a reader can talk
+ * to is the most persuasive thing in the section and the least probative. The record's
+ * measured claim is an ablation over fixed synthetic fixtures and a stubbed model
+ * client; the live agent runs against neither, so it may sit beside that proof and may
+ * never resolve as it.
+ *
+ * The failure this guards against is the easy one: somebody "fixing" the evidence row to
+ * point at the demo because a live URL feels stronger than a markdown file.
+ */
+test('the live product never stands in for the deterministic evaluation', async ({
+  page,
+}) => {
+  await page.goto('/linear');
+  const section = page.locator('#never-ask-twice');
+
+  // The deployment, labelled as what it is, in the resting layer.
+  await expect(section.getByText('LIVE PRODUCT')).toBeVisible();
+  const live = section.getByRole('link', { name: /TRY THE LIVE SUPPORT AGENT/ });
+  await expect(live).toHaveAttribute('href', 'https://neverasktwice.dev/chat');
+  await expect(
+    section.getByRole('link', { name: /INSPECT RECALLED FACTS/ }),
+  ).toHaveAttribute('href', 'https://neverasktwice.dev/facts');
+
+  // And the section says, at rest, that the one is not the other.
+  await expect(section).toContainText(/not the deterministic evaluation/i);
+
+  // The proof is still the evaluation document, behind the question that asks for it.
+  await openPath(section, /How did I test whether memory helped\?/);
+  await expect(section.getByRole('link', { name: /INSPECT PROOF/ })).toHaveAttribute(
+    'href',
+    /github\.com\/Marcelle-Labs\/never-ask-twice\/blob\/main\/docs\/evaluation\.md/,
+  );
+
+  // Nowhere on the page does a live URL serve as the artifact behind a proof.
+  const proofCtas = await page
+    .getByRole('link', { name: /INSPECT PROOF|VERIFY THIS|INSPECT EVIDENCE/ })
+    .evaluateAll((nodes) => nodes.map((n) => n.getAttribute('href') ?? ''));
+  for (const href of proofCtas) {
+    expect(href, 'a live deployment is being cited as proof').not.toContain(
+      'neverasktwice.dev',
+    );
+  }
+});
+
+/**
+ * The career record is chronology here, not a third telling of the technology list.
+ *
+ * Section 01 states the stack twice already: in the stage summaries a reader sees at
+ * rest, and in the capability register behind "What did I actually build?". Twelve theme
+ * chips repeating it after five chapters is what turned the close back into a dossier.
+ *
+ * On `/` there is no product-history chapter and the chips are the only such signal, so
+ * this asserts the difference rather than the absence.
+ */
+test('the career record does not restate the product history chapter', async ({
+  page,
+}) => {
+  await page.goto('/linear');
+  const career = page.locator('#career');
+
+  // The dated record, intact.
+  await expect(career).toContainText('2016');
+  await expect(career).toContainText('2026');
+  await expect(career).toContainText(/Enterprise healthcare engineering/);
+  // The boundary, still stated.
+  await expect(career).toContainText(/employer-confidential/i);
+  // The inventory, not repeated.
+  await expect(career).not.toContainText('Sitecore customer portals');
+
+  // Product History is where it lives on this surface, and it still does.
+  await openPath(page.locator('#product-history'), /What did I actually build\?/);
+  await expect(page.locator('#product-history')).toContainText('Sitecore');
+
+  // And `/`, which has no such chapter, keeps the chips.
+  await page.goto('/');
+  await expect(page.locator('#career')).toContainText('Sitecore customer portals');
+});
+
+/**
+ * Vreko answers at rest, and keeps its proof one question away.
+ *
+ * This section is demoted on this surface and was still the largest block on the page:
+ * 2067px on a desktop and 3930px on a phone at rest, against roughly 667px for each of
+ * the five chapters before it, landing immediately before the close. Its scan layer is
+ * already a complete twenty-second answer, limit included, so the proof underneath moved
+ * behind the question that asks for it.
+ *
+ * Both halves are asserted, because "compressed" and "deleted" look identical from a
+ * test that only reads the resting page: the four scan lines still state the limit, and
+ * the diagram, the evidence panel and the recorded contradictions all still arrive.
+ */
+test('vreko states its limit at rest and keeps its proof behind a question', async ({
+  page,
+}) => {
+  await page.goto('/linear');
+  const section = page.locator('#vreko');
+
+  // The scan layer, including the part that does not flatter.
+  await expect(section).toContainText('4 published packages, 9 declared and unpublished');
+  await expect(section).toContainText(/No implementation source is published/);
+
+  // And no proof under it yet.
+  await expect(section.getByText('RECORDED CONTRADICTIONS · 3')).toHaveCount(0);
+  await expect(
+    section.getByRole('button', { name: /Inspect evidence.*EV-VRK/ }),
+  ).toHaveCount(0);
+
+  await openPath(section, /Re-derive the published\/unpublished split/);
+
+  // All of it, unchanged.
+  await expect(section.getByText('RECORDED CONTRADICTIONS · 3')).toBeVisible();
+  await expect(
+    section.getByRole('button', { name: /Inspect evidence.*EV-VRK/ }),
+  ).toBeVisible();
+  await expect(section).toContainText('npm view @vreko/intelligence version');
+  await expect(section.getByRole('button', { name: /COPY THIS VIEW/ })).toBeVisible();
+
+  // `/` renders the same proof directly: it is a proof there, not an aside.
+  await page.goto('/');
+  await expect(
+    page.locator('#vreko').getByText('RECORDED CONTRADICTIONS · 3'),
+  ).toBeVisible();
+});
+
+/**
+ * An address shared before this section had a disclosure still resolves.
+ *
+ * `?layer=` names a layer of the containment diagram, which now lives behind a question.
+ * Without the path declaring that key as one of its own, such a link would land on a
+ * scan layer and silently drop the state it was sent to show, which is the one failure
+ * mode a deterministic address exists to prevent.
+ */
+test('a layer link shared before the disclosure still opens the diagram', async ({
+  page,
+}) => {
+  await page.goto('/linear?layer=protocol-surface');
+
+  const section = page.locator('#vreko');
+  await expect(
+    section.getByRole('group', { name: /THE PUBLICATION BOUNDARY/ }),
+  ).toBeVisible();
+  await expect(section.getByText('SELECTED LAYER')).toBeVisible();
+});

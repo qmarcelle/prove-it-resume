@@ -12,7 +12,9 @@ import {
   ProofLayerColumn,
   ProofSection,
 } from '@/components/proof/ProofSection';
-import type { SurfaceStep } from '@/lib/types';
+import { ProgressiveDisclosure } from '@/components/interactions/ProgressiveDisclosure';
+import { DISCLOSURE_KEYS, requirePath } from '@/lib/disclosure';
+import type { DisclosureCopy, SurfaceStep } from '@/lib/types';
 
 /**
  * 02: Vreko. Spatial grammar: containment.
@@ -28,7 +30,23 @@ import type { SurfaceStep } from '@/lib/types';
  * softened version of it: the scan layer is allowed to be shorter than the proof
  * layer, never kinder than it.
  */
-export function VrekoSection({ step }: { step?: SurfaceStep } = {}) {
+export function VrekoSection({
+  step,
+  paths,
+}: {
+  step?: SurfaceStep;
+  /**
+   * A surface's curiosity path over this proof's evidence.
+   *
+   * Absent on `/`, where these six sections are the page and this one is a proof a
+   * reader arrived to read. Where it is supplied the scan layer stays exactly where it
+   * is and everything after it moves behind one question, because the four scan lines
+   * are already a complete answer: the problem, what was built, the published/declared
+   * split, and the limit. Nothing is removed; the diagram, the panel and the recorded
+   * contradictions all still render, once somebody has asked for them.
+   */
+  paths?: readonly DisclosureCopy[];
+} = {}) {
   /*
    * PROBLEM and BUILT are the proof's own fields. EVIDENCE is counted from the package
    * lists rather than written down, so the sentence cannot drift from the split it
@@ -57,6 +75,40 @@ export function VrekoSection({ step }: { step?: SurfaceStep } = {}) {
 
       <ProofScan items={scan} />
 
+      {paths ? (
+        <ProgressiveDisclosure
+          label="Questions this system can answer"
+          paths={[
+            {
+              ...requirePath(paths, 'boundary'),
+              /*
+               * `layer` is the architecture trace's own key, and it lives inside this
+               * path now. Without this declaration an address somebody already shared
+               * would resolve to a scan layer with the selected layer silently dropped.
+               */
+              revealedBy: ['layer'],
+              content: <Evidence />,
+            },
+          ]}
+          queryKey={DISCLOSURE_KEYS['vreko']}
+        />
+      ) : (
+        <Evidence />
+      )}
+    </ProofSection>
+  );
+}
+
+/**
+ * The proof itself: the boundary drawn, the artifacts listed, the contradictions kept.
+ *
+ * Extracted so the two surfaces compose the *same* blocks rather than one of them
+ * rendering a shortened copy. `/` shows it directly; a surface that demoted this section
+ * shows it behind the question that asks for it.
+ */
+function Evidence() {
+  return (
+    <>
       <VrekoArchitectureTrace data={vrekoArchitecture} shareAnchor={vreko.sectionId} />
 
       {/* `EvidencePanel` sizes itself as a flex row item; a row of one stretches it. */}
@@ -91,6 +143,6 @@ export function VrekoSection({ step }: { step?: SurfaceStep } = {}) {
           ))}
         </ProofLayerColumn>
       </ProofLayer>
-    </ProofSection>
+    </>
   );
 }

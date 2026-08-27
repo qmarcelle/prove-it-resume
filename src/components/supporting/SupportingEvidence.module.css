@@ -171,6 +171,61 @@
   color: var(--color-meta);
 }
 
+/*
+ * The live product exit.
+ *
+ * A quiet rule and a mono role label rather than a card or a filled button. The page's
+ * loudest affordance is the amber invitation, and a running demo competing with the two
+ * questions above it would invert the section's argument: the product is the easiest
+ * thing here to reach and the least load-bearing thing here to cite.
+ */
+.live {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: var(--rule-quiet);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.liveLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: var(--tracking-meta);
+  color: var(--color-meta-quiet);
+}
+
+.liveNote {
+  max-width: 62ch;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-ink-tertiary);
+  text-wrap: pretty;
+}
+
+/* Wraps rather than scrolls; two call-to-action verbs do not fit one narrow line. */
+.liveLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-5);
+  margin-top: 0.25rem;
+}
+
+/*
+ * `EvidenceLink` carries `margin-left: auto` because its usual home is the right end of
+ * an evidence row. These two are a pair reading left to right under a label, so the
+ * push is cancelled here rather than made conditional there.
+ *
+ * The vertical padding is the thumb target. The link's own box is one 11.5px mono line,
+ * which is a correct mouse target and half of a usable touch one, and this is the first
+ * place on the page where two of them sit side by side rather than at the end of a tall
+ * row.
+ */
+.liveLinks a {
+  margin-left: 0;
+  padding: 0.6875rem 0;
+}
+
 @media (max-width: 640px) {
   .meta {
     padding-left: 0;

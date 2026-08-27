@@ -4,7 +4,12 @@ import { EvidenceLink } from '@/components/evidence/EvidenceLink';
 import { ProgressiveDisclosure } from '@/components/interactions/ProgressiveDisclosure';
 import { SectionHead, sectionFrameClass } from '@/components/section/SectionFrame';
 import { DISCLOSURE_KEYS, requirePath } from '@/lib/disclosure';
-import type { DisclosureCopy, SectionProjection, SurfaceStep } from '@/lib/types';
+import type {
+  DisclosureCopy,
+  SectionProjection,
+  SupportingArtifacts,
+  SurfaceStep,
+} from '@/lib/types';
 import styles from './SupportingEvidence.module.css';
 
 /**
@@ -129,8 +134,70 @@ export function SupportingEvidence({
         ) : (
           <Card step={step} work={work} />
         )}
+
+        {/*
+         * The live product, on the surfaces that promoted this work.
+         *
+         * Not inside the evaluation path, which is where the proof lives: a reader who
+         * asked how memory was *tested* did not ask for a demo, and putting the running
+         * agent behind that question would make reaching it depend on choosing the one
+         * artifact it is not. Not above the invitations either. It sits under them,
+         * which is what "subordinate to the curiosity paths" means in layout.
+         *
+         * Absent on `/`, where this is the appendix and is deliberately one entry in one
+         * card. A reader who has scrolled past three proofs to reach it is being offered
+         * a pointer, not a product tour, and the card's own `INSPECT PROOF` is the right
+         * single exit there. The record carries all three artifacts either way, so this
+         * is a decision about what a surface shows, not about what is known.
+         */}
+        {projection ? <LiveProduct artifacts={work.evidence} /> : null}
       </div>
     </section>
+  );
+}
+
+/**
+ * The deployed product, and the sentence that stops it being read as the proof.
+ *
+ * A running agent a reader can talk to is the most persuasive thing this record has and
+ * the least probative. It establishes that the product exists, is reachable, and works;
+ * it establishes nothing about the deterministic ablation, which runs against fixed
+ * fixtures and a stubbed client precisely so that its scoring does not depend on a live
+ * model. Both facts are true and the page has to hold them apart, so the role is
+ * labelled rather than left to the reader to infer from a URL.
+ *
+ * Durable copy: the distinction is a property of the record, not of a surface, and it
+ * would be the same sentence written twice if each surface framed it.
+ */
+function LiveProduct({ artifacts }: { artifacts: SupportingArtifacts }) {
+  if (!artifacts.deployment) return null;
+
+  return (
+    <div className={styles.live}>
+      <p className={styles.liveLabel}>LIVE PRODUCT</p>
+      <p className={styles.liveNote}>
+        Publicly reachable and running. It shows the product working. It is not the
+        deterministic evaluation, which is a separate artifact carrying its own boundary.
+      </p>
+      <div className={styles.liveLinks}>
+        {/*
+         * `visit-external-site`, not the CTA-inferred `inspect-artifact`. These are
+         * living pages, and this site draws that distinction deliberately.
+         */}
+        <EvidenceLink
+          affordance="visit-external-site"
+          cta="TRY THE LIVE SUPPORT AGENT"
+          reference={artifacts.deployment}
+        />
+        {artifacts.inspector ? (
+          <EvidenceLink
+            affordance="visit-external-site"
+            cta="INSPECT RECALLED FACTS"
+            reference={artifacts.inspector}
+          />
+        ) : null}
+      </div>
+    </div>
   );
 }
 
@@ -179,7 +246,15 @@ function Card({ step, work }: { step?: SurfaceStep; work: typeof neverAskTwice }
         </div>
         <ClaimBoundary variant="note">{work.boundary}</ClaimBoundary>
         <div className={styles.cta}>
-          <EvidenceLink reference={work.evidence} cta="INSPECT PROOF" variant="block" />
+          {/*
+           * The evaluation, and only the evaluation. `INSPECT PROOF` is a claim about
+           * what is on the other side, so the live deployment may never resolve here.
+           */}
+          <EvidenceLink
+            cta="INSPECT PROOF"
+            reference={work.evidence.evaluation}
+            variant="block"
+          />
         </div>
       </div>
     </div>
