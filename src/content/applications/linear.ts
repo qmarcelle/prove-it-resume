@@ -40,6 +40,24 @@ import { defaultRole } from '../roles/default';
  * direction removes it from the sequence entirely; this surface may reorder evidence
  * and may not remove it, so the demotion is carried by the `inline` frame instead.
  */
+/**
+ * The problems this surface leads with, named once.
+ *
+ * The same list does two jobs and must not be able to disagree with itself:
+ * `prioritiseMapping` moves these rows to the front of the durable mapping, and
+ * `mappingFocus` is how many of that front the closing section shows before it asks. A
+ * literal `5` beside the list would be a second statement of the same fact, and the
+ * failure mode is silent: a sixth problem added here and the count left alone hides a
+ * row the lens just promoted.
+ */
+const MAPPING_FOCUS = [
+  'Build production-grade agent systems',
+  'Persist agent state across sessions',
+  'Introduce agents into developer workflows',
+  'Integrate agents with enterprise metadata systems',
+  'Explain architecture rather than hide behind AI-generated code',
+] as const;
+
 export const linearApplication: ApplicationLens = {
   kind: 'application',
   slug: 'linear',
@@ -50,13 +68,8 @@ export const linearApplication: ApplicationLens = {
   resumeProjection: 'linear',
   roleFitHeading: 'Where this work already touches yours.',
   proofOrder: ['repository-intelligence', 'interlock', 'vreko'],
-  mapping: prioritiseMapping(defaultRole.mapping, [
-    'Build production-grade agent systems',
-    'Persist agent state across sessions',
-    'Introduce agents into developer workflows',
-    'Integrate agents with enterprise metadata systems',
-    'Explain architecture rather than hide behind AI-generated code',
-  ]),
+  mapping: prioritiseMapping(defaultRole.mapping, MAPPING_FOCUS),
+  mappingFocus: MAPPING_FOCUS.length,
   showAvailability: true,
 
   hero: {
@@ -64,8 +77,23 @@ export const linearApplication: ApplicationLens = {
     headline:
       'I build AI products and the systems that make them reliable in production.',
     thesis: 'Important evidence should be easy to find at decision time.',
+    /*
+     * Four sentences, now two, and the two that went are the ones the page grew a better
+     * place for.
+     *
+     * The hero was written when it was the only thing above the proofs. Since the
+     * disclosure pass, section 01 opens on the portal estate and renders the surfaces and
+     * the capability register itself, and section 02's heading is "I already use Linear as
+     * the control plane for agent work", so sentences two and four were the hero
+     * summarising two chapters a reader reaches within one scroll, in weaker words than
+     * the chapters use.
+     *
+     * What is left is what a hero is for: the shape of the background, the shape of the
+     * recent work, and the Evidence Index beside it saying the rest is below. It states
+     * nothing the previous version did not; it stops saying the parts twice.
+     */
     supporting:
-      'Nearly a decade building production software in regulated healthcare, and two and a half years leading the teams doing it. The work was customer-facing and full-stack: member, broker and employer portals in React through Next.js and Sitecore, over the services, identity and delivery pipelines beneath them. Lately, agent products end to end: memory, coordination, repository context, and the evaluation that says whether any of it worked. Linear is already the control plane I run agent execution through.',
+      'Nearly a decade building customer-facing, full-stack production software in regulated healthcare, and two and a half years leading the teams doing it. Lately, agent products end to end: memory, coordination, repository context, and the evaluation that says whether any of it worked.',
     capabilities: [
       'AGENT PRODUCTS',
       'AGENT MEMORY',

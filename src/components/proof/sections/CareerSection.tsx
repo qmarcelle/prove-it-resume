@@ -15,10 +15,26 @@ import styles from './CareerSection.module.css';
 export function CareerSection({
   proofs,
   step,
+  themes = true,
 }: {
   proofs: readonly Proof[];
   /** The plan step this section was placed as. Absent on `/`, which has no plan. */
   step?: SurfaceStep;
+  /**
+   * Whether to render the entry's theme chips.
+   *
+   * On `/` they are the only technology signal the page's history carries, so they stay.
+   * On a surface whose first chapter is Product History they are the *third* statement
+   * of the same twelve facts: the stage summaries name React, Azure DevOps, CI/CD,
+   * login/MFA, APIs, identity and multi-tenancy in the default reading layer, and the
+   * capability register behind "What did I actually build?" names all six disciplines by
+   * discipline. Repeating them as chips after five chapters is what turns the close back
+   * into a dossier.
+   *
+   * A display switch, not a content one: `CAREER` is untouched, `/` is untouched, and
+   * the résumé carries the conventional inventory either way.
+   */
+  themes?: boolean;
 }) {
   return (
     <section
@@ -52,7 +68,7 @@ export function CareerSection({
               </div>
               <div className={styles.entryBody}>
                 <p className={styles.entryText}>{entry.body}</p>
-                {'tags' in entry && entry.tags ? (
+                {themes && 'tags' in entry && entry.tags ? (
                   <ul className={styles.tags}>
                     {entry.tags.map((tag) => (
                       <li className={styles.tag} key={tag}>

@@ -165,7 +165,15 @@ export function DecisionReceiptItem({ receipt }: { receipt: Receipt }) {
 
 export function DecisionReceiptList({ receipts }: { receipts: readonly Receipt[] }) {
   return (
-    <div className={styles.list}>
+    /*
+     * A named group, so the seven disclosures announce themselves as one set.
+     *
+     * Without it a screen-reader user meets seven unrelated collapsed controls in a
+     * section that also carries the mapping's own control, and nothing says which of them
+     * are the recorded decisions. The heading above states it visually; this states it to
+     * everyone else.
+     */
+    <div aria-label="Decision receipts" className={styles.list} role="group">
       {receipts.map((receipt) => (
         <DecisionReceiptItem key={receipt.id} receipt={receipt} />
       ))}

@@ -3,6 +3,7 @@ import { DECISION_RECEIPTS, RECEIPT_SECTIONS } from '@/content/decisions';
 import { DecisionReceiptList } from '@/components/decisions/DecisionReceipt';
 import { RoleEvidenceMap } from '@/components/role/RoleEvidenceMap';
 import { SectionHead, sectionFrameClass } from '@/components/section/SectionFrame';
+import { DISCLOSURE_KEYS } from '@/lib/disclosure';
 import type { ApplicationLens, SurfaceStep } from '@/lib/types';
 import styles from '@/components/role/RoleLens.module.css';
 
@@ -50,7 +51,24 @@ export function ProductJudgementSection({
           <li className={styles.chip}>{lens.organisation.toUpperCase()}</li>
         </ul>
 
-        <RoleEvidenceMap rows={lens.mapping} />
+        {/*
+         * The mapping, led by the rows this surface promoted.
+         *
+         * On `/` this table opens the argument and every row is orientation. Here it
+         * closes one: the reader has just walked five chapters, and eight rows of
+         * problem/evidence/discussion arriving after Interlock read as a second
+         * inventory rather than an answer. The five the lens promoted answer "why is
+         * this person relevant to this job?" on their own; "show me the whole mapping"
+         * is a different question and gets its own control, at its own address.
+         *
+         * Nothing is dropped and nothing is rewritten: the split counts off the front of
+         * the array `prioritiseMapping` returned.
+         */}
+        <RoleEvidenceMap
+          focus={lens.mappingFocus}
+          queryKey={DISCLOSURE_KEYS['product-judgment']}
+          rows={lens.mapping}
+        />
 
         {/*
          * The receipts, resting closed, with their shape stated above them.

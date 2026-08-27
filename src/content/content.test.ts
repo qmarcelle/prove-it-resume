@@ -114,10 +114,49 @@ describe('decision receipts', () => {
   });
 });
 
+/**
+ * A supporting work's artifacts, held to the roles they are typed as.
+ *
+ * The type separates a running deployment from a controlled evaluation; these assert the
+ * separation survives contact with the content, because the failure is a one-line edit
+ * that reads like an improvement. The live agent is the most persuasive thing this record
+ * has and the least probative, so `evaluation` may never resolve to it.
+ */
+describe('supporting artifacts', () => {
+  const LIVE = 'neverasktwice.dev';
+
+  it('never cites the running deployment as the evaluation', () => {
+    expect(neverAskTwice.evidence.evaluation.href).toBeTruthy();
+    expect(neverAskTwice.evidence.evaluation.href).not.toContain(LIVE);
+    expect(neverAskTwice.evidence.evaluation.kind).toBe('experiment');
+  });
+
+  it('names the deployment as deployed, on the origin that resolves', () => {
+    for (const ref of [
+      neverAskTwice.evidence.deployment,
+      neverAskTwice.evidence.inspector,
+    ]) {
+      if (!ref) continue;
+      expect(ref.kind).toBe('deployed');
+      // `www.` has no DNS record; the apex is the only address that resolves.
+      expect(ref.href).toMatch(new RegExp(`^https://${LIVE}/`));
+    }
+  });
+
+  it('claims no enterprise deployment the corpus does not establish', () => {
+    /*
+     * "Enterprise support MemoryAgent" read as a claim about where this runs, and nothing
+     * anywhere establishes an enterprise deployment. The subject is customer support,
+     * which is checkable; where it is deployed is not this record's to say.
+     */
+    expect(neverAskTwice.summary).not.toMatch(/enterprise/i);
+  });
+});
+
 describe('evidence integrity', () => {
   const allRefs = [
     ...PROOFS.flatMap((proof) => [...proof.evidence, ...proof.summary]),
-    neverAskTwice.evidence,
+    ...Object.values(neverAskTwice.evidence),
     RESUME,
     ...PROFILES,
   ];
@@ -348,7 +387,7 @@ describe('résumé artifacts', () => {
 describe('published-first linking', () => {
   const allRefs = [
     ...PROOFS.flatMap((proof) => [...proof.evidence, ...proof.summary]),
-    neverAskTwice.evidence,
+    ...Object.values(neverAskTwice.evidence),
   ];
 
   it('pairs every source pin with a label, and never the other way round', () => {

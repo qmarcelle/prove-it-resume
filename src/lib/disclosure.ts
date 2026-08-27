@@ -30,6 +30,12 @@ export const DISCLOSURE_KEYS = {
   'never-ask-twice': 'memory',
   'repository-intelligence': 'context',
   interlock: 'coordination',
+  /*
+   * The closing mapping's remainder. Named here for the same reason the five chapters
+   * are: once a reviewer has sent someone `/linear?mapping=complete` to make a point
+   * about breadth, that address has to keep resolving.
+   */
+  'product-judgment': 'mapping',
 } as const;
 
 /**

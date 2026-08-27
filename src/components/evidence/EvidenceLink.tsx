@@ -1,6 +1,6 @@
 import { ConceptMark } from '@/components/concept/ConceptMark';
 import { ActionIcon } from '@/components/icon/Icon';
-import { affordanceForCta } from '@/components/icon/semantics';
+import { affordanceForCta, type Affordance } from '@/components/icon/semantics';
 import { UNRESOLVED_LABEL, resolveEvidence } from '@/lib/evidence';
 import styles from './EvidenceLink.module.css';
 
@@ -16,6 +16,7 @@ export function EvidenceLink({
   reference,
   cta = 'INSPECT',
   variant = 'inline',
+  affordance,
 }: {
   reference: { href?: string; verified: boolean; title?: string; label?: string };
   cta?: string;
@@ -25,6 +26,18 @@ export function EvidenceLink({
    * every row of every panel stops reading as restraint and starts reading as noise.
    */
   variant?: 'inline' | 'block';
+  /**
+   * What this destination actually is, where the call to action's verb cannot say.
+   *
+   * `affordanceForCta` reads the verb and defaults to `inspect-artifact`, which is right
+   * for almost every row here: they cite frozen, checkable things. A running deployment
+   * is not one. It is a living page, and the icon set draws that distinction on purpose,
+   * so a link to it must be able to say so.
+   *
+   * This names a promise, not a picture, which is the rule the semantics module asks
+   * call sites to keep. There is still no way to reach a glyph directly.
+   */
+  affordance?: Affordance;
 }) {
   const resolved = resolveEvidence(reference);
   const name = reference.title ?? reference.label ?? 'this evidence';
@@ -43,7 +56,7 @@ export function EvidenceLink({
          * inspect, a page for a document to read. Both were `↗`, which promised only
          * "somewhere else", and shared that glyph with visiting a profile.
          */}
-        <ActionIcon affordance={affordanceForCta(cta)} size={12} />
+        <ActionIcon affordance={affordance ?? affordanceForCta(cta)} size={12} />
         <span className="visually-hidden">, {name}, opens in a new tab</span>
       </a>
     );

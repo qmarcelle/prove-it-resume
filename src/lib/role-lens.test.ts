@@ -125,6 +125,38 @@ describe('prioritiseMapping', () => {
  * `/role/linear` must not, because two public addresses for one application surface is
  * exactly the duplication the lens architecture exists to prevent.
  */
+/**
+ * `mappingFocus` is a display count over the ordering `prioritiseMapping` produced. Two
+ * ways it can go wrong and neither is visible on the page: a count larger than the
+ * mapping silently disables the split, and a count that no longer matches the promoted
+ * list hides a row the lens just promoted, or promotes one it did not.
+ */
+describe('mapping focus', () => {
+  for (const lens of APPLICATION_LENSES) {
+    if (lens.mappingFocus === undefined) continue;
+
+    it(`${lens.slug} focuses a real prefix of its own mapping`, () => {
+      expect(lens.mappingFocus).toBeGreaterThan(0);
+      expect(lens.mappingFocus).toBeLessThan(lens.mapping.length);
+    });
+
+    it(`${lens.slug} leaves every mapping row reachable`, () => {
+      // The split cannot drop a row: the two halves are slices of one array.
+      const focus = lens.mappingFocus as number;
+      expect([...lens.mapping.slice(0, focus), ...lens.mapping.slice(focus)]).toEqual(
+        lens.mapping,
+      );
+    });
+  }
+
+  it('shows the whole mapping wherever no surface asked for less', () => {
+    // The role routes and `/` open on this table, so a focus there would be wrong.
+    for (const lens of ROLE_LENSES) {
+      expect('mappingFocus' in lens).toBe(false);
+    }
+  });
+});
+
 describe('application lenses', () => {
   it('resolves an application slug, and keeps it out of the role routes', () => {
     expect(getApplicationLens('linear')?.slug).toBe('linear');

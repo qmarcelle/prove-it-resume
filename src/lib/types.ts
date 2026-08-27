@@ -133,6 +133,28 @@ export type Proof = {
   boundaryNote?: string;
 };
 
+/**
+ * Where a supporting work can be checked, by the evidentiary role each artifact plays.
+ *
+ * Named slots rather than one list, because these are not interchangeable citations and
+ * a list would let them become so. A publicly reachable deployment establishes that the
+ * thing exists and runs; it establishes nothing about a controlled evaluation, and an
+ * evaluation run against fixed fixtures establishes nothing about live traffic. The two
+ * were one field, so representing both at once would have meant either dropping the
+ * proof for the demo or letting a component decide which one a given surface means.
+ *
+ * `evaluation` is required and is the only artifact a measured claim may cite. The
+ * other two are product behaviour, and the type says so.
+ */
+export type SupportingArtifacts = {
+  /** The controlled evaluation. The proof behind any measured claim. */
+  evaluation: EvidenceRef;
+  /** A publicly reachable running deployment. Proves reachability, not results. */
+  deployment?: EvidenceRef;
+  /** A view into what the running deployment remembers. Product behaviour, not proof. */
+  inspector?: EvidenceRef;
+};
+
 export type SupportingWork = {
   id: string;
   title: string;
@@ -141,7 +163,7 @@ export type SupportingWork = {
   tags: string[];
   surface: string;
   boundary: string;
-  evidence: EvidenceRef;
+  evidence: SupportingArtifacts;
   /**
    * How this work names itself where it is listed rather than rendered: the Evidence
    * Index on a surface that promotes it out of the appendix.
@@ -499,6 +521,19 @@ export type ApplicationLens = SurfaceLens & {
   pagePlan: readonly SurfaceSection[];
   /** Curated public receipts from the owner's private workspace, if any. */
   receipts: readonly LinearReceipt[];
+  /**
+   * How many leading `mapping` rows lead the closing section, where fewer read better.
+   *
+   * A display count over the array `prioritiseMapping` already ordered, never a second
+   * list: it can only promote rows the lens promoted, and the remainder stays one
+   * control away at a deterministic address. Absent shows every row, which is right on
+   * a surface that *opens* on the mapping rather than closing on it.
+   *
+   * It exists because this surface's reader reaches the mapping having already read five
+   * chapters. Eight rows there are not an orientation, they are a second inventory, and
+   * the five that answer "why is this candidate relevant to this job?" do it alone.
+   */
+  mappingFocus?: number;
   /**
    * Section copy owned by this surface. States framing, never evidence.
    *

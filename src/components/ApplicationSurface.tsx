@@ -208,7 +208,17 @@ export function ApplicationSurface({ lens }: { lens: ApplicationLens }) {
             })}
 
             <ProductJudgementSection lens={lens} step={step('product-judgment')} />
-            <CareerSection proofs={proofs} step={step('career')} />
+            {/*
+             * The chronology, without the theme chips.
+             *
+             * Section 01 is this surface's product history and states the technologies
+             * twice over: in the stage summaries a reader sees at rest, and in the
+             * capability register behind "What did I actually build?". This section's job
+             * here is the conventional dated record for a reader reviewing it that way,
+             * and twelve chips restating what they read six sections ago is the exact
+             * density the close should not fall back into.
+             */}
+            <CareerSection proofs={proofs} step={step('career')} themes={false} />
             <ResumeBridge lens={lens} />
             <ClaimLedger step={step('claim-ledger')} />
           </main>
