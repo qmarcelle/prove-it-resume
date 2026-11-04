@@ -273,7 +273,8 @@ export type SurfaceLens = {
    *
    * Separate from `resumeTitle`, which is only the masthead line. A role lens changes
    * the title and nothing else; an application lens may also select and order different
-   * durable facts. See ADR 0010.
+   * durable facts. See ADR 0010. A résumé-only lens may do the same, and has no page.
+   * See ADR 0014.
    */
   resumeProjection: ResumeProjectionId;
 };

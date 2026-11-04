@@ -34,14 +34,6 @@ test('a role lens has no automatically detectable violations', async ({ page }) 
   expect(results.violations).toEqual([]);
 });
 
-test('the Product Engineer lens has no automatically detectable violations', async ({
-  page,
-}) => {
-  await page.goto('/role/product-engineer');
-  const results = await analyse(page);
-  expect(results.violations).toEqual([]);
-});
-
 test('revealed content is also clean', async ({ page }) => {
   await page.goto('/');
 

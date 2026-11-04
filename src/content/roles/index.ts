@@ -8,8 +8,13 @@ import { productEngineer } from './product-engineer';
 export const ROLE_LENSES: readonly RoleLens[] = [
   athenahealthYoh,
   endToEndDelivery,
-  productEngineer,
 ] as const;
+
+/**
+ * Lenses with a printable résumé and no page. They are not addressable at `/role/<slug>`.
+ * See ADR 0014.
+ */
+export const RESUME_ONLY_LENSES: readonly RoleLens[] = [productEngineer] as const;
 
 export { athenahealthYoh, defaultRole, endToEndDelivery, productEngineer };
 export type { RoleLens };

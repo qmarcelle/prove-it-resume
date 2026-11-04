@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { PROOFS } from '@/content/proofs';
-import { ROLE_LENSES, athenahealthYoh, defaultRole } from '@/content/roles';
+import {
+  RESUME_ONLY_LENSES,
+  ROLE_LENSES,
+  athenahealthYoh,
+  defaultRole,
+} from '@/content/roles';
 import { APPLICATION_LENSES, linearApplication } from '@/content/applications';
 import { ALL_LENSES, PRINTABLE_LENSES } from '@/content/lenses';
 import { prioritiseMapping } from './mapping';
@@ -190,14 +195,29 @@ describe('application lenses', () => {
   });
 
   it('leaves generic role lenses on the durable résumé', () => {
-    // A role lens changes the masthead title and nothing else, unless it is a named
-    // role-family lens. That exception is one explicit slug rather than a loosened rule,
-    // so a company-specific role lens still cannot reorder a career. See ADR 0014.
-    const roleFamilies = new Set(['product-engineer']);
-
+    // A role lens changes the masthead title and nothing else. Only an application lens
+    // may reorder a career, and only because it is addressed to one reader who has told
+    // us what they are hiring for.
     for (const lens of [defaultRole, ...ROLE_LENSES]) {
-      if (roleFamilies.has(lens.slug)) continue;
       expect(lens.resumeProjection).toBe('default');
+    }
+  });
+
+  it('allows one explicit résumé-only lens, which names no company', () => {
+    // An exact list, so adding a second lens here is a decision someone has to make.
+    // A company-specific lens still cannot use this route to reorder a career.
+    expect(RESUME_ONLY_LENSES.map((lens) => lens.slug)).toEqual(['product-engineer']);
+    for (const lens of RESUME_ONLY_LENSES) {
+      expect(lens.organisation).toBeUndefined();
+    }
+  });
+
+  it('gives a résumé-only lens a print route and no page', () => {
+    for (const lens of RESUME_ONLY_LENSES) {
+      expect(getRoleLens(lens.slug)).toBeUndefined();
+      expect(listRoleSlugs()).not.toContain(lens.slug);
+      expect(getPrintableLens(lens.slug)).toBe(lens);
+      expect(listPrintableSlugs().filter((slug) => slug === lens.slug)).toHaveLength(1);
     }
   });
 

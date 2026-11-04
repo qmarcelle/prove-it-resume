@@ -1,14 +1,14 @@
 import type { AnyLens } from '@/lib/types';
 import { APPLICATION_LENSES } from './applications';
-import { ROLE_LENSES, defaultRole } from './roles';
+import { RESUME_ONLY_LENSES, ROLE_LENSES, defaultRole } from './roles';
 
 /**
  * Every lens in the application, in one place.
  *
- * Two registries feed it because the two kinds route differently: role lenses live
- * under `/role/<slug>`, application lenses own their own path, but everything
- * *downstream* of routing treats them identically: the résumé manifest, the PDF build,
- * the download resolver, and the content tests all walk this list.
+ * Three registries feed it because the kinds route differently: role lenses live under
+ * `/role/<slug>`, application lenses own their own path, and résumé-only lenses have no
+ * page. Everything *downstream* of routing treats them identically: the résumé manifest,
+ * the PDF build, the download resolver, and the content tests all walk this list.
  *
  * That is the property worth protecting. Registering a new application lens should
  * produce its print route, its PDF, its manifest entry, and its download name with no
@@ -18,6 +18,7 @@ import { ROLE_LENSES, defaultRole } from './roles';
 export const ALL_LENSES: readonly AnyLens[] = [
   defaultRole,
   ...ROLE_LENSES,
+  ...RESUME_ONLY_LENSES,
   ...APPLICATION_LENSES,
 ] as const;
 
