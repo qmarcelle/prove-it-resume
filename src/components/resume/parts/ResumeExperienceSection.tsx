@@ -17,9 +17,12 @@ import styles from '../ResumeDocument.module.css';
  */
 export function ResumeExperienceSection({
   employer,
+  highlights = [],
   roles,
 }: {
   employer: ResolvedResume['experience']['employer'];
+  /** Facts true of the whole tenure, printed above the dated roles. */
+  highlights?: ResolvedResume['experience']['highlights'];
   roles: ResolvedResume['experience']['roles'];
 }) {
   return (
@@ -29,6 +32,14 @@ export function ResumeExperienceSection({
         <span className={styles.employerSpan}>{employer.span}</span>
         <span className={styles.employerLocation}>{employer.location}</span>
       </div>
+
+      {highlights.length > 0 ? (
+        <ul className={styles.bullets}>
+          {highlights.map((highlight) => (
+            <li key={highlight}>{highlight}</li>
+          ))}
+        </ul>
+      ) : null}
 
       {roles.map((role, index) =>
         role.bullets.length > 0 ? (

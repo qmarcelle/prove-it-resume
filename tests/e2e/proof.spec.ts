@@ -283,6 +283,38 @@ test.describe('role lens', () => {
     await expect(page.locator('#interlock')).toContainText('Interlock');
   });
 
+  test('the Product Engineer lens serves its own résumé, unindexed and without overflow', async ({
+    page,
+    request,
+  }) => {
+    await page.goto('/role/product-engineer');
+
+    await expect(page.getByText('ROLE LENS: STAFF PRODUCT ENGINEER')).toBeVisible();
+    await expect(
+      page.getByText('AVAILABLE FOR STAFF / PRINCIPAL AI PLATFORM WORK'),
+    ).toHaveCount(0);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+      'content',
+      /noindex/,
+    );
+
+    const resumeLinks = page.locator('a[href^="/qwynn-marcelle-resume"]');
+    expect(await resumeLinks.count()).toBeGreaterThan(0);
+    for (const href of await resumeLinks.evaluateAll((links) =>
+      links.map((link) => link.getAttribute('href')),
+    )) {
+      expect(href).toBe('/qwynn-marcelle-resume-product-engineer.pdf');
+    }
+
+    const pdf = await request.get('/qwynn-marcelle-resume-product-engineer.pdf');
+    expect(pdf.status()).toBe(200);
+
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(0);
+  });
+
   test('an unknown lens 404s rather than serving a different projection', async ({
     page,
   }) => {

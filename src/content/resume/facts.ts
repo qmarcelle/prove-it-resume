@@ -122,6 +122,31 @@ export const RESUME_EMPLOYER = {
 } as const;
 
 /**
+ * Facts true of the BlueCross tenure rather than of one role.
+ *
+ * The modernization direction ran across the career, and the Storybook and Turborepo work
+ * has no recorded dates. Printing any of them under a dated role would assert a period the
+ * record does not establish, so they sit at employer level, where no dates attach.
+ */
+export const RESUME_EMPLOYER_HIGHLIGHTS: readonly ResumeBullet[] = [
+  {
+    id: 'employer:modernization',
+    ownership: 'leadership',
+    text: 'Across my BCBST career, advanced a progressive move from Java and WebSphere to React, Next.js, TypeScript and Node on OpenShift alongside Sitecore migration work, not a rewrite, using architecture diagrams to make the tradeoffs legible.',
+  },
+  {
+    id: 'employer:substrate',
+    ownership: 'personal',
+    text: 'Used a shared Turborepo substrate, theme system, design tokens and environment-driven configuration to deploy one codebase as separate Member and Shared Health portal experiences, protected by unit and visual tests.',
+  },
+  {
+    id: 'employer:storybook',
+    ownership: 'personal',
+    text: 'Set up the Storybook environment that became the seam between teams: the public portal team standardized presentational components while Consumer Portals supplied the authenticated services and personalization behind them.',
+  },
+];
+
+/**
  * Employment chronology, most recent first.
  *
  * Bullets carry ids because a projection reorders them: the neutral résumé opens the
@@ -152,6 +177,15 @@ export const RESUME_ROLES: readonly ResumeRoleFact[] = [
         id: 'team-lead:portals',
         ownership: 'team',
         text: 'Led the full-stack Consumer Portals team, which owned the member and broker/employer portals and the APIs behind them, through a Sitecore-to-Next.js modernization.',
+      },
+      /*
+       * The sentence above with its modernization clause removed, for a projection that
+       * states the modernization direction separately in `RESUME_EMPLOYER_HIGHLIGHTS`.
+       */
+      {
+        id: 'team-lead:portals-ownership',
+        ownership: 'team',
+        text: 'Led the full-stack Consumer Portals team, which owned the member and broker/employer portals and the APIs behind them.',
       },
       {
         id: 'team-lead:services',
@@ -280,6 +314,112 @@ export const RESUME_DELIVERY_CADENCE = {
  * fact rather than a second, driftable one.
  */
 export const RESUME_SYSTEMS: readonly ResumeSystemFact[] = [
+  /*
+   * The one entry that is not an independent project, and the one whose provenance is
+   * easiest to overstate. PostHog/posthog#88639 was approved and closed unmerged; the
+   * merged change is #111237, a smaller reimplementation by a maintainer that credits
+   * the original. The original PR also records that it was human-driven and that an
+   * agent wrote the patch. Both limits are in the sentence rather than left to a reader
+   * following the link, so no projection can select this fact without them.
+   */
+  {
+    id: 'posthog',
+    name: 'PostHog',
+    summary: 'Upstream open-source contribution · chart interaction',
+    bullets: [
+      {
+        id: 'posthog:outcome',
+        ownership: 'personal',
+        text: 'Chart-interaction contribution approved by a maintainer (PR #88639) and incorporated upstream via a credited, maintainer-created successor (PR #111237), a smaller reimplementation. PR #88639 itself did not merge: fork CI blocked it. Human-directed, agent-assisted.',
+      },
+      {
+        id: 'posthog:abstraction',
+        ownership: 'personal',
+        text: 'Replaced the proposed per-bar flag with an isPointClickable(dataIndex) predicate after adversarial review showed a per-bar gate could disagree with click dispatch.',
+      },
+      {
+        id: 'posthog:verification',
+        ownership: 'personal',
+        text: 'Started from a failing reproduction, and rewrote a regression test after mutation-style review showed it passed vacuously on a stale index.',
+      },
+    ],
+    stack: 'TypeScript · React · Jest · Storybook',
+    verifyHref: 'https://github.com/PostHog/posthog/pull/111237',
+  },
+  /*
+   * A merged upstream change, and a different fact from the Tally integration in the
+   * workspace.json entry. Tally used DataHub in a hackathon project; this changed
+   * DataHub's own MCP server, under its maintainers' review.
+   */
+  {
+    id: 'datahub-mcp',
+    name: 'DataHub MCP server',
+    summary: 'Merged upstream open-source contribution',
+    bullets: [
+      {
+        id: 'datahub-mcp:external-url',
+        ownership: 'personal',
+        text: "Fixed get_entities dropping a dataset's commit-pinned source link at the MCP boundary (PR #149, approved and merged by a maintainer), with a reproduction and regression tests.",
+      },
+    ],
+    stack: 'Python · GraphQL · MCP · DataHub · dbt',
+    verifyHref: 'https://github.com/acryldata/mcp-server-datahub/pull/149',
+  },
+  /*
+   * External collaboration, and the entry easiest to overstate as adoption. The
+   * maintainer's README credits this integration to its contributor, so no surface may
+   * call Buildomator an independent implementation, and nothing here claims behavioral
+   * value. "Authored" and "the reader I wrote" keep the authorship plain.
+   */
+  {
+    id: 'buildomator',
+    name: 'Buildomator',
+    summary: 'Independently maintained Claude Code plugin',
+    bullets: [
+      {
+        id: 'buildomator:integration',
+        ownership: 'personal',
+        text: 'Authored the original integration of workspace.json, the open spec I steward (PR #6): scoped with the maintainer in a public issue and merged after review. A later fix (PR #15) was closed unmerged because the maintainer cherry-picked it with authorship preserved.',
+      },
+      {
+        id: 'buildomator:boundary',
+        ownership: 'personal',
+        text: 'The maintainer continues to ship and maintain the reader I wrote, and the project README credits the contribution.',
+      },
+    ],
+    stack: 'Node.js · Claude Code hooks · workspace.json',
+    verifyHref: 'https://github.com/buildomator/buildomator/pull/6',
+  },
+  /*
+   * Client delivery. Unity and The Poetic Method are organisation-level facts, because the
+   * case studies credit Marcelle Labs rather than one person. CRUSOE's technical execution
+   * is personal, as confirmed by the owner; its founders kept positioning and strategy.
+   * No outcome is stated because the case studies publish none.
+   */
+  {
+    id: 'marcelle-labs-delivery',
+    name: 'Marcelle Labs',
+    summary: 'Client and early-stage website delivery',
+    bullets: [
+      {
+        id: 'marcelle-labs:unity',
+        ownership: 'team',
+        text: "Unity Advanced Healthcare: rebuilt a primary care and mental health practice's brochure site as a CMS-managed patient front door with service pathways, booking and insurance transparency.",
+      },
+      {
+        id: 'marcelle-labs:poetic-method',
+        ownership: 'team',
+        text: 'The Poetic Method: moved a healthcare consulting practice from Squarespace to Next.js, absorbing a mid-project repositioning without a change order.',
+      },
+      {
+        id: 'marcelle-labs:crusoe',
+        ownership: 'personal',
+        text: "CRUSOE Agency: handled substantial technical execution, integration and website delivery for the agency's launch site; the founders retained business positioning and strategy.",
+      },
+    ],
+    stack: 'Next.js · React · Tailwind CSS · Vercel',
+    verifyHref: 'https://marcellelabs.io/work',
+  },
   {
     id: 'vreko',
     name: 'Vreko',
@@ -479,6 +619,36 @@ export const RESUME_QUANTITIES: readonly QuantityFact[] = [
     basis:
       'The licence workspace.json is published under. A licence identifier rather than a measurement, listed here so the numeral check does not have to carry an exception.',
   },
+  {
+    value: '88639',
+    claim: 'PR #88639',
+    basis:
+      'PostHog/posthog#88639, the original contribution: approved 2026-09-17, closed unmerged 2026-10-12. An identifier rather than a measurement.',
+  },
+  {
+    value: '111237',
+    claim: 'PR #111237',
+    basis:
+      'PostHog/posthog#111237, the credited in-repository successor: merged 2026-10-12 at f21a8ccd. An identifier rather than a measurement.',
+  },
+  {
+    value: '149',
+    claim: 'PR #149',
+    basis:
+      'acryldata/mcp-server-datahub#149: merged 2026-10-21. An identifier rather than a measurement.',
+  },
+  {
+    value: '6',
+    claim: 'PR #6',
+    basis:
+      'buildomator/buildomator#6: merged 2026-05-10. An identifier rather than a measurement.',
+  },
+  {
+    value: '15',
+    claim: 'PR #15',
+    basis:
+      'buildomator/buildomator#15: closed unmerged 2026-06-10; the commit landed as 41459a5 with authorship preserved. An identifier rather than a measurement.',
+  },
 ];
 
 /** The neutral stack line: one undifferentiated run, as the design export had it. */
@@ -500,6 +670,16 @@ export const RESUME_STACK_LINE =
  * row reads as a competence offered rather than as a system retired.
  */
 export const RESUME_CAPABILITY_GROUPS: readonly CapabilityGroupFact[] = [
+  {
+    id: 'product-full-stack',
+    label: 'FULL STACK',
+    items: 'TypeScript · React / Next.js · Node.js · REST APIs · Storybook · Turborepo',
+  },
+  {
+    id: 'testing',
+    label: 'TESTING',
+    items: 'Playwright · Cypress · unit and visual testing',
+  },
   {
     id: 'product-web',
     label: 'PRODUCT / WEB',

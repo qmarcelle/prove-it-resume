@@ -231,7 +231,7 @@ export type RoleEvidenceMapping = {
  * Declared here rather than in the content module so a lens can name its projection
  * without `lib` importing `content` and closing an import cycle.
  */
-export type ResumeProjectionId = 'default' | 'linear';
+export type ResumeProjectionId = 'default' | 'linear' | 'product-engineer';
 
 /**
  * What every projection the public composition renders through must supply.

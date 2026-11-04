@@ -185,15 +185,18 @@ describe('application lenses', () => {
 
   it('names a résumé projection that is registered', () => {
     for (const lens of ALL_LENSES) {
-      expect(['default', 'linear']).toContain(lens.resumeProjection);
+      expect(['default', 'linear', 'product-engineer']).toContain(lens.resumeProjection);
     }
   });
 
   it('leaves generic role lenses on the durable résumé', () => {
-    // A role lens changes the masthead title and nothing else. Only an application lens
-    // may reorder a career, and only because it is addressed to one reader who has told
-    // us what they are hiring for.
+    // A role lens changes the masthead title and nothing else, unless it is a named
+    // role-family lens. That exception is one explicit slug rather than a loosened rule,
+    // so a company-specific role lens still cannot reorder a career. See ADR 0014.
+    const roleFamilies = new Set(['product-engineer']);
+
     for (const lens of [defaultRole, ...ROLE_LENSES]) {
+      if (roleFamilies.has(lens.slug)) continue;
       expect(lens.resumeProjection).toBe('default');
     }
   });

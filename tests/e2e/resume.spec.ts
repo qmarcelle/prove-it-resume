@@ -46,6 +46,7 @@ const ROUTES = [
   { route: '/resume/print/athenahealth-yoh', title: 'SENIOR AI PLATFORM ENGINEER' },
   { route: '/resume/print/end-to-end-delivery', title: 'END-TO-END DELIVERY ENGINEER' },
   { route: '/resume/print/linear', title: 'STAFF AI PRODUCT & PLATFORM ENGINEER' },
+  { route: '/resume/print/product-engineer', title: 'STAFF PRODUCT ENGINEER' },
 ];
 
 async function printPage(page: Page, route: string) {
@@ -248,11 +249,16 @@ for (const { route, title } of ROUTES) {
      */
     const pageOneAnchor = route.endsWith('/linear')
       ? 'Titles, dates and scope are stated as held'
-      : 'Public source and recorded evidence';
+      : route.endsWith('/product-engineer')
+        ? 'Contact Preference and Fee Schedule'
+        : 'Public source and recorded evidence';
 
     for (const [id, text] of [
       ['#resume-page-1', pageOneAnchor],
-      ['#resume-page-2', 'FULL EVIDENCE SYSTEM'],
+      [
+        '#resume-page-2',
+        route.endsWith('/product-engineer') ? 'PORTFOLIO:' : 'FULL EVIDENCE SYSTEM',
+      ],
     ]) {
       const pageBox = await page.locator(id as string).boundingBox();
       const el = await page

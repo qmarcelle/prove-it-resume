@@ -23,7 +23,7 @@ export function ResumeFooter({
       <a className={styles.footerLink} href={link.href}>
         {link.label}
       </a>
-      <span className={styles.footerTrailing}>{trailing}</span>
+      {trailing ? <span className={styles.footerTrailing}>{trailing}</span> : null}
     </div>
   );
 }
