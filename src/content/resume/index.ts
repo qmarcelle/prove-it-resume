@@ -1,6 +1,7 @@
 import type { ResumeProjectionId } from '@/lib/types';
 import { defaultResumeProjection } from './projections/default';
 import { linearResumeProjection } from './projections/linear';
+import { productEngineerResumeProjection } from './projections/product-engineer';
 import { resolveResume, type ResumeProjection } from './projection';
 
 /**
@@ -13,6 +14,7 @@ import { resolveResume, type ResumeProjection } from './projection';
 export const RESUME_PROJECTIONS: Record<ResumeProjectionId, ResumeProjection> = {
   default: defaultResumeProjection,
   linear: linearResumeProjection,
+  'product-engineer': productEngineerResumeProjection,
 };
 
 export function getResumeProjection(id: ResumeProjectionId): ResumeProjection {

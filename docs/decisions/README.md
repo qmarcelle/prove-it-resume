@@ -19,6 +19,7 @@ answers _what_ on its own.
 | [0011](0011-tokens-that-name-text-are-not-backgrounds.md) | A token that names text is never a background             | Why fills and their ink are declared as pairs                  |
 | [0012](0012-state-can-be-a-link-not-is-one.md)            | Interaction state can be a link; it is not one by default | Why browsing leaves the URL alone and `COPY THIS VIEW` exists  |
 | [0013](0013-mobile-recomposes-rather-than-stacks.md)      | Mobile recomposes; it does not stack                      | Why the mobile gates check meaning and not only fit            |
+| [0014](0014-role-family-resume-projection.md)             | A role-family résumé may ship before its role page        | Why `product-engineer` has a résumé and no `/role/` page       |
 
 ## Longer notes
 

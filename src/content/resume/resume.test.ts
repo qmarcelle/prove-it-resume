@@ -2,11 +2,13 @@ import { describe, expect, it } from 'vitest';
 import {
   RESUME_CAPABILITY_GROUPS,
   RESUME_CAREER_DURATION,
+  RESUME_EMPLOYER_HIGHLIGHTS,
   RESUME_QUANTITIES,
   RESUME_ROLES,
   RESUME_STACK_LINE,
   RESUME_SYSTEMS,
 } from './facts';
+import { productEngineer } from '../roles';
 import { RESUME_PROJECTIONS, resolveResume } from './index';
 import type { ResumeProjection } from './projection';
 
@@ -52,6 +54,7 @@ function printedCopy(projection: ResumeProjection): string {
   const resolved = resolveResume(projection);
   return [
     ...framingCopy(projection),
+    ...resolved.experience.highlights,
     ...resolved.experience.roles.flatMap((role) => role.bullets),
     ...resolved.systems.entries.flatMap((system) =>
       system.bullets.map((bullet) => bullet.text),
@@ -374,6 +377,7 @@ describe('résumé projections', () => {
       // Role bullets too: CIAM is established by the initiatives this role aligned, and
       // a capability the record demonstrates is as durable as one it lists.
       ...RESUME_ROLES.flatMap((role) => role.bullets.map((bullet) => bullet.text)),
+      ...RESUME_EMPLOYER_HIGHLIGHTS.map((bullet) => bullet.text),
     ]
       .join(' · ')
       .toLowerCase();
@@ -425,6 +429,85 @@ describe('the durable projection', () => {
         [...positions].sort((a, b) => a - b),
       );
     }
+  });
+});
+
+describe('the Product Engineer projection', () => {
+  const resolved = resolveResume(RESUME_PROJECTIONS['product-engineer']);
+  const copy = printedCopy(RESUME_PROJECTIONS['product-engineer']);
+
+  it('stays reusable across the role family, on the durable site', () => {
+    expect(productEngineer.organisation).toBeUndefined();
+    expect(resolved.footer.link.href).toBe('https://qwynn.marcellelabs.io/');
+  });
+
+  it('keeps undated BCBST work out of any dated role', () => {
+    const highlights = resolved.experience.highlights.join(' ');
+    expect(highlights).toContain('Across my BCBST career');
+    expect(highlights).toContain('Turborepo');
+    expect(highlights).toContain('Storybook');
+
+    const dated = resolved.experience.roles.flatMap((role) => role.bullets).join(' ');
+    expect(dated).not.toMatch(/Turborepo|Storybook|WebSphere/);
+    expect(resolved.experience.roles[0].bullets[0]).toContain('Consumer Portals');
+  });
+
+  it('reads as a résumé, and only this sheet drops the boundary blocks', () => {
+    expect(resolved.showBoundaries).toBe(false);
+    expect(resolveResume(RESUME_PROJECTIONS.default).showBoundaries).toBe(true);
+    expect(resolveResume(RESUME_PROJECTIONS.linear).showBoundaries).toBe(true);
+  });
+
+  it('closes on a plain portfolio line', () => {
+    expect(resolved.footer.lead).toBe('PORTFOLIO:');
+    expect(resolved.footer.link.label).toBe('qwynn.marcellelabs.io');
+    expect(resolved.footer.trailing).toBe('');
+    expect(resolveResume(RESUME_PROJECTIONS.default).footer.lead).toContain(
+      'FULL EVIDENCE SYSTEM',
+    );
+  });
+
+  it('states the early-career sequence in order', () => {
+    const body = RESUME_PROJECTIONS['product-engineer'].profile.body;
+    expect(body.indexOf('production support')).toBeLessThan(
+      body.indexOf('React provider applications'),
+    );
+  });
+
+  it('does not describe the modernization as starting from Sitecore', () => {
+    expect(copy).not.toContain('Sitecore-to-Next.js');
+    expect(copy).toContain('Java and WebSphere');
+  });
+
+  it('cannot print the PostHog contribution without its provenance limits', () => {
+    expect(resolved.systems.entries[0].id).toBe('posthog');
+    expect(copy).toContain('PR #88639');
+    expect(copy).toContain('PR #111237');
+    expect(copy).toContain('PR #88639 itself did not merge');
+    expect(copy).toContain('Human-directed, agent-assisted');
+  });
+
+  it('keeps the kinds of external evidence separate and bounded', () => {
+    expect(resolved.systems.entries.map((entry) => entry.id)).toEqual([
+      'posthog',
+      'datahub-mcp',
+      'buildomator',
+      'marcelle-labs-delivery',
+    ]);
+    expect(copy).toContain('the reader I wrote');
+    expect(copy).toContain('PR #15) was closed unmerged');
+    expect(copy).toContain('the founders retained business positioning and strategy');
+    expect(copy).not.toMatch(/independent (consumer|implementation)/i);
+  });
+
+  it('cannot be read as merging the Tally work with the DataHub contribution', () => {
+    expect(copy).toContain('PR #149');
+    expect(copy).not.toContain('Tally');
+  });
+
+  it('does not select Vreko', () => {
+    expect(resolved.systems.entries.map((entry) => entry.id)).not.toContain('vreko');
+    expect(copy).not.toMatch(/\bvreko\b/i);
   });
 });
 

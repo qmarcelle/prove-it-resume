@@ -4,6 +4,7 @@ import {
   RESUME_CERTIFICATIONS,
   RESUME_EDUCATION,
   RESUME_EMPLOYER,
+  RESUME_EMPLOYER_HIGHLIGHTS,
   RESUME_FOOTER,
   RESUME_IDENTITY,
   RESUME_NONPROFIT,
@@ -42,6 +43,16 @@ export type ResumeProjection = {
   id: ResumeProjectionId;
   /** Which explicit two-page composition renders this. */
   layout: 'default' | 'linear';
+  /**
+   * The revision printed on this sheet, when it was cut later than the durable one.
+   * Absent keeps the corpus revision, so existing artifacts do not change.
+   */
+  revision?: string;
+  /**
+   * Leaves the prose boundary blocks off this sheet. For a conventional résumé, whose
+   * scope is carried by precise wording and evidence links. Absent keeps them.
+   */
+  omitBoundaries?: boolean;
   domains: string;
   profile: {
     label: string;
@@ -67,6 +78,8 @@ export type ResumeProjection = {
   experience: {
     labelLines: readonly string[];
     note: string;
+    /** Employer-level facts printed above the dated roles, by id. */
+    highlightIds?: readonly string[];
     roles: readonly RoleSelection[];
   };
   /** The Linear-specific block. Absent on projections that do not carry receipts. */
@@ -87,6 +100,8 @@ export type ResumeProjection = {
     nonprofitLabel?: string;
   };
   footerTrailing: string;
+  /** The words before the footer link. Absent keeps the durable evidence-system line. */
+  footerLead?: string;
   /** Where the printed footer sends a reader. Root for the durable résumé. */
   footerLink: { label: string; href: string };
 };
@@ -138,8 +153,12 @@ export function resolveResume(projection: ResumeProjection) {
     id: projection.id,
     layout: projection.layout,
 
-    identity: RESUME_IDENTITY,
+    identity: {
+      ...RESUME_IDENTITY,
+      revision: projection.revision ?? RESUME_IDENTITY.revision,
+    },
     domains: projection.domains,
+    showBoundaries: !projection.omitBoundaries,
 
     profile: projection.profile,
 
@@ -174,6 +193,13 @@ export function resolveResume(projection: ResumeProjection) {
       labelLines: projection.experience.labelLines,
       note: projection.experience.note,
       employer: RESUME_EMPLOYER,
+      highlights: (projection.experience.highlightIds ?? []).map((id) => {
+        const highlight = RESUME_EMPLOYER_HIGHLIGHTS.find((entry) => entry.id === id);
+        if (!highlight) {
+          throw new Error(`résumé projection names an unknown highlight: ${id}`);
+        }
+        return highlight.text;
+      }),
       roles: projection.experience.roles.map((selection): ResolvedRole => {
         const role = requireRole(selection.id);
         return {
@@ -210,7 +236,7 @@ export function resolveResume(projection: ResumeProjection) {
     },
 
     footer: {
-      lead: RESUME_FOOTER.lead,
+      lead: projection.footerLead ?? RESUME_FOOTER.lead,
       link: projection.footerLink,
       trailing: projection.footerTrailing,
     },

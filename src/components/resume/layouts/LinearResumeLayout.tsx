@@ -64,11 +64,14 @@ export function LinearResumeLayout({
         >
           <ResumeExperienceSection
             employer={experience.employer}
+            highlights={experience.highlights}
             roles={experience.roles}
           />
-          <ResumeBoundary label="BOUNDARY" anchored>
-            {RESUME_EXPERIENCE_BOUNDARY}
-          </ResumeBoundary>
+          {resume.showBoundaries ? (
+            <ResumeBoundary label="BOUNDARY" anchored>
+              {RESUME_EXPERIENCE_BOUNDARY}
+            </ResumeBoundary>
+          ) : null}
         </ResumeSection>
       </ResumePage>
 
@@ -97,9 +100,11 @@ export function LinearResumeLayout({
             </ResumeCompactEntry>
           ) : null}
 
-          <ResumeBoundary label={systems.boundaryLabel}>
-            {systems.boundary}
-          </ResumeBoundary>
+          {resume.showBoundaries ? (
+            <ResumeBoundary label={systems.boundaryLabel}>
+              {systems.boundary}
+            </ResumeBoundary>
+          ) : null}
         </ResumeSection>
 
         {agentPlatform ? (

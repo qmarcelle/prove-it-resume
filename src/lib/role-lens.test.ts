@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { PROOFS } from '@/content/proofs';
-import { ROLE_LENSES, athenahealthYoh, defaultRole } from '@/content/roles';
+import {
+  RESUME_ONLY_LENSES,
+  ROLE_LENSES,
+  athenahealthYoh,
+  defaultRole,
+} from '@/content/roles';
 import { APPLICATION_LENSES, linearApplication } from '@/content/applications';
 import { ALL_LENSES, PRINTABLE_LENSES } from '@/content/lenses';
 import { prioritiseMapping } from './mapping';
@@ -185,7 +190,7 @@ describe('application lenses', () => {
 
   it('names a résumé projection that is registered', () => {
     for (const lens of ALL_LENSES) {
-      expect(['default', 'linear']).toContain(lens.resumeProjection);
+      expect(['default', 'linear', 'product-engineer']).toContain(lens.resumeProjection);
     }
   });
 
@@ -195,6 +200,24 @@ describe('application lenses', () => {
     // us what they are hiring for.
     for (const lens of [defaultRole, ...ROLE_LENSES]) {
       expect(lens.resumeProjection).toBe('default');
+    }
+  });
+
+  it('allows one explicit résumé-only lens, which names no company', () => {
+    // An exact list, so adding a second lens here is a decision someone has to make.
+    // A company-specific lens still cannot use this route to reorder a career.
+    expect(RESUME_ONLY_LENSES.map((lens) => lens.slug)).toEqual(['product-engineer']);
+    for (const lens of RESUME_ONLY_LENSES) {
+      expect(lens.organisation).toBeUndefined();
+    }
+  });
+
+  it('gives a résumé-only lens a print route and no page', () => {
+    for (const lens of RESUME_ONLY_LENSES) {
+      expect(getRoleLens(lens.slug)).toBeUndefined();
+      expect(listRoleSlugs()).not.toContain(lens.slug);
+      expect(getPrintableLens(lens.slug)).toBe(lens);
+      expect(listPrintableSlugs().filter((slug) => slug === lens.slug)).toHaveLength(1);
     }
   });
 

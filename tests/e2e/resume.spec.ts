@@ -46,6 +46,7 @@ const ROUTES = [
   { route: '/resume/print/athenahealth-yoh', title: 'SENIOR AI PLATFORM ENGINEER' },
   { route: '/resume/print/end-to-end-delivery', title: 'END-TO-END DELIVERY ENGINEER' },
   { route: '/resume/print/linear', title: 'STAFF AI PRODUCT & PLATFORM ENGINEER' },
+  { route: '/resume/print/product-engineer', title: 'STAFF PRODUCT ENGINEER' },
 ];
 
 async function printPage(page: Page, route: string) {
@@ -248,11 +249,16 @@ for (const { route, title } of ROUTES) {
      */
     const pageOneAnchor = route.endsWith('/linear')
       ? 'Titles, dates and scope are stated as held'
-      : 'Public source and recorded evidence';
+      : route.endsWith('/product-engineer')
+        ? 'Contact Preference and Fee Schedule'
+        : 'Public source and recorded evidence';
 
     for (const [id, text] of [
       ['#resume-page-1', pageOneAnchor],
-      ['#resume-page-2', 'FULL EVIDENCE SYSTEM'],
+      [
+        '#resume-page-2',
+        route.endsWith('/product-engineer') ? 'PORTFOLIO:' : 'FULL EVIDENCE SYSTEM',
+      ],
     ]) {
       const pageBox = await page.locator(id as string).boundingBox();
       const el = await page
@@ -392,6 +398,33 @@ test('the résumé manifest lists every variant exactly once', async ({ request 
   expect(linear?.route).toBe('/resume/print/linear');
   expect(linear?.pdfPath).toBe('/qwynn-marcelle-resume-linear.pdf');
   expect(linear?.downloadName).toBe('Qwynn Marcelle - Resume (Linear).pdf');
+});
+
+test('the Product Engineer résumé exports without publishing a role page', async ({
+  page,
+  request,
+}) => {
+  const rolePage = await page.goto('/role/product-engineer');
+  expect(rolePage?.status()).toBe(404);
+
+  const printRoute = await page.goto('/resume/print/product-engineer');
+  expect(printRoute?.status()).toBe(200);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+
+  const manifest = await request.get('/resume/manifest.json');
+  const { variants } = (await manifest.json()) as {
+    variants: { slug: string; route: string; pdfPath: string; downloadName: string }[];
+  };
+  const variant = variants.find((entry) => entry.slug === 'product-engineer');
+  expect(variant?.route).toBe('/resume/print/product-engineer');
+  expect(variant?.pdfPath).toBe('/qwynn-marcelle-resume-product-engineer.pdf');
+  expect(variant?.downloadName).toBe(
+    'Qwynn Marcelle - Resume (Staff Product Engineer).pdf',
+  );
+
+  const pdf = await request.get('/qwynn-marcelle-resume-product-engineer.pdf');
+  expect(pdf.status()).toBe(200);
+  expect(pdf.headers()['content-type']).toContain('application/pdf');
 });
 
 test('every résumé call to action on /linear downloads the Linear PDF', async ({

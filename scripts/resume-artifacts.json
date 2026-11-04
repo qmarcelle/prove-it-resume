@@ -49,6 +49,23 @@
       "pages": 2
     },
     {
+      "slug": "product-engineer",
+      "route": "/resume/print/product-engineer",
+      "pdfPath": "/qwynn-marcelle-resume-product-engineer.pdf",
+      "fingerprint": "d77f320086f3253e31acc75788fdd5a359f423b52efeed202bf4766bedefe043",
+      "links": [
+        "mailto:qwynn@marcellelabs.io",
+        "https://www.linkedin.com/in/qmarcelle",
+        "https://github.com/qmarcelle",
+        "https://github.com/PostHog/posthog/pull/111237",
+        "https://github.com/acryldata/mcp-server-datahub/pull/149",
+        "https://github.com/buildomator/buildomator/pull/6",
+        "https://marcellelabs.io/work",
+        "https://qwynn.marcellelabs.io/"
+      ],
+      "pages": 2
+    },
+    {
       "slug": "linear",
       "route": "/resume/print/linear",
       "pdfPath": "/qwynn-marcelle-resume-linear.pdf",
